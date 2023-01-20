@@ -45,7 +45,7 @@ module.exports = {
     'react-native/no-raw-text': 2,
     'react-native/no-single-element-style-arrays': 2,
     'react/style-prop-object': 0,
-    'import/no-unresolved': 0
+    'import/no-unresolved': 0,
   },
   globals: {
     fetch: false

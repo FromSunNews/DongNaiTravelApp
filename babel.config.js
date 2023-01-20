@@ -8,6 +8,9 @@ module.exports = function (api) {
         require.resolve('babel-plugin-module-resolver'),
         {
           root: ['./app'],
+          alias: {
+            "~": './src'
+          }
         }
       ],
     ]
