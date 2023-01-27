@@ -2,8 +2,8 @@ import { StyleSheet } from 'react-native'
 
 // Tuan: Palette màu chính
 const APP_PRIMARY_COLOR = {
-  HEX: '#F9F7F7',
-  RGB: '249, 247, 247'
+  HEX: '#FAFAFA',
+  RGB: '250, 250, 250'
 }
 const APP_SECOND_COLOR = {
   HEX: '#DBE2EF',

@@ -58,9 +58,9 @@ const decoration = StyleSheet.create({
   }
 });
 
-const app_fn = {
+const app_typo = {
   ...size,
   ...decoration
 };
 
-export default app_fn
+export default app_typo
