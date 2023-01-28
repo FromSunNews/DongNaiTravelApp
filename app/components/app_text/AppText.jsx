@@ -1,5 +1,5 @@
-import React from 'react'
 import { Text } from 'react-native'
+import React from 'react'
 
 import { app_typo } from 'globals/styles'
 
@@ -10,6 +10,7 @@ import { app_typo } from 'globals/styles'
  * tuỳ chỉnh cỡ chữ `sz`.
  * @param {string} children - Từ hoặc câu cần in ra màn hình.
  * @param {StyleSheet} style - Style cho component.
+ * @param {number} numberOfLines - thông số này giúp mình custom dòng hiển thị ở trong Text (wrap text), và đi cùng là Ellipse Mode
  * @param {string} sz - Là từ có dạng `sz_n`, với n là số từ 1 đến 8.
  * * sz_1 = 7
  * * sz_2 = 9
@@ -21,9 +22,9 @@ import { app_typo } from 'globals/styles'
  * * sz_8 = 50
  * @returns Trả về `Text` Component có chữ và style (bao gồm fontSize đã được tuỳ chỉnh).
  */
-const AppText = ({children, sz = 'sz_5', style}) => {
+const AppText = ({children, style, numberOfLines = 0, sz = 'sz_5'}) => {
   return (
-    <Text style={{...app_typo[sz], ...style}}>{children}</Text>
+    <Text style={{...app_typo[sz], ...style}} numberOfLines={numberOfLines}>{children}</Text>
   )
 }
 

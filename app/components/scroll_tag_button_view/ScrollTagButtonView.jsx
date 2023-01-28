@@ -1,7 +1,9 @@
-import React from 'react'
 import { ScrollView, Text } from 'react-native'
+import React from 'react'
 
 import TagButton from '../tag_button/TagButton'
+
+import { app_sp } from 'globals/styles'
 
 /**
  * by @NguyenAnhTuan1912
@@ -16,7 +18,7 @@ const ScrollTagButtonView = ({concept, isHorizontalScroll = true}) => {
   if(concept === undefined || concept === "") return <Text>Không tìm thấy concept</Text>
 
   return (
-    <ScrollView horizontal={isHorizontalScroll} showsHorizontalScrollIndicator={false}>
+    <ScrollView horizontal={isHorizontalScroll} showsHorizontalScrollIndicator={false} style={app_sp.mv_6}>
       {fakeData[concept].map((data, index) => {
         return (
           <TagButton text={data} key={data} isActive={index === 0 ? true : false} />
