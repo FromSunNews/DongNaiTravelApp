@@ -45,7 +45,12 @@ module.exports = {
     'react-native/no-raw-text': 2,
     'react-native/no-single-element-style-arrays': 2,
     'react/style-prop-object': 0,
-    'import/no-unresolved': 0
+    'import/no-unresolved': 0,
+    'react/function-component-definition': 0,
+    'eol-last': 0,
+    'import/prefer-default-export': 0,
+    'import/no-extraneous-dependencies': 0,
+    'react/jsx-one-expression-per-line': 0
   },
   globals: {
     fetch: false
