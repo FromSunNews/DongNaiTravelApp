@@ -2,11 +2,12 @@ import { StyleSheet } from 'react-native'
 
 const APP_SPACING_0 = 0;
 const APP_SPACING_1 = 6;
-const APP_SPACING_2 = 10;
-const APP_SPACING_3 = 12;
-const APP_SPACING_4 = 16;
-const APP_SPACING_5 = 18;
-const APP_SPACING_6 = 22;
+const APP_SPACING_2 = 8;
+const APP_SPACING_3 = 10;
+const APP_SPACING_4 = 12;
+const APP_SPACING_5 = 16;
+const APP_SPACING_6 = 18;
+const APP_SPACING_7 = 22;
 
 const m = StyleSheet.create({
   m_0: {
@@ -30,6 +31,9 @@ const m = StyleSheet.create({
   m_6: {
     margin: APP_SPACING_6
   },
+  m_7: {
+    margin: APP_SPACING_7
+  },
   mh_0: {
     marginHorizontal: APP_SPACING_0
   },
@@ -50,6 +54,9 @@ const m = StyleSheet.create({
   },
   mh_6: {
     marginHorizontal: APP_SPACING_6
+  },
+  mh_7: {
+    marginHorizontal: APP_SPACING_7
   },
   mv_0: {
     marginVertical: APP_SPACING_0
@@ -72,6 +79,9 @@ const m = StyleSheet.create({
   mv_6: {
     marginVertical: APP_SPACING_6
   },
+  mv_7: {
+    marginVertical: APP_SPACING_7
+  },
   mt_0: {
     marginTop: APP_SPACING_0
   },
@@ -92,6 +102,9 @@ const m = StyleSheet.create({
   },
   mt_6: {
     marginTop: APP_SPACING_6
+  },
+  mt_7: {
+    marginTop: APP_SPACING_7
   },
   mb_0: {
     marginBottom: APP_SPACING_0
@@ -114,6 +127,9 @@ const m = StyleSheet.create({
   mb_6: {
     marginBottom: APP_SPACING_6
   },
+  mb_7: {
+    marginBottom: APP_SPACING_7
+  },
   ms_0: {
     marginStart: APP_SPACING_0
   },
@@ -135,6 +151,9 @@ const m = StyleSheet.create({
   ms_6: {
     marginStart: APP_SPACING_6
   },
+  ms_7: {
+    marginStart: APP_SPACING_7
+  },
   me_0: {
     marginEnd: APP_SPACING_0
   },
@@ -155,6 +174,9 @@ const m = StyleSheet.create({
   },
   me_6: {
     marginEnd: APP_SPACING_6
+  },
+  me_7: {
+    marginEnd: APP_SPACING_7
   }
 });
 
@@ -180,6 +202,9 @@ const p = StyleSheet.create({
   p_6: {
     padding: APP_SPACING_6
   },
+  p_7: {
+    padding: APP_SPACING_7
+  },
   ph_0: {
     paddingHorizontal: APP_SPACING_0
   },
@@ -200,6 +225,9 @@ const p = StyleSheet.create({
   },
   ph_6: {
     paddingHorizontal: APP_SPACING_6
+  },
+  ph_7: {
+    paddingHorizontal: APP_SPACING_7
   },
   pv_0: {
     paddingVertical: APP_SPACING_0
@@ -222,6 +250,9 @@ const p = StyleSheet.create({
   pv_6: {
     paddingVertical: APP_SPACING_6
   },
+  pv_7: {
+    paddingVertical: APP_SPACING_7
+  },
   pt_0: {
     paddingTop: APP_SPACING_0
   },
@@ -242,6 +273,9 @@ const p = StyleSheet.create({
   },
   pt_6: {
     paddingTop: APP_SPACING_6
+  },
+  pt_7: {
+    paddingTop: APP_SPACING_7
   },
   pb_0: {
     paddingBottom: APP_SPACING_0
@@ -264,6 +298,9 @@ const p = StyleSheet.create({
   pb_6: {
     paddingBottom: APP_SPACING_6
   },
+  pb_7: {
+    paddingBottom: APP_SPACING_7
+  },
   ps_0: {
     paddingStart: APP_SPACING_0
   },
@@ -285,6 +322,9 @@ const p = StyleSheet.create({
   ps_6: {
     paddingStart: APP_SPACING_6
   },
+  ps_7: {
+    paddingStart: APP_SPACING_7
+  },
   pe_0: {
     paddingEnd: APP_SPACING_0
   },
@@ -305,6 +345,9 @@ const p = StyleSheet.create({
   },
   pe_6: {
     paddingEnd: APP_SPACING_6
+  },
+  pe_7: {
+    paddingEnd: APP_SPACING_7
   }
 });
 

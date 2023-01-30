@@ -1,7 +1,7 @@
 import { Text } from 'react-native'
 import React from 'react'
 
-import { app_typo } from 'globals/styles'
+import { app_c, app_typo } from 'globals/styles'
 
 /**
  * by @NguyenAnhTuan1912
@@ -22,7 +22,7 @@ import { app_typo } from 'globals/styles'
  * * sz_8 = 50
  * @returns Trả về `Text` Component có chữ và style (bao gồm fontSize đã được tuỳ chỉnh).
  */
-const AppText = ({children, style, numberOfLines = 0, sz = 'sz_5'}) => {
+const AppText = ({children, style = {color: app_c.HEX.ext_second}, numberOfLines = 0, sz = 'sz_5'}) => {
   return (
     <Text style={{...app_typo[sz], ...style}} numberOfLines={numberOfLines}>{children}</Text>
   )

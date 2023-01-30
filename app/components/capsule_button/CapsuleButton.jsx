@@ -3,7 +3,7 @@ import React from 'react'
 
 import AppText from '../app_text/AppText';
 
-import style from './TagButtonStyle'
+import style from './CapsuleButtonStyle'
 
 /**
  * by @NguyenAnhTuan1912
@@ -13,12 +13,12 @@ import style from './TagButtonStyle'
  * @param {boolean} isActive - Nút có được ấn hay chưa?
  * @returns Trả về `TouchableOpacity` Component có chữ và style (bao gồm fontSize đã được tuỳ chỉnh).
  */
-const TagButton = ({text, isActive = false}) => {
+const CapsuleButton = ({children, isActive = false}) => {
   return (
     <TouchableOpacity style={isActive ? style.btn_active : style.btn_inActive}>
-      <AppText style={{...(isActive ? style.lbl_active : style.lbl_inactive)}} sz="sz_3">{text}</AppText>
+      <AppText style={{...(isActive ? style.lbl_active : style.lbl_inactive)}} sz="sz_3">{children}</AppText>
     </TouchableOpacity>
   )
 }
 
-export default TagButton
+export default CapsuleButton

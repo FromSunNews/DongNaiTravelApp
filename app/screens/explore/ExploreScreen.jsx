@@ -3,16 +3,18 @@ import React from 'react'
 
 import { ScrollTagButtonView, HorizontalPlaceCard, BannerButton } from 'components'
 
-import { app_sp } from 'globals/styles'
 import style from './ExporeScreenStyle'
+import { app_sp } from 'globals/styles'
 
 const ExploreScreen = () => {
   return (
     <SafeAreaView>
       <ScrollView style={style.container}>
-        <BannerButton>Let’s see your location in map</BannerButton>
-        <ScrollTagButtonView horizontal={true} concept="place" />
-        <View>
+        <View style={{...app_sp.mh_4}}>
+          <BannerButton>Let’s see your location in map</BannerButton>
+        </View>
+        <ScrollTagButtonView horizontal={true} concept="place" style={app_sp.ms_4} />
+        <View style={{...app_sp.mh_4, ...app_sp.mb_4}}>
           <HorizontalPlaceCard />
           <HorizontalPlaceCard />
           <HorizontalPlaceCard />

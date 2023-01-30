@@ -6,7 +6,11 @@ const style = StyleSheet.create({
   container: {
     width: app_dms.screenWidth,
     height: app_dms.screenHeight,
-    ...app_sp.p_4
+    ...app_sp.pt_4
+  },
+
+  place_cards_container: {
+    ...app_sp.mh_4
   }
 });
 

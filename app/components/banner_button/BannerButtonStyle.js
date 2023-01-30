@@ -12,7 +12,7 @@ const style = StyleSheet.create({
   },
   image: {
     flex: 1,
-    ...app_sp.p_3
+    ...app_sp.p_4
   },
   lbl_container: {
     flex: 1,
