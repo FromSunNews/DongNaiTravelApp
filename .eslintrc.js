@@ -45,7 +45,11 @@ module.exports = {
     'react-native/no-raw-text': 2,
     'react-native/no-single-element-style-arrays': 2,
     'react/style-prop-object': 0,
-    'import/no-unresolved': 0
+    'import/no-unresolved': 0,
+    'react/function-component-definition': [1, {
+      'namedComponents': 'function-declaration' | 'function-expression' | 'arrow-function',
+      'unnamedComponents': 'function-declaration' | 'function-expression' | 'arrow-function'
+    }]
   },
   globals: {
     fetch: false
