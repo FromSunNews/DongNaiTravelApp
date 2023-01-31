@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@expo/webpack-config": "^0.17.2",
+    "@gorhom/bottom-sheet": "^4",
     "@react-native-async-storage/async-storage": "^1.17.11",
     "@react-navigation/native": "^6.1.2",
     "@react-navigation/native-stack": "^6.9.8",
@@ -18,10 +19,13 @@
     "axios": "^1.2.6",
     "expo": "~47.0.12",
     "expo-status-bar": "~1.4.2",
+    "expo-updates": "^0.15.6",
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-native": "0.70.5",
-    "react-native-screens": "^3.19.0",
+    "react-native-gesture-handler": "~2.8.0",
+    "react-native-reanimated": "~2.12.0",
+    "react-native-screens": "~3.18.0",
     "react-native-web": "~0.18.9",
     "react-redux": "^8.0.5",
     "redux-persist": "^6.0.0"
