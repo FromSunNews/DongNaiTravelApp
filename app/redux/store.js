@@ -6,6 +6,7 @@ import { placesReducer } from 'redux/places/PlacesSlice'
 import { profileReducer } from 'redux/profile/ProfileSlice'
 import { settingReducer } from 'redux/setting/SettingSlice'
 import { userReducer } from 'redux/user/UserSlice'
+import { manifoldReducer } from 'redux/manifold/ManifoldSlice'
 
 // https://www.npmjs.com/package/redux-persist
 // https://blog.logrocket.com/use-redux-persist-react-native/
@@ -29,7 +30,9 @@ const reducers = combineReducers({
   places: placesReducer,
   profile: profileReducer,
   setting: settingReducer,
-  user: userReducer
+  user: userReducer,
+  manifold: manifoldReducer,
+  
 })
 
 const persistedReducers = persistReducer(persistConfig, reducers)
