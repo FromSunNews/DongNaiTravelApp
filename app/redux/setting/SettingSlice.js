@@ -4,35 +4,36 @@ import { API_ROOT } from 'utilities/constants'
 
 // Phương: Khởi tạo giá trị của một Slice trong redux
 const initialState = {
-  currentPlaces: null
+  currentSetting: null
 }
 
+// Phương: tạm thời cho setting được lấy về từ DB, có thể về sau sẽ đổi sang LocalStorage
 // Phương: Các hành động gọi api (bất đồng bộ) và cập nhật dữ liệu vào Redux, dùng createAsyncThunk đi kèm với extraReducers
 // Phương: https://redux-toolkit.js.org/api/createAsyncThunk
-export const fetchPlacesAPI = createAsyncThunk(
-  'places/fetchPlacesAPI',
+export const fetchSettingAPI = createAsyncThunk(
+  'setting/fetchSettingAPI',
   async () => {
-    const request = await axios.get(`${API_ROOT}/v1/places`)
+    const request = await axios.get(`${API_ROOT}/v1/setting`)
     return request.data
   }
 )
 // Phương: Khởi tạo một slice trong redux store
-export const placesSlice = createSlice({
-  name: 'places',
+export const settingSlice = createSlice({
+  name: 'setting',
   initialState,
   reducers: {
     // Phương: Lưu ý luôn là ở đây cần cặp ngoặc nhọn cho function trong reducer cho dù code bên trong chỉ có 1 dòng, đây là rule của Redux
     // Phương: https:// Phương:redux-toolkit.js.org/usage/immer-reducers#mutating-and-returning-state
-    updateCurrentPlaces: (state, action) => {
-      const places = action.payload
-      state.currentPlaces = places
+    updateCurrentSetting: (state, action) => {
+      const setting = action.payload
+      state.currentSetting = setting
     }
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchPlacesAPI.fulfilled, (state, action) => {
-      let places = action.payload // Phương: chính là cái request.data phía trên
+    builder.addCase(fetchSettingAPI.fulfilled, (state, action) => {
+      let setting = action.payload // Phương: chính là cái request.data phía trên
 
-      state.currentPlaces = places
+      state.currentSetting = setting
     })
   }
 })
@@ -41,14 +42,14 @@ export const placesSlice = createSlice({
 // Phương: Actions: dành cho các components bên dưới gọi bằng dispatch() tới nó để cập nhật lại dữ liệu thông qua reducer (chạy đồng bộ)
 // Phương: Để ý ở trên thì không thấy properties actions đâu cả, bởi vì những cái actions này đơn giản là được thằng redux tạo tự động theo tên của reducer nhé.
 export const { 
-  updateCurrentPlaces,
+  updateCurrentSetting,
   // Phương
-} = placesSlice.actions
+} = settingSlice.actions
 
 // Phương: Selectors: mục đích là dành cho các components bên dưới gọi bằng useSelector() tới nó để lấy dữ liệu từ trong redux store ra sử dụng
-export const selectCurrentPlaces = (state) => {
-  return state.places.currentPlaces
+export const selectCurrentSetting = (state) => {
+  return state.setting.currentSetting
 }
 
-// Phương: Export default cái placesReducer của chúng ta để combineReducers trong store
-export const placesReducer = placesSlice.reducer
+// Phương: Export default cái settingReducer của chúng ta để combineReducers trong store
+export const settingReducer = settingSlice.reducer
