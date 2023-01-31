@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { selectCurrentManifold, updateCurrentManifold } from 'redux/manifold/ManifoldSlice'
 import { useEffect } from 'react'
 
+// Phuong: https://gorhom.github.io/react-native-bottom-sheet/modal
 const NotificationBottomSheet = () => {
 
   const currentManifold = useSelector(selectCurrentManifold)
@@ -19,26 +20,25 @@ const NotificationBottomSheet = () => {
     setIsOpen(currentManifold.appearNotificationBottomSheet)
   }, [currentManifold])
 
-  // ref
   const bottomSheetRef = useRef(null)
 
-  // variables
   const snapPoints = ['25%', '25%']
 
-  // callbacks
   const handleCloseBottomSheet = useCallback(() => {
-    console.log('handleSheetChanges', bottomSheetRef.current)
+  
     bottomSheetRef.current?.close()
+    
     const timeToClose = setTimeout(() => {
+      // Phuong: call action to update state
       dispatch(updateCurrentManifold({
         ...currentManifold,
         appearNotificationBottomSheet: false
       }))
+      
       clearInterval(timeToClose)
     }, 300)
   }, [])
 
-  // renders
   if (isOpen)
   return (
     <>
