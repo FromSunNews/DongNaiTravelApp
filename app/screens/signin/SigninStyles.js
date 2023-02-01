@@ -1,6 +1,6 @@
-import { app_c, app_dms, app_sh, app_typo } from "globals/styles";
-import { fonts } from "globals/styles/typography";
-import { StyleSheet } from "react-native";
+import { app_c, app_dms, app_sh, app_typo } from 'globals/styles'
+import { fonts } from 'globals/styles/typography'
+import { StyleSheet } from 'react-native'
 import Constants from 'expo-constants'
 
 export const styles = StyleSheet.create({

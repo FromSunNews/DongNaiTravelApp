@@ -1,16 +1,17 @@
 import React from 'react'
 import { StatusBar } from 'expo-status-bar'
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import { Text } from 'react-native'
 
 import { store, persistor } from 'redux/store'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 
-import { useFonts } from 'expo-font';
+import { NavigationContainer } from '@react-navigation/native'
 
 import NotificationBottomSheet from 'components/notification_bottom_sheet/NotificationBottomSheet'
-import { app_c, app_typo } from 'globals/styles'
-import Signin from 'screens/signin/Signin'
+
+import { useFonts } from 'expo-font'
+import AuthNavigator from 'navigations/auth_navigator/AuthNavigator'
 
 export default function App() {
   // Phuong: https://docs.expo.dev/guides/using-custom-fonts/
@@ -37,19 +38,17 @@ export default function App() {
   return (
     <Provider store={store}>
       <PersistGate loading={<Text>Loading...</Text>} persistor={persistor}>
-        <View style={styles.container}>
-          <StatusBar style="auto" />
-          <Signin />
-          {/* <NotificationBottomSheet /> */}
-        </View>
+
+        <StatusBar style="auto" />
+
+        <NavigationContainer>
+          <AuthNavigator/>
+        </NavigationContainer>
+        
+        {/*Phuong: Hien thong bao cho toan he thong => test thu vao redux manifold => appearNotificationBottomSheet: true */}
+        <NotificationBottomSheet />
+
       </PersistGate>
     </Provider>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: app_c.HEX.primary,
-  },
-})
