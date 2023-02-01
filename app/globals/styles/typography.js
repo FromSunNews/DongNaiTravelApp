@@ -62,7 +62,7 @@ const decoration = StyleSheet.create({
   }
 })
 
-export const fonts = StyleSheet.create({
+export const fonts = {
   h0: { fontFamily: "Roboto-Bold", fontSize: APP_FONT_SIZE_9},
   h1: { fontFamily: "Roboto-Bold", fontSize: APP_FONT_SIZE_8, lineHeight: 36 },
   h2: { fontFamily: "Roboto-Bold", fontSize: APP_FONT_SIZE_7, lineHeight: 30 },
@@ -79,11 +79,12 @@ export const fonts = StyleSheet.create({
   body5: { fontFamily: "Roboto-Regular", fontSize: APP_FONT_SIZE_3, lineHeight: 18 },
   body6: { fontFamily: "Roboto-Regular", fontSize: APP_FONT_SIZE_2, lineHeight: 16 },
   body7: { fontFamily: "Roboto-Regular", fontSize: APP_FONT_SIZE_1, lineHeight: 16 },
-})
+}
 
 const app_typo = {
   ...size,
-  ...decoration
+  ...decoration,
+  ...fonts
 }
 
 
