@@ -9,7 +9,8 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { useFonts } from 'expo-font';
 
 import NotificationBottomSheet from 'components/notification_bottom_sheet/NotificationBottomSheet'
-import { app_c, app_typo, fonts } from 'globals/styles'
+import { app_c, app_typo } from 'globals/styles'
+import Signin from 'screens/signin/Signin'
 
 export default function App() {
   // Phuong: https://docs.expo.dev/guides/using-custom-fonts/
@@ -36,16 +37,11 @@ export default function App() {
   return (
     <Provider store={store}>
       <PersistGate loading={<Text>Loading...</Text>} persistor={persistor}>
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
           <StatusBar style="auto" />
-          <Text
-            style={{
-              ...fonts.h0,
-              color: app_c.HEX.fourth
-            }}
-          >DongNaiTravelApp</Text>
-          <NotificationBottomSheet />
-        </SafeAreaView>
+          <Signin />
+          {/* <NotificationBottomSheet /> */}
+        </View>
       </PersistGate>
     </Provider>
   )
@@ -54,8 +50,6 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
-    alignItems: 'center',
-    justifyContent: 'center'
+    backgroundColor: app_c.HEX.primary,
   },
 })

@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 // Phương: Khởi tạo giá trị của một Slice trong redux
 const initialState = {
   currentManifold:{
-    appearNotificationBottomSheet: false,
+    appearNotificationBottomSheet: true,
     contentNotificationBottomSheet: ''
   }
 }
