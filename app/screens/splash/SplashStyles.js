@@ -9,5 +9,9 @@ export const styles = StyleSheet.create({
     backgroundColor: app_c.HEX.primary,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  label: {
+    ...fonts.introText,
+    color: app_c.HEX.fourth
   }
 })
