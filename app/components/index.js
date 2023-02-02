@@ -5,12 +5,11 @@ import CircleButton from "./circle_button/CircleButton"
 import HorizontalPlaceCard from "./horizontal_place_card/HorizontalPlaceCard"
 import ScrollTagButtonView from "./scroll_tag_button_view/ScrollTagButtonView"
 
-
 export {
   AppText,
   BannerButton,
-  ScrollTagButtonView,
   CapsuleButton,
+  CircleButton,
   HorizontalPlaceCard,
-  CircleButton
+  ScrollTagButtonView
 }

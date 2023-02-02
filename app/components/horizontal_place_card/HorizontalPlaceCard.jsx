@@ -17,40 +17,43 @@ import { app_c } from 'globals/styles'
  * @param {boolean} unknown
  * @returns unknown.
  */
-const HorizontalPlaceCard = ({cate}) => {
+const HorizontalPlaceCard = ({place}) => {
   return (
     <View style={style.card}>
       {/* Cột đâu tiên - Image Container */}
-      <ImageBackground style={style.card_image_container} source={{uri: "https://media.istockphoto.com/id/1010884322/fr/photo/esprit-l%C3%AEle-dans-le-lac-maligne-au-coucher-du-soleil-le-parc-national-jasper-alberta-canada.jpg?s=612x612&w=0&k=20&c=rloK48fYfwNT5jVKkdHkCLqQZJ3QVx-lnWvEh3NIJ7c="}}>
-        <View style={style.card_capsule_container}>
-          <AppText sz="sz_2" style={{color: app_c.HEX.ext_second}}>Recommended</AppText>
-        </View>
+      <ImageBackground style={style.card_image_container} source={{uri: place.avatar}}>
+        {
+          place.isRecommended &&
+          <View style={style.card_recommended_mark_container}>
+            <AppText sz="sz_2" style={{color: app_c.HEX.ext_second}}>Recommended</AppText>
+          </View>
+        }
       </ImageBackground>
 
       {/* Cột thứ 2 - Main Container */}
       <View style={style.card_main_container}>
         <View style={style.card_content_container}>
           <View style={style.cart_tag_container}>
-            <AppText sz="sz_2">Walking</AppText>
+            {place.tags.map((tag, index) => <AppText sz="sz_2">{tag.title}{index < place.tags.length - 1 ? ", " : ""}</AppText>)}
           </View>
           <View>
-            <AppText numberOfLines={1} sz="sz_6" style={style.card_title}>Pho di bo</AppText>
-            <AppText style={style.car_subtitle} sz="sz_3">Bien Hoa - Dong Nai</AppText>
+            <AppText numberOfLines={1} sz="sz_6" style={style.card_title}>{place.name}</AppText>
+            <AppText style={style.car_subtitle} sz="sz_3">{place.location.city} - {place.location.name}</AppText>
           </View>
           <View style={style.card_information_container}>
             <View style={style.card_information_col}>
-              <AppText sz="sz_3">4.3</AppText>
-              <AppText sz="sz_3">300</AppText>
+              <AppText sz="sz_3">{place.numberOfRatings}</AppText>
+              <AppText sz="sz_3">{place.numberOfReviews}</AppText>
             </View>
             <View style={style.card_information_col}>
-              <AppText sz="sz_3">3.2k</AppText>
+              <AppText sz="sz_3">{place.numberOfVisited}</AppText>
             </View>
           </View>
         </View>
         <View style={style.card_buttons_container}>
           <CircleButton></CircleButton>
           <CircleButton></CircleButton>
-          <CapsuleButton isActive={false}>Visit</CapsuleButton>
+          <CapsuleButton isActive={place.isVisited}>Visit</CapsuleButton>
         </View>
       </View>
 

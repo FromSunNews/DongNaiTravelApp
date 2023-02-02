@@ -1,14 +1,14 @@
 import { StyleSheet } from "react-native";
 
-import { app_c, app_sp } from "globals/styles";
+import { app_c, app_sh, app_sp } from "globals/styles";
 
 const default_app_caps_style = {
+  justifyContent: 'center',
+  alignSelf: 'flex-start',
+  ...app_sh.capsule,
   ...app_sp.ph_6,
   ...app_sp.pv_2,
   ...app_sp.me_4,
-  justifyContent: 'center',
-  alignSelf: 'flex-start',
-  borderRadius: 9999
 };
 
 const style = StyleSheet.create({

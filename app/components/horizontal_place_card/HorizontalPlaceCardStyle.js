@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native"
 
-import { app_c, app_shdw, app_sp } from "globals/styles";
+import { app_c, app_sh, app_shdw, app_sp } from "globals/styles";
 
 const card_text_default_color = {
   color: app_c.HEX.ext_second
@@ -29,10 +29,10 @@ const style = StyleSheet.create({
     ...app_sp.me_4
   },
 
-  card_capsule_container: {
+  card_recommended_mark_container: {
     justifyContent: 'center',
-    borderRadius: 9999,
     backgroundColor: app_c.HEX.primary,
+    ...app_sh.capsule,
     ...app_sp.ph_4,
     ...app_sp.pv_1
   },
@@ -48,6 +48,7 @@ const style = StyleSheet.create({
   },
 
   cart_tag_container: {
+    flexDirection: 'row',
     ...app_sp.mb_4
   },
 
