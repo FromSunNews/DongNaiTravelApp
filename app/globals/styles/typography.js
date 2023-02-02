@@ -79,6 +79,8 @@ export const fonts = {
   body5: { fontFamily: "Roboto-Regular", fontSize: APP_FONT_SIZE_3, lineHeight: 18 },
   body6: { fontFamily: "Roboto-Regular", fontSize: APP_FONT_SIZE_2, lineHeight: 16 },
   body7: { fontFamily: "Roboto-Regular", fontSize: APP_FONT_SIZE_1, lineHeight: 16 },
+  introText: { fontFamily: "Roboto-BoldItalic", fontSize: 40, lineHeight: 40 },
+
 }
 
 const app_typo = {

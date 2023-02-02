@@ -7,6 +7,7 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: Constants.statusBarHeight,
+    backgroundColor: app_c.HEX.primary
   },
   content: {
     paddingHorizontal: 18
