@@ -9,26 +9,17 @@ import { Easing } from 'react-native-reanimated'
 
 const Splash = () => {
   // Phuong: https://github.com/lottie-react-native/lottie-react-native#usage
+  
   const navigation = useNavigation()
   const [loaded, setLoaded] = useState(false)
-  const leftMovation = useRef(new Animated.Value(-900)).current
   const opacity = useRef(new Animated.Value(0)).current
   useEffect(() => {
     setTimeout(() => {
       Animated.timing(
-        leftMovation,
-        {
-          toValue: 0,
-          duration: 1500,
-          useNativeDriver: false,
-          easing: Easing.ease
-        }
-      ).start()
-      Animated.timing(
         opacity,
         {
           toValue: 1,
-          duration: 1500,
+          duration: 1000,
           useNativeDriver: false,
           easing: Easing.ease
 
@@ -39,7 +30,7 @@ const Splash = () => {
     setTimeout(() => {
       
       setLoaded(true)
-    }, 6000);
+    }, 4000)
   }, [])
   useEffect(() => {
     if (loaded) {
@@ -49,12 +40,12 @@ const Splash = () => {
   return (
     <View style={styles.container}>
       <Animated.Text
-        style={[styles.label, { marginLeft: leftMovation, opacity: opacity}]}
+        style={[styles.label, {opacity: opacity}]}
       >DongNaiTravelApp</Animated.Text>
       <LottieView
         autoPlay
         loop={false}
-        speed={1.3}
+        speed={1.6}
         style={{
           width: 200,
           height: 200,

@@ -12,6 +12,14 @@ import NotificationBottomSheet from 'components/notification_bottom_sheet/Notifi
 
 import { useFonts } from 'expo-font'
 import AuthNavigator from 'navigations/auth_navigator/AuthNavigator'
+import Loading from 'components/loading/Loading'
+
+// Phuong: How can I use the Redux store in non-component files?
+import { injectStore } from 'axios/authorizedAxiosInstance'
+injectStore(store)
+
+import { injectStoreRequest } from 'request_api'
+injectStoreRequest(store)
 
 export default function App() {
   // Phuong: https://docs.expo.dev/guides/using-custom-fonts/
@@ -47,6 +55,9 @@ export default function App() {
         
         {/*Phuong: Hien thong bao cho toan he thong => test thu vao redux manifold => appearNotificationBottomSheet: true */}
         <NotificationBottomSheet />
+
+        {/*Phuong: loading cho toan he thong => test thu vao redux manifold => isLoading: true */}
+        <Loading />
 
       </PersistGate>
     </Provider>

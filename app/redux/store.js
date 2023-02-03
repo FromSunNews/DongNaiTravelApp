@@ -7,6 +7,7 @@ import { profileReducer } from 'redux/profile/ProfileSlice'
 import { settingReducer } from 'redux/setting/SettingSlice'
 import { userReducer } from 'redux/user/UserSlice'
 import { manifoldReducer } from 'redux/manifold/ManifoldSlice'
+import { warehouseReducer } from 'redux/warehouse/WareHouseSlice'
 
 // https://www.npmjs.com/package/redux-persist
 // https://blog.logrocket.com/use-redux-persist-react-native/
@@ -20,7 +21,7 @@ const persistConfig = {
   // Phuong: luu tru o localstorage
   storage: AsyncStorage,
   // Phuong: định nghĩa các slice được phép duy trì qua mỗi lần reload, hoặc đóng ứng dụng tạm thời
-  whitelist: ['user']
+  whitelist: ['user', 'warehouse']
   // Phuong: blacklist: ['user'] // Phuong: định nghĩa các slice không được phép duy trì qua mỗi lần reload, hoặc đóng ứng dụng tạm thời
 }
 
@@ -32,7 +33,7 @@ const reducers = combineReducers({
   setting: settingReducer,
   user: userReducer,
   manifold: manifoldReducer,
-  
+  warehouse: warehouseReducer
 })
 
 const persistedReducers = persistReducer(persistConfig, reducers)

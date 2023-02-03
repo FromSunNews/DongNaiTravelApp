@@ -23,55 +23,74 @@ import { styles } from './SigninStyles'
 import AnimatedCheckbox from 'react-native-checkbox-reanimated'
 import { KEY_EMAIL_NAME, KEY_PASSWORD } from 'utilities/constants'
 import { FIELD_MIN_LENGTH_MESSAGE, FIELD_REQUIRED_MESSAGE, PASSWORD_RULE, PASSWORD_RULE_MESSAGE } from 'utilities/validators'
+import { signUpUserAPI } from 'request_api'
+import { signInUserAPI } from 'redux/user/UserSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigation } from '@react-navigation/native'
+import { selectCurrentWareHouse, updateCurrentWareHouse } from 'redux/warehouse/WareHouseSlice'
+import { cloneDeep } from 'lodash'
 
 const Signin = () => {
 
   // Phuong: https://github.com/Cnilton/react-native-floating-label-input
   // Phuong: https://react-hook-form.com/get-started#ReactNative
 
-  
+  const dispatch = useDispatch()
+  const navigation = useNavigation()
+
+  const warehouse = useSelector(selectCurrentWareHouse)
 
   const [isEmailNameFocused, setIsEmailNameFocused] = useState(false)
   const [isPassFocused, setIsPassFocused] = useState(false)
 
-  const [emailName, setEmailName] = useState('')
-  const [password, setPassword] = useState('')
   const [isChecked, setIsChecked] = useState(null)
   
   const { control, handleSubmit, formState: { errors } } = useForm ({
       defaultValues: {
-        password: emailName,
-        emailname: password
+        password: warehouse.emailName ? warehouse.emailName : '',
+        emailname: warehouse.password ? warehouse.password : ''
       }
     })
 
   useEffect(() => {
-   async () => {
-    let emailName = await SecureStore.getItemAsync(KEY_EMAIL_NAME)
-    setEmailName(emailName)
 
-    let password = await SecureStore.getItemAsync(KEY_PASSWORD)
-    setPassword(password)
-
-    if (emailName && password)
+    if (warehouse.emailName && warehouse.password)
       setIsChecked(true)
-    else
-      setIsChecked(false)
-   }
-    console.log("🚀 ~ file: Signin.js:60 ~ password", password)
-    console.log("🚀 ~ file: Signin.js:60 ~ emailName", emailName)
-  }, [])
+
+  }, [warehouse.emailName, warehouse.password])
 
   const onSubmit = async (data) => {
+    console.log("🚀 ~ file: Signin.js:72 ~ onSubmit ~ data", data)
     if (data.emailname && data.password) {
       // Phuong: call Api
-      // Phuong: Api returen value => set to localStorage
+      signUpUserAPI({
+        email: data.emailname,
+        password: data.password
+      }).then((res) => {
+         const rex = 'sad'
+        if (rex) {
+          // Phuong: check rememberme
+          
+        }
+      })
       if (isChecked) {
-        console.log("🚀 ~ file: Signin.js:62 ~ onSubmit ~ data", data)
-        await SecureStore.setItemAsync(KEY_EMAIL_NAME, data.emailname)
-        await SecureStore.setItemAsync(KEY_PASSWORD, data.password)
+        // Phuong: encypt value then save to store
+        const encryptEmailName = data.emailname
+        const encryptPassword = data.password
+
+        dispatch(updateCurrentWareHouse({
+          ...warehouse,
+          emailName: encryptEmailName,
+          password: encryptPassword
+        }))
+      } else {
+        dispatch(updateCurrentWareHouse({
+          ...warehouse,
+          emailName: null,
+          password: null
+        }))
       }
-      
+      navigation.navigate('GroupBottomTab')
     }
   }
   
