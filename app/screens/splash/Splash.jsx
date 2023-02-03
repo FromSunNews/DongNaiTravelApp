@@ -19,18 +19,18 @@ const Splash = () => {
         opacity,
         {
           toValue: 1,
-          duration: 1500,
+          duration: 1000,
           useNativeDriver: false,
           easing: Easing.ease
 
         }
       ).start()
-    }, 4000);
+    }, 3000);
     
     setTimeout(() => {
       
       setLoaded(true)
-    }, 6000)
+    }, 4000)
   }, [])
   useEffect(() => {
     if (loaded) {
@@ -45,7 +45,7 @@ const Splash = () => {
       <LottieView
         autoPlay
         loop={false}
-        speed={1.3}
+        speed={1.6}
         style={{
           width: 200,
           height: 200,
