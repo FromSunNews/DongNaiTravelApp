@@ -6,18 +6,18 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
-import Splash from 'screens/splash/Splash'
-import Onboarding from 'screens/onboarding/Onboarding'
+import SplashScreen from 'screens/splash/SplashScreen'
+import OnboardingScreen from 'screens/onboarding/OnboardingScreen'
 import GroupBottomTab from 'navigations/group_bottom_tab/GroupBottomTab'
-import NotificationBottomSheet from 'components/notification_bottom_sheet/NotificationBottomSheet'
+import SigninScreen from 'screens/signin/SigninScreen'
+import SignupScreen from 'screens/signup/SignupScreen'
 
 const AuthNavigator = () => {
   // Phuong: https://reactnavigation.org/docs/getting-started
   const AppStack = createNativeStackNavigator()
 
   const [isFirstLauch, setisFirstLauch] = useState(null)
-  const [initialRouteName, setInitialRouteName] = useState('GroupBottomTab')
+  const [initialRouteName, setInitialRouteName] = useState('SplashScreen')
 
   // Phuong: xem issue https://github.com/FromSunNews/DongNaiTravelApp/issues/11
 
@@ -43,9 +43,13 @@ const AuthNavigator = () => {
   // }
   return (
     <AppStack.Navigator initialRouteName={initialRouteName}>
-      <AppStack.Screen name="Splash" component={Splash} options={{ header: () => null }} />
-      <AppStack.Screen name="Onboarding" component={Onboarding} options={{ header: () => null }} />
+      <AppStack.Screen name="SplashScreen" component={SplashScreen} options={{ header: () => null }} />
+      <AppStack.Screen name="OnboardingScreen" component={OnboardingScreen} options={{ header: () => null }} />
+      <AppStack.Screen name="SigninScreen" component={SigninScreen} options={{ header: () => null }} />
+      <AppStack.Screen name="SignupScreen" component={SignupScreen} options={{ header: () => null }} />
+
       <AppStack.Screen name="GroupBottomTab" component={GroupBottomTab} options={{ header: () => null }} />
+
     </AppStack.Navigator>
   )
 }

@@ -1,210 +1,193 @@
 import { 
-  TouchableOpacity, 
-  View,
-  Image,
-  Animated,
-  Dimensions,
-  Text,
-  SafeAreaView,
-  StyleSheet,
-  ScrollView
-} from 'react-native'
-
-import React, { useRef } from 'react'
-
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { useNavigation } from '@react-navigation/native'
-
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
-
-import Home from 'screens/home/Home'
-import Explore from 'screens/exlore/Explore'
-import Blogs from 'screens/blogs/Blogs'
-import Map from 'screens/map/Map'
-import Setting from 'screens/settings/Setting'
-
-import { app_c, app_dms } from 'globals/styles'
-
-const GroupBottomTab = () => {
-  // Phuong: https://reactnavigation.org/docs/bottom-tab-navigator/
-  const Tab = createBottomTabNavigator()
-
-  // const myCart = useSelector(state => state.myCart)
-
-  const tabOffsetValue = useRef(new Animated.Value(0)).current
-  const getWidth = () => {
-      return (app_dms.screenWidth - 80) / 5
+    TouchableOpacity, 
+    View,
+    Animated,
+  } from 'react-native'
+  import React, { useRef } from 'react'
+  
+  import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+  import { useNavigation } from '@react-navigation/native'
+  import Ionicons from 'react-native-vector-icons/Ionicons'
+  
+  import HomeScreen from 'screens/home/HomeScreen'
+  
+  import ExploreScreen from 'screens/exlore/ExploreScreen'
+  import BlogsScreen from 'screens/blogs/BlogsScreen'
+  import MapScreen from 'screens/map/MapScreen'
+  import SettingScreen from 'screens/settings/SettingScreen'
+  
+  import styles from './GroupBottomTabStyles'
+  import { app_dms } from 'globals/styles'
+  
+  const tabIcon = {
+      'HomeScreen': {
+          inactive: 'home-outline',
+          active: 'home',
+          isHighlight: false,
+          size: 25
+      },
+      'ExploreScreen': {
+          inactive: 'compass-outline',
+          active: 'compass',
+          isHighlight: false,
+          size: 30
+      },
+      'MapScreen': {
+          inactive: 'map-outline',
+          active: 'map',
+          isHighlight: true,
+          size: 25
+      },
+      'BlogsScreen': {
+          inactive: 'newspaper-outline',
+          active: 'newspaper',
+          isHighlight: false,
+          size: 25
+      },
+      'SettingScreen': {
+          inactive: 'person-circle-outline',
+          active: 'person-circle',
+          isHighlight: false,
+          size: 30
+      }, 
   }
-
-  const navigation = useNavigation()
-  return (
-        <View style={{ flex: 1 }}>
-            <Tab.Navigator screenOptions={{
-                'tabBarShowLabel': false,
-                'tabBarStyle': {
-                    backgroundColor: app_c.HEX.fourth,
-                    position: 'absolute',
-                    bottom: 40,
-                    height: 60,
-                    marginHorizontal: 20,
-                    borderRadius: 10,
-                    paddingHorizontal: 20,
-                    shadowColor: "#000",
-                    shadowOffset: {
-                        width: 0,
-                        height: 3,
-                    },
-                    shadowOpacity: 0.27,
-                    shadowRadius: 4.65,
-                    elevation: 6,
-                }
-            }}
-            >
-                <Tab.Screen name={'Home'} component={Home} options={{
-                    headerShown: false,
-                    tabBarIcon: ({ focused }) => (
-                        <View style={{ position: 'absolute', top: 15 }}>
-                          {
-                            focused 
-                            ?
-                            <Ionicons name='home' size={25} color={app_c.HEX.ext_primary} />
-                            :
-                            <Ionicons name='md-home-outline' size={25} color={app_c.HEX.ext_second}/>
+  
+  // Tuan: ScreenWidth sẽ có độ dài là 375, vì t đang làm trên iphone 6
+  // Các thông số này tạm thời để đây vì chưa có tính năng xoay màn hình.
+  // Giải thích ở phần comment của https://github.com/FromSunNews/DongNaiTravelApp/issues/17
+  const iconContainerWidth = 30;
+  const numberOfIcons = 5;
+  const dotWidth = 5;
+  const bottomBarWidth = app_dms.screenWidth - 36;
+  const tabButtonsContainerWidth = bottomBarWidth - 44;
+  const tabButtonSpaceWidth = (tabButtonsContainerWidth - (iconContainerWidth * numberOfIcons)) / (numberOfIcons - 1);
+  const centerDotDistance = (iconContainerWidth / 2) - (dotWidth / 2);
+  const dotMoveDistance = tabButtonSpaceWidth + centerDotDistance + (iconContainerWidth - centerDotDistance);
+  
+  const BottomTabBar = ({ state, descriptors, navigation, tabOffsetValue }) => {
+      return (
+          <View style={styles.tab_bottom_container}>
+              <View style={styles.tab_bottom_buttons_container}>
+                  {state.routes.map((route, index) => {
+                      const { options } = descriptors[route.key];
+  
+                      const isFocused = state.index === index;
+  
+                      const handlePressTabButton = () => {
+                          const event = navigation.emit({
+                              type: 'tabPress',
+                              target: route.key,
+                              canPreventDefault: true,
+                          });
+  
+                          if (!isFocused && !event.defaultPrevented) {
+                              // Bảo toàn params trong Screen với prop merge: true
+                              navigation.navigate({ name: route.name, merge: true });
                           }
-                        </View>
-                    )
-                }} listeners={({ navigation, route }) => ({
-                    tabPress: e => {
-                        Animated.spring(tabOffsetValue, {
-                            toValue: 0,
-                            useNativeDriver: true
-                        }).start()
-                    }
-                })}></Tab.Screen>
-                <Tab.Screen name={'Explore'} component={Explore} options={{
-                    headerShown: false,
-                    tabBarIcon: ({ focused }) => (
-                        <View style={{ position: 'absolute', top: 12, right: 12 }}>
-                          {
-                            focused 
-                            ?
-                            <Ionicons name='compass' size={30} color={app_c.HEX.ext_primary} />
-                            :
-                            <Ionicons name='md-compass-outline' size={30} color={app_c.HEX.ext_second}/>
-                          }
-                        </View>
-                    )
-                }} listeners={({ navigation, route }) => ({
-                    tabPress: e => {
-                        Animated.spring(tabOffsetValue, {
-                            toValue: getWidth(),
-                            useNativeDriver: true
-                        }).start()
-                    }
-                })}></Tab.Screen>
-                <Tab.Screen name='Map' component={Map} options={{
-                    headerShown: false,
-                    tabBarIcon: ({ focused }) => (
-                        <View>
-                            <View style={{
-                                width: 60, height: 60, borderRadius: 30, backgroundColor: app_c.HEX.third, justifyContent: 'center', alignItems: 'center', bottom: 15,
-                                borderColor: app_c.HEX.second, borderWidth: 5,
-                            }}>
-                            {
-                              focused 
-                              ?
-                              <Ionicons name='map' size={25} color={app_c.HEX.ext_primary} />
-                              :
-                              <Ionicons name='map-outline' size={25} color={app_c.HEX.ext_primary}/>
-                            }
-                            </View>
-                            {/* {myCart.length > 0 ?
-                                <View
-                                    style={{
-                                        height: 15,
-                                        width: 15,
-                                        backgroundColor: COLORS.red,
-                                        borderRadius: 15,
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        elevation: 20,
-                                        bottom: 70,
-                                        left: 35
-                                    }}
-                                >
-                                    <Text
-                                        style={{
-                                            fontSize: 10,
-                                            color: COLORS.whiteMain
-                                        }}
-                                    >{myCart.length}</Text>
-                                </View>
-                                : null
-                            } */}
-
-                        </View>
-                    )
-                }}
-                listeners={({ navigation, route }) => ({
-                  tabPress: e => {
-                      Animated.spring(tabOffsetValue, {
-                          toValue: getWidth() *2,
-                          useNativeDriver: true
-                      }).start()
-                  }
-              })}
-                ></Tab.Screen>
-                <Tab.Screen name={'Blogs'} component={Blogs} options={{
-                    headerShown: false,
-                    tabBarIcon: ({ focused }) => (
-                        <View style={{ position: 'absolute', top: 12 }}>
-                          {
-                            focused 
-                            ?
-                            <MaterialCommunityIcons name='text-box' size={30} color={app_c.HEX.ext_primary} />
-                            :
-                            <MaterialCommunityIcons name='text-box-outline' size={30} color={app_c.HEX.ext_second}/>
-                          }
-                        </View>
-                    )
-                }} listeners={({ navigation, route }) => ({
-                    tabPress: e => {
-                        Animated.spring(tabOffsetValue, {
-                            toValue: getWidth() * 3,
-                            useNativeDriver: true
-                        }).start()
-                    }
-                })}></Tab.Screen>
-                <Tab.Screen name={'Profile'} component={Setting} options={{
-                    headerShown: false,
-                    tabBarIcon: ({ focused }) => (
-                        <View style={{ position: 'absolute', top: 15 }}>
-                          {
-                            focused 
-                            ?
-                            <FontAwesome name='user-circle' size={25} color={app_c.HEX.ext_primary} />
-                            :
-                            <FontAwesome name='user-circle-o' size={25} color={app_c.HEX.ext_second}/>
-                          }
-                        </View>
-                    )
-                }} listeners={({ navigation, route }) => ({
-                    tabPress: e => {
-                        Animated.spring(tabOffsetValue, {
-                            toValue: getWidth() * 4,
-                            useNativeDriver: true
-                        }).start()
-                    }
-                })}></Tab.Screen>
-            </Tab.Navigator>
-            <Animated.View style={{
-                width: 5, height: 5, backgroundColor: app_c.HEX.primary, position: 'absolute', bottom: 50, left: 67, borderRadius: 10,
-                transform: [{ translateX: tabOffsetValue }], elevation: 20
-            }}></Animated.View>
-        </View>
-  )
-}
-
-export default GroupBottomTab
+  
+                          Animated.spring(tabOffsetValue, {
+                              toValue: dotMoveDistance * index + centerDotDistance,
+                              useNativeDriver: true
+                          }).start()
+                      };
+  
+                      return (
+                          <TouchableOpacity
+                              accessibilityRole="button"
+                              accessibilityState={isFocused ? { selected: true } : {}}
+                              accessibilityLabel={options.tabBarAccessibilityLabel}
+                              onPress={handlePressTabButton}
+                              key={route.name}
+                              style={styles.tab_bottom_button}
+                          >
+                              <View style={tabIcon[route.name].isHighlight ? styles.tab_bottom_hl_icon_conatiner : styles.tab_bottom_icon_conatiner}>
+                                  {
+                                      tabIcon[route.name].isHighlight ?
+                                      (<Ionicons
+                                          size={tabIcon[route.name].size}
+                                          name={isFocused ? tabIcon[route.name].active : tabIcon[route.name].inactive}
+                                          style={isFocused ? styles.tab_bottom_hl_icon_active : styles.tab_bottom_hl_icon_inactive}
+                                      />) :
+                                      (<Ionicons
+                                          size={tabIcon[route.name].size}
+                                          name={isFocused ? tabIcon[route.name].active : tabIcon[route.name].inactive}
+                                          style={{...(isFocused ? styles.tab_bottom_icon_active : styles.tab_bottom_icon_inactive)}}
+                                      />)
+                                  }
+                              </View>
+                          </TouchableOpacity>
+                      );
+                  })}
+              </View>
+              <Animated.View style={{...styles.tab_bottom_dot_animated_container, transform: [{ translateX: tabOffsetValue }]}}></Animated.View>
+          </View>
+      );
+  }
+  
+  const Tab = createBottomTabNavigator()
+  
+  const GroupBottomTab = () => {
+    // Phuong: https://reactnavigation.org/docs/bottom-tab-navigator/
+  
+    // const myCart = useSelector(state => state.myCart)
+  
+    const tabOffsetValue = useRef(new Animated.Value(centerDotDistance)).current
+    const getWidth = () => {
+        return (app_dms.screenWidth) / 5
+    }
+  
+    const navigation = useNavigation()
+    return (
+          <View style={styles.container}>
+                  <Tab.Navigator
+                      tabBar={props => (<BottomTabBar {...props} tabOffsetValue={tabOffsetValue} />)}
+                      screenOptions={{
+                          'tabBarShowLabel': false
+                      }}
+                  >
+                          <Tab.Screen
+                              name={'HomeScreen'}
+                              component={HomeScreen}
+                              options={{
+                                  headerShown: false
+                              }}>
+                          </Tab.Screen>
+  
+                          <Tab.Screen
+                              name={'ExploreScreen'}
+                              component={ExploreScreen}
+                              options={{
+                                  headerShown: false
+                              }}>
+                          </Tab.Screen>
+  
+                          <Tab.Screen
+                              name={'MapScreen'}
+                              component={MapScreen}
+                              options={{
+                                  headerShown: false
+                              }}>
+                          </Tab.Screen>
+  
+                          <Tab.Screen
+                              name={'BlogsScreen'}
+                              component={BlogsScreen}
+                              options={{
+                                  headerShown: false
+                              }}>
+                      </Tab.Screen>
+  
+                          <Tab.Screen
+                              name={'SettingScreen'}
+                              component={SettingScreen}
+                              options={{
+                                  headerShown: false
+                              }}>
+                                  
+                          </Tab.Screen>
+                  </Tab.Navigator>
+          </View>
+    )
+  }
+  
+  export default GroupBottomTab

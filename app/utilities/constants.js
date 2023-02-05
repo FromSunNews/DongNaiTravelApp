@@ -1,6 +1,8 @@
 // Phuong: Created on 31/1/2023
-// Phuong: This is the api web for DongNaiAppTravel
-export const API_ROOT = 'http://localhost:8017'
+// Phuong: Muon test api thi xem ipv4 trong may tinh => cmd => ipconfig => ipv4
+// Phuong: doi lai ipv4 cua minh
+const ip_v4 = '192.168.1.10'
+const API_PORT = '7500'
 
-export const KEY_EMAIL_NAME = 'emailName'
-export const KEY_PASSWORD = 'password'
+// Phuong: This is the api web for DongNaiAppTravel
+export const API_ROOT = `http://${ip_v4}:${API_PORT}`
