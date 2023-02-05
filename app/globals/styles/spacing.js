@@ -1,182 +1,182 @@
 import { StyleSheet } from 'react-native'
 
 const APP_SPACING_0 = 0;
-const APP_SPACING_1 = 6;
-const APP_SPACING_2 = 8;
-const APP_SPACING_3 = 10;
-const APP_SPACING_4 = 12;
-const APP_SPACING_5 = 16;
-const APP_SPACING_6 = 18;
-const APP_SPACING_7 = 22;
+const APP_SPACING_6 = 6;
+const APP_SPACING_8 = 8;
+const APP_SPACING_10 = 10;
+const APP_SPACING_12 = 12;
+const APP_SPACING_16 = 16;
+const APP_SPACING_18 = 18;
+const APP_SPACING_22 = 22;
 
 const m = StyleSheet.create({
   m_0: {
     margin: APP_SPACING_0
   },
-  m_1: {
-    margin: APP_SPACING_1
-  },
-  m_2: {
-    margin: APP_SPACING_2
-  },
-  m_3: {
-    margin: APP_SPACING_3
-  },
-  m_4: {
-    margin: APP_SPACING_4
-  },
-  m_5: {
-    margin: APP_SPACING_5
-  },
   m_6: {
     margin: APP_SPACING_6
   },
-  m_7: {
-    margin: APP_SPACING_7
+  m_8: {
+    margin: APP_SPACING_8
+  },
+  m_10: {
+    margin: APP_SPACING_10
+  },
+  m_12: {
+    margin: APP_SPACING_12
+  },
+  m_16: {
+    margin: APP_SPACING_16
+  },
+  m_18: {
+    margin: APP_SPACING_18
+  },
+  m_22: {
+    margin: APP_SPACING_22
   },
   mh_0: {
     marginHorizontal: APP_SPACING_0
   },
-  mh_1: {
-    marginHorizontal: APP_SPACING_1
-  },
-  mh_2: {
-    marginHorizontal: APP_SPACING_2
-  },
-  mh_3: {
-    marginHorizontal: APP_SPACING_3
-  },
-  mh_4: {
-    marginHorizontal: APP_SPACING_4
-  },
-  mh_5: {
-    marginHorizontal: APP_SPACING_5
-  },
   mh_6: {
     marginHorizontal: APP_SPACING_6
   },
-  mh_7: {
-    marginHorizontal: APP_SPACING_7
+  mh_8: {
+    marginHorizontal: APP_SPACING_8
+  },
+  mh_10: {
+    marginHorizontal: APP_SPACING_10
+  },
+  mh_12: {
+    marginHorizontal: APP_SPACING_12
+  },
+  mh_16: {
+    marginHorizontal: APP_SPACING_16
+  },
+  mh_18: {
+    marginHorizontal: APP_SPACING_18
+  },
+  mh_22: {
+    marginHorizontal: APP_SPACING_22
   },
   mv_0: {
     marginVertical: APP_SPACING_0
   },
-  mv_1: {
-    marginVertical: APP_SPACING_1
-  },
-  mv_2: {
-    marginVertical: APP_SPACING_2
-  },
-  mv_3: {
-    marginVertical: APP_SPACING_3
-  },
-  mv_4: {
-    marginVertical: APP_SPACING_4
-  },
-  mv_5: {
-    marginVertical: APP_SPACING_5
-  },
   mv_6: {
     marginVertical: APP_SPACING_6
   },
-  mv_7: {
-    marginVertical: APP_SPACING_7
+  mv_8: {
+    marginVertical: APP_SPACING_8
+  },
+  mv_10: {
+    marginVertical: APP_SPACING_10
+  },
+  mv_12: {
+    marginVertical: APP_SPACING_12
+  },
+  mv_16: {
+    marginVertical: APP_SPACING_16
+  },
+  mv_18: {
+    marginVertical: APP_SPACING_18
+  },
+  mv_22: {
+    marginVertical: APP_SPACING_22
   },
   mt_0: {
     marginTop: APP_SPACING_0
   },
-  mt_1: {
-    marginTop: APP_SPACING_1
-  },
-  mt_2: {
-    marginTop: APP_SPACING_2
-  },
-  mt_3: {
-    marginTop: APP_SPACING_3
-  },
-  mt_4: {
-    marginTop: APP_SPACING_4
-  },
-  mt_5: {
-    marginTop: APP_SPACING_5
-  },
   mt_6: {
     marginTop: APP_SPACING_6
   },
-  mt_7: {
-    marginTop: APP_SPACING_7
+  mt_8: {
+    marginTop: APP_SPACING_8
+  },
+  mt_10: {
+    marginTop: APP_SPACING_10
+  },
+  mt_12: {
+    marginTop: APP_SPACING_12
+  },
+  mt_16: {
+    marginTop: APP_SPACING_16
+  },
+  mt_18: {
+    marginTop: APP_SPACING_18
+  },
+  mt_22: {
+    marginTop: APP_SPACING_22
   },
   mb_0: {
     marginBottom: APP_SPACING_0
   },
-  mb_1: {
-    marginBottom: APP_SPACING_1
-  },
-  mb_2: {
-    marginBottom: APP_SPACING_2
-  },
-  mb_3: {
-    marginBottom: APP_SPACING_3
-  },
-  mb_4: {
-    marginBottom: APP_SPACING_4
-  },
-  mb_5: {
-    marginBottom: APP_SPACING_5
-  },
   mb_6: {
     marginBottom: APP_SPACING_6
   },
-  mb_7: {
-    marginBottom: APP_SPACING_7
+  mb_8: {
+    marginBottom: APP_SPACING_8
+  },
+  mb_10: {
+    marginBottom: APP_SPACING_10
+  },
+  mb_12: {
+    marginBottom: APP_SPACING_12
+  },
+  mb_16: {
+    marginBottom: APP_SPACING_16
+  },
+  mb_18: {
+    marginBottom: APP_SPACING_18
+  },
+  mb_22: {
+    marginBottom: APP_SPACING_22
   },
   ms_0: {
     marginStart: APP_SPACING_0
   },
-  ms_1: {
-    marginStart: APP_SPACING_1
-  },
-  ms_2: {
-    marginStart: APP_SPACING_2
-  },
-  ms_3: {
-    marginStart: APP_SPACING_3
-  },
-  ms_4: {
-    marginStart: APP_SPACING_4
-  },
-  ms_5: {
-    marginStart: APP_SPACING_5
-  },
   ms_6: {
     marginStart: APP_SPACING_6
   },
-  ms_7: {
-    marginStart: APP_SPACING_7
+  ms_8: {
+    marginStart: APP_SPACING_8
+  },
+  ms_10: {
+    marginStart: APP_SPACING_10
+  },
+  ms_12: {
+    marginStart: APP_SPACING_12
+  },
+  ms_16: {
+    marginStart: APP_SPACING_16
+  },
+  ms_18: {
+    marginStart: APP_SPACING_18
+  },
+  ms_22: {
+    marginStart: APP_SPACING_22
   },
   me_0: {
     marginEnd: APP_SPACING_0
   },
-  me_1: {
-    marginEnd: APP_SPACING_1
-  },
-  me_2: {
-    marginEnd: APP_SPACING_2
-  },
-  me_3: {
-    marginEnd: APP_SPACING_3
-  },
-  me_4: {
-    marginEnd: APP_SPACING_4
-  },
-  me_5: {
-    marginEnd: APP_SPACING_5
-  },
   me_6: {
     marginEnd: APP_SPACING_6
   },
-  me_7: {
-    marginEnd: APP_SPACING_7
+  me_8: {
+    marginEnd: APP_SPACING_8
+  },
+  me_10: {
+    marginEnd: APP_SPACING_10
+  },
+  me_12: {
+    marginEnd: APP_SPACING_12
+  },
+  me_16: {
+    marginEnd: APP_SPACING_16
+  },
+  me_18: {
+    marginEnd: APP_SPACING_18
+  },
+  me_22: {
+    marginEnd: APP_SPACING_22
   }
 });
 
@@ -184,170 +184,170 @@ const p = StyleSheet.create({
   p_0: {
     padding: APP_SPACING_0
   },
-  p_1: {
-    padding: APP_SPACING_1
-  },
-  p_2: {
-    padding: APP_SPACING_2
-  },
-  p_3: {
-    padding: APP_SPACING_3
-  },
-  p_4: {
-    padding: APP_SPACING_4
-  },
-  p_5: {
-    padding: APP_SPACING_5
-  },
   p_6: {
     padding: APP_SPACING_6
   },
-  p_7: {
-    padding: APP_SPACING_7
+  p_8: {
+    padding: APP_SPACING_8
+  },
+  p_10: {
+    padding: APP_SPACING_10
+  },
+  p_12: {
+    padding: APP_SPACING_12
+  },
+  p_16: {
+    padding: APP_SPACING_16
+  },
+  p_18: {
+    padding: APP_SPACING_18
+  },
+  p_22: {
+    padding: APP_SPACING_22
   },
   ph_0: {
     paddingHorizontal: APP_SPACING_0
   },
-  ph_1: {
-    paddingHorizontal: APP_SPACING_1
-  },
-  ph_2: {
-    paddingHorizontal: APP_SPACING_2
-  },
-  ph_3: {
-    paddingHorizontal: APP_SPACING_3
-  },
-  ph_4: {
-    paddingHorizontal: APP_SPACING_4
-  },
-  ph_5: {
-    paddingHorizontal: APP_SPACING_5
-  },
   ph_6: {
     paddingHorizontal: APP_SPACING_6
   },
-  ph_7: {
-    paddingHorizontal: APP_SPACING_7
+  ph_8: {
+    paddingHorizontal: APP_SPACING_8
+  },
+  ph_10: {
+    paddingHorizontal: APP_SPACING_10
+  },
+  ph_12: {
+    paddingHorizontal: APP_SPACING_12
+  },
+  ph_16: {
+    paddingHorizontal: APP_SPACING_16
+  },
+  ph_18: {
+    paddingHorizontal: APP_SPACING_18
+  },
+  ph_22: {
+    paddingHorizontal: APP_SPACING_22
   },
   pv_0: {
     paddingVertical: APP_SPACING_0
   },
-  pv_1: {
-    paddingVertical: APP_SPACING_1
-  },
-  pv_2: {
-    paddingVertical: APP_SPACING_2
-  },
-  pv_3: {
-    paddingVertical: APP_SPACING_3
-  },
-  pv_4: {
-    paddingVertical: APP_SPACING_4
-  },
-  pv_5: {
-    paddingVertical: APP_SPACING_5
-  },
   pv_6: {
     paddingVertical: APP_SPACING_6
   },
-  pv_7: {
-    paddingVertical: APP_SPACING_7
+  pv_8: {
+    paddingVertical: APP_SPACING_8
+  },
+  pv_10: {
+    paddingVertical: APP_SPACING_10
+  },
+  pv_12: {
+    paddingVertical: APP_SPACING_12
+  },
+  pv_16: {
+    paddingVertical: APP_SPACING_16
+  },
+  pv_18: {
+    paddingVertical: APP_SPACING_18
+  },
+  pv_22: {
+    paddingVertical: APP_SPACING_22
   },
   pt_0: {
     paddingTop: APP_SPACING_0
   },
-  pt_1: {
-    paddingTop: APP_SPACING_1
-  },
-  pt_2: {
-    paddingTop: APP_SPACING_2
-  },
-  pt_3: {
-    paddingTop: APP_SPACING_3
-  },
-  pt_4: {
-    paddingTop: APP_SPACING_4
-  },
-  pt_5: {
-    paddingTop: APP_SPACING_5
-  },
   pt_6: {
     paddingTop: APP_SPACING_6
   },
-  pt_7: {
-    paddingTop: APP_SPACING_7
+  pt_8: {
+    paddingTop: APP_SPACING_8
+  },
+  pt_10: {
+    paddingTop: APP_SPACING_10
+  },
+  pt_12: {
+    paddingTop: APP_SPACING_12
+  },
+  pt_16: {
+    paddingTop: APP_SPACING_16
+  },
+  pt_18: {
+    paddingTop: APP_SPACING_18
+  },
+  pt_22: {
+    paddingTop: APP_SPACING_22
   },
   pb_0: {
     paddingBottom: APP_SPACING_0
   },
-  pb_1: {
-    paddingBottom: APP_SPACING_1
-  },
-  pb_2: {
-    paddingBottom: APP_SPACING_2
-  },
-  pb_3: {
-    paddingBottom: APP_SPACING_3
-  },
-  pb_4: {
-    paddingBottom: APP_SPACING_4
-  },
-  pb_5: {
-    paddingBottom: APP_SPACING_5
-  },
   pb_6: {
     paddingBottom: APP_SPACING_6
   },
-  pb_7: {
-    paddingBottom: APP_SPACING_7
+  pb_8: {
+    paddingBottom: APP_SPACING_8
+  },
+  pb_10: {
+    paddingBottom: APP_SPACING_10
+  },
+  pb_12: {
+    paddingBottom: APP_SPACING_12
+  },
+  pb_16: {
+    paddingBottom: APP_SPACING_16
+  },
+  pb_18: {
+    paddingBottom: APP_SPACING_18
+  },
+  pb_22: {
+    paddingBottom: APP_SPACING_22
   },
   ps_0: {
     paddingStart: APP_SPACING_0
   },
-  ps_1: {
-    paddingStart: APP_SPACING_1
-  },
-  ps_2: {
-    paddingStart: APP_SPACING_2
-  },
-  ps_3: {
-    paddingStart: APP_SPACING_3
-  },
-  ps_4: {
-    paddingStart: APP_SPACING_4
-  },
-  ps_5: {
-    paddingStart: APP_SPACING_5
-  },
   ps_6: {
     paddingStart: APP_SPACING_6
   },
-  ps_7: {
-    paddingStart: APP_SPACING_7
+  ps_8: {
+    paddingStart: APP_SPACING_8
+  },
+  ps_10: {
+    paddingStart: APP_SPACING_10
+  },
+  ps_12: {
+    paddingStart: APP_SPACING_12
+  },
+  ps_16: {
+    paddingStart: APP_SPACING_16
+  },
+  ps_18: {
+    paddingStart: APP_SPACING_18
+  },
+  ps_22: {
+    paddingStart: APP_SPACING_22
   },
   pe_0: {
     paddingEnd: APP_SPACING_0
   },
-  pe_1: {
-    paddingEnd: APP_SPACING_1
-  },
-  pe_2: {
-    paddingEnd: APP_SPACING_2
-  },
-  pe_3: {
-    paddingEnd: APP_SPACING_3
-  },
-  pe_4: {
-    paddingEnd: APP_SPACING_4
-  },
-  pe_5: {
-    paddingEnd: APP_SPACING_5
-  },
   pe_6: {
     paddingEnd: APP_SPACING_6
   },
-  pe_7: {
-    paddingEnd: APP_SPACING_7
+  pe_8: {
+    paddingEnd: APP_SPACING_8
+  },
+  pe_10: {
+    paddingEnd: APP_SPACING_10
+  },
+  pe_12: {
+    paddingEnd: APP_SPACING_12
+  },
+  pe_16: {
+    paddingEnd: APP_SPACING_16
+  },
+  pe_18: {
+    paddingEnd: APP_SPACING_18
+  },
+  pe_22: {
+    paddingEnd: APP_SPACING_22
   }
 });
 
