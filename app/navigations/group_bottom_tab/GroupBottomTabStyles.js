@@ -23,8 +23,8 @@ const styles = StyleSheet.create({
     zIndex: 999,
     ...app_shdw.type_5,
     ...app_sh.rounded_8,
-    ...app_sp.ph_7,
-    ...app_sp.pv_4
+    ...app_sp.ph_22,
+    ...app_sp.pv_12
   },
 
   tab_bottom_buttons_container: {
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     height: 5,
     backgroundColor: app_c.HEX.primary,
     ...app_sh.circle,
-    ...app_sp.mt_1
+    ...app_sp.mt_10
   },
 
   tab_bottom_icon_inactive: {

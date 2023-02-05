@@ -1,6 +1,5 @@
 import React from 'react'
-import { StatusBar } from 'expo-status-bar'
-import { Text } from 'react-native'
+import { Text, StatusBar, SafeAreaView } from 'react-native'
 
 import { store, persistor } from 'redux/store'
 import { Provider } from 'react-redux'
@@ -19,6 +18,7 @@ import { injectStore } from 'axios/authorizedAxiosInstance'
 injectStore(store)
 
 import { injectStoreRequest } from 'request_api'
+import { app_c } from 'globals/styles'
 injectStoreRequest(store)
 
 export default function App() {
@@ -46,9 +46,10 @@ export default function App() {
   return (
     <Provider store={store}>
       <PersistGate loading={<Text>Loading...</Text>} persistor={persistor}>
-
-        <StatusBar style="auto" />
-
+        <SafeAreaView style={{backgroundColor: app_c.HEX.primary}}>
+          <StatusBar style="auto" />
+        </SafeAreaView>
+        
         <NavigationContainer>
           <AuthNavigator/>
         </NavigationContainer>
