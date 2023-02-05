@@ -72,7 +72,7 @@ authorizedAxiosInstance.interceptors.response.use(function (response) {
       refreshTokenPromise = refreshTokenAPI()
         .then((data) => {return data?.accessToken}) // Phuong: đồng thời accessToken đã nằm trong httpOnly cookie (xử lý từ phía BE)
         .catch(() => {
-        /// Phuong: Nếu nhận bất kỳ lỗi nào từ api refresh token thì cứ logout luôn
+        // Phuong: Nếu nhận bất kỳ lỗi nào từ api refresh token thì cứ logout luôn
           store.dispatch(signOutUserAPI(false))
         })
         .finally(() => {
@@ -84,7 +84,7 @@ authorizedAxiosInstance.interceptors.response.use(function (response) {
     return refreshTokenPromise.then(accessToken => {
       // Phuong: Hiện tại ở đây không cần dùng gì tới accessToken vì chúng ta đã đưa nó vào cookie (xử lý từ phía BE) khi api được gọi thành công.
       // Phuong: Trường hợp nếu dự án cần lưu accessToken vào localstorage hoặc đâu đó thì sẽ viết code ở đây.
-      store.dispatch(updateFiledsCurrentUser({
+      store.dispatch(updateFiledsUser({
         accessToken: accessToken
       }))
       // Phuong: Quan trọng: Return lại axios instance của chúng ta kết hợp các originalRequests để call lại những api ban đầu bị lỗi

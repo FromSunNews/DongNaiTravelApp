@@ -1,6 +1,6 @@
+import { StyleSheet } from 'react-native'
 import { app_c, app_dms, app_sh, app_typo } from 'globals/styles'
 import { fonts } from 'globals/styles/typography'
-import { StyleSheet } from 'react-native'
 import Constants from 'expo-constants'
 
 export const styles = StyleSheet.create({
@@ -24,9 +24,11 @@ export const styles = StyleSheet.create({
     marginBottom: 10,
   },
   textError: {
+    flex: 1,
     color: '#F32424',
     marginTop: 5,
-    ...app_typo.body4
+    ...app_typo.body4,
+    alignSelf: 'flex-start',
   },
   containerReFor:{
     display: 'flex',
@@ -34,7 +36,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: 10,
+    marginTop: 0,
   },
   containerRe: {
     display: 'flex',
@@ -57,25 +59,12 @@ export const styles = StyleSheet.create({
     padding: 5,
     paddingRight: 0,
   },
-  btn: {
-    width: '100%',
-    backgroundColor: app_c.HEX.fourth,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 20,
-    ...app_sh.rounded_8,
-    height: 48
-  },
-  labelButton: {
-    color: app_c.HEX.primary,
-    ...app_typo.h3
-  },
   containerFooter: {
     flex: 1,
     height: '100%',
     display: 'flex',
     justifyContent: 'center',
+    marginBottom: 20,
   },
   labelSocial: {
     marginTop: 20,
@@ -110,5 +99,41 @@ export const styles = StyleSheet.create({
     padding: 5,
     color: app_c.HEX.third,
     ...app_typo.h5
-  }
+  },
+  smallLabel: {
+    ...app_typo.body4,
+    color: app_c.HEX.fourth,
+    marginBottom: 12,
+    marginTop: 20,
+  },
+  fullname: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  containerError: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    alignContent: 'flex-start'
+  },
+  fillView: {
+    flex: 0.05
+  },
+  terms: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 15,
+  },
+  textRead: {
+    ...app_typo.body4,
+    color: app_c.HEX.fourth
+  },
+  textTerms: {
+    ...app_typo.h5,
+    color: app_c.HEX.third,
+    paddingVertical: 5,
+    paddingHorizontal: 3,
+  },
 })

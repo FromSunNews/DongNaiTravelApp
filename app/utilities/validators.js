@@ -1,12 +1,18 @@
 import React from 'react'
 
 export const EMAIL_RULE = /^\S+@\S+\.\S+$/
+export const EMAIL_RULE_MESSAGE = 'Email is invalid.'
+
 export const PASSWORD_RULE = /^(?=.*[a-zA-Z])(?=.*\d)[A-Za-z\d\W]{8,256}$/
+export const PASSWORD_RULE_MESSAGE = 'At least 1 letter, a number, at least 8 characters.'
+
+export const BIRTHDAY_RULE = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/
+export const BIRTHDAY_RULE_MESSAGE = 'Incorrect format dd/mm/yyyy'
+
+
 export const FIELD_REQUIRED_MESSAGE = 'This field is required.'
 export const FIELD_MIN_LENGTH_MESSAGE = "This field must be at least 8 characters"
 
-export const PASSWORD_RULE_MESSAGE = 'At least 1 letter, a number, at least 8 characters.'
-export const EMAIL_RULE_MESSAGE = 'Email is invalid.'
 
 export const fieldErrorMessage = (errors, fieldName) => {
   if (!errors || !errors[fieldName]) return null

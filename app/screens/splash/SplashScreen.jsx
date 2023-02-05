@@ -2,12 +2,12 @@ import { View, Text, Animated } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import LottieView from 'lottie-react-native'
 
-import { styles } from './SplashStyles'
+import { styles } from './SplashScreenStyles'
 import { app_c } from 'globals/styles'
 import { useNavigation } from '@react-navigation/native'
 import { Easing } from 'react-native-reanimated'
 
-const Splash = () => {
+const SplashScreen = () => {
   // Phuong: https://github.com/lottie-react-native/lottie-react-native#usage
   
   const navigation = useNavigation()
@@ -34,7 +34,7 @@ const Splash = () => {
   }, [])
   useEffect(() => {
     if (loaded) {
-      navigation.navigate('Signin')
+      navigation.navigate('SigninScreen')
     }
   }, [loaded])
   return (
@@ -57,4 +57,4 @@ const Splash = () => {
   )
 }
 
-export default Splash
+export default SplashScreen
