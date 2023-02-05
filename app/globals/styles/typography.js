@@ -69,20 +69,28 @@ export const fonts = {
   h3: { fontFamily: "Roboto-Bold", fontSize: APP_FONT_SIZE_18 },
   h4: { fontFamily: "Roboto-Bold", fontSize: APP_FONT_SIZE_16 },
   h5: { fontFamily: "Roboto-Bold", fontSize: APP_FONT_SIZE_14 },
-  body1: { fontFamily: "Roboto-Regular", fontSize: APP_FONT_SIZE_14 },
-  body2: { fontFamily: "Roboto-Regular", fontSize: APP_FONT_SIZE_12 },
-  body3: { fontFamily: "Roboto-Regular", fontSize: APP_FONT_SIZE_9 },
-  body4: { fontFamily: "Roboto-Regular", fontSize: APP_FONT_SIZE_7 },
-  sub1: { fontFamily: "Roboto-Light", fontSize: APP_FONT_SIZE_12 },
-  sub1: { fontFamily: "Roboto-Light", fontSize: APP_FONT_SIZE_9 },
-  sub1: { fontFamily: "Roboto-Light", fontSize: APP_FONT_SIZE_7 },
+  body0: { fontFamily: "Roboto-Regular", fontSize: APP_FONT_SIZE_40},
+  body1: { fontFamily: "Roboto-Regular", fontSize: APP_FONT_SIZE_32 },
+  body2: { fontFamily: "Roboto-Regular", fontSize: APP_FONT_SIZE_22 },
+  body3: { fontFamily: "Roboto-Regular", fontSize: APP_FONT_SIZE_18 },
+  body4: { fontFamily: "Roboto-Regular", fontSize: APP_FONT_SIZE_16 },
+  body5: { fontFamily: "Roboto-Regular", fontSize: APP_FONT_SIZE_14 },
+  body6: { fontFamily: "Roboto-Regular", fontSize: APP_FONT_SIZE_12 },
+  body7: { fontFamily: "Roboto-Regular", fontSize: APP_FONT_SIZE_9 },
+  body8: { fontFamily: "Roboto-Regular", fontSize: APP_FONT_SIZE_7 },
+  sub0: { fontFamily: "Roboto-Light", fontSize: APP_FONT_SIZE_18 },
+  sub1: { fontFamily: "Roboto-Light", fontSize: APP_FONT_SIZE_16 },
+  sub2: { fontFamily: "Roboto-Light", fontSize: APP_FONT_SIZE_14 },
+  sub3: { fontFamily: "Roboto-Light", fontSize: APP_FONT_SIZE_12 },
+  sub4: { fontFamily: "Roboto-Light", fontSize: APP_FONT_SIZE_9 },
+  sub5: { fontFamily: "Roboto-Light", fontSize: APP_FONT_SIZE_7 },
   introText: { fontFamily: "Roboto-BoldItalic", fontSize: 40, lineHeight: 40 },
 }
 
 const app_typo = {
-  ...size,
-  ...decoration,
-  ...fonts
+  size,
+  decoration,
+  fonts
 }
 
 
