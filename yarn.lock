@@ -9556,6 +9556,11 @@
   dependencies:
     "prop-types" "^15.7.2"
 
+"react-native-app-intro-slider@^4.0.4":
+  "integrity" "sha512-Zkjaol6X3BbZkHUpVDj2LjdidpS6rCgKi0fx80xgGKa0pHxBRd4swWTv2bHnnvu5k1/HXwYk0mY2TbK+2jHl5w=="
+  "resolved" "https://registry.npmjs.org/react-native-app-intro-slider/-/react-native-app-intro-slider-4.0.4.tgz"
+  "version" "4.0.4"
+
 "react-native-checkbox-reanimated@^0.1.1":
   "integrity" "sha512-LvSFBJxGqEOrNAKtypdtFCxWCLaZ6K/0ZKz8WFj0OEuyhHTwwy/ASyfOzN2JibADsTfVQiQgrIzpyjvqCLfR3w=="
   "resolved" "https://registry.npmjs.org/react-native-checkbox-reanimated/-/react-native-checkbox-reanimated-0.1.1.tgz"

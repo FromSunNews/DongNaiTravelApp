@@ -27,7 +27,7 @@ const isLoading = (loading = true) => {
 
 // Phuong: Can thiệp vào giữa request gửi đi
 authorizedAxiosInstance.interceptors.request.use(function (config) {
-  console.log("🚀 ~ file: AuthorizedAxiosInstance.js:35 ~ config", config)
+  console.log("Loading...")
 
   // Phuong: Do something before request is sent
   isLoading(true)
@@ -47,7 +47,7 @@ let refreshTokenPromise = null
 authorizedAxiosInstance.interceptors.response.use(function (response) {
   // Phuong: Bất kỳ mã status code nằm trong phạm vi 200 - 299 thì sẽ là success và code chạy vào đây
   // Phuong: Do something with response data
-  console.log("🚀 ~ file: AuthorizedAxiosInstance.js:112 ~ response", response)
+  console.log("Loading turn off...")
   isLoading(false)
 
   return response
@@ -59,7 +59,8 @@ authorizedAxiosInstance.interceptors.response.use(function (response) {
 
   // Phuong: Nếu như nhận mã 401 từ phía BE trả về, gọi api đăng xuất luôn
   if (error.response?.status === 401) {
-    store.dispatch(signOutUserAPI(false))
+    console.log("Logout user....")
+    store.dispatch(signOutUserAPI())
   }
 
   // Phuong: Nếu như nhận mã 410 từ phía BE trả về, gọi api refresh_token
@@ -69,11 +70,13 @@ authorizedAxiosInstance.interceptors.response.use(function (response) {
 
     // Phuong: Kiểm tra xem nếu chưa có refreshTokenPromise thì thực hiện gán việc gọi api refresh_token vào cho cái refreshTokenPromise này
     if (!refreshTokenPromise) {
+      console.log("Refresh token for User...")
       refreshTokenPromise = refreshTokenAPI()
-        .then((data) => {return data?.accessToken}) // Phuong: đồng thời accessToken đã nằm trong httpOnly cookie (xử lý từ phía BE)
+        .then((data) => {return data?.accessToken}) 
         .catch(() => {
         // Phuong: Nếu nhận bất kỳ lỗi nào từ api refresh token thì cứ logout luôn
-          store.dispatch(signOutUserAPI(false))
+          console.log("Logout user....")
+          store.dispatch(signOutUserAPI())
         })
         .finally(() => {
         // Phuong: Xong xuôi hết thì gán lại cái refreshTokenPromise về null
@@ -82,8 +85,7 @@ authorizedAxiosInstance.interceptors.response.use(function (response) {
     }
 
     return refreshTokenPromise.then(accessToken => {
-      // Phuong: Hiện tại ở đây không cần dùng gì tới accessToken vì chúng ta đã đưa nó vào cookie (xử lý từ phía BE) khi api được gọi thành công.
-      // Phuong: Trường hợp nếu dự án cần lưu accessToken vào localstorage hoặc đâu đó thì sẽ viết code ở đây.
+      // Phuong: Trường hợp nếu dự án cần lưu accessToken vào localstorage sẽ viết code ở đây.
       store.dispatch(updateFiledsUser({
         accessToken: accessToken
       }))
