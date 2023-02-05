@@ -14,7 +14,6 @@ export const styles = StyleSheet.create({
   },
   textHeader: {
     color: app_c.HEX.fourth,
-    marginBottom: 20,
     ...fonts.h1
   },
   image: {
