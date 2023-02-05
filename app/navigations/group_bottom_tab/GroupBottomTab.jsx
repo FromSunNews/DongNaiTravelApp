@@ -2,6 +2,7 @@ import {
     TouchableOpacity, 
     View,
     Animated,
+    SafeAreaView
   } from 'react-native'
   import React, { useRef } from 'react'
   
@@ -10,8 +11,7 @@ import {
   import Ionicons from 'react-native-vector-icons/Ionicons'
   
   import HomeScreen from 'screens/home/HomeScreen'
-  
-  import ExploreScreen from 'screens/exlore/ExploreScreen'
+import ExploreScreen from 'screens/explore/ExploreScreen'
   import BlogsScreen from 'screens/blogs/BlogsScreen'
   import MapScreen from 'screens/map/MapScreen'
   import SettingScreen from 'screens/settings/SettingScreen'
@@ -138,7 +138,7 @@ import {
   
     const navigation = useNavigation()
     return (
-          <View style={styles.container}>
+          <SafeAreaView style={styles.container}>
                   <Tab.Navigator
                       tabBar={props => (<BottomTabBar {...props} tabOffsetValue={tabOffsetValue} />)}
                       screenOptions={{
@@ -186,7 +186,7 @@ import {
                                   
                           </Tab.Screen>
                   </Tab.Navigator>
-          </View>
+          </SafeAreaView>
     )
   }
   
