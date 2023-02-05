@@ -1,14 +1,14 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-import { styles } from './SettingStyles'
+import { styles } from './MapScreenStyles'
 
-const Setting = () => {
+const MapScreen = () => {
   return (
     <View style={styles.container}>
-      <Text>Setting</Text>
+      <Text>MapScreen</Text>
     </View>
   )
 }
 
-export default Setting
+export default MapScreen

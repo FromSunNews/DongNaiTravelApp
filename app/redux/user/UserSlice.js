@@ -12,13 +12,13 @@ const initialState = {
 
 // Phương: Các hành động gọi api (bất đồng bộ) và cập nhật dữ liệu vào Redux, dùng createAsyncThunk đi kèm với extraReducers
 // Phương: https://redux-toolkit.js.org/api/createAsyncThunk
-export const signInUserAPI = createAsyncThunk(
-  'user/signInUserAPI',
-  async (data) => {
-    const request = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/sign_in`, data)
-    return request.data
-  }
-)
+// export const signInUserAPI = createAsyncThunk(
+//   'user/signInUserAPI',
+//   async (data) => {
+//     const request = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/sign_in`, data)
+//     return request.data
+//   }
+// )
 
 export const signOutUserAPI = createAsyncThunk(
   'user/signOutUserAPI',
@@ -34,7 +34,7 @@ export const signOutUserAPI = createAsyncThunk(
 export const updateUserAPI = createAsyncThunk(
   'user/updateUserAPI',
   async ( data ) => {
-    const request = await axios.put(`${API_ROOT}/v1/users/update`, data)
+    const request = await authorizedAxiosInstance.put(`${API_ROOT}/v1/users/update`, data)
     if (request.data) {
       toast.success('Updated successfully!', { theme: 'colored' })
     }
@@ -63,11 +63,11 @@ export const userSlice = createSlice({
     }
   },
   extraReducers: (builder) => {
-    builder.addCase(signInUserAPI.fulfilled, (state, action) => {
-      const user = action.payload
-      state.currentUser = user
-      state.isAuthenticated = true
-    })
+    // builder.addCase(signInUserAPI.fulfilled, (state, action) => {
+    //   const user = action.payload
+    //   state.currentUser = user
+    //   state.isAuthenticated = true
+    // })
 
     builder.addCase(signOutUserAPI.fulfilled, (state) => {
       state.currentUser = null

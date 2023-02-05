@@ -1,14 +1,14 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-import { styles } from './HomeStyles'
+import { styles } from './BlogsScreenStyles'
 
-const Home = () => {
+const BlogsScreen = () => {
   return (
     <View style={styles.container}>
-      <Text>Home</Text>
+      <Text>BlogsScreen</Text>
     </View>
   )
 }
 
-export default Home
+export default BlogsScreen
