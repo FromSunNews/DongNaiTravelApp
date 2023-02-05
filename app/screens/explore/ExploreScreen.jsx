@@ -4,12 +4,12 @@ import React from 'react'
 import { ScrollTagButtonView, HorizontalPlaceCard, BannerButton } from 'components'
 
 import style from './ExporeScreenStyle'
-import { app_sp } from 'globals/styles'
+import { app_sp, app_c } from 'globals/styles'
 
 const ExploreScreen = () => {
   return (
-    <SafeAreaView>
-      <ScrollView style={style.container}>
+    <View>
+      <ScrollView style={style.scroll_view_container}>
         <View style={{...app_sp.mh_4}}>
           <BannerButton>Let’s see your location in map</BannerButton>
         </View>
@@ -17,8 +17,9 @@ const ExploreScreen = () => {
         <View style={{...app_sp.mh_4, ...app_sp.mb_4}}>
           {places.map(place => <HorizontalPlaceCard place={place} key={place.id} />)}
         </View>
+      <View style={{height: 120}}></View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   )
 }
 
@@ -65,8 +66,30 @@ const places = [
     ],
     numberOfRatings: 4.6,
     numberOfReviews: 5687,
-    numberOfVisited: '32242',
+    numberOfVisited: 32242,
     isRecommended: true,
     isVisited: true
+  },
+  {
+    id: '2lkoq-lkcai',
+    name: 'Cong vien Tam Hiep',
+    avatar: 'https://lh3.googleusercontent.com/p/AF1QipOFHqO2nUTvyj0fYEvwt-9AHoQS8e5yajbKLjQE=s680-w680-h510',
+    location: {
+      name: 'Dong Nai',
+      city: 'Bien Hoa'
+    },
+    tags: [
+      {
+        title: 'Walking'
+      },
+      {
+        title: 'Exercise'
+      }
+    ],
+    numberOfRatings: 3.7,
+    numberOfReviews: 1687,
+    numberOfVisited: 2242,
+    isRecommended: false,
+    isVisited: false
   }
 ]

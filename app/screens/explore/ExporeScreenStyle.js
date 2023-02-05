@@ -1,11 +1,10 @@
 import { StyleSheet } from "react-native";
 
-import { app_sp, app_dms } from "globals/styles";
+import { app_sp, app_dms, app_c } from "globals/styles";
 
 const style = StyleSheet.create({
-  container: {
-    width: app_dms.screenWidth,
-    height: app_dms.screenHeight,
+  scroll_view_container: {
+    backgroundColor: app_c.HEX.primary,
     ...app_sp.pt_4
   },
 

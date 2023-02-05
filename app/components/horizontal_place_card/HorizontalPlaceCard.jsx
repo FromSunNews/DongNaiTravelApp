@@ -1,7 +1,9 @@
 import { View, Text, ImageBackground } from 'react-native'
 import React from 'react'
 
-import { AppText, CapsuleButton, CircleButton } from 'components'
+import AppText from 'components/app_text/AppText'
+import CapsuleButton from 'components/capsule_button/CapsuleButton'
+import CircleButton from 'components/circle_button/CircleButton'
 
 import style from './HorizontalPlaceCardStyle'
 import { app_c } from 'globals/styles'
@@ -34,7 +36,7 @@ const HorizontalPlaceCard = ({place}) => {
       <View style={style.card_main_container}>
         <View style={style.card_content_container}>
           <View style={style.cart_tag_container}>
-            {place.tags.map((tag, index) => <AppText sz="sz_2">{tag.title}{index < place.tags.length - 1 ? ", " : ""}</AppText>)}
+            {place.tags.map((tag, index) => <AppText sz="sz_2" key={tag.title}>{tag.title}{index < place.tags.length - 1 ? ", " : ""}</AppText>)}
           </View>
           <View>
             <AppText numberOfLines={1} sz="sz_6" style={style.card_title}>{place.name}</AppText>

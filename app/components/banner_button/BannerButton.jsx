@@ -14,7 +14,7 @@ import { app_c } from 'globals/styles'
  * @param {string} imageUrl - đường dẫn ảnh làm background cho button.
  * @returns Trả về `TouchableOpacity` Component có chữ, ảnh, icon và style (bao gồm fontSize đã được tuỳ chỉnh).
  */
-const BannerButton = ({children, imageUrl}) => {
+const BannerButton = ({children, imageUrl = ""}) => {
   return (
     <TouchableOpacity style={style.in_active}>
       <ImageBackground source={{url: `${imageUrl}`}} resizeMode="cover" style={style.image}>
