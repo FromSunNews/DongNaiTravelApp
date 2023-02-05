@@ -7,6 +7,7 @@ const initialState = {
   currentWareHouse: {
     emailName: null,
     password: null,
+    isFirstTimeLauch: true
   }
 }
 

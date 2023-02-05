@@ -11,45 +11,69 @@ import OnboardingScreen from 'screens/onboarding/OnboardingScreen'
 import GroupBottomTab from 'navigations/group_bottom_tab/GroupBottomTab'
 import SigninScreen from 'screens/signin/SigninScreen'
 import SignupScreen from 'screens/signup/SignupScreen'
+import { useSelector } from 'react-redux'
+import { selectCurrentWareHouse } from 'redux/warehouse/WareHouseSlice'
+import { selectIsAuthenticated, selectUserRole } from 'redux/user/UserSlice'
+import CreatePost from 'screens/create_post/CreatePostScreen'
 
 const AuthNavigator = () => {
   // Phuong: https://reactnavigation.org/docs/getting-started
   const AppStack = createNativeStackNavigator()
+  
+  const isFirstTimeLauch = useSelector(selectCurrentWareHouse).isFirstTimeLauch
+  const isAuthenticated = useSelector(selectIsAuthenticated)
+  const userRole = useSelector(selectUserRole)
 
-  const [isFirstLauch, setisFirstLauch] = useState(null)
-  const [initialRouteName, setInitialRouteName] = useState('SplashScreen')
+  const initialRouteName = 'SplashScreen'
 
-  // Phuong: xem issue https://github.com/FromSunNews/DongNaiTravelApp/issues/11
-
-  // useEffect(() => {
-  //     AsyncStorage.getItem('alreadyLauched').then(value => {
-  //         if (value == null) {
-  //             AsyncStorage.setItem('alreadyLauched', 'true')
-  //             setisFirstLauch(true)
-  //         } else {
-  //             setisFirstLauch(false)
-  //         }
-  //     })
-  // }, [])
-  // if (isFirstLauch == null) {
-  //     console.log('null')
-  //     return null
-  // } else if (isFirstLauch == true) {
-  //     console.log('true')
-  //     setInitialRouteName('Onboarding')
-  // } else {
-  //     console.log('false')
-  //     setInitialRouteName('Login')
-  // }
   return (
     <AppStack.Navigator initialRouteName={initialRouteName}>
-      <AppStack.Screen name="SplashScreen" component={SplashScreen} options={{ header: () => null }} />
-      <AppStack.Screen name="OnboardingScreen" component={OnboardingScreen} options={{ header: () => null }} />
-      <AppStack.Screen name="SigninScreen" component={SigninScreen} options={{ header: () => null }} />
-      <AppStack.Screen name="SignupScreen" component={SignupScreen} options={{ header: () => null }} />
+      {/* Splash thì lúc nào cũng hiển thị cho người dùng */}
+      <AppStack.Screen 
+        name="SplashScreen" 
+        component={SplashScreen} 
+        options={{ header: () => null }}
+      />
 
-      <AppStack.Screen name="GroupBottomTab" component={GroupBottomTab} options={{ header: () => null }} />
+      {/* Phuong: Kiểm tra xem đây có phải là lần đầu tiên người dùng chạy ứng dụng không? */}
+      {/* Phuong: Sẽ thay đổi state của thằng isFirstTimeLauch = false khi người dùng bắt đầu vào trang SignIn */}
+      {
+        isFirstTimeLauch &&
+        <AppStack.Screen 
+          name="OnboardingScreen" 
+          component={OnboardingScreen} 
+          options={{ header: () => null }} 
+        />
+      }
+      
+      {/* Phuong: user hay guest đều cho hiển thị */}
+      <AppStack.Screen 
+        name="GroupBottomTab" 
+        component={GroupBottomTab} 
+        options={{ header: () => null }} 
+      />
+      {/* Phuong: Đối với signin va signup thì nếu mà người dùng đăng nhập r muốn logout ra thì vẫn phải hiện ra thôi*/}
+      <AppStack.Screen 
+        name="SigninScreen" 
+        component={SigninScreen} 
+        options={{ header: () => null }} 
+      />
+      <AppStack.Screen 
+        name="SignupScreen" 
+        component={SignupScreen} 
+        options={{ header: () => null }} 
+      />
 
+      {/* Phuong: chỉ hiện thị trong TH người dùng xác thực và role là user*/}
+      {
+        (isAuthenticated && userRole === 'user') 
+        &&
+        <AppStack.Screen 
+          name="CreatePost" 
+          component={CreatePost} 
+          options={{ header: () => null }} 
+        />
+      }
     </AppStack.Navigator>
   )
 }
