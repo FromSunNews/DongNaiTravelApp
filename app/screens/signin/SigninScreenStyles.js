@@ -63,8 +63,14 @@ export const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
   },
+  signInAsGuest: {
+    marginTop: 10,
+    padding: 5,
+    color: app_c.HEX.third,
+    ...app_typo.h5
+  },
   labelSocial: {
-    marginTop: 20,
+    marginTop: 5,
     color: app_c.HEX.fourth,
     ...app_typo.body4,
     alignSelf: 'center',

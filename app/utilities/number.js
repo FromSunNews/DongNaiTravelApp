@@ -44,9 +44,9 @@ const toMetricNumber = function (number) {
   return firstThreeDigit + ' ' + metrics[remainPartsLength - 1];
 };
 
-const NumberUtilities = {
+const NumberUtility = {
   toThousandsSeparatedNumber,
   toMetricNumber,
 };
 
-export default NumberUtilities;
+export default NumberUtility;

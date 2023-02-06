@@ -3,7 +3,7 @@ import React from 'react'
 
 import { ScrollTagButtonView, HorizontalPlaceCard, BannerButton } from 'components'
 
-import style from './ExporeScreenStyle'
+import style from './ExploreScreenStyles'
 import { app_sp, app_c } from 'globals/styles'
 
 const ExploreScreen = () => {

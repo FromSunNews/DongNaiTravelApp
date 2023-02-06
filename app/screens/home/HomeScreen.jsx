@@ -1,15 +1,25 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import { View, Text, Button } from 'react-native'
+import React, { useEffect } from 'react'
 
 import { styles } from './HomeScreenStyles'
-import { useSelector } from 'react-redux'
-import { selectCurrentUser } from 'redux/user/UserSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectCurrentUser, signOutUserAPI } from 'redux/user/UserSlice'
+import { useNavigation } from '@react-navigation/native'
 
 const HomeScreen = () => {
-  // const user = useSelector(selectCurrentUser)
+  const user = useSelector(selectCurrentUser)
+  const dispatch = useDispatch()
+  const navigation = useNavigation() 
   return (
     <View style={styles.container}>
-      {/* <Text>{user.username}</Text> */}
+      <Button
+        title='Logout' 
+        onPress={() => {
+          dispatch(signOutUserAPI()).then(
+            navigation.navigate('SigninScreen')
+          )
+        }}
+      />
     </View>
   )
 }

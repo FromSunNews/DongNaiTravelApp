@@ -98,7 +98,7 @@ const toTitleCase = function (line) {
   return result;
 };
 
-const StringUtilities = {
+const StringUtility = {
   splitLineBySeperator,
   removeSeparatorFromLine,
   upperCaseFirstLetter,
@@ -107,4 +107,4 @@ const StringUtilities = {
   toTitleCase,
 };
 
-export default StringUtilities;
+export default StringUtility;

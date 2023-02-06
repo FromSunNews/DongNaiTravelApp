@@ -19,7 +19,6 @@ import { app_c, app_typo } from 'globals/styles'
 import { styles } from './SigninScreenStyles'
 import AnimatedCheckbox from 'react-native-checkbox-reanimated'
 import { EMAIL_RULE, FIELD_MIN_LENGTH_MESSAGE, FIELD_REQUIRED_MESSAGE, PASSWORD_RULE, PASSWORD_RULE_MESSAGE } from 'utilities/validators'
-import { signInUserAPI } from 'request_api'
 import { updateCurrentUser } from 'redux/user/UserSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
@@ -27,6 +26,7 @@ import { selectCurrentWareHouse, updateCurrentWareHouse } from 'redux/warehouse/
 import { validateRegex } from 'utilities/functions'
 import ButtonText from 'components/button_text/ButtonText'
 import CheckBoxText from 'components/checkbox_text/CheckBoxText'
+import { signInUserAPI } from 'request_api'
 
 const SigninScreen = () => {
 
@@ -51,14 +51,20 @@ const SigninScreen = () => {
     })
 
   useEffect(() => {
+    dispatch(updateCurrentWareHouse(
+      {
+        ...warehouse,
+        isFirstTimeLauch: false
+      }
+    ))
+  }, []) 
 
+  useEffect(() => {
     if (warehouse.emailName && warehouse.password)
       setIsChecked(true)
-
   }, [warehouse.emailName, warehouse.password])
 
   const onSubmit = async (data) => {
-    console.log("🚀 ~ file: Signin.js:72 ~ onSubmit ~ data", data)
     if (data.emailname && data.password) {
       // Phuong: check emailname is email or username
       let user 
@@ -73,13 +79,13 @@ const SigninScreen = () => {
           password : data.password
         }
       }
-      console.log("🚀 ~ file: Signin.js:75 ~ onSubmit ~ user", user)
       // Phuong: call Api
       signInUserAPI(user).then((res) => {
         console.log("🚀 ~ file: Signin.js:73 ~ onSubmit ~ res", res)
         if (res) {
           // Phuong: Update user in persistent store
           dispatch(updateCurrentUser(res))
+          // Phuong
           // Phuong: check rememberme
           if (isChecked) {
             // Phuong: save emailname and password to remember
@@ -101,8 +107,6 @@ const SigninScreen = () => {
         }
       })
     }
-      console.log("🚀 ~ file: Signin.js:106 ~ onSubmit ~ user", user)
-      console.log("🚀 ~ file: Signin.js:106 ~ onSubmit ~ user", user)
   }
   
   return (
@@ -198,6 +202,13 @@ const SigninScreen = () => {
         </View>
       </TouchableWithoutFeedback>
       <View style={styles.containerFooter}>
+        <TouchableOpacity
+
+          style={{alignSelf: 'center'}}
+          onPress={() => navigation.navigate('GroupBottomTab')}
+        >
+          <Text style={styles.signInAsGuest}>Sign in as Guest</Text>
+        </TouchableOpacity>
           <Text style={styles.labelSocial}>Or Signin with</Text>
           <View style={styles.containerSocialBtn}>
             <TouchableOpacity>

@@ -7,11 +7,13 @@ import { API_ROOT } from 'utilities/constants'
 // Phương: Khởi tạo giá trị một giá trị của Slice trong Redux
 const initialState = {
   currentUser: null,
-  isAuthenticated: false
+  isAuthenticated: false,
+  userRole: 'guest'
 }
 
 // Phương: Các hành động gọi api (bất đồng bộ) và cập nhật dữ liệu vào Redux, dùng createAsyncThunk đi kèm với extraReducers
 // Phương: https://redux-toolkit.js.org/api/createAsyncThunk
+
 // export const signInUserAPI = createAsyncThunk(
 //   'user/signInUserAPI',
 //   async (data) => {
@@ -22,11 +24,8 @@ const initialState = {
 
 export const signOutUserAPI = createAsyncThunk(
   'user/signOutUserAPI',
-  async (showSuccessMessage = true) => {
+  async () => {
     const request = await authorizedAxiosInstance.delete(`${API_ROOT}/v1/users/sign_out`)
-    if (showSuccessMessage) {
-      toast.success('User signed out successfully!', { theme: 'colored' })
-    }
     return request.data
   }
 )
@@ -35,9 +34,6 @@ export const updateUserAPI = createAsyncThunk(
   'user/updateUserAPI',
   async ( data ) => {
     const request = await authorizedAxiosInstance.put(`${API_ROOT}/v1/users/update`, data)
-    if (request.data) {
-      toast.success('Updated successfully!', { theme: 'colored' })
-    }
     return request.data
   }
 )
@@ -51,6 +47,8 @@ export const userSlice = createSlice({
     updateCurrentUser: (state, action) => {
       const user = action.payload
       state.currentUser = user
+      state.isAuthenticated = true
+      state.userRole = 'user'
     },
     updateFiledsUser: (state, action) => {
       const user = action.payload
@@ -67,11 +65,13 @@ export const userSlice = createSlice({
     //   const user = action.payload
     //   state.currentUser = user
     //   state.isAuthenticated = true
+    //   state.userRole = 'user'
     // })
 
     builder.addCase(signOutUserAPI.fulfilled, (state) => {
       state.currentUser = null
-      state.isAuthenticated = false
+      state.isAuthenticated = false,
+      state.userRole = 'guest'
     })
 
     builder.addCase(updateUserAPI.fulfilled, (state, action) => {
@@ -101,6 +101,10 @@ export const selectCurrentUser = (state) => {
 // Phương: cái này import ra để check xem người dùng có đăng nhập hay chưa dùng trong các screen hoặc Component như ContributeBlogs, ContributePlaces, Comment
 export const selectIsAuthenticated = (state) => {
   return state.user.isAuthenticated
+}
+
+export const selectUserRole = (state) => {
+  return state.user.userRole
 }
 // Phương: Export default cái userReducer của chúng ta để combineReducers trong store
 export const userReducer = userSlice.reducer
