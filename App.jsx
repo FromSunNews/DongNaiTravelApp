@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Text, StatusBar, SafeAreaView } from 'react-native'
 
 import { store, persistor } from 'redux/store'
@@ -46,9 +46,15 @@ export default function App() {
   return (
     <Provider store={store}>
       <PersistGate loading={<Text>Loading...</Text>} persistor={persistor}>
-        <SafeAreaView style={{backgroundColor: app_c.HEX.primary}}>
+        {/* Phuong: anh huong den signin va sign up */}
+        {/* <SafeAreaView style={{backgroundColor: app_c.HEX.primary}}>
           <StatusBar style="auto" />
-        </SafeAreaView>
+        </SafeAreaView> */}
+
+        <StatusBar 
+          barStyle='dark-content'
+          backgroundColor={app_c.HEX.primary}
+        />
         
         <NavigationContainer>
           <AuthNavigator/>

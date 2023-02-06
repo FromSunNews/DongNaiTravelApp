@@ -1,5 +1,4 @@
 import { app_c, app_dms, app_sh, app_typo } from 'globals/styles'
-import { fonts } from 'globals/styles/(SKIP) typography'
 import { StyleSheet } from 'react-native'
 import Constants from 'expo-constants'
 
@@ -15,7 +14,7 @@ export const styles = StyleSheet.create({
   textHeader: {
     color: app_c.HEX.fourth,
     marginBottom: 20,
-    ...fonts.h1
+    ...app_typo.fonts.h1
   },
   image: {
     width: app_dms.screenWidth - 18 * 2,
@@ -26,7 +25,7 @@ export const styles = StyleSheet.create({
   textError: {
     color: '#F32424',
     marginTop: 5,
-    ...app_typo.body4
+    ...app_typo.fonts.body5
   },
   containerReFor:{
     display: 'flex',
@@ -45,15 +44,9 @@ export const styles = StyleSheet.create({
     width: 20,
     height: 20
   },
-  label: {
-    marginLeft: 5,
-    ...app_typo.body4,
-    padding: 5,
-    paddingRight: 0,
-  },
   textFor: {
-    color: app_c.HEX.fourth,
-    ...app_typo.body4,
+    color: app_c.HEX.third,
+    ...app_typo.fonts.h5,
     padding: 5,
     paddingRight: 0,
   },
@@ -67,12 +60,12 @@ export const styles = StyleSheet.create({
     marginTop: 10,
     padding: 5,
     color: app_c.HEX.third,
-    ...app_typo.h5
+    ...app_typo.fonts.h5
   },
   labelSocial: {
     marginTop: 5,
     color: app_c.HEX.fourth,
-    ...app_typo.body4,
+    ...app_typo.fonts.body5,
     alignSelf: 'center',
   },
   containerSocialBtn:{
@@ -96,11 +89,11 @@ export const styles = StyleSheet.create({
   },
   labelNoAccount: {
     color: app_c.HEX.fourth,
-    ...app_typo.body4
+    ...app_typo.fonts.body5
   },
   labelSignup: {
     padding: 5,
     color: app_c.HEX.third,
-    ...app_typo.h5
+    ...app_typo.fonts.h5
   }
 })
