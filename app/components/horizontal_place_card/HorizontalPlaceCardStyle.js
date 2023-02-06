@@ -12,8 +12,8 @@ const style = StyleSheet.create({
     flexDirection: 'row',
     borderRadius: 8,
     backgroundColor: app_c.HEX.primary,
-    ...app_sp.p_3,
-    ...app_sp.mb_4,
+    ...app_sp.p_10,
+    ...app_sp.mb_12,
     ...app_shdw.type_1
   },
 
@@ -25,16 +25,16 @@ const style = StyleSheet.create({
     backgroundColor: app_c.HEX.ext_primary,
     overflow: 'hidden',
     borderRadius: 4,
-    ...app_sp.p_3,
-    ...app_sp.me_4
+    ...app_sp.p_10,
+    ...app_sp.me_12
   },
 
   card_recommended_mark_container: {
     justifyContent: 'center',
     backgroundColor: app_c.HEX.primary,
     ...app_sh.capsule,
-    ...app_sp.ph_4,
-    ...app_sp.pv_1
+    ...app_sp.ph_12,
+    ...app_sp.pv_6
   },
 
   card_main_container: {
@@ -49,7 +49,7 @@ const style = StyleSheet.create({
 
   cart_tag_container: {
     flexDirection: 'row',
-    ...app_sp.mb_4
+    ...app_sp.mb_12
   },
 
   card_title: {
@@ -69,7 +69,7 @@ const style = StyleSheet.create({
 
   card_information_col: {
     flexDirection: 'column',
-    ...app_sp.me_4
+    ...app_sp.me_12
   },
 
   card_buttons_container: {

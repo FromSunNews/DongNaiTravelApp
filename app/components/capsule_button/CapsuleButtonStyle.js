@@ -6,9 +6,9 @@ const default_app_caps_style = {
   justifyContent: 'center',
   alignSelf: 'flex-start',
   ...app_sh.capsule,
-  ...app_sp.ph_6,
-  ...app_sp.pv_2,
-  ...app_sp.me_4,
+  ...app_sp.ph_18,
+  ...app_sp.pv_8,
+  ...app_sp.me_12,
 };
 
 const style = StyleSheet.create({

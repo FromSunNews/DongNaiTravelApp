@@ -10,11 +10,11 @@ const ExploreScreen = () => {
   return (
     <View>
       <ScrollView style={style.scroll_view_container}>
-        <View style={{...app_sp.mh_4}}>
+        <View style={{...app_sp.mh_12}}>
           <BannerButton>Let’s see your location in map</BannerButton>
         </View>
-        <ScrollTagButtonView horizontal={true} concept="place" style={app_sp.ms_4} />
-        <View style={{...app_sp.mh_4, ...app_sp.mb_4}}>
+        <ScrollTagButtonView horizontal={true} concept="place" style={{...app_sp.ms_12, ...app_sp.mv_22}} />
+        <View style={{...app_sp.mh_12, ...app_sp.mb_12}}>
           {places.map(place => <HorizontalPlaceCard place={place} key={place.id} />)}
         </View>
       <View style={{height: 120}}></View>
@@ -50,7 +50,7 @@ const places = [
   },
   {
     id: '0s9md-lo9ai',
-    name: 'Quang truonng tinh',
+    name: 'Quang truong tinh',
     avatar: 'https://lh3.googleusercontent.com/p/AF1QipPUoQ-BfuMVqLUZog0RrNnF4HVrFLXlXLQ4wak2=s680-w680-h510',
     location: {
       name: 'Dong Nai',

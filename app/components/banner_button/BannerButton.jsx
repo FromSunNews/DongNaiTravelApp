@@ -19,7 +19,7 @@ const BannerButton = ({children, imageUrl = ""}) => {
     <TouchableOpacity style={style.in_active}>
       <ImageBackground source={{url: `${imageUrl}`}} resizeMode="cover" style={style.image}>
         <View style={style.lbl_container}>
-          <AppText sz="sz_6" style={{color: app_c.HEX.ext_second}} numberOfLines={2}>{children}</AppText>
+          <AppText sz="body3" style={{color: app_c.HEX.ext_second}} numberOfLines={2}>{children}</AppText>
         </View>
       </ImageBackground>
     </TouchableOpacity>

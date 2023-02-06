@@ -16,7 +16,7 @@ import style from './CapsuleButtonStyle'
 const CapsuleButton = ({children, isActive = false}) => {
   return (
     <TouchableOpacity style={isActive ? style.btn_active : style.btn_inActive}>
-      <AppText style={{...(isActive ? style.lbl_active : style.lbl_inactive)}} sz="sz_3">{children}</AppText>
+      <AppText style={{...(isActive ? style.lbl_active : style.lbl_inactive)}} sz="body6">{children}</AppText>
     </TouchableOpacity>
   )
 }

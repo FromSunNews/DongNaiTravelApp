@@ -10,7 +10,7 @@ import {
   import Ionicons from 'react-native-vector-icons/Ionicons'
   
   import HomeScreen from 'screens/home/HomeScreen'
-  import ExploreScreen from 'screens/exlore/ExploreScreen'
+  import ExploreScreen from 'screens/explore/ExploreScreen'
   import BlogsScreen from 'screens/blogs/BlogsScreen'
   import MapScreen from 'screens/map/MapScreen'
   import SettingScreen from 'screens/settings/SettingScreen'

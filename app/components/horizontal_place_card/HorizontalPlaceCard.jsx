@@ -1,6 +1,8 @@
 import { View, Text, ImageBackground } from 'react-native'
 import React from 'react'
 
+import NumberUtility from 'utilities/number'
+
 import AppText from 'components/app_text/AppText'
 import CapsuleButton from 'components/capsule_button/CapsuleButton'
 import CircleButton from 'components/circle_button/CircleButton'
@@ -27,7 +29,7 @@ const HorizontalPlaceCard = ({place}) => {
         {
           place.isRecommended &&
           <View style={style.card_recommended_mark_container}>
-            <AppText sz="sz_2" style={{color: app_c.HEX.ext_second}}>Recommended</AppText>
+            <AppText sz="body6" style={{color: app_c.HEX.ext_second}}>Recommended</AppText>
           </View>
         }
       </ImageBackground>
@@ -36,19 +38,19 @@ const HorizontalPlaceCard = ({place}) => {
       <View style={style.card_main_container}>
         <View style={style.card_content_container}>
           <View style={style.cart_tag_container}>
-            {place.tags.map((tag, index) => <AppText sz="sz_2" key={tag.title}>{tag.title}{index < place.tags.length - 1 ? ", " : ""}</AppText>)}
+            {place.tags.map((tag, index) => <AppText sz="body7" key={tag.title}>{tag.title}{index < place.tags.length - 1 ? ", " : ""}</AppText>)}
           </View>
           <View>
-            <AppText numberOfLines={1} sz="sz_6" style={style.card_title}>{place.name}</AppText>
-            <AppText style={style.car_subtitle} sz="sz_3">{place.location.city} - {place.location.name}</AppText>
+            <AppText numberOfLines={1} sz="h3" style={style.card_title}>{place.name}</AppText>
+            <AppText style={style.car_subtitle} sz="body6">{place.location.city} - {place.location.name}</AppText>
           </View>
           <View style={style.card_information_container}>
             <View style={style.card_information_col}>
-              <AppText sz="sz_3">{place.numberOfRatings}</AppText>
-              <AppText sz="sz_3">{place.numberOfReviews}</AppText>
+              <AppText sz="body6">{NumberUtility.toMetricNumber(place.numberOfRatings)}</AppText>
+              <AppText sz="body6">{NumberUtility.toMetricNumber(place.numberOfReviews)}</AppText>
             </View>
             <View style={style.card_information_col}>
-              <AppText sz="sz_3">{place.numberOfVisited}</AppText>
+              <AppText sz="body6">{NumberUtility.toMetricNumber(place.numberOfVisited)}</AppText>
             </View>
           </View>
         </View>

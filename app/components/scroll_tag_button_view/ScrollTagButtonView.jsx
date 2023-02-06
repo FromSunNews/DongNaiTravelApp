@@ -19,7 +19,7 @@ const ScrollTagButtonView = ({concept, style, isHorizontalScroll = true}) => {
   if(concept === undefined || concept === "") return <Text>Không tìm thấy concept</Text>
 
   return (
-    <ScrollView horizontal={isHorizontalScroll} showsHorizontalScrollIndicator={false} style={{...app_sp.mv_7, ...style}}>
+    <ScrollView horizontal={isHorizontalScroll} showsHorizontalScrollIndicator={false} style={{...style}}>
       {fakeData[concept].map((data, index) => {
         return (
           <CapsuleButton key={data} isActive={index === 0 ? true : false}>{data}</CapsuleButton>
