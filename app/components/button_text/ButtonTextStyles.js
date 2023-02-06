@@ -14,6 +14,6 @@ export const styles = StyleSheet.create({
   },
   label: {
     color: app_c.HEX.primary,
-    ...app_typo.h3
+    ...app_typo.fonts.h4
   }
 })

@@ -12,12 +12,9 @@ import React, { useEffect, useState } from 'react'
 import Input from 'components/input/Input'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 
-import Icon from 'react-native-vector-icons/FontAwesome5'
 import { useForm, Controller } from 'react-hook-form'
 
-import { app_c, app_typo } from 'globals/styles'
 import { styles } from './SigninScreenStyles'
-import AnimatedCheckbox from 'react-native-checkbox-reanimated'
 import { EMAIL_RULE, FIELD_MIN_LENGTH_MESSAGE, FIELD_REQUIRED_MESSAGE, PASSWORD_RULE, PASSWORD_RULE_MESSAGE } from 'utilities/validators'
 import { updateCurrentUser } from 'redux/user/UserSlice'
 import { useDispatch, useSelector } from 'react-redux'

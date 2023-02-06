@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
 import { useForm, Controller } from 'react-hook-form'
-import Modal from "react-native-modal";
+import Modal from "react-native-modal"
 
 import { 
   View, 
@@ -16,6 +16,9 @@ import {
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
+import Octicons from 'react-native-vector-icons/Octicons'
+
+
 import ButtonText from 'components/button_text/ButtonText'
 import CheckBoxText from 'components/checkbox_text/CheckBoxText'
 import Input from 'components/input/Input'
@@ -28,10 +31,12 @@ import { signInUserAPI, signUpUserAPI } from 'request_api'
 import { styles } from './SignupScreenStyles'
 import { app_c } from 'globals/styles'
 import RNDateTimePicker from '@react-native-community/datetimepicker'
-import BottomSheetDefault from 'components/bottom_sheet/BottomSheetDefault'
-import { Button } from 'react-native';
-import moment from 'moment';
-import { updateNotif } from 'redux/manifold/ManifoldSlice';
+import BottomSheetDefault from 'components/bottom_sheet/BottomSheetScroll'
+import { Button } from 'react-native'
+import moment from 'moment'
+import { updateNotif } from 'redux/manifold/ManifoldSlice'
+import BottomSheetScroll from 'components/bottom_sheet/BottomSheetScroll'
+import { termsConditions } from 'utilities/termsConditions'
 
 
 const SignupScreen = () => {
@@ -45,6 +50,9 @@ const SignupScreen = () => {
   const [show, setShow] = useState(false)
   const [timestamp, setTimestamp] = useState(null)
   const [dateTime, setDateTime] = useState(new Date())
+
+
+  const [openTermCondition, setOpenTermCondition] = useState(false) 
 
   const { control, handleSubmit, formState: { errors }, setValue } = useForm ({
       defaultValues: {
@@ -95,15 +103,15 @@ const SignupScreen = () => {
   return (
     <>
       <ScrollView
-        style={{backgroundColor: app_c.HEX.primary}}
+        style={{backgroundColor: app_c.HEX.primary, flex: 1}}
       >
         <KeyboardAwareScrollView
           extraScrollHeight={40}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={styles.container}
+          
         >
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={{flex: 1}}>
+            <View style={styles.container}>
               <View style={styles.content}>
               <Text style={styles.textHeader}>Sign up</Text>
 
@@ -331,7 +339,7 @@ const SignupScreen = () => {
               <View style={styles.terms}>
                 <Text style={styles.textRead}>Read our</Text>
                 <TouchableOpacity
-                  onPress={() => null}
+                  onPress={() => setOpenTermCondition(true)}
                 >
                   <Text style={styles.textTerms}>Terms & Conditions</Text>
                 </TouchableOpacity>
@@ -352,48 +360,79 @@ const SignupScreen = () => {
                 
               </View>
               
-              <View style={{ flex: 1}}></View>
+                <View style={styles.containerSignup}>
+                  <Text style={styles.labelNoAccount}>Already have an account?</Text>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('SigninScreen')}
+                  >
+                    <Text style={styles.labelSignup}>Sign in</Text>
+                  </TouchableOpacity>
+                </View>
             </View>
           </TouchableWithoutFeedback>
-          <View style={styles.containerFooter}>
-            <View style={styles.containerSignup}>
-              <Text style={styles.labelNoAccount}>Already have an account?</Text>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('SigninScreen')}
-              >
-                <Text style={styles.labelSignup}>Sign in</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-          {/* <RNDateTimePicker 
-            value={date}
-            display="spinner"
-            onChange={(e, date) => handleDateChange(e, date)}
-            textColor={app_c.HEX.fourth}
-          /> */}
         </KeyboardAwareScrollView>
-      </ScrollView>
-      <Modal 
-        isVisible={show}
-        backdropColor={app_c.HEX.primary}
-        backdropOpacity={0.9}
-      >
-        <View style={{ position: 'absolute', display: 'flex', alignItems: 'center', justifyContent: 'center', height: 200 }}>
-          <RNDateTimePicker 
-            value={dateTime}
-            display="spinner"
-            onChange={(e, date) => handleDateChange(e, date)}
-            textColor={app_c.HEX.fourth}
-          />
-          <ButtonText
-            label='OK'
-            onPress={() => {
-              setShow(false)
-              setValue('birthday',  moment(dateTime).format('DD/MM/YYYY'))
-            }}
-          />
-        </View>
-      </Modal>
+        </ScrollView>
+        <BottomSheetScroll 
+          openTermCondition={openTermCondition} 
+          closeTermCondition={() => {
+            setIsChecked(true)
+            setOpenTermCondition(false)
+          }}
+          labelBtn='I Agree'
+          snapPoints={['25%', '50%', '100%']}
+          childView={
+            termsConditions.map((item) => (
+              <>
+                <Text style={styles.headerText}>{item.headerText}</Text>
+                {
+                  item.paragraphs.map((paragraph) => (
+                    <>
+                      <Text style={styles.paragraph}>{paragraph.content}</Text>
+                      {
+                        paragraph.childContent &&
+                        paragraph.childContent.map((child) => (
+                          <>
+                            <View
+                              style={styles.childContentContainer}
+                            >
+                              <Octicons 
+                                name='dot-fill' 
+                                size={14} 
+                                color={app_c.HEX.fourth}
+                              />
+                              <Text style={styles.childContent}>{child}</Text>
+                            </View>
+                          </>
+                        ))
+                      }
+                    </>
+                  ))
+                }
+              </>
+            ))
+          }
+        />
+        <Modal 
+          isVisible={show}
+          backdropColor={app_c.HEX.primary}
+          backdropOpacity={0.9}
+        >
+          <View style={{ position: 'absolute', display: 'flex', alignItems: 'center', justifyContent: 'center', height: 200 }}>
+            <RNDateTimePicker 
+              value={dateTime}
+              display="spinner"
+              onChange={(e, date) => handleDateChange(e, date)}
+              textColor={app_c.HEX.fourth}
+            />
+            <ButtonText
+              label='OK'
+              onPress={() => {
+                setShow(false)
+                setValue('birthday',  moment(dateTime).format('DD/MM/YYYY'))
+              }}
+            />
+          </View>
+        </Modal>
     </>
   )
 }

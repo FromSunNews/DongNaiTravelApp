@@ -1,20 +1,22 @@
 import { StyleSheet } from 'react-native'
 import { app_c, app_dms, app_sh, app_typo } from 'globals/styles'
-import { fonts } from 'globals/styles/(SKIP) typography'
+
 import Constants from 'expo-constants'
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: Constants.statusBarHeight,
-    backgroundColor: app_c.HEX.primary
+    backgroundColor: app_c.HEX.primary,
+    paddingBottom: 20
   },
   content: {
     paddingHorizontal: 18
   },
   textHeader: {
     color: app_c.HEX.fourth,
-    ...fonts.h1
+    marginBottom: 20,
+    ...app_typo.fonts.h1
   },
   image: {
     width: app_dms.screenWidth - 18 * 2,
@@ -26,7 +28,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     color: '#F32424',
     marginTop: 5,
-    ...app_typo.body4,
+    ...app_typo.fonts.body5,
     alignSelf: 'flex-start',
   },
   containerReFor:{
@@ -52,25 +54,6 @@ export const styles = StyleSheet.create({
     padding: 5,
     paddingRight: 0,
   },
-  textFor: {
-    color: app_c.HEX.fourth,
-    ...app_typo.body4,
-    padding: 5,
-    paddingRight: 0,
-  },
-  containerFooter: {
-    flex: 1,
-    height: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    marginBottom: 20,
-  },
-  labelSocial: {
-    marginTop: 20,
-    color: app_c.HEX.fourth,
-    ...app_typo.body4,
-    alignSelf: 'center',
-  },
   containerSocialBtn:{
     marginTop: 15,
     display: 'flex',
@@ -88,19 +71,19 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 10
+    marginTop: 20
   },
   labelNoAccount: {
     color: app_c.HEX.fourth,
-    ...app_typo.body4
+    ...app_typo.fonts.body5
   },
   labelSignup: {
     padding: 5,
     color: app_c.HEX.third,
-    ...app_typo.h5
+    ...app_typo.fonts.h5
   },
   smallLabel: {
-    ...app_typo.body4,
+    ...app_typo.fonts.body5,
     color: app_c.HEX.fourth,
     marginBottom: 12,
     marginTop: 20,
@@ -126,13 +109,31 @@ export const styles = StyleSheet.create({
     marginTop: 15,
   },
   textRead: {
-    ...app_typo.body4,
+    ...app_typo.fonts.body5,
     color: app_c.HEX.fourth
   },
   textTerms: {
-    ...app_typo.h5,
+    ...app_typo.fonts.h5,
     color: app_c.HEX.third,
     paddingVertical: 5,
     paddingHorizontal: 3,
   },
+  headerText: {
+    ...app_typo.fonts.h4,
+    color: app_c.HEX.fourth,
+    marginTop: 20,
+  },
+  paragraph: { 
+    marginTop: 10,
+    textAlign: 'justify'
+  },
+  childContentContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    marginTop: 10,
+    paddingLeft: 10
+  },
+  childContent:{
+    marginLeft: 10
+  }
 })
