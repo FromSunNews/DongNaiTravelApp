@@ -182,7 +182,7 @@ const SigninScreen = () => {
                 isChecked={isChecked}
               />
               <TouchableOpacity
-                onPress={() => console.log(password)}
+                onPress={() => navigation.navigate('ForgotPasswordScreen')}
               >
                 <Text style={styles.textFor}>Forgot password?</Text>
               </TouchableOpacity>
