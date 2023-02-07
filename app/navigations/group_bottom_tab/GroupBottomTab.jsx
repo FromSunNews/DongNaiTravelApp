@@ -82,7 +82,7 @@ import ExploreScreen from 'screens/explore/ExploreScreen'
   
                           if (!isFocused && !event.defaultPrevented) {
                               // Bảo toàn params trong Screen với prop merge: true
-                              navigation.navigate({ name: route.name, merge: true });
+                              navigation.replace({ name: route.name, merge: true });
                           }
   
                           Animated.spring(tabOffsetValue, {

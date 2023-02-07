@@ -16,7 +16,7 @@ const OtpScreen = () => {
 
   const lengthInput = 6
   const [otpValue, setOtpValue] = useState('')
-  const [countdown, setCountdown] = useState(10)
+  const [countdown, setCountdown] = useState(30)
   const [enableResend, setEnableResend] = useState(false)
 
   let textInputRef = useRef(null)
@@ -48,7 +48,7 @@ const OtpScreen = () => {
       }).then((res) => {
         console.log("🚀 ~ file: OtpScreen.jsx:47 ~ onChangeText ~ res", res)
         if (res)
-        navigation.navigate('ResetPasswordScreen', {
+        navigation.replace('ResetPasswordScreen', {
           email: route.params?.email
         })
       })
@@ -103,7 +103,8 @@ const OtpScreen = () => {
               {
                 Array(lengthInput).fill().map((data, index) => (
                   <Pressable
-                  onPress={() => textInputRef.focus()}
+                    key={index}
+                    onPress={() => textInputRef.focus()}
                   >
                   <View 
                     style={[
@@ -112,7 +113,7 @@ const OtpScreen = () => {
                         borderBottomColor: index === otpValue. length ? 'red' : app_c.HEX.fourth 
                       }
                     ]} 
-                    key={index}>
+                  >
                     <Text 
                       style={styles.cellText}
                     >
@@ -126,7 +127,7 @@ const OtpScreen = () => {
           </View>
           <View style={styles.bottomView}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('ForgotPasswordScreen')}
+              onPress={() => navigation.replace('ForgotPasswordScreen')}
             >
               <View style={styles.btnChangeEmail}>
                 <Text style={styles.textChange}>Change your email</Text>

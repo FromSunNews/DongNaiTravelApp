@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TouchableWithoutFeedback, Keyboard } from 'react-native'
+import { View, Text, ScrollView, TouchableWithoutFeedback, Keyboard, TouchableOpacity } from 'react-native'
 import React from 'react'
 
 import { styles } from './ForgotPasswordScreenStyles'
@@ -30,7 +30,7 @@ const ForgotPasswordScreen = () => {
     }).then((res) => {
       console.log("🚀 ~ file: ForgotPasswordScreen.jsx:29 ~ sendOtpAPI ~ res", res)
       // Phuong: And then
-      navigation.navigate('OtpScreen', {
+      navigation.replace('OtpScreen', {
         otpToken: res,
         email: data.email
       })
@@ -90,6 +90,13 @@ const ForgotPasswordScreen = () => {
                   label='Send OTP'
                   onPress={handleSubmit(handleSendOTP)}
                 />
+
+                <TouchableOpacity
+                  onPress={() => navigation.pop()}
+                  style={styles.containerLabel}
+                >
+                  <Text style={styles.labelSignin}>Go back sign in</Text>
+                </TouchableOpacity>
               </View>
             </View>
           </TouchableWithoutFeedback>
