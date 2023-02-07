@@ -4,6 +4,9 @@ import CheckBoxText from './checkbox_text/CheckBoxText'
 import Input from './input/Input'
 import Loading from './loading/Loading'
 import NotificationBottomSheet from './notification_bottom_sheet/NotificationBottomSheet'
+import Header from './header/Header'
+import RoundedRectangleButton from './rounded_rectangle_button/RoundedRectangleButton'
+
 
 export {
   ButtonText,
@@ -11,5 +14,7 @@ export {
   Input,
   Loading,
   BottomSheetScroll,
-  NotificationBottomSheet
+  NotificationBottomSheet,
+  Header,
+  RoundedRectangleButton
 }
