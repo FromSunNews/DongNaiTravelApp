@@ -19,13 +19,11 @@ const handleNotif = (content) => {
 
 export const signUpUserAPI = async (data) => {
   const request = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/sign_up`, data)
-  handleNotif('Account created successfully!')
   return request.data
 }
 
 export const signInUserAPI = async (data) => {
   const request = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/sign_in`, data)
-  handleNotif('Sign in successfully!')
   return request.data
 }
 
@@ -35,3 +33,20 @@ export const refreshTokenAPI = async () => {
   })
   return request.data
 }
+
+export const sendOtpAPI = async (data) => {
+  const request = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/send_otp`, data)
+  return request.data
+}
+
+export const verifyOtpAPI = async (data) => {
+  const request = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/verify_otp`, data)
+  return request.data
+}
+
+export const resetPasswordAPI = async (data) => {
+  const request = await authorizedAxiosInstance.put(`${API_ROOT}/v1/users/reset_password`, data)
+  handleNotif('Reset your password successfully!')
+  return request.data
+}
+

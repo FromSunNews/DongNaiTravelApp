@@ -124,7 +124,7 @@ export const styles = StyleSheet.create({
     marginTop: 20,
   },
   paragraph: { 
-    marginTop: 10,
+    marginTop: 10, 
     textAlign: 'justify'
   },
   childContentContainer: {

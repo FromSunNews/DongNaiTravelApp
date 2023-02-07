@@ -15,6 +15,9 @@ import { useSelector } from 'react-redux'
 import { selectCurrentWareHouse } from 'redux/warehouse/WareHouseSlice'
 import { selectIsAuthenticated, selectUserRole } from 'redux/user/UserSlice'
 import CreatePost from 'screens/create_post/CreatePostScreen'
+import ForgotPasswordScreen from 'screens/fogot_password/ForgotPasswordScreen'
+import OtpScreen from 'screens/otp/OtpScreen'
+import ResetPasswordScreen from 'screens/reset_password/ResetPasswordScreen'
 
 const AuthNavigator = () => {
   // Phuong: https://reactnavigation.org/docs/getting-started
@@ -61,6 +64,21 @@ const AuthNavigator = () => {
       <AppStack.Screen 
         name="SignupScreen" 
         component={SignupScreen} 
+        options={{ header: () => null }} 
+      />
+      <AppStack.Screen 
+        name="ForgotPasswordScreen" 
+        component={ForgotPasswordScreen} 
+        options={{ header: () => null }} 
+      />
+      <AppStack.Screen 
+        name="OtpScreen" 
+        component={OtpScreen} 
+        options={{ header: () => null }} 
+      />
+      <AppStack.Screen 
+        name="ResetPasswordScreen" 
+        component={ResetPasswordScreen} 
         options={{ header: () => null }} 
       />
 
