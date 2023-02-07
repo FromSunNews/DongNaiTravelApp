@@ -27,7 +27,7 @@ const AuthNavigator = () => {
   const isAuthenticated = useSelector(selectIsAuthenticated)
   const userRole = useSelector(selectUserRole)
 
-  const initialRouteName = 'GroupBottomTab'
+  const initialRouteName = 'SplashScreen'
 
   return (
     <AppStack.Navigator initialRouteName={initialRouteName}>
@@ -56,7 +56,7 @@ const AuthNavigator = () => {
         options={{ header: () => null }} 
       />
       {/* Phuong: Đối với signin va signup thì nếu mà người dùng đăng nhập r muốn logout ra thì vẫn phải hiện ra thôi*/}
-      {/* <AppStack.Screen 
+       <AppStack.Screen 
         name="SigninScreen" 
         component={SigninScreen} 
         options={{ header: () => null }} 
@@ -64,6 +64,21 @@ const AuthNavigator = () => {
       <AppStack.Screen 
         name="SignupScreen" 
         component={SignupScreen} 
+        options={{ header: () => null }} 
+      />
+      <AppStack.Screen 
+        name="ForgotPasswordScreen" 
+        component={ForgotPasswordScreen} 
+        options={{ header: () => null }} 
+      />
+      <AppStack.Screen 
+        name="OtpScreen" 
+        component={OtpScreen} 
+        options={{ header: () => null }} 
+      />
+      <AppStack.Screen 
+        name="ResetPasswordScreen" 
+        component={ResetPasswordScreen} 
         options={{ header: () => null }} 
       />
 
