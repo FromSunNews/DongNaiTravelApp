@@ -37,4 +37,15 @@ export const styles = StyleSheet.create({
     marginTop: 5,
     ...app_typo.fonts.body5
   },
+  containerLabel: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 5,
+    marginTop: 20,
+  },
+  labelSignin: {
+    padding: 5,
+    color: app_c.HEX.third,
+    ...app_typo.fonts.h5
+  }
 })

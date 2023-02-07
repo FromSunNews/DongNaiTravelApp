@@ -37,7 +37,7 @@ const ResetPasswordScreen = () => {
         if (res) {
           console.log("🚀 ~ file: SignupScreen.js:80 ~ signUpUserAPI ~ res", res)
           // Phuong: move to SigninScreen screen
-          navigation.navigate('SigninScreen')
+          navigation.replace('SigninScreen')
         }
       })
   }

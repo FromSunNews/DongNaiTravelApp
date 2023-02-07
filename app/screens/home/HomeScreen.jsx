@@ -16,7 +16,7 @@ const HomeScreen = () => {
         title='Logout' 
         onPress={() => {
           dispatch(signOutUserAPI()).then(
-            navigation.navigate('SigninScreen')
+            navigation.replace('SigninScreen')
           )
         }}
       />

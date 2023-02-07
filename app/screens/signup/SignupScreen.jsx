@@ -87,7 +87,7 @@ const SignupScreen = () => {
         if (res) {
           console.log("🚀 ~ file: SignupScreen.js:80 ~ signUpUserAPI ~ res", res)
           // Phuong: move to SigninScreen screen
-          navigation.navigate('SigninScreen')
+          navigation.replace('SigninScreen')
         }
       })
     }
@@ -345,13 +345,16 @@ const SignupScreen = () => {
                 </TouchableOpacity>
               </View>
 
-                <View style={styles.containerReFor}>
-                  <CheckBoxText
-                    label='I agree with Terms & Conditions'
-                    onPress={() => setIsChecked(!isChecked)}
-                    isChecked={isChecked}
-                  />
-                </View>
+                {
+                  isChecked &&
+                  <View style={styles.containerReFor}>
+                    <CheckBoxText
+                      label='I agree with Terms & Conditions'
+                      onPress={() => setIsChecked(!isChecked)}
+                      isChecked={isChecked}
+                    />
+                  </View>
+                }
 
                 <ButtonText
                   label='Sign Up'
@@ -363,7 +366,7 @@ const SignupScreen = () => {
                 <View style={styles.containerSignup}>
                   <Text style={styles.labelNoAccount}>Already have an account?</Text>
                   <TouchableOpacity
-                    onPress={() => navigation.navigate('SigninScreen')}
+                    onPress={() => navigation.pop()}
                   >
                     <Text style={styles.labelSignup}>Sign in</Text>
                   </TouchableOpacity>
@@ -383,17 +386,18 @@ const SignupScreen = () => {
           childView={
             termsConditions.map((item) => (
               <>
-                <Text style={styles.headerText}>{item.headerText}</Text>
+                <Text key={item.id} style={styles.headerText}>{item.headerText}</Text>
                 {
-                  item.paragraphs.map((paragraph) => (
+                  item.paragraphs.map((paragraph, index) => (
                     <>
-                      <Text style={styles.paragraph}>{paragraph.content}</Text>
+                      <Text key={index} style={styles.paragraph}>{paragraph.content}</Text>
                       {
                         paragraph.childContent &&
-                        paragraph.childContent.map((child) => (
+                        paragraph.childContent.map((child, index) => (
                           <>
                             <View
                               style={styles.childContentContainer}
+                              key={index}
                             >
                               <Octicons 
                                 name='dot-fill' 

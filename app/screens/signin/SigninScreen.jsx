@@ -100,7 +100,7 @@ const SigninScreen = () => {
             }))
           }
           // Phuong: move to GroupBottomTab screen
-          navigation.navigate('GroupBottomTab')
+          navigation.replace('GroupBottomTab')
         }
       })
     }
@@ -182,7 +182,8 @@ const SigninScreen = () => {
                 isChecked={isChecked}
               />
               <TouchableOpacity
-                onPress={() => navigation.navigate('ForgotPasswordScreen')}
+              // Phuong: vi user goback() dc
+                onPress={() => navigation.push('ForgotPasswordScreen')}
               >
                 <Text style={styles.textFor}>Forgot password?</Text>
               </TouchableOpacity>
@@ -202,7 +203,7 @@ const SigninScreen = () => {
         <TouchableOpacity
 
           style={{alignSelf: 'center'}}
-          onPress={() => navigation.navigate('GroupBottomTab')}
+          onPress={() => navigation.replace('GroupBottomTab')}
         >
           <Text style={styles.signInAsGuest}>Sign in as Guest</Text>
         </TouchableOpacity>
@@ -232,7 +233,7 @@ const SigninScreen = () => {
         <View style={styles.containerSignup}>
           <Text style={styles.labelNoAccount}>You don't have an account?</Text>
           <TouchableOpacity
-            onPress={() => navigation.navigate('SignupScreen')}
+            onPress={() => navigation.push('SignupScreen')}
           >
             <Text style={styles.labelSignup}>Sign up</Text>
           </TouchableOpacity>
