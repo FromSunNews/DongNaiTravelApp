@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 6,
     bottom: 6,
-    ...app_shdw.type_2
+    ...app_shdw.type_1
   },
   icon_camera: {
     fontSize: 16,
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     color: app_c.HEX.fourth
   },
   user_info_follow: {
-    ...app_sp.pt_1,
+    ...app_sp.pt_6,
     flexDirection: 'row',
   },
   user_following: {
@@ -83,36 +83,36 @@ const styles = StyleSheet.create({
   },
   user_follower: {
     color: app_c.HEX.ext_second,
-    ...app_typo.sz_4
+    ...app_typo.size.sz_18
   },
   user_infos: {
     width: '100%',
     
   },
   user_info_block:{
-    ...app_sp.pt_2,
+    ...app_sp.pt_8,
   },
   user_info_title: {
-    ...app_typo.sz_6,
+    ...app_typo.size.sz_18,
     fontWeight: 'bold',
     color:app_c.HEX.fourth
 
   },
   user_bio_content: {
-    ...app_sp.pt_1
+    ...app_sp.pt_18
   },
   user_info_other:{
     flexDirection:'row',
-    ...app_sp.pt_1,
+    ...app_sp.pt_6,
     alignItems:'center'
   },
   user_info_other_icon:{
     color:app_c.HEX.ext_second,
-    ...app_typo.sz_5
+    ...app_typo.size.sz_18
   },
   user_info_other_content:{
-    ...app_sp.ph_1,
-    ...app_typo.sz_4,
+    ...app_sp.ph_16,
+    ...app_typo.size.sz_12,
     color:app_c.HEX.ext_second
   },
   user_info_address:{

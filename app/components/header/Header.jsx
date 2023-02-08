@@ -1,6 +1,6 @@
-import React from "react";
 import { StyleSheet, SafeAreaView, View, Text, ScrollView, Button, Touchable, TouchableOpacity } from "react-native";
-import styles from "./HeaderStyle";
+import React from "react";
+import styles from "./HeaderStyles";
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { app_c } from "globals/styles";
 

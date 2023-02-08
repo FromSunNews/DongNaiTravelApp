@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     position:'absolute',
     left:18,
     top:10,
-    ...app_shdw.type_2
+    ...app_shdw.type_1
   },
   icon_exit:{
     fontSize:20,

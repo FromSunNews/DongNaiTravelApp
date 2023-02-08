@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
     width:'100%',
     flexDirection:'row',
     justifyContent:'space_between',
-    ...app_sp.pt_4
+    ...app_sp.pt_12
   },
   
   profile_btn:{
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
  
   },
   btn_name:{
-    ...app_typo.sz_4,
+    ...app_typo.size.sz_12,
   },
   choices_setting:{
     width:35,
