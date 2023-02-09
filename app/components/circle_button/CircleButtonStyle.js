@@ -7,6 +7,7 @@ import { app_c, app_sh, app_sp } from "globals/styles";
 // 
 
 const default_app_cir_style = {
+  flex: 0,
   flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'center',
@@ -14,7 +15,7 @@ const default_app_cir_style = {
   minHeight: 30,
   aspectRatio: 1,
   ...app_sh.circle,
-  ...app_sp.p_10
+  ...app_sp.p_10,
 };
 
 const styles = StyleSheet.create({

@@ -4,7 +4,7 @@ import React from 'react'
 import AppText from '../app_text/AppText'
 
 import styles from './CapsuleButtonStyles'
-import { app_c, app_shdw } from 'globals/styles'
+import { app_c, app_shdw, app_sp } from 'globals/styles'
 
 /**
  * __Creator__: Nguyen Anh Tuan.
@@ -18,6 +18,7 @@ import { app_c, app_shdw } from 'globals/styles'
  * @param {'type_1' | 'type_2'} [props.activeColor=type_1] - Màu nút khi khi được focus (active).
  * @param {'type_1' | 'type_2' | 'type_3' | 'type_4' | 'type_5'} [props.boxShadowType=] - Đổ bóng cho button theo loại, xem thêm trong `box-shadow.js`.
  * @param {string} [props.font=body6] - Font chữ, xem thêm trong `typography.js`.
+ * @param {StyleProp<ViewStyle>} [props.style={}] - Custom style cho button, không can thiệp vào các thuộc tính mặc định.
  * @param {(isActive: boolean, currentLabelStyle: StyleSheet) => JSX.Element} props.setIcon - Function trả về một JSX.Element.
  * @param {() => void} props.handlePressButton - Function xử lý sự kiện cho Capsule button.
  * @returns Trả về `TouchableOpacity` Component có chữ và style (bao gồm fontSize đã được tuỳ chỉnh).
@@ -30,6 +31,7 @@ const CapsuleButton = ({
   activeColor = "type_1",
   boxShadowType = "",
   fontOfText = "body6",
+  style = {},
   setIcon,
   handlePressButton = () => {}
 }) => {
@@ -39,22 +41,25 @@ const CapsuleButton = ({
     return (
       <TouchableOpacity
         disabled={isDisable}
-        style={styles.btn_caps_disable}
+        style={{...style, ...styles.btn_caps_disable}}
       >
-        {canSetIcon && setIcon(isActive = false, styles.lbl_disable)}
-        {canSetIcon && <View style={{width: 8}}></View>}
-        <AppText style={styles.lbl_disable} font={fontOfText}>{children}</AppText>
+        {canSetIcon && setIcon(isActive, currentLabelStyle)}
+        {
+          canSetIcon
+          ? <AppText style={{...app_sp.ms_8, ...styles.lbl_disable}} font={fontOfText}>{children}</AppText>
+          : <AppText style={styles.lbl_disable} font={fontOfText}>{children}</AppText>
+        }
       </TouchableOpacity>
     );
   }
   
-  let currentButtonStyle = isActive ? styles[`btn_caps_active_${activeColor}`] : styles[`btn_caps_default_${defaultColor}`];
+  let currentButtonStyle = {...style, ...(isActive ? styles[`btn_caps_active_${activeColor}`] : styles[`btn_caps_default_${defaultColor}`])};
   let currentLabelStyle = isActive ? styles[`lbl_active_${activeColor}`]: styles[`lbl_default_${defaultColor}`];
 
   if(boxShadowType !== "") {
     currentButtonStyle = isActive
-      ? {...styles[`btn_caps_active_${activeColor}`], ...app_shdw[boxShadowType]}
-      : {...styles[`btn_caps_default_${defaultColor}`], ...app_shdw[boxShadowType]};
+      ? {...style, ...styles[`btn_caps_active_${activeColor}`], ...app_shdw[boxShadowType]}
+      : {...style, ...styles[`btn_caps_default_${defaultColor}`], ...app_shdw[boxShadowType]};
   }
 
   return (
@@ -64,8 +69,11 @@ const CapsuleButton = ({
       onPress={handlePressButton}
     >
       {canSetIcon && setIcon(isActive, currentLabelStyle)}
-      {canSetIcon && <View style={{width: 8}}></View>}
-      <AppText style={currentLabelStyle} font={fontOfText}>{children}</AppText>
+      {
+        canSetIcon
+        ? <AppText style={{...app_sp.ms_8, ...styles.lbl_disable}} font={fontOfText}>{children}</AppText>
+        : <AppText style={styles.lbl_disable} font={fontOfText}>{children}</AppText>
+      }
     </TouchableOpacity>
   )
 }
