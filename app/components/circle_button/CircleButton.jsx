@@ -15,6 +15,7 @@ import { app_c, app_shdw } from 'globals/styles'
  * @param {'type_1' | 'type_2' | 'type_3'} [props.defaultColor=type_1] - Màu nút bình thường (mặc định).
  * @param {'type_1' | 'type_2'} [props.activeColor=type_1] - Màu nút khi khi được focus (active).
  * @param {'type_1' | 'type_2' | 'type_3' | 'type_4' | 'type_5'} [props.boxShadowType=] - Đổ bóng cho button theo loại, xem thêm trong `box-shadow.js`.
+ * @param {StyleProp<ViewStyle>} [props.style={}] - Custom style cho button, không can thiệp vào các thuộc tính mặc định.
  * @param {(isActive: boolean, currentLabelStyle: StyleSheet) => JSX.Element} props.setIcon - Function trả về một JSX.Element.
  * @param {() => void} props.handlePressButton - Function xử lý sự kiện cho Capsule button.
  * @returns Trả về `TouchableOpacity` Component có chữ và style (bao gồm fontSize đã được tuỳ chỉnh).
@@ -25,6 +26,7 @@ const CircleButton = ({
   defaultColor = "type_1",
   activeColor = "type_1",
   boxShadowType = "",
+  style = {},
   setIcon,
   handlePressButton = () => {}
 }) => {
@@ -34,20 +36,20 @@ const CircleButton = ({
     return (
       <TouchableOpacity
       disabled={isDisable}
-      style={styles.btn_cir_disable}
+      style={{...style, ...styles.btn_cir_disable}}
     >
       {canSetIcon && setIcon(isActive = false, styles.lbl_disable)}
     </TouchableOpacity>
     );
   }
 
-  let currentButtonStyle = isActive ? styles[`btn_cir_active_${activeColor}`] : styles[`btn_cir_default_${defaultColor}`];
+  let currentButtonStyle = {...style, ...(isActive ? styles[`btn_cir_active_${activeColor}`] : styles[`btn_cir_default_${defaultColor}`])};
   let currentLabelStyle = isActive ? styles[`lbl_active_${activeColor}`]: styles[`lbl_default_${defaultColor}`];
 
   if(boxShadowType !== "") {
     currentButtonStyle = isActive
-      ? {...styles[`btn_cir_active_${activeColor}`], ...app_shdw[boxShadowType]}
-      : {...styles[`btn_cir_default_${defaultColor}`], ...app_shdw[boxShadowType]};
+      ? {...style, ...styles[`btn_cir_active_${activeColor}`], ...app_shdw[boxShadowType]}
+      : {...style, ...styles[`btn_cir_default_${defaultColor}`], ...app_shdw[boxShadowType]};
   }
 
   return (

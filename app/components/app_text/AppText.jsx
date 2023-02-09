@@ -30,7 +30,7 @@ const AppText = ({
   if(hyperLink && hyperLink !== '') {
     return (
       <Text
-        style={{...app_typo.fonts[font], color: app_c.HEX.sub_fourth, ...style}}
+        style={{...style, ...app_typo.fonts[font], color: app_c.HEX.sub_fourth}}
         onPress={() => Linking.openURL(hyperLink)}
       >{children}
       </Text>
@@ -39,7 +39,7 @@ const AppText = ({
 
   return (
     <Text
-      style={{...app_typo.fonts[font], color: app_c.HEX[color], ...style}}
+      style={{...style, ...app_typo.fonts[font], color: app_c.HEX[color]}}
       numberOfLines={numberOfLines}
     >{children}
     </Text>

@@ -9,12 +9,13 @@ const default_app_caps_style = {
   ...app_sh.capsule,
   ...app_sp.ph_18,
   ...app_sp.pv_8,
+  
 };
 
 const styles = StyleSheet.create({
   btn_caps_disable: {
     ...default_app_caps_style,
-    backgroundColor: app_c.HEX.ext_primary
+    backgroundColor: app_c.HEX.ext_primary,
   },
 
   lbl_disable: {
