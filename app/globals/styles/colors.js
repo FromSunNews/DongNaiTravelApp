@@ -45,10 +45,6 @@ const APP_EXT_SECOND_COLOR = {
 	HEX: '#5F6C7C',
 	RGB: '95, 108, 124'
 }
-const APP_EXT_THIRD_COLOR = {
-	HEX: '#B4B4B4',
-	RGB: '180, 180, 180'
-}
 
 // ==========================
 // ===== CODE SEPERATOR =====
@@ -64,8 +60,7 @@ const HEX = {
 	sub_third: APP_SUB_THIRD_COLOR.HEX,
 	sub_fourth: APP_SUB_FOURTH_COLOR.HEX,
 	ext_primary: APP_EXT_PRIMARY_COLOR.HEX,
-	ext_second: APP_EXT_SECOND_COLOR.HEX,
-	ext_third: APP_EXT_THIRD_COLOR.HEX
+	ext_second: APP_EXT_SECOND_COLOR.HEX
 }
 const RGB = {
 	primary: APP_PRIMARY_COLOR.RGB,
@@ -77,13 +72,85 @@ const RGB = {
 	sub_third: APP_SUB_THIRD_COLOR.RGB,
 	sub_fourth: APP_SUB_FOURTH_COLOR.RGB,
 	ext_primary: APP_EXT_PRIMARY_COLOR.RGB,
-	ext_second: APP_EXT_SECOND_COLOR.RGB,
-	xt_third: APP_EXT_THIRD_COLOR.RGB
+	ext_second: APP_EXT_SECOND_COLOR.RGB
 }
 
 const app_c = {
 	HEX,
-	RGB,
+	RGB
 }
 
 export default app_c
+
+/*
+const HEX = StyleSheet.create({
+	primary: {
+	  color: APP_PRIMARY_COLOR.HEX
+	},
+	second: {
+		color: APP_SECOND_COLOR.HEX
+	},
+	third: {
+		color: APP_THIRD_COLOR.HEX
+	},
+	fourth: {
+		color: APP_FOURTH_COLOR.HEX
+	},
+	sub_primary: {
+	  color: APP_SUB_PRIMARY_COLOR.HEX
+	},
+	sub_second: {
+		color: APP_SUB_SECOND_COLOR.HEX
+	},
+	sub_third: {
+		color: APP_SUB_THIRD_COLOR.HEX
+	},
+	sub_fourth: {
+		color: APP_SUB_FOURTH_COLOR.HEX
+	},
+	ext_primary: {
+	  color: APP_EXT_PRIMARY_COLOR.HEX
+	},
+	ext_second: {
+		color: APP_EXT_SECOND_COLOR.HEX
+	}
+});
+
+const RGB = StyleSheet.create({
+	primary: {
+	  color: APP_PRIMARY_COLOR.RGB
+	},
+	second: {
+		color: APP_SECOND_COLOR.RGB
+	},
+	third: {
+		color: APP_THIRD_COLOR.RGB
+	},
+	fourth: {
+		color: APP_FOURTH_COLOR.RGB
+	},
+	sub_primary: {
+	  color: APP_SUB_PRIMARY_COLOR.RGB
+	},
+	sub_second: {
+		color: APP_SUB_SECOND_COLOR.RGB
+	},
+	sub_third: {
+		color: APP_SUB_THIRD_COLOR.RGB
+	},
+	sub_fourth: {
+		color: APP_SUB_FOURTH_COLOR.RGB
+	},
+	ext_primary: {
+	  color: APP_EXT_PRIMARY_COLOR.RGB
+	},
+	ext_second: {
+		color: APP_EXT_SECOND_COLOR.RGB
+	}
+});
+*/
+
+// const app_c =  {
+// 	HEX,
+// 	RGB
+// };
