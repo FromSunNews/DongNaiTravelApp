@@ -9,7 +9,7 @@ function RoundedRectangleButton() {
       <Text style={[{color:app_c.HEX.primary}, styles.btn_name]}>View stats</Text>
     </TouchableOpacity>
     <TouchableOpacity style={[{backgroundColor:app_c.HEX.ext_primary,marginLeft:12}, styles.profile_btn]}>
-      <AntDesign style={{...app_sp.ph_1}} name="edit"/>
+      <AntDesign style={{...app_sp.ph_6}} name="edit"/>
       <Text style={[{color:app_c.HEX.ext_second}, styles.btn_name]} >Edit Profile</Text>
     </TouchableOpacity>
     <TouchableOpacity style={styles.choices_setting}>

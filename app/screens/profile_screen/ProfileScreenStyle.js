@@ -64,8 +64,8 @@ const styles = StyleSheet.create({
   },
   //user_info_block
   user_block: {
-    ...app_sp.ph_6,
-    ...app_sp.pt_1,
+    ...app_sp.ph_16,
+    ...app_sp.pt_6,
     alignItems: "center"
   },
   user_name: {
@@ -79,18 +79,19 @@ const styles = StyleSheet.create({
   },
   user_following: {
     color: app_c.HEX.ext_second,
+    ...app_typo.size.sz_14
 
   },
   user_follower: {
     color: app_c.HEX.ext_second,
-    ...app_typo.size.sz_18
+    ...app_typo.size.sz_14
   },
   user_infos: {
     width: '100%',
     
   },
   user_info_block:{
-    ...app_sp.pt_8,
+    ...app_sp.pt_12,
   },
   user_info_title: {
     ...app_typo.size.sz_18,
@@ -99,7 +100,9 @@ const styles = StyleSheet.create({
 
   },
   user_bio_content: {
-    ...app_sp.pt_18
+    ...app_sp.pt_6,
+    color:app_c.HEX.ext_second,
+    ...app_typo.size.sz_16``
   },
   user_info_other:{
     flexDirection:'row',
@@ -112,7 +115,7 @@ const styles = StyleSheet.create({
   },
   user_info_other_content:{
     ...app_sp.ph_16,
-    ...app_typo.size.sz_12,
+    ...app_typo.size.sz_14,
     color:app_c.HEX.ext_second
   },
   user_info_address:{
@@ -122,12 +125,12 @@ const styles = StyleSheet.create({
     width:'100%',
     borderBottomWidth:1,
     borderBottomColor:app_c.HEX.ext_second,
-    ...app_sp.pt_4
+    ...app_sp.pt_12
   },
   // start blog block
   blog_block:{
     width:'100%',
-    ...app_sp.ph_6,
+    ...app_sp.ph_16,
   },
   btn_create_blog:{
     width:'100%',
@@ -137,7 +140,7 @@ const styles = StyleSheet.create({
     justifyContent:'center',
     alignItems:'center',
     flexDirection:'row',
-    ...app_sp.mt_7
+    ...app_sp.mt_22
     
   },
   btn_create_blog_name:{
@@ -150,17 +153,17 @@ const styles = StyleSheet.create({
     ...app_sh.rounded_8,
     justifyContent:'center',
     alignItems:'center',
-    ...app_sp.mt_4,
+    ...app_sp.mt_12,
   },
   btn_manage_blog_name:{
     ...app_typo.sz_5,
     color:app_c.HEX.primary
   }, 
   blog_title_container:{
-    ...app_sp.mt_7,
+    ...app_sp.mt_22,
   },
   blog_title:{
-    ...app_typo.sz_6,
+    ...app_typo.size.sz_16,
     fontWeight:'bold',
     color:app_c.HEX.fourth
   },
@@ -170,7 +173,8 @@ const styles = StyleSheet.create({
     backgroundColor:app_c.HEX.sub_primary,
     ...app_sh.rounded_8,
     justifyContent:'center',
-    alignItems:'center'
+    alignItems:'center',
+    ...app_sp.mt_12
   }
   // end blog block
 })

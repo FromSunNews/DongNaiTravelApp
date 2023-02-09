@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
  
   },
   btn_name:{
-    ...app_typo.size.sz_12,
+    ...app_typo.size.sz_16,
   },
   choices_setting:{
     width:35,

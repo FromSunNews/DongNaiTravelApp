@@ -15,6 +15,7 @@ import ExploreScreen from 'screens/explore/ExploreScreen'
   import BlogsScreen from 'screens/blogs/BlogsScreen'
   import MapScreen from 'screens/map/MapScreen'
   import SettingScreen from 'screens/settings/SettingScreen'
+  import ProfileScreen from 'screens/profile_screen/ProfileScreen'
   
   import styles from './GroupBottomTabStyles'
   import { app_dms } from 'globals/styles'
@@ -44,7 +45,7 @@ import ExploreScreen from 'screens/explore/ExploreScreen'
           isHighlight: false,
           size: 25
       },
-      'SettingScreen': {
+      'ProfileScreen': {
           inactive: 'person-circle-outline',
           active: 'person-circle',
           isHighlight: false,
@@ -178,8 +179,8 @@ import ExploreScreen from 'screens/explore/ExploreScreen'
                       </Tab.Screen>
   
                           <Tab.Screen
-                              name={'SettingScreen'}
-                              component={SettingScreen}
+                              name={'ProfileScreen'}
+                              component={ProfileScreen}
                               options={{
                                   headerShown: false
                               }}>

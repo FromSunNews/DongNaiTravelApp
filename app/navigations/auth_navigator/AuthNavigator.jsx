@@ -18,6 +18,7 @@ import CreatePost from 'screens/create_post/CreatePostScreen'
 import ForgotPasswordScreen from 'screens/fogot_password/ForgotPasswordScreen'
 import OtpScreen from 'screens/otp/OtpScreen'
 import ResetPasswordScreen from 'screens/reset_password/ResetPasswordScreen'
+import ProfileScreen from 'screens/profile_screen/ProfileScreen'
 
 const AuthNavigator = () => {
   // Phuong: https://reactnavigation.org/docs/getting-started
