@@ -2,32 +2,26 @@ import { StyleSheet } from "react-native";
 
 import { app_c, app_sh, app_sp } from "globals/styles";
 
-// COLOR MIX FOR ALL TYPES OF BUTTON
-// Xem thêm tại issue: 
-// 
-
 const default_style = {
-  flex: 0,
   flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'center',
-  minWidth: 30,
-  minHeight: 30,
-  aspectRatio: 1,
-  ...app_sh.circle,
-  ...app_sp.p_10,
+  ...app_sh.capsule,
+  ...app_sp.ph_18,
+  ...app_sp.pv_8,
+  
 };
 
 const styles = StyleSheet.create({
   btn_disable: {
     ...default_style,
-    backgroundColor: app_c.HEX.ext_primary
+    backgroundColor: app_c.HEX.ext_primary,
   },
-  
+
   lbl_disable: {
     color: app_c.HEX.ext_third
   },
-  
+
   btn_transparent: {
     ...default_style
   },
@@ -52,7 +46,7 @@ const styles = StyleSheet.create({
 
   btn_default_type_1: {
     ...default_style,
-    backgroundColor: app_c.HEX.ext_primary,
+    backgroundColor: app_c.HEX.ext_primary
   },
 
   lbl_default_type_1: {

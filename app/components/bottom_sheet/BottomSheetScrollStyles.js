@@ -1,4 +1,4 @@
-import { app_c, app_dms, app_sh, app_typo } from 'globals/styles'
+import { app_c, app_dms, app_sh, app_sp, app_typo } from 'globals/styles'
 import { StyleSheet } from 'react-native'
 
 export const styles = StyleSheet.create({
@@ -8,22 +8,19 @@ export const styles = StyleSheet.create({
     right: 0,
     left: 0,
     bottom: 0,
-    backgroundColor: 'red',
+    backgroundColor: 'black',
     opacity: 0.2
   },
   bottomSheetContainer: {
     borderRadius: 24,
-    backgroundColor: 'red'
   },
   contentContainer: {
-    flex: 1,
     width: '100%',
     alignItems: 'center',
   },
   bottomView: {
-    flex: 1,
     display: 'flex',
-    alignItems: 'center',
+    paddingHorizontal: 18
   },
   textHeader: {
     ...app_typo.sz_6,
@@ -43,15 +40,33 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: app_dms.screenWidth - 32,
-    marginHorizontal: 18,
     paddingVertical: 14,
     backgroundColor: app_c.HEX.fourth,
     marginTop: 20,
-    ...app_sh.capsule
+    marginBottom: 30,
+    borderRadius: 8,
   },
   btnText: {
-    ...app_typo.sz_4,
+    ...app_typo.fonts.h4,
     color: app_c.HEX.primary,
     fontWeight: '600'
+  },
+  headerText: {
+    ...app_typo.fonts.h4,
+    color: app_c.HEX.fourth,
+    marginTop: 20,
+  },
+  paragraph: { 
+    marginTop: 10,
+    textAlign: 'justify'
+  },
+  childContentContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    marginTop: 10,
+    paddingLeft: 10
+  },
+  childContent:{
+    marginLeft: 10
   }
 })

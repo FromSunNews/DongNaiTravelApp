@@ -12,12 +12,9 @@ import React, { useEffect, useState } from 'react'
 import Input from 'components/input/Input'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 
-import Icon from 'react-native-vector-icons/FontAwesome5'
 import { useForm, Controller } from 'react-hook-form'
 
-import { app_c, app_typo } from 'globals/styles'
 import { styles } from './SigninScreenStyles'
-import AnimatedCheckbox from 'react-native-checkbox-reanimated'
 import { EMAIL_RULE, FIELD_MIN_LENGTH_MESSAGE, FIELD_REQUIRED_MESSAGE, PASSWORD_RULE, PASSWORD_RULE_MESSAGE } from 'utilities/validators'
 import { updateCurrentUser } from 'redux/user/UserSlice'
 import { useDispatch, useSelector } from 'react-redux'
@@ -103,7 +100,7 @@ const SigninScreen = () => {
             }))
           }
           // Phuong: move to GroupBottomTab screen
-          navigation.navigate('GroupBottomTab')
+          navigation.replace('GroupBottomTab')
         }
       })
     }
@@ -185,7 +182,8 @@ const SigninScreen = () => {
                 isChecked={isChecked}
               />
               <TouchableOpacity
-                onPress={() => console.log(password)}
+              // Phuong: vi user goback() dc
+                onPress={() => navigation.push('ForgotPasswordScreen')}
               >
                 <Text style={styles.textFor}>Forgot password?</Text>
               </TouchableOpacity>
@@ -205,7 +203,7 @@ const SigninScreen = () => {
         <TouchableOpacity
 
           style={{alignSelf: 'center'}}
-          onPress={() => navigation.navigate('GroupBottomTab')}
+          onPress={() => navigation.replace('GroupBottomTab')}
         >
           <Text style={styles.signInAsGuest}>Sign in as Guest</Text>
         </TouchableOpacity>
@@ -235,7 +233,7 @@ const SigninScreen = () => {
         <View style={styles.containerSignup}>
           <Text style={styles.labelNoAccount}>You don't have an account?</Text>
           <TouchableOpacity
-            onPress={() => navigation.navigate('SignupScreen')}
+            onPress={() => navigation.push('SignupScreen')}
           >
             <Text style={styles.labelSignup}>Sign up</Text>
           </TouchableOpacity>

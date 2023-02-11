@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 
 import { app_sp, app_dms, app_c } from "globals/styles";
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
   scroll_view_container: {
     backgroundColor: app_c.HEX.primary,
     ...app_sp.pt_4
@@ -13,4 +13,4 @@ const style = StyleSheet.create({
   }
 });
 
-export default style;
+export default styles;

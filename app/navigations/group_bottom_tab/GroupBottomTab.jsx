@@ -1,69 +1,81 @@
 import { 
-    TouchableOpacity, 
-    View,
-    Animated,
-  } from 'react-native'
-  import React, { useRef } from 'react'
-  
-  import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-  import { useNavigation } from '@react-navigation/native'
-  import Ionicons from 'react-native-vector-icons/Ionicons'
-  
-  import HomeScreen from 'screens/home/HomeScreen'
-  import ExploreScreen from 'screens/explore/ExploreScreen'
-  import BlogsScreen from 'screens/blogs/BlogsScreen'
-  import MapScreen from 'screens/map/MapScreen'
-  import SettingScreen from 'screens/settings/SettingScreen'
-  
-  import styles from './GroupBottomTabStyles'
-  import { app_dms } from 'globals/styles'
-  
-  const tabIcon = {
-      'HomeScreen': {
-          inactive: 'home-outline',
-          active: 'home',
-          isHighlight: false,
-          size: 25
-      },
-      'ExploreScreen': {
-          inactive: 'compass-outline',
-          active: 'compass',
-          isHighlight: false,
-          size: 30
-      },
-      'MapScreen': {
-          inactive: 'map-outline',
-          active: 'map',
-          isHighlight: true,
-          size: 25
-      },
-      'BlogsScreen': {
-          inactive: 'newspaper-outline',
-          active: 'newspaper',
-          isHighlight: false,
-          size: 25
-      },
-      'SettingScreen': {
-          inactive: 'person-circle-outline',
-          active: 'person-circle',
-          isHighlight: false,
-          size: 30
-      }, 
-  }
-  
-  // Tuan: ScreenWidth sẽ có độ dài là 375, vì t đang làm trên iphone 6
-  // Các thông số này tạm thời để đây vì chưa có tính năng xoay màn hình.
-  // Giải thích ở phần comment của https://github.com/FromSunNews/DongNaiTravelApp/issues/17
-  const iconContainerWidth = 30;
-  const numberOfIcons = 5;
-  const dotWidth = 5;
-  const bottomBarWidth = app_dms.screenWidth - 36;
-  const tabButtonsContainerWidth = bottomBarWidth - 44;
-  const tabButtonSpaceWidth = (tabButtonsContainerWidth - (iconContainerWidth * numberOfIcons)) / (numberOfIcons - 1);
-  const centerDotDistance = (iconContainerWidth / 2) - (dotWidth / 2);
-  const dotMoveDistance = tabButtonSpaceWidth + centerDotDistance + (iconContainerWidth - centerDotDistance);
-  
-const BottomTabBar = ({ state, descriptors, navigation, tabOffsetValue }) => {
+	TouchableOpacity, 
+	View,
+	Animated,
+	SafeAreaView
+} from 'react-native'
+import React, { useRef } from 'react'
+
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { useNavigation } from '@react-navigation/native'
+import Ionicons from 'react-native-vector-icons/Ionicons'
+
+import HomeScreen from 'screens/home/HomeScreen'
+import ExploreScreen from 'screens/explore/ExploreScreen'
+import BlogsScreen from 'screens/blogs/BlogsScreen'
+import MapScreen from 'screens/map/MapScreen'
+import SettingScreen from 'screens/settings/SettingScreen'
+
+import styles from './GroupBottomTabStyles'
+import { app_dms } from 'globals/styles'
+
+const tabIcon = {
+	'HomeScreen': {
+		inactive: 'home-outline',
+		active: 'home',
+		isHighlight: false,
+		size: 25
+	},
+	'ExploreScreen': {
+		inactive: 'compass-outline',
+		active: 'compass',
+		isHighlight: false,
+		size: 30
+	},
+	'MapScreen': {
+		inactive: 'map-outline',
+		active: 'map',
+		isHighlight: true,
+		size: 25
+	},
+	'BlogsScreen': {
+		inactive: 'newspaper-outline',
+		active: 'newspaper',
+		isHighlight: false,
+		size: 25
+	},
+	'SettingScreen': {
+		inactive: 'person-circle-outline',
+		active: 'person-circle',
+		isHighlight: false,
+		size: 30
+	}, 
+}
+
+// Tuan: ScreenWidth sẽ có độ dài là 375, vì t đang làm trên iphone 6.
+// Vì dây là những biến nằm ngoài function component scope, cho nên các thông số được thay đổi khi file này được thực thi lại,
+// có nghĩa là được load lại.
+// Giải thích ở phần comment của https://github.com/FromSunNews/DongNaiTravelApp/issues/17
+const iconContainerWidth = 30;
+const numberOfIcons = 5;
+const dotWidth = 5;
+const bottomBarWidth = app_dms.screenWidth - 36;
+const tabButtonsContainerWidth = bottomBarWidth - 44;
+const tabButtonSpaceWidth = (tabButtonsContainerWidth - (iconContainerWidth * numberOfIcons)) / (numberOfIcons - 1);
+const centerDotDistance = (iconContainerWidth / 2) - (dotWidth / 2);
+const dotMoveDistance = tabButtonSpaceWidth + centerDotDistance + (iconContainerWidth - centerDotDistance);
+
+const BottomTabBar = ({
+	state,
+	descriptors,
+	navigation,
+	tabOffsetValue
+}) => {
+	Animated.spring(tabOffsetValue, {
+		toValue: dotMoveDistance * state.index + centerDotDistance,
+		useNativeDriver: true
+	}).start()
+
 	return (
 		<View style={styles.tab_bottom_container}>
 			<View style={styles.tab_bottom_buttons_container}>
@@ -83,11 +95,6 @@ const BottomTabBar = ({ state, descriptors, navigation, tabOffsetValue }) => {
 							// Bảo toàn params trong Screen với prop merge: true
 							navigation.navigate({ name: route.name, merge: true });
 						}
-
-						Animated.spring(tabOffsetValue, {
-							toValue: dotMoveDistance * index + centerDotDistance,
-							useNativeDriver: true
-						}).start()
 					};
 
 					return (
@@ -122,71 +129,71 @@ const BottomTabBar = ({ state, descriptors, navigation, tabOffsetValue }) => {
 		</View>
 	);
 }
-  
+
 const Tab = createBottomTabNavigator()
-  
+
 const GroupBottomTab = () => {
-	// Phuong: https://reactnavigation.org/docs/bottom-tab-navigator/
-  
-	// const myCart = useSelector(state => state.myCart)
-  
-	const tabOffsetValue = useRef(new Animated.Value(centerDotDistance)).current
-	const getWidth = () => {
-		return (app_dms.screenWidth) / 5
-	}
-  
-    const navigation = useNavigation()
-    return (
-          <View style={styles.container}>
-                  <Tab.Navigator
-                      tabBar={props => (<BottomTabBar {...props} tabOffsetValue={tabOffsetValue} />)}
-                      screenOptions={{
-                          'tabBarShowLabel': false
-                      }}
-                  >
-                          <Tab.Screen
-                              name={'HomeScreen'}
-                              component={HomeScreen}
-                              options={{
-                                  headerShown: false
-                              }}>
-                          </Tab.Screen>
-  
-                          <Tab.Screen
-                              name={'ExploreScreen'}
-                              component={ExploreScreen}
-                              options={{
-                                  headerShown: false
-                              }}>
-                          </Tab.Screen>
-  
-                          <Tab.Screen
-                              name={'MapScreen'}
-                              component={MapScreen}
-                              options={{
-                                  headerShown: false
-                              }}>
-                          </Tab.Screen>
-  
-                          <Tab.Screen
-                              name={'BlogsScreen'}
-                              component={BlogsScreen}
-                              options={{
-                                  headerShown: false
-                              }}>
-                      </Tab.Screen>
-  
-                          <Tab.Screen
-                              name={'SettingScreen'}
-                              component={SettingScreen}
-                              options={{
-                                  headerShown: false
-                              }}>
-                                  
-                          </Tab.Screen>
-                  </Tab.Navigator>
-          </View>
-    )
-  }
-  
+// Phuong: https://reactnavigation.org/docs/bottom-tab-navigator/
+
+// const myCart = useSelector(state => state.myCart)
+
+const navigation = useNavigation()
+const tabOffsetValue = useRef(new Animated.Value(centerDotDistance)).current
+const getWidth = () => {
+	return (app_dms.screenWidth) / 5
+}
+
+	return (
+		<SafeAreaView style={styles.container}>
+				<Tab.Navigator
+					tabBar={props => (<BottomTabBar {...props} tabOffsetValue={tabOffsetValue} />)}
+					screenOptions={{
+						'tabBarShowLabel': false
+					}}
+				>
+						<Tab.Screen
+							name={'HomeScreen'}
+							component={HomeScreen}
+							options={{
+								headerShown: false
+							}}>
+						</Tab.Screen>
+
+						<Tab.Screen
+							name={'ExploreScreen'}
+							component={ExploreScreen}
+							options={{
+								headerShown: false
+							}}>
+						</Tab.Screen>
+
+						<Tab.Screen
+							name={'MapScreen'}
+							component={MapScreen}
+							options={{
+								headerShown: false
+							}}>
+						</Tab.Screen>
+
+						<Tab.Screen
+							name={'BlogsScreen'}
+							component={BlogsScreen}
+							options={{
+								headerShown: false
+							}}>
+					</Tab.Screen>
+
+						<Tab.Screen
+							name={'SettingScreen'}
+							component={SettingScreen}
+							options={{
+								headerShown: false
+							}}>
+								
+						</Tab.Screen>
+				</Tab.Navigator>
+		</SafeAreaView>
+	)
+}
+
 export default GroupBottomTab

@@ -43,12 +43,12 @@ const SplashScreen = () => {
   useEffect(() => {
     if (loaded) {
       if (isFirstTimeLauch)
-        navigation.navigate('OnboardingScreen')
+        navigation.replace('OnboardingScreen')
       else {
         if (isAuthenticated) 
-          navigation.navigate('GroupBottomTab')
+          navigation.replace('GroupBottomTab')
         else 
-          navigation.navigate('SigninScreen')
+          navigation.replace('SigninScreen')
       }
         
     }

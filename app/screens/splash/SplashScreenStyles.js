@@ -1,5 +1,5 @@
 import { app_c, app_dms, app_sh, app_typo } from 'globals/styles'
-import { fonts } from 'globals/styles/(SKIP) typography'
+
 import { StyleSheet } from 'react-native'
 import Constants from 'expo-constants'
 
@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   label: {
-    ...fonts.introText,
+    ...app_typo.fonts.introText,
     color: app_c.HEX.fourth
   }
 })

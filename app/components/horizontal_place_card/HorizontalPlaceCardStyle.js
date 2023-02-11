@@ -2,11 +2,11 @@ import { StyleSheet } from "react-native"
 
 import { app_c, app_sh, app_shdw, app_sp } from "globals/styles";
 
-const card_text_default_color = {
+const default_card_text_color = {
   color: app_c.HEX.ext_second
 };
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
   card: {
     flex: 1,
     flexDirection: 'row',
@@ -15,6 +15,10 @@ const style = StyleSheet.create({
     ...app_sp.p_10,
     ...app_sp.mb_12,
     ...app_shdw.type_1
+  },
+
+  card_text_color: {
+    color: app_c.HEX.ext_second
   },
 
   card_image_container: {
@@ -38,6 +42,7 @@ const style = StyleSheet.create({
   },
 
   card_main_container: {
+    flex: 1,
     flexDirection: 'column',
     justifyContent: 'space-between'
   },
@@ -56,11 +61,11 @@ const style = StyleSheet.create({
     flex: 1,
     flexWrap: 'wrap',
     fontWeight: 'bold',
-    ...card_text_default_color
+    ...default_card_text_color
   },
 
   car_subtitle: {
-    ...card_text_default_color
+    ...default_card_text_color
   },
 
   card_information_container: {
@@ -74,7 +79,10 @@ const style = StyleSheet.create({
 
   card_buttons_container: {
     flexDirection: 'row'
+  },
+
+  card_share_container: {
   }
 });
 
-export default style
+export default styles
