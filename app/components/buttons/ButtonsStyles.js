@@ -1,20 +1,13 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet } from "react-native"
 
 import { app_c, app_sh, app_sp } from "globals/styles";
 
-const default_app_caps_style = {
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'center',
-  ...app_sh.capsule,
-  ...app_sp.ph_18,
-  ...app_sp.pv_8,
-  
-};
-
 const styles = StyleSheet.create({
-  btn_caps_disable: {
-    ...default_app_caps_style,
+  btn_inactive: {
+    backgroundColor: app_c.HEX.ext_primary
+  },
+
+  btn_disable: {
     backgroundColor: app_c.HEX.ext_primary,
   },
 
@@ -22,8 +15,7 @@ const styles = StyleSheet.create({
     color: app_c.HEX.ext_third
   },
 
-  btn_caps_active_type_1: {
-    ...default_app_caps_style,
+  btn_active_type_1: {
     backgroundColor: app_c.HEX.fourth
   },
 
@@ -31,8 +23,8 @@ const styles = StyleSheet.create({
     color: app_c.HEX.primary
   },
 
-  btn_caps_active_type_2: {
-    ...default_app_caps_style,
+  btn_active_type_2: {
+    
     backgroundColor: app_c.HEX.third
   },
 
@@ -40,8 +32,7 @@ const styles = StyleSheet.create({
     color: app_c.HEX.primary
   },
 
-  btn_caps_default_type_1: {
-    ...default_app_caps_style,
+  btn_default_type_1: {
     backgroundColor: app_c.HEX.ext_primary
   },
 
@@ -49,8 +40,7 @@ const styles = StyleSheet.create({
     color: app_c.HEX.fourth
   },
 
-  btn_caps_default_type_2: {
-    ...default_app_caps_style,
+  btn_default_type_2: {
     backgroundColor: app_c.HEX.sub_primary
   },
 
@@ -58,14 +48,29 @@ const styles = StyleSheet.create({
     color: app_c.HEX.fourth
   },
 
-  btn_caps_default_type_3: {
-    ...default_app_caps_style,
+  btn_default_type_3: {
     backgroundColor: app_c.HEX.second
   },
 
   lbl_default_type_3: {
     color: app_c.HEX.fourth
   },
+
+  btn_default_type_4: {
+    backgroundColor: app_c.HEX.fourth
+  },
+
+  lbl_default_type_4: {
+    color: app_c.HEX.primary
+  },
+
+  btn_default_type_5: {
+    backgroundColor: app_c.HEX.third
+  },
+
+  lbl_default_type_5: {
+    color: app_c.HEX.primary
+  },
 });
 
-export default styles;
+export default styles

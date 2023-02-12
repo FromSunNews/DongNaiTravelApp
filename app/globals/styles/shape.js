@@ -10,19 +10,11 @@ const shape = StyleSheet.create({
     aspectRatio: 1
   },
 
-  rounded_4: {
-    borderRadius: 4
-  },
-
-  rounded_8: {
-    borderRadius: 8
-  },
-
-  rounded_16: {
-    borderRadius: 16
-  },
-
   rounded_3: {
+    borderRadius: 3
+  },
+
+  rounded_4: {
     borderRadius: 4
   },
 
@@ -30,7 +22,15 @@ const shape = StyleSheet.create({
     borderRadius: 8
   },
 
+  rounded_8: {
+    borderRadius: 8
+  },
+
   rounded_12: {
+    borderRadius: 16
+  },
+
+  rounded_16: {
     borderRadius: 16
   },
 
