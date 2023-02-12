@@ -9,6 +9,7 @@ import styles from './ExploreScreenStyles'
 import { app_sp, app_c } from 'globals/styles'
 
 const ExploreScreen = () => {
+  console.log("Render Explore Screen");
   return (
     <View>
       <ScrollView
@@ -17,8 +18,8 @@ const ExploreScreen = () => {
       >
         <View style={{...app_sp.mh_12}}>
           <BannerButton
+            typeOfButton="highlight"
             toScreen={{screenName: "MapScreen"}}
-            isActive={true}
             setRightIcon={(isActive, currentLabelStyle) =>
               <Ionicons name="chevron-forward-outline" style={currentLabelStyle} size={25} />
             }
@@ -28,7 +29,7 @@ const ExploreScreen = () => {
         </View>
         <View style={{backgroundColor: app_c.HEX.primary, ...app_sp.mv_10}}>
           <TagScrollView 
-            concept="place"
+            concept="places"
             style={{...app_sp.ms_12, ...app_sp.pv_12}}
           />
         </View>

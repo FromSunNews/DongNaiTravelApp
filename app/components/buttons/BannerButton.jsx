@@ -1,12 +1,44 @@
-import { View, Text, TouchableOpacity, ImageBackground, Linking } from 'react-native'
+import { 
+  View,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  TouchableHighlight,
+  ImageBackground,
+  Linking,
+  StyleSheet
+} from 'react-native'
 import React from 'react'
 
 import { useNavigation } from '@react-navigation/native'
 
 import AppText from '../app_text/AppText'
 
-import styles from './BannerButtonStyles'
-import { app_c, app_sp } from 'globals/styles'
+import styles from './ButtonsStyles'
+import { app_sp, app_sh, app_c } from 'globals/styles'
+
+const default_style = {
+  width: '100%',
+  minHeight: 72,
+  overflow: 'hidden',
+  ...app_sh.rounded_8
+}
+
+const banner_button_styles = StyleSheet.create({
+  image: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    ...app_sp.p_12,
+  },
+  
+  lbl_container: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    width: '45%'
+  },
+});
 
 /**
  * __Creator__: @NguyenAnhTuan1912
@@ -20,9 +52,9 @@ import { app_c, app_sp } from 'globals/styles'
  * @param {boolean} [props.isTransparent=false] - Nút có background color hay không?
  * @param {boolean} [props.isOnlyContent=false] - Nút có container bọc ở ngoài hay là không?
  * @param {boolean} [props.isChangeColorWhenActive=false] - Khi được active (focus) thì nút có đổi màu không hay không? Mặc định là không.
- * @param {'type_1' | 'type_2' | 'type_3'} [props.defaultColor=type_1] - Màu nút bình thường (mặc định).
+ * @param {'none' | 'opacity' | 'highlight'} [props.typeOfButton=none] - Loại nút.
+ * @param {'type_1' | 'type_2' | 'type_3' | 'type_4' | 'type_5'} [props.defaultColor=type_1] - Màu nút bình thường (mặc định).
  * @param {'type_1' | 'type_2'} [props.activeColor=type_1] - Màu nút khi khi được focus (active).
- * @param {'type_1' | 'type_2' | 'type_3' | 'type_4' | 'type_5'} [props.boxShadowType=] - Đổ bóng cho button theo loại, xem thêm trong `box-shadow.js`.
  * @param {string} [props.imageUrl=] - đường dẫn ảnh làm background cho button.
  * @param {string} [props.font=body3] - Font chữ, xem thêm trong `typography.js`.
  * @param {string}  props.hyperLink - Function xử lý việc navigate sang app khác.
@@ -42,9 +74,9 @@ const BannerButton = ({
   isTransparent = false,
   isOnlyContent = false,
   isChangeColorWhenActive = false,
+  typeOfButton = "none",
   defaultColor = "type_1",
   activeColor = "type_1",
-  boxShadowType = "",
   fontOfText = "body3",
   imageUrl = "",
   hyperLink,
@@ -61,10 +93,10 @@ const BannerButton = ({
     return (
       <TouchableOpacity
         disabled={isDisable}
-        style={styles.btn_disable}
+        style={{...style, ...default_style, ...styles.btn_disable}}
       >
-        <ImageBackground source={{url: `${imageUrl}`}} resizeMode="cover" style={styles.image}>
-          <View style={styles.lbl_container}>
+        <ImageBackground source={{url: `${imageUrl}`}} resizeMode="cover" style={banner_button_styles.image}>
+          <View style={banner_button_styles.lbl_container}>
             {canLoadLeftIcon && setLeftIcon(isActive = false, styles.lbl_disable)}
             {
               canLoadLeftIcon
@@ -78,29 +110,30 @@ const BannerButton = ({
     );
   }
   
-  const navigation = useNavigation();
   let handlePressBannerButton = handlePressButton;
-  let currentButtonStyle = {...style, ...(isActive ? styles[`btn_active_${activeColor}`] : styles[`btn_default_${defaultColor}`])};
-  let currentLabelStyle = isActive ? styles[`lbl_active_${activeColor}`] : styles[`lbl_default_${defaultColor}`];
+  let currentButtonStyle = currentButtonStyle = {...style, ...default_style, ...styles[`btn_default_${defaultColor}`]};
+  let currentLabelStyle = currentLabelStyle = styles[`lbl_default_${defaultColor}`];
+
+  if(isChangeColorWhenActive) {
+    currentButtonStyle = {
+      ...style,
+      ...default_style,
+      ...(
+        isActive
+        ? styles[`btn_active_${activeColor}`]
+        : styles[`btn_default_${defaultColor}`]
+    )};
+    currentLabelStyle = isActive ? styles[`lbl_active_${activeColor}`] : styles[`lbl_default_${defaultColor}`];
+  }
 
   if(isOnlyContent) {
     currentButtonStyle = style;
   }
 
   if(isTransparent) {
-    currentButtonStyle = {...style, ...styles.btn_transparent};
+    currentButtonStyle = {...style, ...default_style};
   }
-
-  if(boxShadowType !== "") {
-    currentButtonStyle = {...currentButtonStyle, ...app_shdw[boxShadowType]}
-  }
-
   
-  if(!isChangeColorWhenActive) {
-    currentButtonStyle = {...style, ...styles[`btn_default_${defaultColor}`]};
-    currentLabelStyle = styles[`lbl_default_${defaultColor}`];
-  }
-
   // Valid sau
   // Vì không thể ghi đè việc navigate của button, cho nên việc navigate sang app khác sẽ được ưu tiên hơn.
   if(hyperLink !== "") {
@@ -108,31 +141,49 @@ const BannerButton = ({
       Linking.openURL(hyperLink);
     }
   }
-
+  
   // Valid sau
   if(toScreen.screenName !== "") {
+    const navigation = useNavigation();
     handlePressBannerButton = () => {
       navigation.navigate(toScreen.screenName);
     }
   }
 
+  let ButtonComponent = TouchableWithoutFeedback;
+  let ButtonComponentProps;
+
+  if(typeOfButton === "opacity") {
+    ButtonComponent = TouchableOpacity;
+  }
+
+  if(typeOfButton === "highlight") {
+    ButtonComponent = TouchableHighlight;
+    ButtonComponentProps = {
+      underlayColor: app_c.HEX.ext_third,
+      style: currentButtonStyle
+    }
+  }
+
   return (
-    <TouchableOpacity
+    <ButtonComponent
+      {...ButtonComponentProps}
       onPress={handlePressBannerButton}
-      style={currentButtonStyle}
     >
-      <ImageBackground source={{url: `${imageUrl}`}} resizeMode="cover" style={styles.image}>
-        <View style={styles.lbl_container}>
-          {canLoadLeftIcon && setLeftIcon(isActive = false, currentLabelStyle)}
-          {
-              canLoadLeftIcon
-              ? <AppText font={fontOfText} style={{...currentLabelStyle, ...app_sp.ms_8}} numberOfLines={2}>{children}</AppText>
-              : <AppText font={fontOfText} style={currentLabelStyle} numberOfLines={2}>{children}</AppText>
-            }
-        </View>
-        {canLoadRightIcon && setRightIcon(isActive, currentLabelStyle)}
-      </ImageBackground>
-    </TouchableOpacity>
+      <View style={typeOfButton === "highlight" ? {flex: 1, flexDirection: 'row'} : currentButtonStyle}>
+        <ImageBackground source={{url: `${imageUrl}`}} resizeMode="cover" style={banner_button_styles.image}>
+          <View style={banner_button_styles.lbl_container}>
+            {canLoadLeftIcon && setLeftIcon(isActive = false, currentLabelStyle)}
+            {
+                canLoadLeftIcon
+                ? <AppText font={fontOfText} style={{...currentLabelStyle, ...app_sp.ms_8}} numberOfLines={2}>{children}</AppText>
+                : <AppText font={fontOfText} style={currentLabelStyle} numberOfLines={2}>{children}</AppText>
+              }
+          </View>
+          {canLoadRightIcon && setRightIcon(isActive, currentLabelStyle)}
+        </ImageBackground>
+      </View>
+    </ButtonComponent>
   )
 }
 

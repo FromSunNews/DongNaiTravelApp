@@ -6,8 +6,8 @@ import NumberUtility from 'utilities/number'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import AppText from 'components/app_text/AppText'
-import CapsuleButton from 'components/capsule_button/CapsuleButton'
-import CircleButton from 'components/circle_button/CircleButton'
+import RectangleButton from 'components/buttons/RectangleButton'
+import CircleButton from 'components/buttons/CircleButton'
 
 import styles from './HorizontalPlaceCardStyle'
 import { app_c, app_sp } from 'globals/styles'
@@ -79,13 +79,21 @@ const HorizontalPlaceCard = ({place}) => {
         <View style={styles.card_buttons_container}>
           <CircleButton
             style={app_sp.me_8}
+            typeOfButton="highlight"
             setIcon={(isActive, currentLabelStyle) => <Ionicons name={isActive ? 'hear' : 'heart-outline'} style={currentLabelStyle} />}
           />
           <CircleButton
             style={app_sp.me_8}
+            typeOfButton="highlight"
             setIcon={(isActive, currentLabelStyle) => <Ionicons name={isActive ? 'map' : 'map-outline'} style={currentLabelStyle} />}
           />
-          <CapsuleButton isActive={place.isVisited}>{place.isVisited ? 'Visited' : 'Visit'}</CapsuleButton>
+          <RectangleButton
+            isActive={place.isVisited}
+            typeOfButton="highlight"
+            overrideShape="capsule"
+          >
+            {place.isVisited ? 'Visited' : 'Visit'}
+          </RectangleButton>
         </View>
       </View>
 

@@ -1,8 +1,26 @@
-import { TouchableOpacity } from 'react-native'
+import {
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  TouchableHighlight,
+  View
+} from 'react-native'
 import React from 'react'
 
-import styles from './CircleButtonStyle'
-import { app_c, app_shdw } from 'globals/styles'
+import styles from './ButtonsStyles'
+import { app_shdw, app_sh, app_sp, app_c } from 'globals/styles'
+
+const default_style = {
+  flex: 0,
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center',
+  alignSelf: 'flex-start',
+  minWidth: 30,
+  minHeight: 30,
+  aspectRatio: 1,
+  ...app_sh.circle,
+  ...app_sp.p_10,
+};
 
 /**
  * __Creator__: @NguyenAnhTuan1912
@@ -14,7 +32,8 @@ import { app_c, app_shdw } from 'globals/styles'
  * @param {boolean} [props.isDisable=false] - Nút có được bật hay không?
  * @param {boolean} [props.isTransparent=false] - Nút có background color hay không?
  * @param {boolean} [props.isOnlyContent=false] - Nút có container bọc ở ngoài hay là không?
- * @param {'type_1' | 'type_2' | 'type_3'} [props.defaultColor=type_1] - Màu nút bình thường (mặc định).
+ * @param {'none' | 'opacity' | 'highlight'} [props.typeOfButton=none] - Loại nút.
+ * @param {'type_1' | 'type_2' | 'type_3' | 'type_4' | 'type_5'} [props.defaultColor=type_1] - Màu nút bình thường (mặc định).
  * @param {'type_1' | 'type_2'} [props.activeColor=type_1] - Màu nút khi khi được focus (active).
  * @param {'type_1' | 'type_2' | 'type_3' | 'type_4' | 'type_5'} [props.boxShadowType=] - Đổ bóng cho button theo loại, xem thêm trong `box-shadow.js`.
  * @param {StyleProp<ViewStyle>} [props.style={}] - Custom style cho button, không can thiệp vào các thuộc tính mặc định.
@@ -27,6 +46,7 @@ const CircleButton = ({
   isDisable = false,
   isTransparent = false,
   isOnlyContent = false,
+  typeOfButton = "none",
   defaultColor = "type_1",
   activeColor = "type_1",
   boxShadowType = "",
@@ -38,38 +58,61 @@ const CircleButton = ({
 
   if(isDisable) {
     return (
-      <TouchableOpacity
+      <TouchableWithoutFeedback
       disabled={isDisable}
-      style={{...style, ...styles.btn_disable}}
+      style={{...style, ...default_style, ...styles.btn_disable}}
     >
       {canSetIcon && setIcon(isActive = false, styles.lbl_disable)}
-    </TouchableOpacity>
+    </TouchableWithoutFeedback>
     );
   }
 
-  let currentButtonStyle = {...style, ...(isActive ? styles[`btn_active_${activeColor}`] : styles[`btn_default_${defaultColor}`])};
-  let currentLabelStyle = isActive ? styles[`lbl_active_${activeColor}`]: styles[`lbl_default_${defaultColor}`];
+  let currentButtonStyle = {
+    ...style,
+    ...default_style,
+    ...(
+      isActive
+      ? styles[`btn_active_${activeColor}`]
+      : styles[`btn_default_${defaultColor}`]
+  )};
+  let currentLabelStyle = isActive ? styles[`lbl_active_${activeColor}`] : styles[`lbl_default_${defaultColor}`];
 
   if(isOnlyContent) {
     currentButtonStyle = style;
   }
 
   if(isTransparent) {
-    currentButtonStyle = {...style, ...styles.btn_transparent};
+    currentButtonStyle = {...style, ...default_style};
   }
 
   if(boxShadowType !== "") {
     currentButtonStyle = {...currentButtonStyle, ...app_shdw[boxShadowType]}
   }
 
+  let ButtonComponent = TouchableWithoutFeedback;
+  let ButtonComponentProps;
+
+  if(typeOfButton === "opacity") {
+    ButtonComponent = TouchableOpacity;
+  }
+
+  if(typeOfButton === "highlight") {
+    ButtonComponent = TouchableHighlight;
+    ButtonComponentProps = {
+      underlayColor: app_c.HEX.ext_third,
+      style: currentButtonStyle
+    }
+  }
+
   return (
-    <TouchableOpacity
-      activeOpacity={0.4}
-      style={currentButtonStyle}
+    <ButtonComponent
+      {...ButtonComponentProps}
       onPress={handlePressButton}
     >
-      {canSetIcon && setIcon(isActive, currentLabelStyle)}
-    </TouchableOpacity>
+      <View style={typeOfButton === "highlight" ? {} : currentButtonStyle}>
+        {canSetIcon && setIcon(isActive, currentLabelStyle)}
+      </View>
+    </ButtonComponent>
   )
 }
 

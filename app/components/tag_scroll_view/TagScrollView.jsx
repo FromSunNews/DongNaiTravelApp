@@ -1,7 +1,7 @@
 import { ScrollView, Text } from 'react-native'
 import React from 'react'
 
-import CapsuleButton from '../capsule_button/CapsuleButton'
+import RectangleButton from '../buttons/RectangleButton'
 
 import { app_sp } from 'globals/styles'
 
@@ -10,13 +10,13 @@ import { app_sp } from 'globals/styles'
  * 
  * ScrollButtonView sẽ chịu trách nhiệm load dữ liệu cho các Button, mà dữ liệu này sẽ theo một chủ đề nào đó.
  * @param {object} props - Props của component.
- * @param {string} props.concept - Chủ đề cần để load dữ liệu. VD: `Blog`, `Place`.
+ * @param {'places' | 'blogs'} [props.concept=places] - Chủ đề cần để load dữ liệu. VD: `Blog`, `Place`.
  * @param {StyleProp<ViewStyle>} props.style - Style riêng cho Scroll TagButton View.
  * @param {boolean} props.isHorizontalScroll - Đây có phải là một view scroll nằm ngang hay không? Mặc định là `true`
  * @returns Trả về `ScrollView` Component có các `TouchableOpacity` Components ở trong đó.
  */
 const TagScrollView = ({
-  concept,
+  concept = 'places',
   style,
   isHorizontalScroll = true
 }) => {
@@ -33,8 +33,8 @@ const TagScrollView = ({
       {fakeData[concept].map((data, index) => {
         return (
           index > (lengthOfTags - 1)
-          ? <CapsuleButton key={data} isActive={index === 0 ? true : false}>{data}</CapsuleButton>
-          : <CapsuleButton key={data} style={app_sp.me_12} isActive={index === 0 ? true : false}>{data}</CapsuleButton>
+          ? <RectangleButton key={data} overrideShape="capsule" typeOfButton="highlight" isActive={index === 0 ? true : false}>{data}</RectangleButton>
+          : <RectangleButton key={data} overrideShape="capsule" typeOfButton="highlight" style={app_sp.me_12} isActive={index === 0 ? true : false}>{data}</RectangleButton>
         );
       })}
     </ScrollView>
@@ -42,9 +42,10 @@ const TagScrollView = ({
 }
 
 const fakeData = {
-  "place": [
+  "places": [
     "All", "Recommended", "Popular", "Most visited", "Most Ratings"
-  ]
+  ],
+  "blogs": []
 };
 
 export default TagScrollView

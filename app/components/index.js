@@ -1,10 +1,10 @@
 import AppText from "./app_text/AppText"
-import BannerButton from "./banner_button/BannerButton"
+import BannerButton from "./buttons/BannerButton"
 import BottomSheetScroll from "./bottom_sheet/BottomSheetScroll"
 import ButtonText from './button_text/ButtonText'
-import CapsuleButton from "./capsule_button/CapsuleButton"
+import RectangleButton from "./buttons/RectangleButton"
 import CheckBoxText from './checkbox_text/CheckBoxText'
-import CircleButton from "./circle_button/CircleButton"
+import CircleButton from "./buttons/CircleButton"
 import HorizontalPlaceCard from "./horizontal_place_card/HorizontalPlaceCard"
 import Input from './input/Input'
 import Loading from './loading/Loading'
@@ -14,11 +14,11 @@ import TagScrollView from "./tag_scroll_view/TagScrollView"
 export {
   AppText,
   BannerButton,
+  RectangleButton,
+  CircleButton,
   BottomSheetScroll,
   ButtonText,
-  CapsuleButton,
   CheckBoxText,
-  CircleButton,
   HorizontalPlaceCard,
   Input,
   Loading,
