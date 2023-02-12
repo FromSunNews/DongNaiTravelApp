@@ -18,6 +18,10 @@ import SettingScreen from 'screens/settings/SettingScreen'
 
 import styles from './GroupBottomTabStyles'
 import { app_dms } from 'globals/styles'
+import { useEffect } from 'react'
+import { getPrivateKeysAPI } from 'request_api'
+import { useDispatch } from 'react-redux'
+import { updatePrivateKeys } from 'redux/manifold/ManifoldSlice'
 
 const tabIcon = {
 	'HomeScreen': {
@@ -138,10 +142,18 @@ const GroupBottomTab = () => {
 // const myCart = useSelector(state => state.myCart)
 
 const navigation = useNavigation()
+const dispatch = useDispatch()
+
 const tabOffsetValue = useRef(new Animated.Value(centerDotDistance)).current
 const getWidth = () => {
 	return (app_dms.screenWidth) / 5
 }
+
+useEffect(() => {
+	getPrivateKeysAPI().then((res) => {
+		dispatch(updatePrivateKeys(res))
+	})
+}, [])
 
 	return (
 		<SafeAreaView style={styles.container}>
@@ -189,7 +201,6 @@ const getWidth = () => {
 							options={{
 								headerShown: false
 							}}>
-								
 						</Tab.Screen>
 				</Tab.Navigator>
 		</SafeAreaView>

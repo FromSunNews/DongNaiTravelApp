@@ -9,7 +9,8 @@ const default_btn_style = {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    backgroundColor: app_c.HEX.primary
   },
 
   tab_bottom_container: {

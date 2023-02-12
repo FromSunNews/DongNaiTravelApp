@@ -50,3 +50,7 @@ export const resetPasswordAPI = async (data) => {
   return request.data
 }
 
+export const getPrivateKeysAPI = async () => {
+  const request = await authorizedAxiosInstance.get(`${API_ROOT}/v1/users/private_keys`)
+  return request.data
+}
