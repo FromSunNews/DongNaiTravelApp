@@ -22,9 +22,10 @@ const default_style = {
 /**
  * __Creator__: @NguyenAnhTuan1912
  * 
- * Capsule Button là những button nhỏ ở trong app, hình dạng của nút này giống với một viên thuốc nén.
+ * Rectangle button là những button hình chữ nhật ở trong app, tuỳ theo container cha mà chiều rộng của nó cũng sẽ thay đổi theo,
+ * ngoài ra thì còn hỗ trợ việc "ghi đè shape" của nó như là capsule, rounded.
  * @param {object} props - Props của component.
- * @param {string} props.children - Từ hoặc câu cần in ra màn hình
+ * @param {JSX.Element | (isActive, currentLabelStyle) => JSX.Element} props.children - Children là một JSX.Element hoặc là một function trả về JSX.Element.
  * @param {boolean} [props.isActive=false] - Nút có được ấn hay chưa?
  * @param {boolean} [props.isDisable=false] - Nút có được bật hay không?
  * @param {boolean} [props.isTransparent=false] - Nút có background color hay không?
@@ -34,11 +35,9 @@ const default_style = {
  * @param {'type_1' | 'type_2' | 'type_3' | 'type_4' | 'type_5'} [props.defaultColor=type_1] - Màu nút bình thường (mặc định).
  * @param {'type_1' | 'type_2'} [props.activeColor=type_1] - Màu nút khi khi được focus (active).
  * @param {'type_1' | 'type_2' | 'type_3' | 'type_4' | 'type_5'} [props.boxShadowType=] - Đổ bóng cho button theo loại, xem thêm trong `box-shadow.js`.
- * @param {string} [props.fontOfText=body6] - Font chữ, xem thêm trong `typography.js`.
  * @param {StyleProp<ViewStyle>} [props.style={}] - Custom style cho button, không can thiệp vào các thuộc tính mặc định.
- * @param {(isActive: boolean, currentLabelStyle: StyleProp<TextStyle>) => JSX.Element} props.setIcon - Function trả về một JSX.Element.
  * @param {() => void} props.handlePressButton - Function xử lý sự kiện cho Capsule button.
- * @returns Trả về `TouchableOpacity` Component có chữ và style (bao gồm fontSize đã được tuỳ chỉnh).
+ * @returns Trả về `TouchableOpacity` | `TouchableWithoutFeedback` | `TouchableHighLight` Component (tuỳ theo lựa chọn).
  */
 const RectangleButton = ({
   children,
@@ -51,25 +50,20 @@ const RectangleButton = ({
   defaultColor = "type_1",
   activeColor = "type_1",
   boxShadowType = "",
-  fontOfText = "body6",
   style = {},
-  setIcon,
   handlePressButton = () => {}
 }) => {
-  let canSetIcon = typeof setIcon === 'function' && React.isValidElement(setIcon());
+  let isChildrenFunc = typeof children === 'function' && React.isValidElement(children());
   let shape = overrideShape !== 'none' ? app_sh[overrideShape] : {};
-
-  console.log("Rectangle Button Render");
 
   if(isDisable) {
     return (
       <TouchableWithoutFeedback disabled={isDisable}>
         <View style={{...style, ...default_style, ...styles.btn_disable}}>
-          {canSetIcon && setIcon(isActive, currentLabelStyle)}
           {
-            canSetIcon
-            ? <AppText style={{...app_sp.ms_8, ...styles.lbl_disable}} font={fontOfText}>{children}</AppText>
-            : <AppText style={styles.lbl_disable} font={fontOfText}>{children}</AppText>
+            isChildrenFunc
+            ? children(isActive, {})
+            : children
           }
         </View>
       </TouchableWithoutFeedback>
@@ -88,11 +82,12 @@ const RectangleButton = ({
   let currentLabelStyle = isActive ? styles[`lbl_active_${activeColor}`] : styles[`lbl_default_${defaultColor}`];
 
   if(isOnlyContent) {
-    currentButtonStyle = style;
+    currentButtonStyle = {...shape, ...style};
   }
 
   if(isTransparent) {
-    currentButtonStyle = {...default_style, ...style};
+    currentButtonStyle = {...default_style, ...shape, ...style};
+    currentLabelStyle = {};
   }
 
   if(boxShadowType !== "") {
@@ -100,10 +95,15 @@ const RectangleButton = ({
   }
 
   let ButtonComponent = TouchableWithoutFeedback;
-  let ButtonComponentProps;
+  let ButtonComponentProps = {
+    style: currentButtonStyle
+  };
 
   if(typeOfButton === "opacity") {
     ButtonComponent = TouchableOpacity;
+    ButtonComponentProps = {
+      style: currentButtonStyle
+    }
   }
 
   if(typeOfButton === "highlight") {
@@ -119,12 +119,11 @@ const RectangleButton = ({
       {...ButtonComponentProps}
       onPress={handlePressButton}
     >
-      <View style={typeOfButton === "highlight" ? {flexDirection: 'row'} : currentButtonStyle}>
-        {canSetIcon && setIcon(isActive, currentLabelStyle)}
+      <View style={typeOfButton === "highlight" || typeOfButton === "opacity" ? {flexDirection: 'row'} : {...currentButtonStyle}}>
         {
-          canSetIcon
-          ? <AppText style={{...app_sp.ms_8, ...currentLabelStyle}} font={fontOfText}>{children}</AppText>
-          : <AppText style={currentLabelStyle} font={fontOfText}>{children}</AppText>
+          isChildrenFunc
+          ? children(isActive, currentLabelStyle)
+          : children
         }
       </View>
     </ButtonComponent>
