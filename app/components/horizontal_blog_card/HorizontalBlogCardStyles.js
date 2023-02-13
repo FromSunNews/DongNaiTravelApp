@@ -28,9 +28,8 @@ const styles = StyleSheet.create({
     height: 145,
     backgroundColor: app_c.HEX.ext_primary,
     overflow: 'hidden',
-    borderRadius: 4,
+    ...app_sh.rounded_4,
     ...app_sp.p_10,
-    ...app_sp.me_12
   },
 
   card_recommended_mark_container: {
@@ -52,7 +51,8 @@ const styles = StyleSheet.create({
     flexDirection: 'column'
   },
 
-  cart_tag_container: {
+  card_user_container: {
+    alignItems: 'center',
     flexDirection: 'row',
     ...app_sp.mb_12
   },
@@ -69,12 +69,13 @@ const styles = StyleSheet.create({
   },
 
   card_information_container: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
 
   card_information_col: {
-    flexDirection: 'column',
-    ...app_sp.me_12
+    flex: 1,
+    flexDirection: 'column'
   },
 
   card_buttons_container: {
@@ -82,6 +83,13 @@ const styles = StyleSheet.create({
   },
 
   card_share_container: {
+  },
+
+  car_skeleton_rectangle: {
+    width: '100%',
+    height: 19,
+    backgroundColor: app_c.HEX.ext_primary,
+    ...app_sh.rounded_4
   }
 });
 

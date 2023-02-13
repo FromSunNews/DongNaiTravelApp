@@ -6,7 +6,7 @@
  * @param {number} year - Năm bất kì.
  * @returns Trả về `true` nếu như là `year` là năm nhuận, ngược lại là `false`.
  */
-const isLeapYear = function (year) {
+const isLeapYear = function(year) {
   return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
 };
 
@@ -18,7 +18,7 @@ const isLeapYear = function (year) {
  * @param {number} month - Năm bất kì.
  * @returns Trả về số ngày trong `month`.
  */
-const getDayInMonth = function (month) {
+const getDayInMonth = function(month) {
   if (month < 0 || month > 12) return 0;
   if (month === 2) return isLeapYear(new Date().getFullYear()) ? 29 : 28;
   return (month % 2 !== 0 && month < 8) ||
@@ -37,7 +37,7 @@ const getDayInMonth = function (month) {
  * @param {number} timeStamp - Một mốc thời gian tính bằng `mili second`.
  * @returns `Thứ tháng ngày năm giờ múi giờ` ở dạng chuỗi.
  */
-const getDateInString = function (timeStamp) {
+const getDateInString = function(timeStamp) {
   return new Date(timeStamp).toString();
 };
 
@@ -49,7 +49,7 @@ const getDateInString = function (timeStamp) {
  * @param {number} timeStamp - Một mốc thời gian tính bằng `mili second`.
  * @returns `Ngày tháng năm giờ` ở dạng chuỗi.
  */
-const getDateInLocaleString = function (timeStamp) {
+const getDateInLocaleString = function(timeStamp) {
   return new Date(timeStamp).toLocaleString();
 };
 
@@ -71,7 +71,7 @@ const getDateInLocaleString = function (timeStamp) {
  * @param {number} timeStamp - Một mốc thời gian tính bằng `mili second`.
  * @returns `TimeCollection`.
  */
-const getTimeCollection = function (timeStamp = Date.now()) {
+const getTimeCollection = function(timeStamp = Date.now()) {
   const dateByTS = new Date(timeStamp);
   return {
     dateObj: dateByTS,
@@ -98,7 +98,7 @@ const getTimeCollection = function (timeStamp = Date.now()) {
  * @param {number} timeStampNow - Một mốc thời gian "hiện tại" tính bằng `mili second`.
  * @returns `TimeDistance`.
  */
-const getTimeDistance = function (timeStampThen, timeStampNow = Date.now()) {
+const getTimeDistance = function(timeStampThen, timeStampNow = Date.now()) {
   const distanceInSecond = parseInt(
     Math.abs(timeStampNow - timeStampThen) / 1000
   );
@@ -134,6 +134,23 @@ const getTimeDistance = function (timeStampThen, timeStampNow = Date.now()) {
   }
 };
 
+const getShortDateString = function(timeStamp, options = {day: 'numeric', month: 'short', year: 'numeric'}) {
+  const date = new Date(timeStamp);
+  return date.toLocaleString(undefined, options);
+}
+
+const toMinute = function(second) {
+  return parseInt(second / 60);
+}
+
+const toHour = function(second) {
+  return parseInt(second / 3600);
+}
+
+const toDay = function(second) {
+  return parseInt(second / 86400);
+}
+
 const DateTimeUtility = {
   isLeapYear,
   getDateInString,
@@ -141,6 +158,10 @@ const DateTimeUtility = {
   getTimeCollection,
   getTimeDistance,
   getDayInMonth,
+  getShortDateString,
+  toMinute,
+  toHour,
+  toDay
 };
 
 export default DateTimeUtility;

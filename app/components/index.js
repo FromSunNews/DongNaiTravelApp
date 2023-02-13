@@ -5,7 +5,10 @@ import ButtonText from './button_text/ButtonText'
 import RectangleButton from "./buttons/RectangleButton"
 import CheckBoxText from './checkbox_text/CheckBoxText'
 import CircleButton from "./buttons/CircleButton"
+import HorizontalBlogCard from "./horizontal_blog_card/HorizontalBlogCard"
+import HorizontalBlogCardSkeleton from "./horizontal_blog_card/HorizontalBlogCardSkeleton"
 import HorizontalPlaceCard from "./horizontal_place_card/HorizontalPlaceCard"
+import HorizontalPlaceCardSkeleton from "./horizontal_place_card/HorizontalPlaceCardSkeleton"
 import Input from './input/Input'
 import Loading from './loading/Loading'
 import NotificationBottomSheet from './notification_bottom_sheet/NotificationBottomSheet'
@@ -19,7 +22,10 @@ export {
   BottomSheetScroll,
   ButtonText,
   CheckBoxText,
+  HorizontalBlogCard,
+  HorizontalBlogCardSkeleton,
   HorizontalPlaceCard,
+  HorizontalPlaceCardSkeleton,
   Input,
   Loading,
   NotificationBottomSheet,

@@ -1,46 +1,55 @@
-import { View, SafeAreaView, ScrollView } from 'react-native'
+import { View, SafeAreaView, ScrollView, Text } from 'react-native'
 import React from 'react'
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
-import { TagScrollView, HorizontalPlaceCard, BannerButton } from 'components'
+import { TagScrollView, HorizontalPlaceCard, HorizontalPlaceCardSkeleton, BannerButton } from 'components'
 
 import styles from './ExploreScreenStyles'
 import { app_sp, app_c } from 'globals/styles'
 
 const ExploreScreen = () => {
-  console.log("Render Explore Screen");
+  const [currentPlaces, setCurrentPlaces] = React.useState([]);
+
+  React.useEffect(() => {
+    setTimeout(() => {
+      setCurrentPlaces([...places]);
+    }, 2000);
+  }, []);
+
   return (
-    <View>
-      <ScrollView
-        style={styles.scroll_view_container}
-        stickyHeaderIndices={[1]}
-      >
-        <View style={{...app_sp.mh_12}}>
-          <BannerButton
-            typeOfButton="highlight"
-            toScreen={{screenName: "MapScreen"}}
-            setRightIcon={(isActive, currentLabelStyle) =>
-              <Ionicons name="chevron-forward-outline" style={currentLabelStyle} size={25} />
-            }
-          >
-            Let’s see your location in map
-          </BannerButton>
-        </View>
-        <View style={{backgroundColor: app_c.HEX.primary, ...app_sp.mv_10}}>
-          <TagScrollView 
-            concept="places"
-            style={{...app_sp.ms_12, ...app_sp.pv_12}}
-          />
-        </View>
+    <ScrollView
+      style={styles.scroll_view_container}
+      stickyHeaderIndices={[1]}
+    >
+      <View style={{...app_sp.mh_12}}>
+        <BannerButton
+          typeOfButton="highlight"
+          toScreen={{screenName: "MapScreen"}}
+          setRightIcon={(isActive, currentLabelStyle) =>
+            <Ionicons name="chevron-forward-outline" style={currentLabelStyle} size={25} />
+          }
+        >
+          Let’s see your location in map
+        </BannerButton>
+      </View>
+      <View style={{backgroundColor: app_c.HEX.primary, ...app_sp.mv_10}}>
+        <TagScrollView 
+          concept="places"
+          style={{...app_sp.ms_12, ...app_sp.pv_12}}
+        />
+      </View>
 
-        <View style={{...app_sp.mh_12, ...app_sp.mb_12}}>
-          {places.map(place => <HorizontalPlaceCard place={place} key={place.id} />)}
-        </View>
+      <View style={{...app_sp.mh_12, ...app_sp.mb_12}}>
+        {
+          currentPlaces.length === 0
+          ? [1, 2, 3].map((value, index) => <HorizontalPlaceCardSkeleton key={value + index} />)
+          : currentPlaces.map((place, index) => <HorizontalPlaceCard place={place} key={place.id} />)
+        }
+      </View>
 
-        <View style={{height: 100}}></View>
-      </ScrollView>
-    </View>
+      <View style={{height: 100}}></View>
+    </ScrollView>
   )
 }
 
