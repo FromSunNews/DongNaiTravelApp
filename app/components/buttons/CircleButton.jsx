@@ -19,14 +19,14 @@ const default_style = {
   minHeight: 30,
   aspectRatio: 1,
   ...app_sh.circle,
-  ...app_sp.p_10,
+  ...app_sp.p_6,
 };
 
 /**
  * __Creator__: @NguyenAnhTuan1912
  * 
  * Circle Button là những button nhỏ ở trong app, có hình dạng là một hình tròn. Button này chỉ
- * có icon chứ không có text.
+ * có icon.
  * @param {object} props - Props của component.
  * @param {boolean} [props.isActive=false] - Nút có được ấn hay chưa?
  * @param {boolean} [props.isDisable=false] - Nút có được bật hay không?
@@ -37,9 +37,9 @@ const default_style = {
  * @param {'type_1' | 'type_2'} [props.activeColor=type_1] - Màu nút khi khi được focus (active).
  * @param {'type_1' | 'type_2' | 'type_3' | 'type_4' | 'type_5'} [props.boxShadowType=] - Đổ bóng cho button theo loại, xem thêm trong `box-shadow.js`.
  * @param {StyleProp<ViewStyle>} [props.style={}] - Custom style cho button, không can thiệp vào các thuộc tính mặc định.
- * @param {(isActive: boolean, currentLabelStyle: StyleSheet) => JSX.Element} props.setIcon - Function trả về một JSX.Element.
+ * @param {(isActive, currentLabelStyle) => JSX.Element} props.setIcon - Custom style cho button, không can thiệp vào các thuộc tính mặc định.
  * @param {() => void} props.handlePressButton - Function xử lý sự kiện cho Capsule button.
- * @returns Trả về `TouchableOpacity` Component có chữ và style (bao gồm fontSize đã được tuỳ chỉnh).
+ * @returns Trả về `TouchableOpacity` | `TouchableWithoutFeedback` | `TouchableHighLight` Component (tuỳ theo lựa chọn).
  */
 const CircleButton = ({
   isActive = false,
@@ -54,16 +54,17 @@ const CircleButton = ({
   setIcon,
   handlePressButton = () => {}
 }) => {
-  let canSetIcon = typeof setIcon === 'function';
+  let canSetIcon = typeof setIcon === 'function' && React.isValidElement(setIcon());
 
   if(isDisable) {
     return (
       <TouchableWithoutFeedback
-      disabled={isDisable}
-      style={{...style, ...default_style, ...styles.btn_disable}}
-    >
-      {canSetIcon && setIcon(isActive = false, styles.lbl_disable)}
-    </TouchableWithoutFeedback>
+        disabled={isDisable}
+      >
+        <View style={{...style, ...default_style, ...styles.btn_disable}}>
+          {canSetIcon && setIcon(isActive, {})}
+        </View>
+      </TouchableWithoutFeedback>
     );
   }
 
@@ -82,7 +83,8 @@ const CircleButton = ({
   }
 
   if(isTransparent) {
-    currentButtonStyle = {...style, ...default_style};
+    currentButtonStyle = {...default_style, ...style};
+    currentLabelStyle = {};
   }
 
   if(boxShadowType !== "") {
@@ -90,10 +92,15 @@ const CircleButton = ({
   }
 
   let ButtonComponent = TouchableWithoutFeedback;
-  let ButtonComponentProps;
+  let ButtonComponentProps = {
+    style: currentButtonStyle
+  };
 
   if(typeOfButton === "opacity") {
     ButtonComponent = TouchableOpacity;
+    ButtonComponentProps = {
+      style: currentButtonStyle
+    }
   }
 
   if(typeOfButton === "highlight") {
@@ -109,8 +116,8 @@ const CircleButton = ({
       {...ButtonComponentProps}
       onPress={handlePressButton}
     >
-      <View style={typeOfButton === "highlight" ? {} : currentButtonStyle}>
-        {canSetIcon && setIcon(isActive, currentLabelStyle)}
+      <View style={typeOfButton === "highlight" || typeOfButton === "opacity" ? {flexDirection: 'row'} : {...currentButtonStyle}}>
+          {canSetIcon && setIcon(isActive, currentLabelStyle)}
       </View>
     </ButtonComponent>
   )
