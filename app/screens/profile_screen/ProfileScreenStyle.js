@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
   user_bio_content: {
     ...app_sp.pt_6,
     color:app_c.HEX.ext_second,
-    ...app_typo.size.sz_16``
+    ...app_typo.size.sz_16
   },
   user_info_other:{
     flexDirection:'row',
