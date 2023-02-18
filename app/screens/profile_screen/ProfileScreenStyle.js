@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
     height: app_dms.screenHeight,
   },
   container: {
-    width: '100%',
+    ...app_dms.screenWidth
   },
   imageCover: {
     width: '100%',
@@ -175,7 +175,29 @@ const styles = StyleSheet.create({
     justifyContent:'center',
     alignItems:'center',
     ...app_sp.mt_12
-  }
+  },
   // end blog block
+
+  //start bottomsheet setting image
+  
+  choice_setting_image:{
+    width:'100%',
+    height:50,
+    ...app_sp.mt_6,
+    alignItems:'center',
+    flexDirection:'row',
+    
+  },
+  choice_setting_icon:{
+    color:app_c.HEX.ext_second,
+    ...app_sp.ph_6
+  },
+  choice_setting_image_name:{
+    ...app_typo.size.sz_18,
+    color:app_c.HEX.fourth,
+    fontWeight:'500',
+  
+  }
+
 })
 export default styles
