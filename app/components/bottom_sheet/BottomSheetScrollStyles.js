@@ -1,4 +1,4 @@
-import { app_c, app_dms, app_sh, app_sp, app_typo } from 'globals/styles'
+import { app_c, app_dms, app_sh, app_shdw, app_sp, app_typo } from 'globals/styles'
 import { StyleSheet } from 'react-native'
 
 export const styles = StyleSheet.create({
@@ -13,6 +13,7 @@ export const styles = StyleSheet.create({
   },
   bottomSheetContainer: {
     borderRadius: 24,
+    ...app_shdw.type_4
   },
   contentContainer: {
     width: '100%',

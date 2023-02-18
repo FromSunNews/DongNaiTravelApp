@@ -191,19 +191,19 @@ const SigninScreen = () => {
               </TouchableOpacity>
             </View>
 
-            {/* <ButtonText
+            <ButtonText
               label='Sign In'
               onPress={handleSubmit(onSubmit)}
-            /> */}
+            />
 
-            <RectangleButton
+            {/* <RectangleButton
               overrideShape="rounded_8"
               typeOfButton="opacity"
               fontOfText='h4'
               defaultColor="type_4"
               style={{...app_sp.mt_12, ...app_sp.pv_16}}
               handlePressButton={handleSubmit(onSubmit)}
-            >Sign In</RectangleButton>
+            >Sign In</RectangleButton> */}
             
           </View>
           
@@ -212,7 +212,6 @@ const SigninScreen = () => {
       </TouchableWithoutFeedback>
       <View style={styles.containerFooter}>
         <TouchableOpacity
-
           style={{alignSelf: 'center'}}
           onPress={() => navigation.replace('GroupBottomTab')}
         >

@@ -1,16 +1,23 @@
+import { app_c, app_typo } from 'globals/styles'
 import { StyleSheet } from 'react-native'
 
 export const StarRatingStyles = StyleSheet.create({
   container: {
+    display: 'flex',
     flexDirection: 'row',
     alignItems: 'center'
   },
   star: {
-    color: '#FF8C00'
+    color: '#F9BD06'
   },
-  text: {
-    fontSize: 12,
+  textReviews: {
     marginLeft: 5,
-    color: '#444',
+    color: app_c.HEX.fourth,
+    ...app_typo.fonts.body5
+  },
+  textRatings: {
+    marginRight: 5,
+    color: app_c.HEX.fourth,
+    ...app_typo.fonts.body5
   }
 })

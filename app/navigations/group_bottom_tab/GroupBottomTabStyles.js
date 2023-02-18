@@ -19,7 +19,9 @@ const styles = StyleSheet.create({
     backgroundColor: app_c.HEX.fourth,
     position: 'absolute',
     width: app_dms.screenWidth - 36,
-    bottom: 18,
+    // bottom: 18,
+    // Phuong: with IpX
+    bottom: 30,
     left: 18,
     zIndex: 999,
     ...app_shdw.type_5,

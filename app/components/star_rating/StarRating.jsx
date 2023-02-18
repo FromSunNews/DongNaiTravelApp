@@ -3,7 +3,7 @@ import React from 'react'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { StarRatingStyles } from './StarRatingStyles'
 
-const StarRating = ({ ratings, reviews }) => {
+const StarRating = ({ ratings, reviews = null, containerStyle, textRatingStyle, textReviewStyle, isHaveRatingText = true}) => {
   // This array will contain our star tags. We will include this
   // array between the view tag.
   const stars = []
@@ -21,9 +21,16 @@ const StarRating = ({ ratings, reviews }) => {
   }
 
   return (
-    <View style={StarRatingStyles.container}>
+    <View style={[StarRatingStyles.container, containerStyle]}>
+      {
+        isHaveRatingText &&
+        <Text style={[StarRatingStyles.textRatings, textRatingStyle]}>{ratings}</Text>
+      }
       {stars}
-      <Text style={StarRatingStyles.text}>({reviews})</Text>
+      {
+        reviews &&
+        <Text style={[StarRatingStyles.textReviews, textReviewStyle]}>({reviews})</Text>
+      }
     </View>
   )
 }

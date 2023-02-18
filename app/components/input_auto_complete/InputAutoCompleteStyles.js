@@ -1,4 +1,4 @@
-import { app_c } from 'globals/styles'
+import { app_c, app_sh, app_sp } from 'globals/styles'
 import { StyleSheet } from 'react-native'
 
 export const styles = StyleSheet.create({
@@ -20,6 +20,15 @@ export const styles = StyleSheet.create({
   },
   poweredContainer: {
     backgroundColor: app_c.HEX.primary,
+  },
+  overlayBtn: {
+    position: 'absolute',
+    width: '100%',
+    height: 52,
+    top: 0,
+    right: 0,
+    left: 0,
+    ...app_sh.rounded_8
   }
 
 })

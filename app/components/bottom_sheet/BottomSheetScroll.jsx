@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/Octicons'
 import { app_c } from 'globals/styles'
 
 
-const BottomSheetScroll = ({ openTermCondition, closeTermCondition, childView, snapPoints, labelBtn }) => {
+const BottomSheetScroll = ({ openTermCondition = false, closeTermCondition, childView, snapPoints, labelBtn, haveBtn = true, haveOverlay = true, bottomView }) => {
 
   const bottomSheetRef = useRef(null)
 
@@ -20,10 +20,13 @@ const BottomSheetScroll = ({ openTermCondition, closeTermCondition, childView, s
   if (openTermCondition)
     return (
       <>
-        <Pressable 
-          style={styles.modal} 
-          onPress={handleClosePress}
-        />
+        {
+          haveOverlay &&
+          <Pressable 
+            style={styles.modal} 
+            onPress={handleClosePress}
+          />
+        }
         <BottomSheet
           ref={bottomSheetRef}
           index={1}
@@ -33,17 +36,22 @@ const BottomSheetScroll = ({ openTermCondition, closeTermCondition, childView, s
           backgroundStyle={styles.bottomSheetContainer}
         >
           <BottomSheetScrollView
-            contentContainerStyle={styles.bottomView}
+            contentContainerStyle={[styles.bottomView, bottomView]}
+            showsVerticalScrollIndicator={false}
           >
 
             {childView}
 
-            <TouchableOpacity
-              style={styles.btn}
-              onPress={handleClosePress}
-            >
-            <Text style={styles.btnText}>{labelBtn}</Text>
-            </TouchableOpacity>
+            {
+              haveBtn && 
+              <TouchableOpacity
+                style={styles.btn}
+                onPress={handleClosePress}
+              >
+                <Text style={styles.btnText}>{labelBtn}</Text>
+              </TouchableOpacity>
+            }
+
           </BottomSheetScrollView>
         </BottomSheet>
       </> 

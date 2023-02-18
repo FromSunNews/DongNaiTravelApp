@@ -53,7 +53,7 @@ export default function App() {
 
         <StatusBar 
           barStyle='dark-content'
-          backgroundColor={app_c.HEX.primary}
+          backgroundColor={app_c.HEX.third}
         />
         
         <NavigationContainer>

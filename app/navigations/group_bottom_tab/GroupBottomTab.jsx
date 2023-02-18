@@ -156,7 +156,7 @@ useEffect(() => {
 }, [])
 
 	return (
-		<SafeAreaView style={styles.container}>
+		<View style={styles.container}>
 				<Tab.Navigator
 					tabBar={props => (<BottomTabBar {...props} tabOffsetValue={tabOffsetValue} />)}
 					screenOptions={{
@@ -203,7 +203,7 @@ useEffect(() => {
 							}}>
 						</Tab.Screen>
 				</Tab.Navigator>
-		</SafeAreaView>
+		</View>
 	)
 }
 
