@@ -10,16 +10,14 @@ import styles from './ButtonsStyles'
 import { app_shdw, app_sh, app_sp, app_c } from 'globals/styles'
 
 const default_style = {
-  flex: 0,
-  flexDirection: 'row',
-  alignItems: 'center',
   justifyContent: 'center',
-  alignSelf: 'flex-start',
+  alignItems: 'center',
   minWidth: 30,
-  minHeight: 30,
+  maxWidth: 100,
+  maxHeight: 100,
   aspectRatio: 1,
   ...app_sh.circle,
-  ...app_sp.p_6,
+  ...app_sp.p_10,
 };
 
 /**
@@ -61,7 +59,7 @@ const CircleButton = ({
       <TouchableWithoutFeedback
         disabled={isDisable}
       >
-        <View style={{...style, ...default_style, ...styles.btn_disable}}>
+        <View style={{...default_style, ...style, ...styles.btn_disable}}>
           {canSetIcon && setIcon(isActive, {})}
         </View>
       </TouchableWithoutFeedback>
@@ -69,8 +67,8 @@ const CircleButton = ({
   }
 
   let currentButtonStyle = {
-    ...style,
     ...default_style,
+    ...style,
     ...(
       isActive
       ? styles[`btn_active_${activeColor}`]
@@ -116,7 +114,7 @@ const CircleButton = ({
       {...ButtonComponentProps}
       onPress={handlePressButton}
     >
-      <View style={typeOfButton === "highlight" || typeOfButton === "opacity" ? {flexDirection: 'row'} : {...currentButtonStyle}}>
+      <View style={typeOfButton === "highlight" || typeOfButton === "opacity" ? {flex: 1, justifyContent: 'center', alignItems: 'center'} : {...currentButtonStyle}}>
           {canSetIcon && setIcon(isActive, currentLabelStyle)}
       </View>
     </ButtonComponent>

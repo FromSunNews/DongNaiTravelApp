@@ -60,7 +60,7 @@ const TagScrollView = ({
                   isActive={index === 0 ? true : false}
                 >
                   {(isActive, currentLabelStyle) => (
-                    <AppText style={currentLabelStyle}>{data}</AppText>
+                    <AppText style={currentLabelStyle} font="body3">{data}</AppText>
                   )}
                 </RectangleButton>
               )
@@ -73,7 +73,7 @@ const TagScrollView = ({
                   isActive={index === 0 ? true : false}
                 >
                   {(isActive, currentLabelStyle) => (
-                    <AppText style={currentLabelStyle}>{data}</AppText>
+                    <AppText style={currentLabelStyle} font="body3">{data}</AppText>
                   )}
                 </RectangleButton>
               )
