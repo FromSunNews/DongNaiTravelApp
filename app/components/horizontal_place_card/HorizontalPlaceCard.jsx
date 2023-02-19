@@ -13,7 +13,6 @@ import CircleButton from '../buttons/CircleButton'
 
 import styles from './HorizontalPlaceCardStyles'
 import { app_c, app_sh, app_sp } from 'globals/styles'
-import { BannerButton } from 'components'
 
 /*
   Các thông tin về một place có thể thay đổi.
@@ -50,9 +49,9 @@ const HorizontalPlaceCard = ({place}) => {
     <View style={styles.card}>
       {/* Cột đâu tiên - Image Container */}
       <RectangleButton
+        isOnlyContent
         typeOfButton="none"
         overrideShape="rounded_4"
-        isOnlyContent={true}
         handlePressButton={handlePressImageButton}
         style={{
           ...app_sp.me_12
@@ -65,7 +64,7 @@ const HorizontalPlaceCard = ({place}) => {
           {
             place.isRecommended &&
             <View style={styles.card_recommended_mark_container}>
-              <AppText font="body6" style={{color: app_c.HEX.ext_second}}>Recommended</AppText>
+              <AppText font="body3" color="ext_second">Recommended</AppText>
             </View>
           }
         </ImageBackground>
@@ -75,23 +74,25 @@ const HorizontalPlaceCard = ({place}) => {
       <View style={styles.card_main_container}>
         <View style={styles.card_content_container}>
           <View style={styles.card_tag_container}>
-            {place.tags.map((tag, index) => <AppText font="body7" key={tag.title}>{tag.title}{index < place.tags.length - 1 ? ", " : ""}</AppText>)}
+            {place.tags.map((tag, index) => (
+              <AppText font="body3" style={styles.card_text_color} key={tag.title}>{tag.title}{index < place.tags.length - 1 ? ", " : ""}</AppText>
+            ))}
           </View>
           <View>
-            <AppText numberOfLines={1} font="h3" style={styles.card_title}>{place.name}</AppText>
-            <AppText style={styles.car_subtitle} font="body6">{place.location.city} - {place.location.province}</AppText>
+            <AppText numberOfLines={1} font="h4" style={styles.card_title}>{place.name}</AppText>
+            <AppText style={styles.car_subtitle} font="body3">{place.location.city} - {place.location.province}</AppText>
           </View>
           <View style={styles.card_information_container}>
             <View style={styles.card_information_col}>
-              <AppText font="body6" style={styles.card_text_color}>
-                <Ionicons name='star-outline' /> {NumberUtility.toMetricNumber(place.ratingPoints)}
+              <AppText font="body3" style={styles.card_text_color}>
+                <Ionicons name='star-outline' /> {place.ratingPoints}
               </AppText>
-              <AppText font="body6" style={styles.card_text_color}>
+              <AppText font="body3" style={styles.card_text_color}>
                 <Ionicons name='chatbubble-outline' /> {NumberUtility.toMetricNumber(place.numberOfReviews)}
               </AppText>
             </View>
             <View style={styles.card_information_col}>
-              <AppText font="body6" style={styles.card_text_color}>
+              <AppText font="body3" style={styles.card_text_color}>
                 <Ionicons name='eye-outline' /> {NumberUtility.toMetricNumber(place.numberOfVisited)}
               </AppText>
             </View>
@@ -102,14 +103,14 @@ const HorizontalPlaceCard = ({place}) => {
             style={app_sp.me_8}
             typeOfButton="highlight"
             setIcon={(isActive, currentLabelStyle) => (
-              <Ionicons name={isActive ? 'heart' : 'heart-outline'} style={currentLabelStyle} />
+              <Ionicons name={isActive ? 'heart' : 'heart-outline'} size={14} style={currentLabelStyle} />
             )}
           />
           <CircleButton
             style={app_sp.me_8}
             typeOfButton="highlight"
             setIcon={(isActive, currentLabelStyle) => (
-              <Ionicons name={isActive ? 'map' : 'map-outline'} style={currentLabelStyle} />
+              <Ionicons name={isActive ? 'map' : 'map-outline'} size={14} style={currentLabelStyle} />
             )}
           />
           <RectangleButton
@@ -118,7 +119,7 @@ const HorizontalPlaceCard = ({place}) => {
             overrideShape="capsule"
           >
             {(isActive, currentLabelStyle) => (
-              <AppText style={currentLabelStyle}>{isActive ? 'Visited' : 'Visit'}</AppText>
+              <AppText style={currentLabelStyle} font="body3">{isActive ? 'Visited' : 'Visit'}</AppText>
             )}
           </RectangleButton>
         </View>
@@ -128,11 +129,10 @@ const HorizontalPlaceCard = ({place}) => {
       <View style={styles.card_share_container}>
         <CircleButton
           isOnlyContent={true}
-        >
-          {(isActive, currentLabelStyle) => (
+          setIcon={(isActive, currentLabelStyle) => (
             <Ionicons name="share-outline" size={20} style={currentLabelStyle} />
           )}
-        </CircleButton>
+        />
       </View>
     </View>
   )

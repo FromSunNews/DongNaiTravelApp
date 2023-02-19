@@ -1,5 +1,5 @@
 /**
- * by @NguyenAnhTuan1912
+ * __Creator__: @NguyenAnhTuan1912
  * 
  * Nhận vào một năm để check xem năm đó có phải là năm nhuận hay không?
  * 
@@ -11,7 +11,7 @@ const isLeapYear = function(year) {
 };
 
 /**
- * by @NguyenAnhTuan1912
+ * __Creator__: @NguyenAnhTuan1912
  * 
  * Nhận vào số đại diện của tháng, trả về ngày trong tháng đó.
  * 
@@ -30,7 +30,7 @@ const getDayInMonth = function(month) {
 };
 
 /**
- * by @NguyenAnhTuan1912
+ * __Creator__: @NguyenAnhTuan1912
  * 
  * Nhận vào `timeStamp`, trả về ngày tháng đầy đủ ở dạng chuỗi.
  * 
@@ -42,7 +42,7 @@ const getDateInString = function(timeStamp) {
 };
 
 /**
- * by @NguyenAnhTuan1912
+ * __Creator__: @NguyenAnhTuan1912
  * 
  * Nhận vào `timeStamp`, trả về ngày tháng ngắn gọn ở dạng chuỗi.
  * 
@@ -54,7 +54,7 @@ const getDateInLocaleString = function(timeStamp) {
 };
 
 /**
- * by @NguyenAnhTuan1912
+ * __Creator__: @NguyenAnhTuan1912
  * 
  * Nhận vào `timeStamp`, trả về một `TimeCollection`.
  * `TimeCollection` sẽ bao gồm:
@@ -87,7 +87,7 @@ const getTimeCollection = function(timeStamp = Date.now()) {
 };
 
 /**
- * by @NguyenAnhTuan1912
+ * __Creator__: @NguyenAnhTuan1912
  * 
  * Nhận vào `timeStamp`, trả về `TimeDistance`.
  * `TimeDistance` bao gồm:

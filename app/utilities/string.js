@@ -5,7 +5,7 @@
 const notAllowCharInTextRegex = /[\~\!\#\$\%\^\&\*\(\)\@\-\\\/\=\+\_\,\.\|]+/g;
 
 /**
- * by @NguyenAnhTuan1912
+ * __Creator__: @NguyenAnhTuan1912
  * 
  * Một chuỗi ngẫu nhiên có dạng là `text + separator + text`, khi truyền vào hàm này thì sẽ nhận về kết quả là
  * một mảng chuỗi chứa các từ (`text`) trong text đó.
@@ -19,7 +19,7 @@ const splitLineBySeperator = function (line, seperator) {
 };
 
 /**
- * by @NguyenAnhTuan1912
+ * __Creator__: @NguyenAnhTuan1912
  * 
  * Một chuỗi ngẫu nhiên có dạng là `text + separator + text`, khi truyền vào hàm này thì sẽ nhận về kết quả là
  * một mảng chuỗi chứa các từ (`text`) trong text đó. Tuy nhiên nó chỉ có lọc được một loại `separator` duy nhất.
@@ -33,7 +33,7 @@ const removeSeparatorFromLine = function (line, seperator) {
 };
 
 /**
- * by @NguyenAnhTuan1912
+ * __Creator__: @NguyenAnhTuan1912
  * 
  * * Chữ, câu "sạch" là chữ, câu không chứa các kí tự được định nghĩa trong `Not Allow Character`.
  * 
@@ -49,7 +49,7 @@ const upperCaseFirstLetter = function (text) {
 };
 
 /**
- * by @NguyenAnhTuan1912
+ * __Creator__: @NguyenAnhTuan1912
  * 
  * Một chuỗi bất kì truyền vào function này sẽ nhận về một chuỗi "sạch". Chuỗi "sạch" là chuỗi
  * không chứa các kí tự được định nghĩa trong `Not Allow Character`. Ví dụ:
@@ -65,7 +65,7 @@ const getPureString = function (line) {
 };
 
 /**
- * by @NguyenAnhTuan1912
+ * __Creator__: @NguyenAnhTuan1912
  * 
  * Một chuỗi bất kì được truyền vào trong function này sẽ nhận về một chuỗi có dạng là `snake_case`, `snake_Case`, `Snake_case`
  * hoặc ... tuỳ theo chuỗi được truyền vào.
@@ -82,7 +82,7 @@ const toSnakeCase = function (line) {
 };
 
 /**
- * by @NguyenAnhTuan1912
+ * __Creator__: @NguyenAnhTuan1912
  * 
  * Một chuỗi bất kì được truyền vào trong function này sẽ nhận về một chuỗi có dạng là `Title_Case`.
  * 

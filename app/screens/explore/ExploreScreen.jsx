@@ -25,6 +25,7 @@ const ExploreScreen = () => {
       <View style={{...app_sp.mh_12}}>
         <BannerButton
           typeOfButton="highlight"
+          style={app_sp.mt_12}
           toScreen={{screenName: "MapScreen"}}
           setRightIcon={(isActive, currentLabelStyle) =>
             <Ionicons name="chevron-forward-outline" style={currentLabelStyle} size={25} />

@@ -25,6 +25,7 @@ const BlogsScreen = () => {
       <View style={{...app_sp.mh_12}}>
         <BannerButton
           typeOfButton="highlight"
+          style={app_sp.mt_12}
           setRightIcon={(isActive, currentLabelStyle) =>
             <Ionicons name="chevron-forward-outline" style={currentLabelStyle} size={25} />
           }

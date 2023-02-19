@@ -77,7 +77,7 @@ const BannerButton = ({
   typeOfButton = "none",
   defaultColor = "type_1",
   activeColor = "type_1",
-  fontOfText = "body3",
+  fontOfText = "body0",
   imageUrl = "",
   hyperLink,
   toScreen = { screenName: "", params: {} },

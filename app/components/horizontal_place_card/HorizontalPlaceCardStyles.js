@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
   card_tag_container: {
     alignItems: 'center',
     flexDirection: 'row',
-    ...app_sp.mb_12
+    ...app_sp.mb_10
   },
 
   card_title: {
@@ -80,6 +80,7 @@ const styles = StyleSheet.create({
 
   card_buttons_container: {
     width: '100%',
+    alignItems: 'center',
     flexDirection: 'row'
   },
 

@@ -6,7 +6,7 @@ const metrics = ['N', 'Tr', 'T', 'Unknown'];
 const numberFormatter = new Intl.NumberFormat('de-DE');
 
 /**
- * by @NguyenAnhTuan1912
+ * __Creator__: @NguyenAnhTuan1912
  * 
  * Số bình thường có dạng là `nnnnnnnnn.ddd`, khi truyền vào trong hàm này thì nó sẽ chuyển thành một chuỗi có dạng là
  * `nnn.nnn.nnn,ddd`
@@ -19,7 +19,7 @@ const toThousandsSeparatedNumber = function (number) {
 };
 
 /**
- * by @NguyenAnhTuan1912
+ * __Creator__: @NguyenAnhTuan1912
  * 
  * Số bình thường có dạng là `nnnnnnnnn.ddd`, tuỳ thuộc xem có bao nhiêu chữ số trong số thì chuỗi trả về cũng sẽ khác.
  * VD:

@@ -15,8 +15,10 @@ const default_style = {
   flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'center',
+  minHeight: 30,
+  maxHeight: 100,
   ...app_sp.ph_18,
-  ...app_sp.pv_8,
+  ...app_sp.pv_10,
 } 
 
 /**
@@ -59,7 +61,7 @@ const RectangleButton = ({
   if(isDisable) {
     return (
       <TouchableWithoutFeedback disabled={isDisable}>
-        <View style={{...style, ...default_style, ...styles.btn_disable}}>
+        <View style={{...default_style, ...style, ...styles.btn_disable}}>
           {
             isChildrenFunc
             ? children(isActive, {})
@@ -82,11 +84,11 @@ const RectangleButton = ({
   let currentLabelStyle = isActive ? styles[`lbl_active_${activeColor}`] : styles[`lbl_default_${defaultColor}`];
 
   if(isOnlyContent) {
-    currentButtonStyle = {...shape, ...style};
+    currentButtonStyle = {...style, ...shape};
   }
 
   if(isTransparent) {
-    currentButtonStyle = {...default_style, ...shape, ...style};
+    currentButtonStyle = {...default_style, ...style, ...shape};
     currentLabelStyle = {};
   }
 

@@ -79,6 +79,8 @@ const styles = StyleSheet.create({
   },
 
   card_buttons_container: {
+    width: '100%',
+    alignItems: 'center',
     flexDirection: 'row'
   },
 
