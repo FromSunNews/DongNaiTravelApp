@@ -12,9 +12,6 @@ const styles = StyleSheet.create({
   imageCover: {
     width: '100%',
     height: 210,
-    justifyContent: 'flex-end',
-    alignItems: 'flex-end'
-
   },
   circle_icon: {
     width: 30,
@@ -23,9 +20,11 @@ const styles = StyleSheet.create({
     ...app_sh.circle,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 18,
-    marginBottom: 18,
-    ...app_shdw.type_1
+
+    ...app_shdw.type_1,
+    position:"absolute",
+    bottom:20,
+    right:20
   },
   icon_camera: {
     color: app_c.HEX.fourth,

@@ -10,6 +10,7 @@ import {
   ScrollView,
   TouchableOpacity,
   LayoutChangeEvent,
+  Button,
 } from "react-native";
 import {
   AntDesign,
@@ -19,7 +20,7 @@ import {
   Feather,
   MaterialCommunityIcons,
 } from "react-native-vector-icons";
-import ImageModal from "react-native-image-modal";
+import * as ImagePicker from "expo-image-picker";
 
 import { Header, RoundedRectangleButton, BottomSheetScroll } from "components";
 import styles from "./ProfileScreenStyle";
@@ -33,27 +34,47 @@ const imageCover = {
 
 function Profile() {
   const [openTermCondition, setOpenTermCondition] = useState(false);
+  const [image, setImage] = useState(imageCover.uri);
 
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
   return (
-<>
+    <>
       <ScrollView style={styles.wrapper}>
         <View style={styles.container}>
           <Header headerName="Profile" />
           <View style={{ ...app_dms.screenWidth }}>
-            <ImageBackground
-              source={imageCover}
-              resizeMode="cover"
-              style={styles.imageCover}
-            >
-              <TouchableOpacity
-                style={styles.circle_icon}
-                onPress={() => setOpenTermCondition(!openTermCondition)}
-              >
-                <AntDesign name="camerao" style={styles.icon_camera} />
-              </TouchableOpacity>
-            </ImageBackground>
+            {image && (
+              <View>
+                <Image
+                  source={{ uri: image }}
+                  resizeMode="cover"
+                  style={styles.imageCover}
+                >
+                </Image>
+                  <TouchableOpacity
+                    style={styles.circle_icon}
+                    onPress={() => setOpenTermCondition(!openTermCondition)}
+                  >
+                    <AntDesign name="camerao" style={styles.icon_camera} />
+                  </TouchableOpacity>
+              </View>
+            )}
           </View>
-  
+
           <View style={styles.profile_avatar}>
             <View style={styles.circle_avatar}>
               <Ionicons
@@ -61,7 +82,10 @@ function Profile() {
                 style={styles.avatar}
                 color={app_c.HEX.fourth}
               />
-              <TouchableOpacity style={styles.avatar_icon} onPress={() => setOpenTermCondition(!openTermCondition)}>
+              <TouchableOpacity
+                style={styles.avatar_icon}
+                onPress={() => setOpenTermCondition(!openTermCondition)}
+              >
                 <AntDesign
                   name="camerao"
                   style={styles.icon_camera}
@@ -87,8 +111,8 @@ function Profile() {
               <View style={styles.user_info_block}>
                 <Text style={styles.user_info_title}>Bio</Text>
                 <Text style={styles.user_bio_content}>
-                  Toi la nguoi da di khap 63 tinh thanh o Viet Nam. Chuyen review
-                  cac dia diem du lich.
+                  Toi la nguoi da di khap 63 tinh thanh o Viet Nam. Chuyen
+                  review cac dia diem du lich.
                 </Text>
               </View>
             </View>
@@ -138,7 +162,10 @@ function Profile() {
                   </Text>
                 </View>
                 <View style={styles.user_info_other}>
-                  <Entypo style={styles.user_info_other_icon} name="instagram" />
+                  <Entypo
+                    style={styles.user_info_other_icon}
+                    name="instagram"
+                  />
                   <Text style={styles.user_info_other_content}>ngd.nangno</Text>
                 </View>
               </View>
@@ -168,22 +195,71 @@ function Profile() {
           </View>
         </View>
       </ScrollView>
-        <BottomSheetScroll
-          haveBtn={false}
-          openTermCondition={openTermCondition}
-         
-          snapPoints={["25%", "50%", "74%"]}
-          closeTermCondition={() => {
-            setOpenTermCondition(false);
-          }}
-          childView={choiceSettingImage.map((item) => (
-            <TouchableOpacity style={styles.choice_setting_image} key={item.id}>
-              <Entypo name={item.icon} size={25} style={styles.choice_setting_icon}/>
-              <Text style={styles.choice_setting_image_name}>{item.nameChoice}</Text>
-            </TouchableOpacity>
-          ))}
-        />
-</>
+      <BottomSheetScroll
+        haveBtn={false}
+        openTermCondition={openTermCondition}
+        snapPoints={["25%", "50%", "74%"]}
+        closeTermCondition={() => {
+          setOpenTermCondition(false);
+        }}
+        childView={
+          <View>
+            <TouchableOpacity 
+              style={styles.choice_setting_image}
+              onPress={pickImage}
+            >
+              <Entypo
+                  name='images'
+                  size={25}
+                  style={styles.choice_setting_icon}
+                />
+                <Text style={styles.choice_setting_image_name}>Camera</Text>
+              </TouchableOpacity>
+            <TouchableOpacity 
+              style={styles.choice_setting_image}
+              onPress={pickImage}
+            >
+              <Entypo
+                  name='images'
+                  size={25}
+                  style={styles.choice_setting_icon}
+                />
+                <Text style={styles.choice_setting_image_name}>Chọn ảnh từ thư viện</Text>
+              </TouchableOpacity>
+            <TouchableOpacity 
+              style={styles.choice_setting_image}
+              onPress={pickImage}
+            >
+              <Entypo
+                  name='images'
+                  size={25}
+                  style={styles.choice_setting_icon}
+                />
+                <Text style={styles.choice_setting_image_name}>Chỉnh sửa ảnh</Text>
+              </TouchableOpacity>
+          </View>
+          //   choiceSettingImage.map((item) => (
+          //   <>
+          //     <TouchableOpacity style={styles.choice_setting_image} key={item.id}>
+          //       <Entypo
+          //         name={item.icon}
+          //         size={25}
+          //         style={styles.choice_setting_icon}
+          //       />
+          //       <Text style={styles.choice_setting_image_name}>
+          //         {item.nameChoice}
+          //       </Text>
+          //     </TouchableOpacity>
+          //     <Button
+          //       title="Pick an image from camera roll"
+          //       onPress={pickImage}
+          //     />
+
+          //   </>
+          // ))
+        }
+      />
+    </>
   );
 }
 
