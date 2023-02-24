@@ -25,7 +25,7 @@ import * as ImagePicker from "expo-image-picker";
 import { Header, RoundedRectangleButton, BottomSheetScroll } from "components";
 import styles from "./ProfileScreenStyle";
 import { app_c, app_dms, app_sp } from "globals/styles";
-import { choiceSettingImage } from "utilities/choiceSettingImage";
+import { choiceSettingImage } from "utilities/choiceSettingImage"; 
 
 //Đức: sử dụng expo picker để chọn ảnh tử local để upload lên
 const imageCover = {
