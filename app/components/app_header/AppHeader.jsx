@@ -3,7 +3,7 @@ import React from 'react'
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
-import styles from './MyHeaderStyles'
+import styles from './AppHeaderStyles'
 import AppText from '../app_text/AppText';
 import CircleButton from '../buttons/CircleButton';
 
@@ -31,7 +31,7 @@ import { app_c, app_shdw } from 'globals/styles';
  * @param {() => JSX.Element} props.setRightPart - Function cho phép custom phần phải trái của Header.
  * @returns `View` component với styles
  */
-const MyHeader = ({
+const AppHeader = ({
   boxShadowType,
   screenName,
   marginBottom,
@@ -124,4 +124,4 @@ const MyHeader = ({
   )
 }
 
-export default MyHeader
+export default AppHeader
