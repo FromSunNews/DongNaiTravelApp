@@ -42,7 +42,7 @@ const HorizontalPlaceCard = ({place}) => {
   const navigation = useNavigation()
 
   const handlePressImageButton = () => {
-    navigation.navigate({name: 'PlaceDetailStackScreen'});
+    navigation.navigate({name: 'PlaceDetailScreen'});
   }
 
   return (

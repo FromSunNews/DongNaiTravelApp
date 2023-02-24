@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     height: HEADER_HEIGHT,
     border: 'none',
     backgroundColor: app_c.HEX.primary,
-    ...app_sp.ph_12
+    ...app_sp.ph_18
   },
 
   header_col: {

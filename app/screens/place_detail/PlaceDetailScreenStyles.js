@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
   pd_bottom_sheet_view: {
     backgroundColor: app_c.HEX.primary,
     flex: 1,
-    ...app_sp.ph_12
+    ...app_sp.ph_18
   },
 
   pd_header: {

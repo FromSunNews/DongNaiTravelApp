@@ -22,7 +22,7 @@ const BlogsScreen = () => {
       style={styles.scroll_view_container}
       stickyHeaderIndices={[1]}
     >
-      <View style={{...app_sp.mh_12}}>
+      <View style={{...app_sp.mh_18}}>
         <BannerButton
           typeOfButton="highlight"
           style={app_sp.mt_12}
@@ -36,11 +36,11 @@ const BlogsScreen = () => {
       <View style={{backgroundColor: app_c.HEX.primary, ...app_sp.mv_10}}>
         <TagScrollView 
           concept="blogs"
-          style={{...app_sp.ms_12, ...app_sp.pv_12}}
+          style={{...app_sp.ms_18, ...app_sp.pv_12}}
         />
       </View>
 
-      <View style={{...app_sp.mh_12, ...app_sp.mb_12}}>
+      <View style={{...app_sp.mh_18, ...app_sp.mb_12}}>
         {
           currentBlogs.length === 0
           ? [1, 2, 3].map((value, index) => <HorizontalBlogCardSkeleton key={value + index} />)

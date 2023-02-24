@@ -3,7 +3,7 @@ import React from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import BlogsScreen from 'screens/blogs/BlogsScreen';
 import BlogDetailScreen from 'screens/blog_detail/BlogDetailScreen';
-import MyHeader from 'components/my_header/MyHeader';
+import { AppHeader } from 'components';
 
 const BlogsStack = createNativeStackNavigator();
 
@@ -12,7 +12,7 @@ const BlogsNavigator = () => {
     <BlogsStack.Navigator
       initialRouteName="BlogScreen"
       screenOptions={{
-        header: props => (<MyHeader {...props} />)
+        header: props => (<AppHeader {...props} />)
     }}>
       <BlogsStack.Screen
         name="BlogScreen"

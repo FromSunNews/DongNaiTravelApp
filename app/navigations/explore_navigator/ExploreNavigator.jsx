@@ -4,7 +4,7 @@ import { createNativeStackNavigator} from '@react-navigation/native-stack'
 
 import ExploreScreen from 'screens/explore/ExploreScreen';
 import PlaceDetailScreen from 'screens/place_detail/PlaceDetailScreen';
-import { MyHeader } from 'components';
+import { AppHeader } from 'components';
 
 import { app_c } from 'globals/styles';
 
@@ -16,7 +16,7 @@ const ExploreNavigator = () => {
     <ExploreStack.Navigator
       initialRouteName='ExploreScreen'
       screenOptions={{
-        header: props => (<MyHeader {...props} />),
+        header: props => (<AppHeader {...props} />),
     }}>
       <ExploreStack.Screen
         name='ExploreScreen'
@@ -28,7 +28,7 @@ const ExploreNavigator = () => {
         {() => (<ExploreScreen />)}
       </ExploreStack.Screen>
       <ExploreStack.Screen
-        name='PlaceDetailStackScreen'
+        name='PlaceDetailScreen'
         options={{
           title: 'Place Detail',
           headerTransparent: true,

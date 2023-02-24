@@ -20,10 +20,10 @@ import { app_sp } from 'globals/styles'
  * @param {'h0' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'body0' | 'body1' | 'body2' | 'body3' | 'sub0' | 'sub1'} [props.font=body1] - Từ khoá liên quan tới font, được quy định trong typography.js.
  * @param {'primary' | 'second' | 'third' | 'fourth' | 'sub_primary' | 'sub_second' | 'sub_third' | 'sub_fourth' | 'ext_primary' | 'ext_second' | 'ext_third'} [props.color=fourth] - Từ khoá lên quan tới màu sắc, được quy định trong `color.js`.
  * @param {Array<string>} props.customOrderBullets - Tuỳ chỉnh bullet cho list, các bullet này là một circle, khi số cấp của list vượt quá số các bullet đã cho thì nó sẽ chở về buttet đầu tiên. Lưu ý: Bullet của ordered list là các mảng có thứ tự.
- * @param {StyleProp<TextStyle>} [props.style={}] - Style cho component.
+ * @param {StyleProp<ViewStyle>} [props.style={}] - Style cho component.
  * @returns Trả về một `FlatList` có bullet.
  */
-const MyOrderedList = ({
+const AppOrderedList = ({
   children,
   data = [],
   level = 0,
@@ -78,4 +78,4 @@ const MyOrderedList = ({
   )
 }
 
-export default MyOrderedList
+export default AppOrderedList
