@@ -36,43 +36,40 @@ function Profile() {
   const [openTermCondition, setOpenTermCondition] = useState(false);
   const [image, setImage] = useState(imageCover.uri);
 
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+  // const pickImage = async () => {
+  //   // No permissions request is necessary for launching the image library
+  //   let result = await ImagePicker.launchImageLibraryAsync({
+  //     mediaTypes: ImagePicker.MediaTypeOptions.All,
+  //     allowsEditing: true,
+  //     aspect: [4, 3],
+  //     quality: 1,
+  //   });
 
-    console.log(result);
+  //   console.log(result);
 
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
-  };
+  //   if (!result.canceled) {
+  //     setImage(result.assets[0].uri);
+  //   }
+  // };
   return (
     <>
       <ScrollView style={styles.wrapper}>
         <View style={styles.container}>
           <Header headerName="Profile" />
           <View style={{ ...app_dms.screenWidth }}>
-            {image && (
-              <View>
-                <Image
-                  source={{ uri: image }}
-                  resizeMode="cover"
-                  style={styles.imageCover}
-                >
-                </Image>
-                  <TouchableOpacity
-                    style={styles.circle_icon}
-                    onPress={() => setOpenTermCondition(!openTermCondition)}
-                  >
-                    <AntDesign name="camerao" style={styles.icon_camera} />
-                  </TouchableOpacity>
-              </View>
-            )}
+            <View>
+              <Image
+                source={{ uri: image }}
+                resizeMode="cover"
+                style={styles.imageCover}
+              ></Image>
+              <TouchableOpacity
+                style={styles.circle_icon}
+                onPress={() => setOpenTermCondition(!openTermCondition)}
+              >
+                <AntDesign name="camerao" style={styles.icon_camera} />
+              </TouchableOpacity>
+            </View>
           </View>
 
           <View style={styles.profile_avatar}>
@@ -195,7 +192,7 @@ function Profile() {
           </View>
         </View>
       </ScrollView>
-      <BottomSheetScroll
+      {/* <BottomSheetScroll
         haveBtn={false}
         openTermCondition={openTermCondition}
         snapPoints={["25%", "50%", "74%"]}
@@ -258,7 +255,7 @@ function Profile() {
           //   </>
           // ))
         }
-      />
+      /> */}
     </>
   );
 }
