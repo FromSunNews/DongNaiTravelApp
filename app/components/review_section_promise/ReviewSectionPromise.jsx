@@ -10,7 +10,7 @@ import moment from 'moment/moment'
 import 'moment/locale/vi'  // without this line it didn't work
 moment.locale('vi')
 
-const ReviewSectionPromise = ({ review }) => {
+const ReviewSectionPromise = ({ review, isTranformData}) => {
   
   const [urlBase64, setUrlBase64] = useState(null)
   
@@ -19,10 +19,14 @@ const ReviewSectionPromise = ({ review }) => {
   }, [review.profile_photo_url])
   
   const getUrlBase64 = async () => {
-    const res = await axios.get(review.profile_photo_url, {responseType: 'arraybuffer'})
-    const urlBase64 = Buffer.from(res.data, 'binary').toString('base64')
-    
-    setUrlBase64(urlBase64)
+    if (!isTranformData) {
+      const res = await axios.get(review.profile_photo_url, {responseType: 'arraybuffer'})
+      const urlBase64 = Buffer.from(res.data, 'binary').toString('base64')
+      
+      setUrlBase64(urlBase64)
+    } else {
+      setUrlBase64(review.profile_photo_url)
+    }
   }
   if (urlBase64)
     return (

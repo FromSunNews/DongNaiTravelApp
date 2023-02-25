@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/Octicons'
 import { app_c } from 'globals/styles'
 
 
-const BottomSheetScroll = ({ openTermCondition = false, closeTermCondition, childView, snapPoints, labelBtn, haveBtn = true, haveOverlay = true, bottomView }) => {
+const BottomSheetScroll = ({ openTermCondition = false, closeTermCondition, childView, snapPoints, labelBtn, handleLabelBtn, haveBtn = true, haveOverlay = true, bottomView }) => {
 
   const bottomSheetRef = useRef(null)
 
@@ -46,7 +46,7 @@ const BottomSheetScroll = ({ openTermCondition = false, closeTermCondition, chil
               haveBtn && 
               <TouchableOpacity
                 style={styles.btn}
-                onPress={handleClosePress}
+                onPress={handleLabelBtn}
               >
                 <Text style={styles.btnText}>{labelBtn}</Text>
               </TouchableOpacity>

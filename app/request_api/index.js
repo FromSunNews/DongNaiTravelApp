@@ -54,3 +54,13 @@ export const getPrivateKeysAPI = async () => {
   const request = await authorizedAxiosInstance.get(`${API_ROOT}/v1/map/private_keys`)
   return request.data
 }
+
+export const getPlaceDetailsAPI = async (data) => {
+  const request = await authorizedAxiosInstance.post(`${API_ROOT}/v1/map/place_details`, data)
+  return request.data
+}
+
+export const getPlacesTextSearchAPI = async (data) => {
+  const request = await authorizedAxiosInstance.post(`${API_ROOT}/v1/map/places_text_search`, data)
+  return request.data
+}

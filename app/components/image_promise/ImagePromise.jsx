@@ -10,7 +10,7 @@ import moment from 'moment/moment'
 import 'moment/locale/vi'  // without this line it didn't work
 moment.locale('vi')
 
-const ImagePromise = ({ photoReference, styleImage, map_api_key}) => {
+const ImagePromise = ({ photoReference, styleImage, map_api_key, pushArrImgBase64, isTranformData}) => {
   
   const [urlBase64, setUrlBase64] = useState(null)
   
@@ -19,10 +19,17 @@ const ImagePromise = ({ photoReference, styleImage, map_api_key}) => {
   }, [photoReference])
   
   const getUrlBase64 = async () => {
-    const res = await axios.get(`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${photoReference}&key=${map_api_key}`, {responseType: 'arraybuffer'})
-    const urlBase64 = Buffer.from(res.data, 'binary').toString('base64')
-    
-    setUrlBase64(urlBase64)
+    if (!isTranformData) {
+      const res = await axios.get(`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${photoReference}&key=${map_api_key}`, {responseType: 'arraybuffer'})
+      const urlBase64Decode = Buffer.from(res.data, 'binary').toString('base64')
+      console.log('url base64 decode!')
+      setUrlBase64(urlBase64Decode)
+      typeof pushArrImgBase64 === 'function' && pushArrImgBase64(`data:image/jpeg;base64,${urlBase64Decode}`)
+    } else {
+      console.log('url base64 do not need decode!')
+      setUrlBase64(photoReference)
+      typeof pushArrImgBase64 === 'function' && pushArrImgBase64(`data:image/jpeg;base64,${photoReference}`)
+    }
   }
   if (urlBase64)
     return (

@@ -4,7 +4,11 @@ import { StyleSheet } from 'react-native'
 export const styles = StyleSheet.create({
   iconSearch: {
     marginTop: 15,
-    marginLeft: 15,
+    marginLeft: 15
+  },
+  iconBack: {
+    marginTop: 13,
+    marginLeft: 15
   },
   textContainer: {
   },
@@ -27,7 +31,7 @@ export const styles = StyleSheet.create({
     height: 52,
     top: 0,
     right: 0,
-    left: 0,
+    left: 50,
     ...app_sh.rounded_8
   }
 

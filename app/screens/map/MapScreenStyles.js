@@ -3,7 +3,7 @@ import { app_c, app_dms, app_sh, app_shdw, app_typo } from 'globals/styles'
 import { Dimensions, StyleSheet } from 'react-native'
 
 const { width, height } = Dimensions.get('window')
-const CARD_HEIGHT = 220
+const CARD_HEIGHT = 240
 const CARD_WIDTH = width * 0.8
 
 export const styles = StyleSheet.create({
@@ -76,43 +76,53 @@ export const styles = StyleSheet.create({
   },
   cardScrollView: {
     position: 'absolute',
-    bottom: 100,
     left: 0,
     right: 0,
     paddingHorizontal: 12,
+    ...app_shdw.type_1,
+    paddingVertical: 18,
   },
   endPadding: {
     paddingRight: width - CARD_WIDTH,
   },
   card: {
-    elevation: 2,
-    backgroundColor: '#FFF',
+    backgroundColor: app_c.HEX.primary,
     marginHorizontal: 10,
     height: CARD_HEIGHT,
     width: CARD_WIDTH,
     overflow: 'hidden',
-    marginBottom: 10,
     ...app_sh.rounded_8,
-    ...app_shdw.type_3
   },
   cardImage: {
-    flex: 3,
     width: '100%',
-    height: '100%',
+    height: 135,
+    alignSelf: 'center'
+  },
+  cardNoImage: {
+    width: '100%',
+    height: 140,
     alignSelf: 'center',
+    backgroundColor: app_c.HEX.ext_primary,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  noImageText: {
+    color: app_c.HEX.ext_third,
+    ...app_typo.fonts.h3
   },
   textContent: {
     flex: 2,
     padding: 10,
   },
   cardtitle: {
-    fontSize: 12,
-    // marginTop: 5,
-    fontWeight: 'bold',
+    color: app_c.HEX.fourth,
+    ...app_typo.fonts.h5
   },
   cardDescription: {
-    fontSize: 12,
-    color: '#444',
+    marginTop: 2,
+    color: app_c.HEX.fourth,
+    ...app_typo.fonts.body6
   },
   markerWrap: {
     alignItems: 'center',
@@ -125,22 +135,25 @@ export const styles = StyleSheet.create({
     height: 30,
   },
   button: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: 5
   },
-  signIn: {
-    width: '100%',
+  scrollPlaceBtn: {
+    width: '49%',
     padding: 5,
     justifyContent: 'center',
     alignItems: 'center',
+    borderColor: app_c.HEX.third,
+    borderWidth: 1,
     ...app_sh.rounded_4,
-    borderColor: app_c.HEX.fourth,
-    borderWidth: 1
   },
   textSign: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: app_c.HEX.fourth
+    color: app_c.HEX.third
   },
   besideBtn: {
     position: 'absolute',
@@ -167,7 +180,8 @@ export const styles = StyleSheet.create({
   headerBottomSheet: {
     paddingHorizontal: 18,
     color: app_c.HEX.fourth,
-    ...app_typo.fonts.body2
+    ...app_typo.fonts.body2,
+    marginTop: 15
   },
   contentContainer: {
     paddingHorizontal: 18

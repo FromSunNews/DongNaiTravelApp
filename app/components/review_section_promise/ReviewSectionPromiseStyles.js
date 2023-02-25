@@ -20,7 +20,6 @@ export const styles = StyleSheet.create({
   avatar: {
     width: 45,
     height: 45,
-    borderRadius: '50%',
     marginRight: 10
   },
   nameAuthorRatingContainer: {

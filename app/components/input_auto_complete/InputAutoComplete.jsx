@@ -2,7 +2,8 @@ import { View, Text, TextInput, Pressable } from 'react-native'
 import React from 'react'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
 
-import Icon from 'react-native-vector-icons/FontAwesome'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 import { styles } from './InputAutoCompleteStyles'
 import { app_c } from 'globals/styles'
@@ -11,7 +12,7 @@ import { selectCurrentManifold } from 'redux/manifold/ManifoldSlice'
 import { useEffect } from 'react'
 import { TouchableOpacity } from 'react-native'
 
-const InputAutoComplete = ({ onPlaceSelected, map_api_key, isFocusedInput, handleFocus, inputRef }) => {
+const InputAutoComplete = ({ onPlaceSelected, map_api_key, isFocusedInput, handleFocus, inputRef, handleGetAddressText, isShowBackIcon = false, handlePressBackIcon }) => {
 
   return (
     <>
@@ -29,18 +30,35 @@ const InputAutoComplete = ({ onPlaceSelected, map_api_key, isFocusedInput, handl
           row: styles.row,
           poweredContainer: styles.poweredContainer,
         }}
-        renderLeftButton={() => (
-          <TouchableOpacity
-            onPress={() => console.log(inputRef.current?.getAddressText())}
-          >
-            <Icon
-              name="search"
-              size={18}
-              color={app_c.HEX.fourth}
-              style={styles.iconSearch}
-            />
-          </TouchableOpacity>
-        )}
+        renderLeftButton={() => {
+          if (!isShowBackIcon) {
+            return (
+              <TouchableOpacity
+                onPress={() => handleGetAddressText(inputRef.current?.getAddressText())}
+              >
+                <FontAwesome
+                  name="search"
+                  size={18}
+                  color={app_c.HEX.fourth}
+                  style={styles.iconSearch}
+                />
+              </TouchableOpacity>
+            )
+          } else {
+            return (
+              <TouchableOpacity
+                onPress={() => handlePressBackIcon()}
+              >
+                <MaterialIcons
+                  name="arrow-back-ios"
+                  size={25}
+                  color={app_c.HEX.fourth}
+                  style={styles.iconBack}
+                />
+              </TouchableOpacity>
+            )
+          }
+        }}
         query={{
           key: map_api_key,
           language: 'vi',

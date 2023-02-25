@@ -23,13 +23,15 @@ const StarRating = ({ ratings, reviews = null, containerStyle, textRatingStyle, 
   return (
     <View style={[StarRatingStyles.container, containerStyle]}>
       {
-        isHaveRatingText &&
-        <Text style={[StarRatingStyles.textRatings, textRatingStyle]}>{ratings}</Text>
+        isHaveRatingText ?
+        <Text style={[StarRatingStyles.textRatings, textRatingStyle]}>{ratings}</Text> :
+        null
       }
       {stars}
       {
-        reviews &&
-        <Text style={[StarRatingStyles.textReviews, textReviewStyle]}>({reviews})</Text>
+        reviews ?
+        <Text style={[StarRatingStyles.textReviews, textReviewStyle]}>({reviews})</Text> :
+        null
       }
     </View>
   )

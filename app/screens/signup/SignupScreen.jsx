@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
 import { useForm, Controller } from 'react-hook-form'
-import Modal from "react-native-modal"
 
 import { 
   View, 
@@ -14,22 +13,22 @@ import {
   ScrollView
 } from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
-import Icon from 'react-native-vector-icons/FontAwesome'
+import Modal from "react-native-modal"
 
+import Icon from 'react-native-vector-icons/FontAwesome'
 import Octicons from 'react-native-vector-icons/Octicons'
 
-
+import DateTimePicker from '@react-native-community/datetimepicker'
 import ButtonText from 'components/button_text/ButtonText'
 import CheckBoxText from 'components/checkbox_text/CheckBoxText'
 import Input from 'components/input/Input'
 
-import DateTimePicker from '@react-native-community/datetimepicker'
 import { BIRTHDAY_RULE, BIRTHDAY_RULE_MESSAGE, EMAIL_RULE, FIELD_MIN_LENGTH_MESSAGE, FIELD_REQUIRED_MESSAGE, PASSWORD_RULE, PASSWORD_RULE_MESSAGE } from 'utilities/validators'
 import { updateCurrentUser } from 'redux/user/UserSlice'
 
 import { signInUserAPI, signUpUserAPI } from 'request_api'
 import { styles } from './SignupScreenStyles'
-import { app_c } from 'globals/styles'
+import { app_c, app_sh, app_shdw } from 'globals/styles'
 import RNDateTimePicker from '@react-native-community/datetimepicker'
 import BottomSheetDefault from 'components/bottom_sheet/BottomSheetScroll'
 import { Button } from 'react-native'
@@ -46,8 +45,9 @@ const SignupScreen = () => {
   const dispatch = useDispatch()
   const navigation = useNavigation()
 
-  const [isChecked, setIsChecked] = useState(null)
-  const [show, setShow] = useState(false)
+  const [isChecked, setIsChecked] = useState(false)
+  const [isShowCheckBox, setIsShowCheckBox] = useState(false)
+  const [showModal, setShowModal] = useState(false)
   const [timestamp, setTimestamp] = useState(null)
   const [dateTime, setDateTime] = useState(new Date())
 
@@ -73,11 +73,12 @@ const SignupScreen = () => {
         contentNotificationBottomSheet: 'You should agree with Terms and Conditions'
       }))
     else {
+      const birthday = (new Date(data.birthday)).getTime() / 1000
       const userSignUp = {
         email: data.email,
         firstName: data.firstName,
         lastName: data.lastName,
-        birthday: timestamp,
+        birthday: birthday,
         username: data.username,
         password: data.password,
         confirmPassword: data.confirmPassword
@@ -106,11 +107,12 @@ const SignupScreen = () => {
         style={{backgroundColor: app_c.HEX.primary, flex: 1}}
       >
         <KeyboardAwareScrollView
-          extraScrollHeight={40}
+          // extraScrollHeight={40}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           
         >
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          </TouchableWithoutFeedback> */}
             <View style={styles.container}>
               <View style={styles.content}>
               <Text style={styles.textHeader}>Sign up</Text>
@@ -225,18 +227,18 @@ const SignupScreen = () => {
                     onBlur={onBlur}
                     value={value}
                     error={errors.birthday}
-                    rightComponent={
-                      <TouchableOpacity
-                        onPress={() => setShow(true)}
-                      >
-                        <Icon 
-                          name='calendar' 
-                          size={16} 
-                          color={'#808080'}
-                          style={{padding: 5}}
-                        />
-                      </TouchableOpacity>
-                    }
+                    // rightComponent={
+                    //   <TouchableOpacity
+                    //     onPress={() => setShowModal(true)}
+                    //   >
+                    //     <Icon 
+                    //       name='calendar' 
+                    //       size={16} 
+                    //       color={'#808080'}
+                    //       style={{padding: 5, marginTop: 5,}}
+                    //     />
+                    //   </TouchableOpacity>
+                    // }
                   />
                 )}
               />
@@ -346,7 +348,7 @@ const SignupScreen = () => {
               </View>
 
                 {
-                  isChecked &&
+                  isShowCheckBox &&
                   <View style={styles.containerReFor}>
                     <CheckBoxText
                       label='I agree with Terms & Conditions'
@@ -372,32 +374,36 @@ const SignupScreen = () => {
                   </TouchableOpacity>
                 </View>
             </View>
-          </TouchableWithoutFeedback>
         </KeyboardAwareScrollView>
         </ScrollView>
         <BottomSheetScroll 
           openTermCondition={openTermCondition} 
           closeTermCondition={() => {
-            setIsChecked(true)
             setOpenTermCondition(false)
+            setIsShowCheckBox(true)
+          }}
+          handleLabelBtn={() => {
+            setOpenTermCondition(false)
+            setIsShowCheckBox(true)
+            setIsChecked(true)
           }}
           labelBtn='I Agree'
           snapPoints={['25%', '50%', '100%']}
           childView={
             termsConditions.map((item) => (
-              <>
-                <Text key={item.id} style={styles.headerText}>{item.headerText}</Text>
+              <View key={`term-${item.id}`}>
+                <Text style={styles.headerText}>{item.headerText}</Text>
                 {
                   item.paragraphs.map((paragraph, index) => (
                     <>
-                      <Text key={index} style={styles.paragraph}>{paragraph.content}</Text>
+                      <Text key={`paragraph-${index}`} style={styles.paragraph}>{paragraph.content}</Text>
                       {
                         paragraph.childContent &&
                         paragraph.childContent.map((child, index) => (
                           <>
                             <View
                               style={styles.childContentContainer}
-                              key={index}
+                              key={`childcontent-${index}`}
                             >
                               <Octicons 
                                 name='dot-fill' 
@@ -412,31 +418,52 @@ const SignupScreen = () => {
                     </>
                   ))
                 }
-              </>
+              </View>
             ))
           }
         />
-        <Modal 
-          isVisible={show}
-          backdropColor={app_c.HEX.primary}
-          backdropOpacity={0.9}
-        >
-          <View style={{ position: 'absolute', display: 'flex', alignItems: 'center', justifyContent: 'center', height: 200 }}>
-            <RNDateTimePicker 
-              value={dateTime}
-              display="spinner"
-              onChange={(e, date) => handleDateChange(e, date)}
-              textColor={app_c.HEX.fourth}
-            />
-            <ButtonText
-              label='OK'
-              onPress={() => {
-                setShow(false)
-                setValue('birthday',  moment(dateTime).format('DD/MM/YYYY'))
-              }}
-            />
-          </View>
-        </Modal>
+        {/* <Modal 
+          isVisible={showModal}
+          coverScreen={false}
+          hasBackdrop={false}
+        > */}
+          {
+            showModal && 
+            <View style={{ position: 'absolute', top: 0, bottom: 0, right: 0, left: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <View style={{marginHorizontal: 18 , backgroundColor: app_c.HEX.primary, ...app_shdw.type_2, justifyContent: 'center', alignItems: 'center', paddingVertical: 5, ...app_sh.rounded_8}}>
+                <RNDateTimePicker 
+                  value={dateTime}
+                  display='spinner'
+                  mode="date"
+                  onChange={(e, date) => handleDateChange(e, date)}
+                  textColor={app_c.HEX.fourth}
+                />
+                {/* <DateTimePicker
+                  testID="dateTimePicker"
+                  value={dateTime}
+                  mode='date'
+                  is24Hour={true}
+                  themeVariant='light'
+                  // onChange={onChange}
+                /> */}
+                <ButtonText
+                  label='OK'
+                  onPress={() => {
+                    setShowModal(false)
+                    setValue('birthday',  moment(dateTime).format('DD/MM/YYYY'))
+                  }}
+                  btnStyle={{
+                    marginTop: -5
+                  }}
+                  textStyle={{
+                    paddingHorizontal: 15,
+                    paddingVertical: 5
+                  }}
+                />
+              </View>
+            </View>
+          }
+        {/* </Modal> */}
     </>
   )
 }
