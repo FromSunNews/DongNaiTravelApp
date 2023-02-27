@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     height: 5,
     backgroundColor: app_c.HEX.primary,
     ...app_sh.circle,
-    ...app_sp.mt_10
+    ...app_sp.mt_6
   },
 
   tab_bottom_icon_inactive: {

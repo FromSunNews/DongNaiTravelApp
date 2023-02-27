@@ -25,7 +25,7 @@ function RoundedRectangleButton() {
       <TouchableOpacity
         style={[
           { backgroundColor: app_c.HEX.ext_primary, marginLeft: 12 },
-          styles.profile_btn,
+          styles.profile_btn
         ]}
       >
         <AntDesign style={{ ...app_sp.ph_6 }} name="edit" />
@@ -34,12 +34,10 @@ function RoundedRectangleButton() {
         </Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.choices_setting}>
-        <Entypo name="dots-three-horizontal" color={app_c.HEX.ext_second} />
+        <Text><Entypo name="dots-three-horizontal" color={app_c.HEX.ext_second} /></Text>
       </TouchableOpacity>
     </View>
-
- 
-  );
+  )
 }
 
 export default RoundedRectangleButton;
