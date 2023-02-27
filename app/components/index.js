@@ -13,6 +13,8 @@ import Input from './input/Input'
 import Loading from './loading/Loading'
 import NotificationBottomSheet from './notification_bottom_sheet/NotificationBottomSheet'
 import TagScrollView from './tag_scroll_view/TagScrollView'
+import Header from './header/Header'
+import RoundedRectangleButton from './rounded_rectangle_button/RoundedRectangleButton'
 
 export {
   AppText,
@@ -29,5 +31,7 @@ export {
   Input,
   Loading,
   NotificationBottomSheet,
-  TagScrollView
+  TagScrollView,
+  RoundedRectangleButton,
+  Header
 }
