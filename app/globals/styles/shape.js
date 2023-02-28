@@ -6,7 +6,7 @@ const shape = StyleSheet.create({
   },
 
   circle: {
-    borderRadius: '50%',
+    borderRadius: '100%',
     aspectRatio: 1
   },
 

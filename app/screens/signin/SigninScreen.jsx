@@ -24,7 +24,7 @@ import { validateRegex } from 'utilities/functions'
 import ButtonText from 'components/button_text/ButtonText'
 import CheckBoxText from 'components/checkbox_text/CheckBoxText'
 import { signInUserAPI } from 'request_api'
-import { RectangleButton } from 'components'
+import { RectangleButton, AppText } from 'components'
 import { app_sp } from 'globals/styles'
 
 const SigninScreen = () => {
@@ -203,7 +203,9 @@ const SigninScreen = () => {
               defaultColor="type_4"
               style={{...app_sp.mt_12, ...app_sp.pv_16}}
               handlePressButton={handleSubmit(onSubmit)}
-            >Sign In</RectangleButton>
+            >
+              <AppText color="primary" font="h4">Sign In</AppText>
+            </RectangleButton>
             
           </View>
           
