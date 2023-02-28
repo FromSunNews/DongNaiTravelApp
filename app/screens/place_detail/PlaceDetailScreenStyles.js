@@ -31,35 +31,53 @@ const styles = StyleSheet.create({
     ...app_sp.mb_12
   },
 
-  pb_tab_button_active: {
+  pd_tab_button_active: {
     borderBottomColor: app_c.HEX.fourth,
     borderBottomWidth: .75,
   },
 
-  pb_content_container: {
+  pd_content_container: {
     flex: 1
   },
 
-  pb_content_article: {
+  pd_content_article: {
     flex: 1,
     ...app_sp.mb_12
   },
 
-  pb_content_image_row_container: {
+  pd_content_image_row_container: {
     flex: 1,
     flexWrap: 'wrap',
     flexDirection: 'column'
   },
 
-  pb_content_image_row: {
+  pd_content_image_row: {
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between'
   },
 
-  pb_content_image_button: {
+  pd_content_image_button: {
     width: '48%',
     overflow: 'hidden'
+  },
+
+  pd_content_rr_stats_container: {
+    flexDirection: 'row',
+    borderBottomColor: app_c.HEX.fourth,
+    borderBottomWidth: .75,
+    ...app_sp.pb_12,
+  },
+
+  pd_content_rr_rating_point_container: {
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+
+  pd_content_rr_chart_container: {
+    flex: 1,
+    justifyContent: 'space-between',
+    ...app_sp.ps_22
   }
 })
 

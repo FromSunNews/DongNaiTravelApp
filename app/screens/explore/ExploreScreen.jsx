@@ -8,6 +8,11 @@ import { TagScrollView, HorizontalPlaceCard, HorizontalPlaceCardSkeleton, Banner
 import styles from './ExploreScreenStyles'
 import { app_sp, app_c } from 'globals/styles'
 
+/**
+ * __Creator__: @NguyenAnhTuan1912
+ * 
+ * @returns 
+ */
 const ExploreScreen = () => {
   const [currentPlaces, setCurrentPlaces] = React.useState([]);
 
