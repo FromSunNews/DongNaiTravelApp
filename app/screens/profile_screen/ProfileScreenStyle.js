@@ -115,10 +115,10 @@ const styles = StyleSheet.create({
   user_info_other_content:{
     ...app_sp.ph_16,
     ...app_typo.size.sz_14,
-    color:app_c.HEX.ext_second
+    color:app_c.HEX.ext_second,
   },
   user_info_address:{
-    fontWeight:'bold'
+    fontWeight:'bold',
   },
   line_horizontal:{
     width:'100%',

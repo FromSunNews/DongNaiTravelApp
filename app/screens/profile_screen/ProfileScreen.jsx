@@ -22,15 +22,37 @@ import {
 } from "react-native-vector-icons";
 import * as ImagePicker from "expo-image-picker";
 
-import { Header, RoundedRectangleButton, BottomSheetScroll } from "components";
+import {
+  Header,
+  RoundedRectangleButton,
+  BottomSheetScroll,
+  AppText,
+  AppHeader
+} from "components";
 import styles from "./ProfileScreenStyle";
 import { app_c, app_dms, app_sp } from "globals/styles";
-import { choiceSettingImage } from "utilities/choiceSettingImage"; 
+import { choiceSettingImage } from "utilities/choiceSettingImage";
 
 //Đức: sử dụng expo picker để chọn ảnh tử local để upload lên
 const imageCover = {
   uri: "https://images.pexels.com/photos/1227511/pexels-photo-1227511.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
 };
+
+const user={
+  userId:1,
+  userName:'Thai Anh Duc',
+  userInFo:{
+    userFollower:20,
+    userFollowing:2,
+    userAddress:'Bien Hoa - Dong Nai'
+  },
+  userSocial:{
+    userFacebook:'https://www.facebook.com/profile.php?id=100016839395108',
+    userYoutube:'https://www.facebook.com/profile.php?id=100016839395108',
+    userInstagram:'https://www.instagram.com/thai.a.duc/'
+  },
+  userBio:'Thích màu hồng'
+}
 
 function Profile() {
   const [openTermCondition, setOpenTermCondition] = useState(false);
@@ -93,23 +115,21 @@ function Profile() {
           </View>
           <View style={styles.user_block}>
             <View style={{ alignItems: "center" }}>
-              <Text style={styles.user_name}>Người Dùng Năng Nổ</Text>
+              <Text style={styles.user_name}>{user.userName}</Text>
             </View>
             <View style={styles.user_info_follow}>
-              <Text style={styles.user_follower}>5.6k Follower</Text>
+              <Text style={styles.user_follower}>{user.userInFo.userFollower} Follower</Text>
               <Text>
-                {" "}
                 <Entypo name="dot-single" size={20} color={app_c.HEX.fourth} />
               </Text>
-              <Text style={styles.user_following}>12 Following</Text>
+              <Text style={styles.user_following}>{user.userInFo.userFollowing} Following</Text>
             </View>
             <RoundedRectangleButton />
             <View style={styles.user_infos}>
               <View style={styles.user_info_block}>
                 <Text style={styles.user_info_title}>Bio</Text>
                 <Text style={styles.user_bio_content}>
-                  Toi la nguoi da di khap 63 tinh thanh o Viet Nam. Chuyen
-                  review cac dia diem du lich.
+                  {user.userBio}
                 </Text>
               </View>
             </View>
@@ -122,16 +142,10 @@ function Profile() {
                     name="enviromento"
                   />
                   <Text style={styles.user_info_other_content}>
-                    Live in{" "}
+                    <Text>Live in </Text>
                     <Text style={styles.user_info_address}>
-                      Bien Hoa - Dong Nai
+                    {user.userInFo.userAddress}
                     </Text>
-                  </Text>
-                </View>
-                <View style={styles.user_info_other}>
-                  <Feather style={styles.user_info_other_icon} name="globe" />
-                  <Text style={styles.user_info_other_content}>
-                    nguoidungnang.com
                   </Text>
                 </View>
                 <View style={styles.user_info_other}>
@@ -139,31 +153,23 @@ function Profile() {
                     style={styles.user_info_other_icon}
                     name="facebook"
                   />
-                  <Text style={styles.user_info_other_content}>
-                    Nguoi Dung Nang No{" "}
-                  </Text>
-                </View>
-                <View style={styles.user_info_other}>
-                  <Entypo style={styles.user_info_other_icon} name="youtube" />
-                  <Text style={styles.user_info_other_content}>
-                    Nguoi Dung Nang No
-                  </Text>
-                </View>
-                <View style={styles.user_info_other}>
-                  <AntDesign
-                    style={styles.user_info_other_icon}
-                    name="enviromento"
-                  />
-                  <Text style={styles.user_info_other_content}>
-                    Nguoi Dung Nang No
-                  </Text>
+                  <AppText
+                    style={styles.user_info_other_content}
+                    hyperLink={user.userSocial.userFacebook}
+                  >
+                   {user.userSocial.userFacebook}
+                  </AppText>
                 </View>
                 <View style={styles.user_info_other}>
                   <Entypo
                     style={styles.user_info_other_icon}
                     name="instagram"
                   />
-                  <Text style={styles.user_info_other_content}>ngd.nangno</Text>
+                  <AppText
+                    style={styles.user_info_other_content}
+                    hyperLink={user.userSocial.userInstagram}
+                  >{user.userSocial.userInstagram}
+                  </AppText>
                 </View>
               </View>
             </View>
