@@ -178,10 +178,12 @@ export const styles = StyleSheet.create({
     left: 0
   },
   headerBottomSheet: {
-    paddingHorizontal: 18,
     color: app_c.HEX.fourth,
     ...app_typo.fonts.body2,
-    marginTop: 15
+    paddingTop: 15,
+    paddingLeft: 18,
+    paddingBottom: 10,
+    width: app_dms.screenWidth - 36
   },
   contentContainer: {
     paddingHorizontal: 18
@@ -194,8 +196,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
-    marginBottom: 5,
-    marginTop: 10
+    marginBottom: 5
   },
   textTypeContainer: {
     display: 'flex',
@@ -327,5 +328,229 @@ export const styles = StyleSheet.create({
     color: app_c.HEX.fourth,
     ...app_typo.fonts.body2,
     marginTop: 20
-  }
+  },
+  containerRouteInfo: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    paddingHorizontal: 18,
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    left: 0,
+    backgroundColor: app_c.HEX.primary
+  },
+  backbtn: {
+    width: 35,
+    height: 35,
+    borderRadius: '50%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: app_c.HEX.primary,
+    position: 'absolute',
+    ...app_shdw.type_2,
+    left: 18,
+    top: 40
+  },
+  iconBack: {
+    marginLeft: 8,
+  },
+  headerRouteInfo: {
+    color: app_c.HEX.ext_second,
+    ...app_typo.fonts.h4,
+    marginTop: 50
+  },
+  frameRouteInfo: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    height: 130,
+    borderWidth: 1,
+    borderColor: app_c.HEX.ext_third,
+    ...app_sh.rounded_8,
+    overflow: 'hidden',
+    // paddingHorizontal: 18,
+    marginVertical: 18
+  },
+  changeOriDes: {
+    width: 40,
+    height: 40,
+    borderRadius: '50%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: app_c.HEX.primary,
+    position: 'absolute',
+    right: -20,
+    ...app_shdw.type_2
+  },  
+  leftContainerFrame: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    borderBottomRightRadius: '130%',
+    borderTopRightRadius: '130%',
+    borderStyle: 'dashed',
+    borderWidth: 1,
+    height: '110%',
+    width: '45%',
+    marginLeft: -2,
+    paddingLeft: 14,
+    paddingRight: 12,
+    borderColor: app_c.HEX.ext_second
+  },
+  originText: {
+    color: app_c.HEX.ext_second,
+    ...app_typo.fonts.h4,
+    textDecorationLine: 'underline',
+    paddingRight: 10
+  },
+  toText: {
+    color: app_c.HEX.ext_second,
+    ...app_typo.fonts.body4,
+    marginVertical: 5
+  },
+  detinationText: {
+    color: app_c.HEX.ext_second,
+    ...app_typo.fonts.h4,
+    textDecorationLine: 'underline',
+    paddingRight: 10
+
+  },
+  rightContainerFrame: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingRight: 12
+  },
+  routeInfoTimeContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  routeInfoUnixTime: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginRight: 5,
+  },
+  routeInfoNumberTime: {
+    color: app_c.HEX.ext_second,
+    ...app_typo.fonts.h3,
+  },
+  routeInfoTextTime: {
+    color: app_c.HEX.ext_second,
+    ...app_typo.fonts.body5,
+  },
+  routeInfoTranportContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  routeInfoTranport: {
+    color: app_c.HEX.ext_second,
+    ...app_typo.fonts.h4,
+  },
+  routeInfoTextTranport: {
+    color: app_c.HEX.ext_second,
+    ...app_typo.fonts.body5,
+  },
+  optionalContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    marginTop: 18,
+    marginBottom: 50,
+  },
+  iconOriDesContainer: {
+    marginRight: 10
+  },
+  oriDesContainer: {
+    flex: 1,
+    height: 100
+  },
+  textInput: {
+    ...app_sh.rounded_8,
+    borderWidth: 1,
+    borderColor: app_c.HEX.ext_third,
+  },
+  listView: {
+    position: 'absolute',
+    top: 40,
+    ...app_shdw.type_2,
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: app_c.HEX.ext_third,
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
+  },
+  predefinedPlacesDescription: {
+    ...app_typo.fonts.h4,
+    color: app_c.HEX.third
+  },
+  routeBtn: {
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    alignSelf: 'center',
+    ...app_sh.rounded_8,
+    backgroundColor: app_c.HEX.third,
+    position: 'absolute',
+    bottom: -40,
+    right: '40%',
+  },
+  routeBtnText: {
+    color: app_c.HEX.primary,
+    ...app_typo.fonts.h5,
+  },
+  tagContainerTrans: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 18,
+    marginRight: 10,
+    height: 32,
+    ...app_shdw.type_1,
+  },
+  tagTextTrans: {
+    color: '#112D4E',
+    padding: 5,
+    paddingRight: 15,
+  },
+  tagListTrans: {
+    paddingLeft: 18,
+    position: 'absolute',
+    top: 250,
+  },
+  headerTextFilterContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 18,
+    paddingTop: 10,
+    paddingBottom:8,
+    backgroundColor: app_c.HEX.primary,
+  },
+  headerTextFilter: {
+    color: app_c.HEX.fourth,
+    ...app_typo.fonts.h3,
+    paddingLeft: 5
+  },
+  rightHeaderBtnFilter: {
+    paddingVertical: 5,
+    paddingHorizontal: 3
+  },
+  leftHeaderBtnFilter: {
+    paddingVertical: 5,
+    paddingHorizontal: 3
+  },
+  rightHeaderBtnTextFilter: {
+    color: app_c.HEX.third,
+    ...app_typo.fonts.h4
+  },
 })

@@ -1,14 +1,18 @@
-import { app_c, app_sh, app_sp } from 'globals/styles'
+import { app_c, app_sh, app_sp, app_typo } from 'globals/styles'
 import { StyleSheet } from 'react-native'
 
 export const styles = StyleSheet.create({
   iconSearch: {
-    marginTop: 15,
-    marginLeft: 15
+    paddingTop: 15,
+    paddingLeft: 15
+  },
+  iconFilter: {
+    paddingTop: 15,
+    paddingHorizontal: 12
   },
   iconBack: {
-    marginTop: 13,
-    marginLeft: 15
+    paddingTop: 13,
+    paddingLeft: 15
   },
   textContainer: {
   },
@@ -25,13 +29,19 @@ export const styles = StyleSheet.create({
   poweredContainer: {
     backgroundColor: app_c.HEX.primary,
   },
+  listView: {
+    backgroundColor: app_c.HEX.primary,
+  },
+  predefinedPlacesDescription: {
+    ...app_typo.fonts.h5,
+    color: app_c.HEX.third,
+  },
   overlayBtn: {
     position: 'absolute',
-    width: '100%',
     height: 52,
     top: 0,
-    right: 0,
-    left: 50,
+    right:40,
+    left: 40,
     ...app_sh.rounded_8
   }
 

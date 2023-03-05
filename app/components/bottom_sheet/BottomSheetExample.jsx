@@ -7,26 +7,18 @@ import Icon from 'react-native-vector-icons/Octicons'
 import { app_c, app_typo } from 'globals/styles'
 
 
-const BottomSheetScroll = ({ 
+const BottomSheetExample = ({ 
   openTermCondition = false,
   closeTermCondition,
   childView,
   snapPoints,
-  labelBtn,
-  handleLabelBtn,
-  haveBtn = true,
   haveOverlay = true,
-  bottomView,
-  labelBtnStyle,
-  haveHeader = false,
-  childHeader,
+  bottomSheetExampleRef
 }) => {
-
-  const bottomSheetRef = useRef(null)
 
   const handleClosePress = () => {
     closeTermCondition()
-    bottomSheetRef.current?.close()
+    bottomSheetExampleRef.current?.close()
   }
 
   if (openTermCondition)
@@ -40,25 +32,27 @@ const BottomSheetScroll = ({
           />
         }
         <BottomSheet
-          ref={bottomSheetRef}
+          ref={bottomSheetExampleRef}
           index={1}
           snapPoints={snapPoints}
           enablePanDownToClose
           onClose={() => closeTermCondition()}
           backgroundStyle={styles.bottomSheetContainer}
         >
-          {
+          {childView}
+          {/* {
             haveHeader &&
             <BottomSheetView>
               {childHeader}
             </BottomSheetView>
-          }
+          } */}
 
-          <BottomSheetScrollView
+          {/* <BottomSheetScrollView
             contentContainerStyle={[styles.bottomView, bottomView]}
             showsVerticalScrollIndicator={false}
           >
-            {childView}
+            
+
             {
               haveBtn && 
               <TouchableOpacity
@@ -69,10 +63,10 @@ const BottomSheetScroll = ({
               </TouchableOpacity>
             }
 
-          </BottomSheetScrollView>
+          </BottomSheetScrollView> */}
         </BottomSheet>
       </> 
     )
 }
 
-export default BottomSheetScroll
+export default BottomSheetExample
