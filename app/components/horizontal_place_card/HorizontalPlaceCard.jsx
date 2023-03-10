@@ -19,24 +19,30 @@ import { app_c, app_sh, app_sp } from 'globals/styles'
 */
 
 /**
+ * @typedef PlaceProps
+ * @property {string} name Tên địa điểm.
+ * @property {string} avatar Ảnh đại diện cho địa điểm.
+ * @property {object} location Location giống với place, nhưng nó sẽ rộng hơn, ở cấp thành phố đổ lên.
+ * @property {string} location.province Tên của tỉnh.
+ * @property {string} location.city Tên của thành phố.
+ * @property {Array<object>} tags Các thể loại danh mục.
+ * @property {number} ratingPoints Điểm rating.
+ * @property {number} numberOfReviews Số lượng người dùng đã đánh giá (viết comment review).
+ * @property {number} numberOfVisited Số lượng người dùng đã đến tham quan.
+ * @property {boolean} isRecommended Có được đề xuất hay không?.
+ * @property {boolean} isVisited Có đến đây thăm hay chưa? (Đây là một trường ghép từ User và Place, được tạo trong quá trình chuẩn bị dữ liệu).
+ * 
+ */
+
+/**
  * __Creator__: @NguyenAnhTuan1912
  * 
  * Đây là card nằm ngang, hiển thị một số thông tin cơ bản của một địa điểm nào đó. Có thể ấn vào để xem chi tiết
  * một địa điểm nào đó. Một card sẽ chứa 3 cột. Cột đâu tiên là dành cho ảnh, cột thứ 2 là giành cho nội dung chính
  * và cột cuói cùng là giành cho nút share.
- * @param {object} place - Thông tin về một địa điểm của một nơi nào đó.
- * @param {string} place.name - Tên địa điểm.
- * @param {string} place.avatar - Ảnh đại diện cho địa điểm.
- * @param {object} place.location - Location giống với place, nhưng nó sẽ rộng hơn, ở cấp thành phố đổ lên.
- * @param {string} place.location.province - Tên của tỉnh.
- * @param {string} place.location.city - Tên của thành phố.
- * @param {Array<object>} place.tags - Các thể loại danh mục.
- * @param {number} place.ratingPoints - Điểm rating.
- * @param {number} place.numberOfReviews - Số lượng người dùng đã đánh giá (viết comment review).
- * @param {number} place.numberOfVisited - Số lượng người dùng đã đến tham quan.
- * @param {boolean} place.isRecommended - Có được đề xuất hay không?.
- * @param {boolean} place.isVisited - Có đến đây thăm hay chưa? (Đây là một trường ghép từ User và Place, được tạo trong quá trình chuẩn bị dữ liệu).
- * @returns unknown.
+ * @param {object} props - Props của component.
+ * @param {PlaceProps} props.place - Thông tin về một địa điểm của một nơi nào đó.
+ * @returns Thẻ ngang chứa các thông tin cơ bản của một địa điểm.
  */
 const HorizontalPlaceCard = ({place}) => {
   const navigation = useNavigation()
