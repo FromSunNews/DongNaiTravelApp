@@ -16,15 +16,15 @@ import { app_c, app_sp } from 'globals/styles'
 
 /**
  * @typedef BlogProps
- * @property {object} user - Thông tin cơ bản của một user, là tác giả của blog.
- * @property {string} user.id - Id của user.
- * @property {string} user.name - Tên của user.
- * @property {string} user.avatar - Đường dẫn ảnh đại diện của user.
- * @property {string} name - Tên của blog.
- * @property {string} avatar - Ảnh đại diện của blog.
- * @property {number} createdAt - Thời gian blog này được tạo ra.
- * @property {number} readTime - Thời gian đọc blog.
- * @property {boolean} isLiked - Đây là một trường thời gian được thêm vào khi chuẩn bị dữ liệu.
+ * @property {object} user Thông tin cơ bản của một user, là tác giả của blog.
+ * @property {string} user.id Id của user.
+ * @property {string} user.name Tên của user.
+ * @property {string} user.avatar Đường dẫn ảnh đại diện của user.
+ * @property {string} name Tên của blog.
+ * @property {string} avatar Ảnh đại diện của blog.
+ * @property {number} createdAt Thời gian blog này được tạo ra.
+ * @property {number} readTime Thời gian đọc blog.
+ * @property {boolean} isLiked Đây là một trường thời gian được thêm vào khi chuẩn bị dữ liệu.
  */
 
 /**
@@ -35,7 +35,7 @@ import { app_c, app_sp } from 'globals/styles'
  * và cột cuói cùng là giành cho nút share.
  * @param {object} props - Props của component.
  * @param {BlogProps} props.blog - Dữ liệu của blog, thông tin này chủ yếu là thông tin đã được làm gọn lại.
- * @returns 
+ * @returns Thẻ ngang chứa các thông tin cơ bản của một blog.
  */
 const HorizontalBlogCard = ({blog}) => {
   const navigation = useNavigation()
