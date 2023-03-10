@@ -2,11 +2,11 @@ import { StyleSheet } from "react-native"
 
 const shape = StyleSheet.create({
   capsule: {
-    borderRadius: 9999
+    borderRadius: '100000000000%',
   },
 
   circle: {
-    borderRadius: '100%',
+    borderRadius: '100000000000%',
     aspectRatio: 1
   },
 
@@ -34,65 +34,105 @@ const shape = StyleSheet.create({
     borderRadius: 16
   },
 
-  ronuded_top_4: {
-    borderTopRightRadius: 4,
+  // Top right
+  ronuded_top_right_3: {
+    borderTopRightRadius: 3,
+  },
+
+  ronuded_top_right_4: {
+    borderTopRightRadius: 4
+  },
+
+  ronuded_top_right_6: {
+    borderTopRightRadius: 6,
+  },
+
+  ronuded_top_right_8: {
+    borderTopRightRadius: 8,
+  },
+
+  ronuded_top_right_12: {
+    borderTopRightRadius: 12,
+  },
+
+  ronuded_top_right_16: {
+    borderTopRightRadius: 16,
+  },
+
+  // Top left
+  ronuded_top_left_3: {
+    borderTopLeftRadius: 3,
+  },
+
+  ronuded_top_left_4: {
     borderTopLeftRadius: 4
   },
 
-  ronuded_top_8: {
-    borderTopRightRadius: 8,
-    borderTopLeftRadius: 8
+  ronuded_top_left_6: {
+    borderTopLeftRadius: 6,
   },
 
-  ronuded_top_16: {
-    borderTopRightRadius: 16,
-    borderTopLeftRadius: 16
+  ronuded_top_left_8: {
+    borderTopLeftRadius: 8,
   },
 
-  ronuded_top_3: {
-    borderTopRightRadius: 3,
-    borderTopLeftRadius: 3
+  ronuded_top_left_12: {
+    borderTopLeftRadius: 12,
   },
 
-  ronuded_top_6: {
-    borderTopRightRadius: 6,
-    borderTopLeftRadius: 6
+  ronuded_top_left_16: {
+    borderTopLeftRadius: 16,
   },
 
-  ronuded_top_12: {
-    borderTopRightRadius: 12,
-    borderTopLeftRadius: 12
+  // Bottom right
+  ronuded_bottom_right_3: {
+    borderBottomRightRadius: 3,
   },
 
-  ronuded_bottom_4: {
-    borderBottomRightRadius: 4,
+  ronuded_bottom_right_4: {
+    borderBottomRightRadius: 4
+  },
+
+  ronuded_bottom_right_6: {
+    borderBottomRightRadius: 6,
+  },
+
+  ronuded_bottom_right_8: {
+    borderBottomRightRadius: 8,
+  },
+
+  ronuded_bottom_right_12: {
+    borderBottomRightRadius: 12,
+  },
+
+  ronuded_bottom_right_16: {
+    borderBottomRightRadius: 16,
+  },
+
+  // Bottom left
+  ronuded_bottom_left_3: {
+    borderBottomLeftRadius: 3,
+  },
+
+  ronuded_bottom_left_4: {
     borderBottomLeftRadius: 4
   },
 
-  ronuded_bottom_8: {
-    borderBottomRightRadius: 8,
-    borderBottomLeftRadius: 8
+  ronuded_bottom_left_6: {
+    borderBottomLeftRadius: 6,
   },
 
-  ronuded_bottom_16: {
-    borderBottomRightRadius: 16,
-    borderBottomLeftRadius: 16
+  ronuded_bottom_left_8: {
+    borderBottomLeftRadius: 8,
   },
 
-  ronuded_bottom_3: {
-    borderBottomRightRadius: 3,
-    borderBottomLeftRadius: 3
+  ronuded_bottom_left_12: {
+    borderBottomLeftRadius: 12,
   },
 
-  ronuded_bottom_6: {
-    borderBottomRightRadius: 6,
-    borderBottomLeftRadius: 6
+  ronuded_bottom_left_16: {
+    borderBottomLeftRadius: 16,
   },
-
-  ronuded_bottom_12: {
-    borderBottomRightRadius: 12,
-    borderBottomLeftRadius: 12
-  }
 });
 
 const app_sh = {...shape};

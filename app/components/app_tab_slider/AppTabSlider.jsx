@@ -1,35 +1,71 @@
 import { View, Animated, ScrollView, FlatList } from 'react-native'
 import React, { useCallback } from 'react'
 
+import StringUtility from 'utilities/string'
+
 import AppText from '../app_text/AppText'
 import RectangleButton from '../buttons/RectangleButton'
 
 import styles from './AppTabSliderStyles'
-import StringUtility from 'utilities/string'
 import { app_dms } from 'globals/styles'
 
 // Để hiểu hơn về component này thì đọc bài này:
 // Link: https://docs.google.com/document/d/1S9RUWqudJ-djqsEA5zzzJU8l2HL5Z3dCQQlUaTJZNvY/edit#
 
-let childrenRef;
+const SlideScroll = ({ children }) => {
+  return (
+    <ScrollView
+      style={styles.slide_container}
+      showsVerticalScrollIndicator={false}
+    >
+      {children}
+    </ScrollView>
+  )
+}
+
+const SlideView = ({ children }) => {
+  return (
+    <View style={styles.slide_container}>
+      {children}
+    </View>
+  )
+}
+
+/**
+ * @typedef TabSliderProps
+ * @property {JSX.Element[]} props.children Children này là một tổ hợp AppTabSlider.Slide.
+ * @property {number} [props.lineIndexTranslateXStart=20] Thuộc tính này dùng để setup ví trí bắt đầu cho slide index để animation (translateX animation).
+ * @property {number} [props.slideTranslateXStart=100] Thuộc tính này dùng để setup ví trí bắt đầu cho slide index để animation (translateX animation).
+ * @property {boolean} [isSliderContainerScrollable=false] Thuộc tính này cho biết là AppTabSlider có scroll được hay không?
+ */
+
+/**
+ * @typedef ScrollInfo
+ * @property {number} previousScrollToCenter Gía trị để scroll button trước về giữa.
+ * @property {number[]} scrollToXList Danh sách giá trị để scroll button về giữa.
+ * @property {number} prevSlideIndex Chỉ mục của index trước.
+ * @property {number} tabButtonScrollContainerWidth Chỉ mục của index trước.
+ * @property {boolean} isSliderButtonPress Button có được ấn hay chưa.
+ * @property {boolean} isFirstRender Có phải là first render không? Dùng để tránh animation lần đầu render.
+ */
 
 /**
  * __Creator__: @NguyenAnhTuan1912
  * 
- * Component này sẽ giúp chúng ta tạo ra một slider cho một screen.
- * @param {object} props - Props của component.
- * @param {JSX.Element[]} props.children - Children này là một tổ hợp AppTabSlider.Slide.
- * @param {number} [props.lineIndexTranslateXStart=20] - Thuộc tính này dùng để setup ví trí bắt đầu cho slide index để animation (translateX animation).
- * @param {number} [props.slideTranslateXStart=100] - Thuộc tính này dùng để setup ví trí bắt đầu cho slide index để animation (translateX animation).
- * @returns 
- */  
+ * Trả về một Slider, có thể scroll hoặc không bằng cách set up thuộc tính `isSliderContainerScrollable`
+ * @param {TabSliderProps} props - Props của component.
+ * @returns `AppTabSlider`
+ */
 const AppTabSlider = ({
   children,
   lineIndexTranslateXStart = 20,
-  slideTranslateXStart = 100
+  slideTranslateXStart = 100,
+  isSliderContainerScrollable = false
 }) => {
   if(!children) return null;
   if(!children.length) return children;
+
+  const SlideContainer = React.useMemo(() => isSliderContainerScrollable ? SlideScroll : SlideView, [isSliderContainerScrollable])
 
   const [currentSlideIndex, setSlideIndex] = React.useState(0);
   const scrollRef = React.useRef(null);
@@ -37,6 +73,7 @@ const AppTabSlider = ({
     previousScrollToCenter: 0,
     scrollToXList: [],
     prevSlideIndex: 0,
+    tabButtonScrollContainerWidth: 0,
     isSliderButtonPress: false,
     isFirstRender: true
   });
@@ -64,7 +101,13 @@ const AppTabSlider = ({
   const translateAnim = new Animated.Value(slideTranslateXStart * direction);
   const opacityAnim = new Animated.Value(0);
 
-  if(sliderInfoRef.current.isSliderButtonPress || sliderInfoRef.current.isFirstRender) {
+  if(sliderInfoRef.current.isFirstRender) {
+    translateAnim.setValue(0);
+    lineTranslateAmin.setValue(0);
+    opacityAnim.setValue(1);
+  }
+
+  if(sliderInfoRef.current.isSliderButtonPress) {
     Animated.timing(translateAnim, {
       toValue: 0,
       duration: 200,
@@ -106,6 +149,12 @@ const AppTabSlider = ({
         horizontal
         showsHorizontalScrollIndicator={false}
         style={styles.slider_button_container}
+        overScrollMode="never"
+        onLayout={e => {
+          const {width} = e.nativeEvent.layout;
+          console.log("Slider's width: ", width);
+          sliderInfoRef.current.tabButtonScrollContainerWidth = width;
+        }}
       >
         {
           listSlideName.map((slideName, index) =>
@@ -114,20 +163,20 @@ const AppTabSlider = ({
                 key={slideName + 'container'}
                 onLayout={e => {
                   const { x, width } = e.nativeEvent.layout;
-                  const snapItemPosition = (app_dms.screenWidth / 2)
-                  const distanceFromXToSnapPosition = x - snapItemPosition;
-                  const halfWidthOfButton = (width / 2);
-                  const distanceForScrollingToCenterButton = distanceFromXToSnapPosition > 0
-                    ? distanceFromXToSnapPosition + halfWidthOfButton
-                    : 0;
-                  sliderInfoRef.current.scrollToXList[index] = distanceForScrollingToCenterButton;
+                  setTimeout(() => {
+                    const snapItemPosition = (sliderInfoRef.current.tabButtonScrollContainerWidth / 2)
+                    const distanceFromXToSnapPosition = x - snapItemPosition;
+                    const halfWidthOfButton = (width / 2);
+                    const distanceForScrollingToCenterButton = distanceFromXToSnapPosition + halfWidthOfButton;
+                    sliderInfoRef.current.scrollToXList[index] = distanceForScrollingToCenterButton;
+                    console.log(`Button ${slideName}: ${distanceFromXToSnapPosition}, x: ${x}, center: ${distanceForScrollingToCenterButton}, slider'width: ${sliderInfoRef.current.tabButtonScrollContainerWidth}`);
+                  }, 0);
                 }}
               >
                 <RectangleButton
-                  key={slideName + 'button'}
                   isTransparent
-                  typeOfButton="highlight"
-                  handlePressButton={handlePressTabSlider(index)}
+                  key={slideName + 'button'}
+                  onPress={handlePressTabSlider(index)}
                 >
                   {(isActive, currentLabelStyle) => (
                     <AppText style={currentLabelStyle} weight="lighter" font="h5">{StringUtility.toTitleCase(slideName)}</AppText>
@@ -148,7 +197,7 @@ const AppTabSlider = ({
           )
         }
       </ScrollView>
-      <View style={styles.slide_container}>
+      <SlideContainer style={styles.slide_container}>
         <Animated.View
           style={{
             transform: [
@@ -161,7 +210,7 @@ const AppTabSlider = ({
             children[currentSlideIndex]
           }
         </Animated.View>
-      </View>
+      </SlideContainer>
     </View>
   )
 }
