@@ -15,21 +15,26 @@ import styles from './HorizontalBlogCardStyles'
 import { app_c, app_sp } from 'globals/styles'
 
 /**
+ * @typedef BlogProps
+ * @property {object} user - Thông tin cơ bản của một user, là tác giả của blog.
+ * @property {string} user.id - Id của user.
+ * @property {string} user.name - Tên của user.
+ * @property {string} user.avatar - Đường dẫn ảnh đại diện của user.
+ * @property {string} name - Tên của blog.
+ * @property {string} avatar - Ảnh đại diện của blog.
+ * @property {number} createdAt - Thời gian blog này được tạo ra.
+ * @property {number} readTime - Thời gian đọc blog.
+ * @property {boolean} isLiked - Đây là một trường thời gian được thêm vào khi chuẩn bị dữ liệu.
+ */
+
+/**
  * __Creator__: @NguyenAnhTuan1912
  * 
  * Đây là card nằm ngang, hiển thị một số thông tin cơ bản của một blog nào đó. Có thể ấn vào để xem chi tiết
  * của blog đó. Một card sẽ chứa 3 cột. Cột đâu tiên là dành cho ảnh, cột thứ 2 là giành cho nội dung chính
  * và cột cuói cùng là giành cho nút share.
- * @param {object} blog - Dữ liệu của blog, thông tin này chủ yếu là thông tin đã được làm gọn lại.
- * @param {object} blog.user - Thông tin cơ bản của một user, là tác giả của blog.
- * @param {string} blog.user.id - Id của user.
- * @param {string} blog.user.name - Tên của user.
- * @param {string} blog.user.avatar - Đường dẫn ảnh đại diện của user.
- * @param {string} blog.name - Tên của blog.
- * @param {string} blog.avatar - Ảnh đại diện của blog.
- * @param {number} blog.createdAt - Thời gian blog này được tạo ra.
- * @param {number} blog.readTime - Thời gian đọc blog.
- * @param {boolean} blog.isLiked - Đây là một trường thời gian được thêm vào khi chuẩn bị dữ liệu.
+ * @param {object} props - Props của component.
+ * @param {BlogProps} props.blog - Dữ liệu của blog, thông tin này chủ yếu là thông tin đã được làm gọn lại.
  * @returns 
  */
 const HorizontalBlogCard = ({blog}) => {
@@ -45,10 +50,8 @@ const HorizontalBlogCard = ({blog}) => {
         typeOfButton="highlight"
         overrideShape="rounded_4"
         isOnlyContent={true}
-        handlePressButton={handlePressImageButton}
-        style={{
-          ...app_sp.me_12
-        }}
+        onPress={handlePressImageButton}
+        style={app_sp.me_12}
       >
         <ImageBackground style={styles.card_image_container} source={blog.avatar !== "" ? {uri: blog.avatar} : {}}>
           {/*

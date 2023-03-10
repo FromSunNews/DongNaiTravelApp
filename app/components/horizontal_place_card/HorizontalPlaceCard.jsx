@@ -52,10 +52,8 @@ const HorizontalPlaceCard = ({place}) => {
         isOnlyContent
         typeOfButton="none"
         overrideShape="rounded_4"
-        handlePressButton={handlePressImageButton}
-        style={{
-          ...app_sp.me_12
-        }}
+        onPress={handlePressImageButton}
+        style={app_sp.me_12}
       >
         <ImageBackground
           style={styles.card_image_container}

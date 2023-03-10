@@ -1,9 +1,10 @@
 import { View, Text, ViewStyle, StyleProp } from 'react-native'
 import React from 'react'
 
+import AppText from '../../app_text/AppText'
+
 import styles from './AppBarChartStyles'
 import { app_c } from 'globals/styles'
-import { AppText } from 'components'
 
 const defaultDataSetValue = {
   indexUnit: '',

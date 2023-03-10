@@ -165,7 +165,7 @@ const AboutSlide = ({
     <View style={styles.pd_content_container}>
       {/* Description */}
       <View style={styles.pd_content_article}>
-        <AppText font="h4" numberOfLines={1} style={app_sp.mb_6}>Description</AppText>
+        <AppText font="h3" numberOfLines={1} style={app_sp.mb_6}>Description</AppText>
         <AppText color="ext_second">
           Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
         </AppText>
@@ -173,7 +173,7 @@ const AboutSlide = ({
 
       {/* Images */}
       <View style={styles.pd_content_article}>
-        <AppText font="h4" numberOfLines={1} style={app_sp.mb_6}>Images</AppText>
+        <AppText font="h3" numberOfLines={1} style={app_sp.mb_6}>Images</AppText>
         <View style={styles.pd_content_image_row_container}>
           <View style={{...styles.pd_content_image_row, ...app_sp.mb_12}}>
             <RectangleButton
@@ -219,7 +219,7 @@ const AboutSlide = ({
 
       {/* Related Places */}
       <View style={{...styles.pd_content_article, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-        <AppText font="h4" numberOfLines={1} style={app_sp.mb_6}>Related Places</AppText>
+        <AppText font="h3" numberOfLines={1} style={app_sp.mb_6}>Related Places</AppText>
         <CircleButton
           isTransparent
           typeOfButton="highlight"
@@ -262,7 +262,7 @@ const ReviewsSlide = () => {
 
       {/* Review rating information */}
       <View>
-        <AppText font="h4" style={app_sp.mb_12}>Ratings & reviews</AppText>
+        <AppText font="h3" style={app_sp.mb_12}>Ratings & reviews</AppText>
         
         {/* Rating statistic */}
         <View style={styles.pd_content_rr_stats_container}>

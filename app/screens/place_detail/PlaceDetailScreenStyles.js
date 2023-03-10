@@ -1,10 +1,12 @@
-import { app_c, app_dms, app_sh, app_sp } from "globals/styles"
 import { StyleSheet } from "react-native"
+
+import { app_c, app_dms, app_sh, app_sp } from "globals/styles"
 
 const styles = StyleSheet.create({
   pd_bottom_sheet: {
     backgroundColor: app_c.HEX.primary,
-    ...app_sh.ronuded_top_16
+    ...app_sh.ronuded_top_right_16,
+    ...app_sh.ronuded_top_left_16
   },
 
   pd_bottom_sheet_view: {
