@@ -83,7 +83,7 @@ const AppHeader = ({
                   defaultColor="type_2"
                   boxShadowType="type_1"
                   typeOfButton="opacity"
-                  handlePressButton={() => navigation.goBack()}
+                  onPress={() => navigation.goBack()}
                   setIcon={(isActive, currentLabelStyle) => (
                     <Ionicons name="chevron-back-outline" size={18} style={currentLabelStyle} />
                   )}

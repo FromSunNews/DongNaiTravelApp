@@ -1,10 +1,15 @@
 import {
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  TouchableHighlight,
-  View
+  View,
+  TouchableHighlightProps,
+  TouchableOpacityProps,
+  TouchableWithoutFeedbackProps,
+  StyleProp,
+  TextStyle,
+  ViewStyle
 } from 'react-native'
 import React from 'react'
+
+import ComponentUtility from 'utilities/component'
 
 import styles from './ButtonsStyles'
 import { app_shdw, app_sh, app_sp, app_c } from 'globals/styles'
@@ -13,111 +18,87 @@ const default_style = {
   justifyContent: 'center',
   alignItems: 'center',
   minWidth: 30,
-  maxWidth: 100,
-  maxHeight: 100,
-  aspectRatio: 1,
+  minHeight: 30,
   ...app_sh.circle,
   ...app_sp.p_10,
 };
+
+/**
+ * @typedef CircleButtonProps
+ * @property {JSX.Element | (isActive: boolean, currentLabelStyle: StyleProp<TextStyle>) => JSX.Element} props.setIcon - Custom style cho button, không can thiệp vào các thuộc tính mặc định.
+ * @property {boolean} [isActive=false] Nút có được ấn hay chưa?
+ * @property {boolean} [isTransparent=false] Nút có background color hay không?
+ * @property {boolean} [isOnlyContent=false] Nút có padding hay background hay không? Và chỉ có content hay không?
+ * @property {'none' | 'opacity' | 'highlight'} [typeOfButton=none] Loại nút.
+ * @property {'type_1' | 'type_2' | 'type_3' | 'type_4' | 'type_5'} [defaultColor=type_1] Màu nút bình thường (mặc định).
+ * @property {'type_1' | 'type_2'} [activeColor=type_1] Màu nút khi khi được focus (active).
+ * @property {'type_1' | 'type_2' | 'type_3' | 'type_4' | 'type_5'} [boxShadowType=] Đổ bóng cho button theo loại, xem thêm trong `box-shadow.js`.
+ */
 
 /**
  * __Creator__: @NguyenAnhTuan1912
  * 
  * Circle Button là những button nhỏ ở trong app, có hình dạng là một hình tròn. Button này chỉ
  * có icon.
- * @param {object} props - Props của component.
- * @param {boolean} [props.isActive=false] - Nút có được ấn hay chưa?
- * @param {boolean} [props.isDisable=false] - Nút có được bật hay không?
- * @param {boolean} [props.isTransparent=false] - Nút có background color hay không?
- * @param {boolean} [props.isOnlyContent=false] - Nút có container bọc ở ngoài hay là không?
- * @param {'none' | 'opacity' | 'highlight'} [props.typeOfButton=none] - Loại nút.
- * @param {'type_1' | 'type_2' | 'type_3' | 'type_4' | 'type_5'} [props.defaultColor=type_1] - Màu nút bình thường (mặc định).
- * @param {'type_1' | 'type_2'} [props.activeColor=type_1] - Màu nút khi khi được focus (active).
- * @param {'type_1' | 'type_2' | 'type_3' | 'type_4' | 'type_5'} [props.boxShadowType=] - Đổ bóng cho button theo loại, xem thêm trong `box-shadow.js`.
- * @param {StyleProp<ViewStyle>} [props.style={}] - Custom style cho button, không can thiệp vào các thuộc tính mặc định.
- * @param {(isActive, currentLabelStyle) => JSX.Element} props.setIcon - Custom style cho button, không can thiệp vào các thuộc tính mặc định.
- * @param {() => void} props.handlePressButton - Function xử lý sự kiện cho Capsule button.
+ * @param {CircleButtonProps & TouchableHighlightProps & TouchableOpacityProps} props Props của component.
  * @returns Trả về `TouchableOpacity` | `TouchableWithoutFeedback` | `TouchableHighLight` Component (tuỳ theo lựa chọn).
  */
 const CircleButton = ({
   isActive = false,
-  isDisable = false,
   isTransparent = false,
   isOnlyContent = false,
   typeOfButton = "none",
   defaultColor = "type_1",
   activeColor = "type_1",
   boxShadowType = "",
-  style = {},
   setIcon,
-  handlePressButton = () => {}
+  ...props
 }) => {
   let canSetIcon = typeof setIcon === 'function' && React.isValidElement(setIcon());
 
-  if(isDisable) {
-    return (
-      <TouchableWithoutFeedback
-        disabled={isDisable}
-      >
-        <View style={{...default_style, ...style, ...styles.btn_disable}}>
-          {canSetIcon && setIcon(isActive, {})}
-        </View>
-      </TouchableWithoutFeedback>
-    );
-  }
-
-  let currentButtonStyle = {
+  let Button = ComponentUtility.getTouchable(typeOfButton);
+  
+  let contentContainerStyle = {
     ...default_style,
-    ...style,
     ...(
       isActive
       ? styles[`btn_active_${activeColor}`]
       : styles[`btn_default_${defaultColor}`]
   )};
+
   let currentLabelStyle = isActive ? styles[`lbl_active_${activeColor}`] : styles[`lbl_default_${defaultColor}`];
 
   if(isOnlyContent) {
-    currentButtonStyle = style;
+    contentContainerStyle = {};
   }
 
   if(isTransparent) {
-    currentButtonStyle = {...default_style, ...style};
+    contentContainerStyle.backgroundColor = "transparent";
     currentLabelStyle = {};
   }
 
   if(boxShadowType !== "") {
-    currentButtonStyle = {...currentButtonStyle, ...app_shdw[boxShadowType]}
+    contentContainerStyle = Object.assign({}, contentContainerStyle, app_shdw[boxShadowType]);
   }
 
-  let ButtonComponent = TouchableWithoutFeedback;
-  let ButtonComponentProps = {
-    style: currentButtonStyle
-  };
-
-  if(typeOfButton === "opacity") {
-    ButtonComponent = TouchableOpacity;
-    ButtonComponentProps = {
-      style: currentButtonStyle
-    }
+  if(props.disabled) {
+    contentContainerStyle = Object.assign({}, contentContainerStyle, styles.btn_disable);
+    currentLabelStyle = styles.lbl_disable;
   }
 
-  if(typeOfButton === "highlight") {
-    ButtonComponent = TouchableHighlight;
-    ButtonComponentProps = {
-      underlayColor: app_c.HEX.ext_third,
-      style: currentButtonStyle
-    }
-  }
+  contentContainerStyle = ComponentUtility.mergeStyle(contentContainerStyle, props.style);
+
+  props.underlayColor = props.underlayColor ? props.underlayColor : app_c.HEX.sub_third;
 
   return (
-    <ButtonComponent
-      {...ButtonComponentProps}
-      onPress={handlePressButton}
+    <Button
+      {...props}
+      style={typeOfButton === "none" ? {} : contentContainerStyle}
     >
-      <View style={typeOfButton === "highlight" || typeOfButton === "opacity" ? {flex: 1, justifyContent: 'center', alignItems: 'center'} : {...currentButtonStyle}}>
-          {canSetIcon && setIcon(isActive, currentLabelStyle)}
+      <View style={typeOfButton === "none" ? contentContainerStyle : {}}>
+        {canSetIcon && setIcon(isActive, currentLabelStyle)}
       </View>
-    </ButtonComponent>
+    </Button>
   )
 }
 
