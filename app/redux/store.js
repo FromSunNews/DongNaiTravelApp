@@ -22,7 +22,7 @@ const persistConfig = {
   // Phuong: luu tru o localstorage
   storage: AsyncStorage,
   // Phuong: định nghĩa các slice được phép duy trì qua mỗi lần reload, hoặc đóng ứng dụng tạm thời
-  whitelist: ['user', 'warehouse', 'filer']
+  whitelist: ['user', 'warehouse', 'filter']
   // Phuong: blacklist: ['user'] // Phuong: định nghĩa các slice không được phép duy trì qua mỗi lần reload, hoặc đóng ứng dụng tạm thời
 }
 

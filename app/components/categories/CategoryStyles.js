@@ -172,7 +172,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 10
   },
   cardCategoryText: {
-    ...app_typo.fonts.h4
+    ...app_typo.fonts.h5
   },
   saperate: {
     height: 1,

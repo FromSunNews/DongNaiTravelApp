@@ -1016,6 +1016,724 @@ export const typesPlace = [
   },
 ]
 
+// export const typesPlace = [
+//   {
+//     type_id: 'all_categories',
+//     text_en: 'All categories',
+//     text_vi: 'Tất cả các loại hình' 
+//   },
+//   {
+//     type_id: 'accounting',
+//     text_en: 'Accounting',
+//     text_vi: 'Kế toán' 
+//   },
+//   {
+//     type_id: 'airport',
+//     text_en: 'Airport',
+//     text_vi: 'Sân bay' 
+//   },
+//   {
+//     type_id: 'amusement_park',
+//     text_en: 'Amusement park',
+//     text_vi: 'Công viên giải trí' 
+//   },
+//   {
+//     type_id: 'aquarium',
+//     text_en: 'Aquarium',
+//     text_vi: 'Bể nuôi cá' 
+//   },
+//   {
+//     type_id: 'art_gallery',
+//     text_en: 'Art gallery',
+//     text_vi: 'Triển lãm nghệ thuật' 
+//   },
+//   {
+//     type_id: 'atm',
+//     text_en: 'Atm',
+//     text_vi: 'Cây ATM' 
+//   },
+//   {
+//     type_id: 'grocery_or_supermarket',
+//     text_en: 'Grocery, supermarket',
+//     text_vi: 'Tạp hóa, siêu thị' 
+//   },
+//   {
+//     type_id: 'bakery',
+//     text_en: 'Bakery',
+//     text_vi: 'cửa hàng bánh ngọt' 
+//   },
+//   {
+//     type_id: 'bank',
+//     text_en: 'Bank',
+//     text_vi: 'Ngân hàng' 
+//   },
+//   {
+//     type_id: 'bar',
+//     text_en: 'Bar',
+//     text_vi: 'Quán bar' 
+//   },
+//   {
+//     type_id: 'beauty_salon',
+//     text_en: 'Beauty salon',
+//     text_vi: 'Thẩm mỹ viện' 
+//   },
+//   {
+//     type_id: 'bicycle_store',
+//     text_en: 'Bicycle store',
+//     text_vi: 'Cửa hàng xe đạp' 
+//   },
+//   {
+//     type_id: 'book_store',
+//     text_en: 'Book store',
+//     text_vi: 'Cửa hàng sách' 
+//   },
+//   {
+//     type_id: 'bowling_alley',
+//     text_en: 'Bowling alley',
+//     text_vi: 'Sân chơi bowling' 
+//   },
+//   {
+//     type_id: 'bus_station',
+//     text_en: 'Bus station',
+//     text_vi: 'Trạm xe buýt' 
+//   },
+//   {
+//     type_id: 'cafe',
+//     text_en: 'Cafe',
+//     text_vi: 'Quán cafe' 
+//   },
+//   {
+//     type_id: 'campground',
+//     text_en: 'Campground',
+//     text_vi: 'Nơi cắm trại' 
+//   },
+//   {
+//     type_id: 'car_dealer',
+//     text_en: 'Car dealer',
+//     text_vi: 'Cửa hàng bán xe' 
+//   },
+//   {
+//     type_id: 'car_rental',
+//     text_en: 'Car rental',
+//     text_vi: 'Cửa hàng thuê xe' 
+//   },
+//   {
+//     type_id: 'car_repair',
+//     text_en: 'Car repair',
+//     text_vi: 'Cửa hàng sửa xe' 
+//   },
+//   {
+//     type_id: 'car_wash',
+//     text_en: 'Car wash',
+//     text_vi: 'Cửa hàng rửa xe' 
+//   },
+//   {
+//     type_id: 'casino',
+//     text_en: 'casino',
+//     text_vi: 'Sòng bạc' 
+//   },
+//   {
+//     type_id: 'cemetery',
+//     text_en: 'Cemetery',
+//     text_vi: 'Nghĩa trang' 
+//   },
+//   {
+//     type_id: 'church',
+//     text_en: 'Church',
+//     text_vi: 'Nhà thờ' 
+//   },
+//   {
+//     type_id: 'city_hall',
+//     text_en: 'City hall',
+//     text_vi: 'Toà thị chính' 
+//   },
+//   {
+//     type_id: 'clothing_store',
+//     text_en: 'Clothing store',
+//     text_vi: 'Cửa hàng quần áo' 
+//   },
+//   {
+//     type_id: 'convenience_store',
+//     text_en: 'Convenience store',
+//     text_vi: 'Cửa hàng tiện lợi' 
+//   },
+//   {
+//     type_id: 'courthouse',
+//     text_en: 'Courthouse',
+//     text_vi: 'Tòa án' 
+//   },
+//   {
+//     type_id: 'dentist',
+//     text_en: 'dentist',
+//     text_vi: 'Nha khoa' 
+//   },
+//   {
+//     type_id: 'department_store',
+//     text_en: 'Department store',
+//     text_vi: 'Cửa hàng bách hóa' 
+//   },
+//   {
+//     type_id: 'doctor',
+//     text_en: 'Doctor',
+//     text_vi: 'Bác sĩ' 
+//   },
+//   {
+//     type_id: 'drugstore',
+//     text_en: 'Drugstore',
+//     text_vi: 'Nhà thuốc' 
+//   },
+//   {
+//     type_id: 'electrician',
+//     text_en: 'Electrician',
+//     text_vi: 'Thợ điện' 
+//   },
+//   {
+//     type_id: 'electronics_store',
+//     text_en: 'Electronics store',
+//     text_vi: 'Cửa hàng điện tử' 
+//   },
+//   {
+//     type_id: 'embassy',
+//     text_en: 'Embassy',
+//     text_vi: 'Đại sứ quán' 
+//   },
+//   {
+//     type_id: 'fire_station',
+//     text_en: 'Fire station',
+//     text_vi: 'Trạm cứu hỏa' 
+//   },
+//   {
+//     type_id: 'florist',
+//     text_en: 'Florist',
+//     text_vi: 'Người bán hoa' 
+//   },
+//   {
+//     type_id: 'funeral_home',
+//     text_en: 'Funeral home',
+//     text_vi: 'Nhà tang lễ' 
+//   },
+//   {
+//     type_id: 'furniture_store',
+//     text_en: 'Furniture store',
+//     text_vi: 'Cửa hàng nội thất' 
+//   },
+//   {
+//     type_id: 'gas_station',
+//     text_en: 'Gas station',
+//     text_vi: 'Trạm xăng' 
+//   },
+//   {
+//     type_id: 'gym',
+//     text_en: 'gym',
+//     text_vi: 'Phòng gym' 
+//   },
+//   {
+//     type_id: 'hair_care',
+//     text_en: 'Hair care',
+//     text_vi: 'Cửa hàng chăm sóc tóc' 
+//   },
+//   {
+//     type_id: 'hardware_store',
+//     text_en: 'Hardware store',
+//     text_vi: 'Cưa hàng phần cứng' 
+//   },
+//   {
+//     type_id: 'hindu_temple',
+//     text_en: 'Hindu temple',
+//     text_vi: 'Đền hindu' 
+//   },
+//   {
+//     type_id: 'home_goods_store',
+//     text_en: 'Home goods store',
+//     text_vi: 'Cửa hàng đồ gia dụng' 
+//   },
+//   {
+//     type_id: 'hospital',
+//     text_en: 'Hospital',
+//     text_vi: 'Bệnh viện' 
+//   },
+//   {
+//     type_id: 'insurance_agency',
+//     text_en: 'Insurance agency',
+//     text_vi: 'Cơ quan bảo hiểm' 
+//   },
+//   {
+//     type_id: 'jewelry_store',
+//     text_en: 'Jewelry store',
+//     text_vi: 'Cửa hàng nữ trang' 
+//   },
+//   {
+//     type_id: 'laundry',
+//     text_en: 'Laundry',
+//     text_vi: 'Cửa hàng giặt ủi' 
+//   },
+//   {
+//     type_id: 'lawyer',
+//     text_en: 'Lawyer',
+//     text_vi: 'Luật sư' 
+//   },
+//   {
+//     type_id: 'library',
+//     text_en: 'Library',
+//     text_vi: 'Thư viện' 
+//   },
+//   {
+//     type_id: 'light_rail_station',
+//     text_en: 'Light rail station',
+//     text_vi: 'Ga đường sắt nhẹ' 
+//   },
+//   {
+//     type_id: 'liquor_store',
+//     text_en: 'Liquor store',
+//     text_vi: 'Cửa hàng rượu' 
+//   },
+//   {
+//     type_id: 'local_government_office',
+//     text_en: 'Local government office',
+//     text_vi: 'Văn phòng chính quyền địa phương' 
+//   },
+//   {
+//     type_id: 'locksmith',
+//     text_en: 'Locksmith',
+//     text_vi: 'Thợ khóa' 
+//   },
+//   {
+//     type_id: 'lodging',
+//     text_en: 'Lodging',
+//     text_vi: 'Chỗ ở' 
+//   },
+//   {
+//     type_id: 'meal_delivery',
+//     text_en: 'Meal delivery',
+//     text_vi: 'Giao đồ ăn' 
+//   },
+//   {
+//     type_id: 'meal_takeaway',
+//     text_en: 'Meal takeaway',
+//     text_vi: 'Đồ ăn mang đi' 
+//   },
+//   {
+//     type_id: 'mosque',
+//     text_en: 'Mosque',
+//     text_vi: 'Nhà thờ hồi giáo' 
+//   },
+//   {
+//     type_id: 'movie_rental',
+//     text_en: 'Movie rental',
+//     text_vi: 'Thuê phim' 
+//   },
+//   {
+//     type_id: 'movie_theater',
+//     text_en: 'Movie theater',
+//     text_vi: 'Rạp chiếu phim' 
+//   },
+//   {
+//     type_id: 'moving_company',
+//     text_en: 'Moving company',
+//     text_vi: 'Công ty chuyển nhà' 
+//   },
+//   {
+//     type_id: 'museum',
+//     text_en: 'Museum',
+//     text_vi: 'Viện bảo tàng' 
+//   },
+//   {
+//     type_id: 'night_club',
+//     text_en: 'Night club',
+//     text_vi: 'Câu lạc bộ đêm' 
+//   },
+//   {
+//     type_id: 'painter',
+//     text_en: 'Painter',
+//     text_vi: 'Họa sĩ' 
+//   },
+//   {
+//     type_id: 'park',
+//     text_en: 'Park',
+//     text_vi: 'Công viên' 
+//   },
+//   {
+//     type_id: 'parking',
+//     text_en: 'Parking',
+//     text_vi: 'Chỗ đậu xe' 
+//   },
+//   {
+//     type_id: 'pet_store',
+//     text_en: 'Pet store',
+//     text_vi: 'Cửa hàng thú cưng' 
+//   },
+//   {
+//     type_id: 'pharmacy',
+//     text_en: 'Pharmacy',
+//     text_vi: 'Tiệm thuốc tây' 
+//   },
+//   {
+//     type_id: 'physiotherapist',
+//     text_en: 'Physiotherapist',
+//     text_vi: 'Nhà vật lý trị liệu' 
+//   },
+//   {
+//     type_id: 'plumber',
+//     text_en: 'Plumber',
+//     text_vi: 'Thợ sửa ống nước' 
+//   },
+//   {
+//     type_id: 'police',
+//     text_en: 'Police',
+//     text_vi: 'Cảnh sát' 
+//   },
+//   {
+//     type_id: 'post_office',
+//     text_en: 'Post office',
+//     text_vi: 'Bưu điện' 
+//   },
+//   {
+//     type_id: 'primary_school',
+//     text_en: 'Primary school',
+//     text_vi: 'Trường tiểu học' 
+//   },
+//   {
+//     type_id: 'real_estate_agency',
+//     text_en: 'Real estate agency',
+//     text_vi: 'Cơ quan bất động sản' 
+//   },
+//   {
+//     type_id: 'restaurant',
+//     text_en: 'Restaurant',
+//     text_vi: 'Nhà hàng' 
+//   },
+//   {
+//     type_id: 'roofing_contractor',
+//     text_en: 'Roofing contractor',
+//     text_vi: 'Nhà thầu lợp mái' 
+//   },
+//   {
+//     type_id: 'rv_park',
+//     text_en: 'rv_park',
+//     text_vi: 'Công viên RV' 
+//   },
+//   {
+//     type_id: 'school',
+//     text_en: 'school',
+//     text_vi: 'Trường học' 
+//   },
+//   {
+//     type_id: 'secondary_school',
+//     text_en: 'Secondary school',
+//     text_vi: 'Trường cấp hai' 
+//   },
+//   {
+//     type_id: 'shoe_store',
+//     text_en: 'Shoe store',
+//     text_vi: 'Cửa hàng giày' 
+//   },
+//   {
+//     type_id: 'shopping_mall',
+//     text_en: 'Shopping mall',
+//     text_vi: 'Trung tâm mua sắm' 
+//   },
+//   {
+//     type_id: 'spa',
+//     text_en: 'Spa',
+//     text_vi: 'Spa' 
+//   },
+//   {
+//     type_id: 'stadium',
+//     text_en: 'Stadium',
+//     text_vi: 'Sân vận động' 
+//   },
+//   {
+//     type_id: 'storage',
+//     text_en: 'Storage',
+//     text_vi: 'Kho' 
+//   },
+//   {
+//     type_id: 'store',
+//     text_en: 'store',
+//     text_vi: 'Cửa hàng' 
+//   },
+//   {
+//     type_id: 'subway_station',
+//     text_en: 'Subway station',
+//     text_vi: 'Ga tàu điện ngầm' 
+//   },
+//   {
+//     type_id: 'supermarket',
+//     text_en: 'Supermarket',
+//     text_vi: 'Siêu thị' 
+//   },
+//   {
+//     type_id: 'synagogue',
+//     text_en: 'Synagogue',
+//     text_vi: 'Giáo đường' 
+//   },
+//   {
+//     type_id: 'taxi_stand',
+//     text_en: 'Taxi stand',
+//     text_vi: 'Điểm đón taxi' 
+//   },
+//   {
+//     type_id: 'tourist_attraction',
+//     text_en: 'Tourist attraction',
+//     text_vi: 'Điểm thu hút khách du lịch' 
+//   },
+//   {
+//     type_id: 'train_station',
+//     text_en: 'Train station',
+//     text_vi: 'Ga xe lửa' 
+//   },
+//   {
+//     type_id: 'transit_station',
+//     text_en: 'Transit station',
+//     text_vi: 'Trạm trung chuyển' 
+//   },
+//   {
+//     type_id: 'travel_agency',
+//     text_en: 'Travel agency',
+//     text_vi: 'Đại lý du lịch' 
+//   },
+//   {
+//     type_id: 'university',
+//     text_en: 'University',
+//     text_vi: 'Trường đại học' 
+//   },
+//   {
+//     type_id: 'veterinary_care',
+//     text_en: 'Veterinary care',
+//     text_vi: 'Chăm sóc thú y' 
+//   },
+//   {
+//     type_id: 'zoo',
+//     text_en: 'Zoo',
+//     text_vi: 'Vườn bách thú' 
+//   },
+//   {
+//     type_id: 'administrative_area_level_1',
+//     text_en: 'Administrative area level 1',
+//     text_vi: 'Tỉnh'
+//   },
+//   {
+//     type_id: 'administrative_area_level_2',
+//     text_en: 'Administrative area level 2',
+//     text_vi: 'Quận, huyện'
+//   },
+//   {
+//     type_id: 'administrative_area_level_3',
+//     text_en: 'Administrative area level 3',
+//     text_vi: 'Phường, xã'
+//   },
+//   {
+//     type_id: 'administrative_area_level_4',
+//     text_en: 'Administrative area level 4',
+//     text_vi: 'Khu hành chính cấp 4'
+//   },
+//   {
+//     type_id: 'administrative_area_level_5',
+//     text_en: 'Administrative area level 5',
+//     text_vi: 'Khu hành chính cấp 5'
+//   },
+//   {
+//     type_id: 'administrative_area_level_6',
+//     text_en: 'Administrative area level 6',
+//     text_vi: 'Khu hành chính cấp 6'
+//   },
+//   {
+//     type_id: 'administrative_area_level_7',
+//     text_en: 'Administrative area level 7',
+//     text_vi: 'Khu hành chính cấp 7'
+//   },
+//   {
+//     type_id: 'archipelago',
+//     text_en: 'Archipelago',
+//     text_vi: 'Quần đảo'
+//   },
+//   {
+//     type_id: 'colloquial_area',
+//     text_en: 'Colloquial area',
+//     text_vi: 'khu vực thông tục'
+//   },
+//   {
+//     type_id: 'continent',
+//     text_en: 'Continent',
+//     text_vi: 'Lục địa'
+//   },
+//   {
+//     type_id: 'country',
+//     text_en: 'Country',
+//     text_vi: 'Quốc gia'
+//   },
+//   {
+//     type_id: 'establishment',
+//     text_en: 'Establishment',
+//     text_vi: 'Cơ sở'
+//   },
+//   {
+//     type_id: 'finance',
+//     text_en: 'Finance',
+//     text_vi: 'Tài chính'
+//   },
+//   {
+//     type_id: 'floor',
+//     text_en: 'Floor',
+//     text_vi: 'Đáy sông'
+//   },
+//   {
+//     type_id: 'food',
+//     text_en: 'Food',
+//     text_vi: 'Đồ ăn'
+//   },
+//   {
+//     type_id: 'general_contractor',
+//     text_en: 'General contractor',
+//     text_vi: 'Chủ thầu'
+//   },
+//   {
+//     type_id: 'geocode',
+//     text_en: 'Geocode',
+//     text_vi: 'Mã địa lý'
+//   },
+//   {
+//     type_id: 'health',
+//     text_en: 'Health',
+//     text_vi: 'Sức khỏe'
+//   },
+//   {
+//     type_id: 'intersection',
+//     text_en: 'Intersection',
+//     text_vi: 'Ngã tư'
+//   },
+//   {
+//     type_id: 'landmark',
+//     text_en: 'Landmark',
+//     text_vi: 'Phong cảnh'
+//   },
+//   {
+//     type_id: 'locality',
+//     text_en: 'Locality',
+//     text_vi: 'Địa phương'
+//   },
+//   {
+//     type_id: 'natural_feature',
+//     text_en: 'Natural feature',
+//     text_vi: 'Yếu tố tự nhiên'
+//   },
+//   {
+//     type_id: 'neighborhood',
+//     text_en: 'Neighborhood',
+//     text_vi: 'Khu phố'
+//   },
+//   {
+//     type_id: 'place_of_worship',
+//     text_en: 'Place of worship',
+//     text_vi: 'Nơi thờ phượng'
+//   },
+//   {
+//     type_id: 'plus_code',
+//     text_en: 'Plus code',
+//     text_vi: 'Plus code'
+//   },
+//   {
+//     type_id: 'point_of_interest',
+//     text_en: 'Point of interest',
+//     text_vi: 'Điểm ưa thích'
+//   },
+//   {
+//     type_id: 'political',
+//     text_en: 'political',
+//     text_vi: 'Thuộc về chính phủ'
+//   },
+//   {
+//     type_id: 'post_box',
+//     text_en: 'Post box',
+//     text_vi: 'Hộp thư'
+//   },
+//   {
+//     type_id: 'postal_code',
+//     text_en: 'Postal code',
+//     text_vi: 'Mã bưu điện'
+//   },
+//   {
+//     type_id: 'postal_code_prefix',
+//     text_en: 'Postal code prefix',
+//     text_vi: 'Tiền tố mã bưu điện'
+//   },
+//   {
+//     type_id: 'postal_code_suffix',
+//     text_en: 'Postal code suffix',
+//     text_vi: 'Hậu tố mã bưu điện'
+//   },
+//   {
+//     type_id: 'postal_town',
+//     text_en: 'Postal town',
+//     text_vi: 'Mã bưu điện thị trấn'
+//   },
+//   {
+//     type_id: 'premise',
+//     text_en: 'Premise',
+//     text_vi: 'Tiền đề'
+//   },
+//   {
+//     type_id: 'room',
+//     text_en: 'Room',
+//     text_vi: 'Phòng'
+//   },
+//   {
+//     type_id: 'route',
+//     text_en: 'Route',
+//     text_vi: 'Tuyến đường'
+//   },
+//   {
+//     type_id: 'street_address',
+//     text_en: 'Street address',
+//     text_vi: 'Địa chỉ đường'
+//   },
+//   {
+//     type_id: 'street_number',
+//     text_en: 'Street number',
+//     text_vi: 'Số đường'
+//   },
+//   {
+//     type_id: 'sublocality',
+//     text_en: 'Sublocality',
+//     text_vi: 'Địa phương'
+//   },
+//   {
+//     type_id: 'sublocality_level_1',
+//     text_en: 'Sublocality level 1',
+//     text_vi: 'Phường, Thị trấn'
+//   },
+//   {
+//     type_id: 'sublocality_level_2',
+//     text_en: 'Sublocality level 2',
+//     text_vi: 'Xã'
+//   },
+//   {
+//     type_id: 'sublocality_level_3',
+//     text_en: 'Sublocality level 3',
+//     text_vi: 'Địa phương cấp 3'
+//   },
+//   {
+//     type_id: 'sublocality_level_4',
+//     text_en: 'Sublocality level 4',
+//     text_vi: 'Địa phương cấp 4'
+//   },
+//   {
+//     type_id: 'sublocality_level_5',
+//     text_en: 'Sublocality level 5',
+//     text_vi: 'Địa phương cấp 5'
+//   },
+//   {
+//     type_id: 'subpremise',
+//     text_en: 'Subpremise',
+//     text_vi: 'Cơ sở phụ'
+//   },
+//   {
+//     type_id: 'town_square',
+//     text_en: 'Town square',
+//     text_vi: 'Quảng trường thành phố'
+//   },
+// ]
+
 export const markers = [
   {
     id: '1',

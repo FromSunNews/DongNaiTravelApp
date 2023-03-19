@@ -64,3 +64,13 @@ export const getPlacesTextSearchAPI = async (data) => {
   const request = await authorizedAxiosInstance.post(`${API_ROOT}/v1/map/places_text_search`, data)
   return request.data
 }
+
+export const getMorePlacesTextSearchAPI = async (data) => {
+  const request = await axios.post(`${API_ROOT}/v1/map/places_text_search`, data)
+  return request.data
+}
+
+export const getRouteDirectionAPI = async (data) => {
+  const request = await authorizedAxiosInstance.post(`${API_ROOT}/v1/direction/route_direction`, data)
+  return request.data
+}

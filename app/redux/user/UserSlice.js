@@ -8,7 +8,8 @@ import { API_ROOT } from 'utilities/constants'
 const initialState = {
   currentUser: null,
   isAuthenticated: false,
-  userRole: 'guest'
+  userRole: 'guest',
+  temporaryUserId: null,
 }
 
 // Phương: Các hành động gọi api (bất đồng bộ) và cập nhật dữ liệu vào Redux, dùng createAsyncThunk đi kèm với extraReducers
@@ -58,6 +59,10 @@ export const userSlice = createSlice({
           state.currentUser = user[key]
         }
       })
+    },
+    updateTemporaryUserId: (state, action) => {
+      const userId = action.payload
+      state.temporaryUserId = userId
     }
   },
   extraReducers: (builder) => {
@@ -88,7 +93,8 @@ export const userSlice = createSlice({
 // Phương: 
 export const { 
   updateCurrentUser,
-  updateFiledsUser
+  updateFiledsUser,
+  updateTemporaryUserId
  } = userSlice.actions
 
 // Phương: Selectors: mục đích là dành cho các components bên dưới gọi bằng useSelector() tới nó
@@ -105,6 +111,10 @@ export const selectIsAuthenticated = (state) => {
 
 export const selectUserRole = (state) => {
   return state.user.userRole
+}
+
+export const selectTemporaryUserId = (state) => {
+  return state.user.temporaryUserId
 }
 // Phương: Export default cái userReducer của chúng ta để combineReducers trong store
 export const userReducer = userSlice.reducer

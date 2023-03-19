@@ -1,10 +1,10 @@
 import Constants from 'expo-constants'
-import { app_c, app_dms, app_sh, app_shdw, app_typo } from 'globals/styles'
+import { app_c, app_dms, app_sh, app_shdw, app_sp, app_typo } from 'globals/styles'
 import { Dimensions, StyleSheet } from 'react-native'
 
-const { width, height } = Dimensions.get('window')
+
 const CARD_HEIGHT = 240
-const CARD_WIDTH = width * 0.8
+const CARD_WIDTH = app_dms.screenWidth * 0.8
 
 export const styles = StyleSheet.create({
   headerBox: {
@@ -78,12 +78,22 @@ export const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     right: 0,
-    paddingHorizontal: 12,
     ...app_shdw.type_1,
     paddingVertical: 18,
+
+  },
+  refreshContainer: {
+    width: 35,
+    height: 35,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: '50%',
+    ...app_shdw.type_1,
+    marginTop: CARD_HEIGHT / 2 - 35/2,
+    marginLeft: 10
   },
   endPadding: {
-    paddingRight: width - CARD_WIDTH,
+    paddingRight: app_dms.screenWidth - CARD_WIDTH,
   },
   card: {
     backgroundColor: app_c.HEX.primary,
@@ -420,6 +430,12 @@ export const styles = StyleSheet.create({
   },
   rightContainerFrame: {
     display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    paddingRight: 12
+  },
+  rightContainerFrameInto: {
+    display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     paddingRight: 12
@@ -455,6 +471,20 @@ export const styles = StyleSheet.create({
   routeInfoTextTranport: {
     color: app_c.HEX.ext_second,
     ...app_typo.fonts.body5,
+  },
+  btnStart: {
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    marginTop: 10,
+    ...app_sh.rounded_8,
+    backgroundColor: app_c.HEX.third,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  textStart: {
+    color: app_c.HEX.primary,
+    ...app_typo.fonts.h5,
+    marginRight: 5
   },
   optionalContainer: {
     display: 'flex',

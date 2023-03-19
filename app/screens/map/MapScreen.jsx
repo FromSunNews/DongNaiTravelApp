@@ -1,9 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react'
-import MapView, { Marker, Polygon, Polyline, PROVIDER_GOOGLE } from 'react-native-maps'
+import React, { useEffect, useMemo, useRef, useState, memo } from 'react'
+
+// Related to redux
+import { useDispatch, useSelector } from 'react-redux'
+import { selectCurrentManifold, updateNotif } from 'redux/manifold/ManifoldSlice'
+import { selectCurrentFilter } from 'redux/filter/FilterSlice'
+
+// Related to component of react native
 import {
   Animated,
-  Dimensions, 
-  Image, 
   LayoutAnimation, 
   Platform, 
   Pressable, 
@@ -13,17 +17,48 @@ import {
   View,
   Share,
   Keyboard,
-  Button
+  Linking,
+  ActivityIndicator
 } from 'react-native'
-import InputAutoComplete from 'components/input_auto_complete/InputAutoComplete'
-import MapViewDirections from 'react-native-maps-directions'
 
-import { coordinates } from 'utilities/coordinates'
-import { typemapsearch } from 'utilities/typemapsearch'
+// Related to react navigation
+import { NavigationContainer, useNavigation } from '@react-navigation/native'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
+// Related to Expo
 import * as Location from 'expo-location'
 
-import { markers, mapDarkStyle, mapStandardStyle, controls, typesPlace, rawImages, typeModeTransport } from 'utilities/mapdata'
+// Related to map
+import MapView, { Marker, Polygon, Polyline, PROVIDER_GOOGLE } from 'react-native-maps'
+import MapViewDirections from 'react-native-maps-directions'
+
+// Related to raw datas
+import { coordinates } from 'utilities/coordinates'
+import { typemapsearch } from 'utilities/typemapsearch'
+import { typesPlace, typeModeTransport } from 'utilities/mapdata'
+import { FilterConstants } from 'utilities/constants'
+
+// Related to APis
+import { getRouteDirectionAPI, getMorePlacesTextSearchAPI, getPlaceDetailsAPI, getPlacesTextSearchAPI } from 'request_api'
+
+// Related to debounce
+import { debounce } from 'lodash'
+
+// Related to Styles
+import { styles } from './MapScreenStyles'
+import { app_c, app_dms, app_sh, app_shdw, app_typo } from 'globals/styles'
+
+// Related to components
+import { BottomSheetScroll } from 'components'
+import ImagePromise from 'components/image_promise/ImagePromise'
+import ReviewSectionPromise from 'components/review_section_promise/ReviewSectionPromise'
+import Filter from 'components/filter/Filter'
+import BottomSheetExample from 'components/bottom_sheet/BottomSheetExample'
+import Category from 'components/categories/Category'
+import InputAutoComplete from 'components/input_auto_complete/InputAutoComplete'
+import StarRating from 'components/star_rating/StarRating'
+
+// Related to Icons
 import Entypo from 'react-native-vector-icons/Entypo'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -31,31 +66,15 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import Octicons from 'react-native-vector-icons/Octicons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
-import StarRating from 'components/star_rating/StarRating'
-import { styles } from './MapScreenStyles'
-import { useDispatch, useSelector } from 'react-redux'
-import { selectCurrentManifold, updateNotif } from 'redux/manifold/ManifoldSlice'
-import { app_c, app_dms, app_sh, app_shdw, app_typo } from 'globals/styles'
-import CircleButton from 'components/buttons/CircleButton'
-import { BottomSheetScroll } from 'components'
+// Related to component notification
+import { useToast } from 'react-native-toast-notifications'
+
+// Related to Animation
 import { dropDownAnimation } from 'animations/dropDownAnimation'
-import { TouchableOpacityComponent } from 'react-native'
-import { Linking } from 'react-native'
-import { Buffer } from 'buffer'
-import axios from 'axios'
-import ImagePromise from 'components/image_promise/ImagePromise'
-import { getPlaceDetailsAPI, getPlacesTextSearchAPI } from 'request_api'
-import ReviewSectionPromise from 'components/review_section_promise/ReviewSectionPromise'
-import { memo } from 'react'
-import { BottomSheetTextInput } from '@gorhom/bottom-sheet'
-import MultiSlider from '@ptomasroos/react-native-multi-slider'
-import { NavigationContainer, useNavigation } from '@react-navigation/native'
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import Filter from 'components/filter/Filter'
-import BottomSheetExample from 'components/bottom_sheet/BottomSheetExample'
-import Category from 'components/categories/Category'
-import { selectCurrentFilter } from 'redux/filter/FilterSlice'
-import { FilterConstants } from 'utilities/constants'
+import * as Animatable from 'react-native-animatable'
+
+import { socketIoInstance } from '../../../App'
+import { selectCurrentUser, selectTemporaryUserId } from 'redux/user/UserSlice'
 
 const Map = () => {
 // Phương: https://docs.expo.dev/versions/latest/sdk/map-view/
@@ -64,8 +83,13 @@ const Map = () => {
 
   const Stack = createNativeStackNavigator()
   const navigation = useNavigation()
+  const toast = useToast()
+  const user = useSelector(selectCurrentUser)
+  const temporaryUserId = useSelector(selectTemporaryUserId)
 
   const map_api_key = useSelector(selectCurrentManifold).privateKeys?.map_api_key
+  const ors_api_key = useSelector(selectCurrentManifold).privateKeys?.ors_api_key[0]
+
   const dispatch = useDispatch()
   const currentFilter = useSelector(selectCurrentFilter)
 
@@ -109,6 +133,7 @@ const Map = () => {
   const [placeDetails, setPlaceDetails] = useState(null)
   const [placeDetailsClone, setPlaceDetailsClone] = useState(null)
   const [placesTextSearch, setPlacesTextSearch] = useState(null)
+
   const [placesTextSearchClone, setPlacesTextSearchClone] = useState(null)
 
   const [arrImgBase64, setArrImgBase64] = useState([])
@@ -125,8 +150,12 @@ const Map = () => {
 
   const bottomSheetExampleRef = useRef(null)
   
-  const [currentCoorArr, setCurrentCoorArr] = useState(null)
-  const [arrPlaceToFitCoor, setArrPlaceToFitCoor] = useState(null)
+  const [currentCoorArr, setCurrentCoorArr] = useState([])
+  const [coorArrDirection, setCoorArrDirection] = useState([])
+  const [directionsPolyLine, setDirectionsPolyLine] = useState([])
+  const [selectedPolyLine, setSelectedPolyLine] = useState(0)
+  
+  const [arrPlaceToFitCoor, setArrPlaceToFitCoor] = useState([])
 
   const [isShowOptionRoute, setIsShowOptionRoute] = useState(false)
   const [oriRouteInfo, setOriRouteInfo] = useState(null)
@@ -135,6 +164,7 @@ const Map = () => {
   const [nextPageToken, setNextPageToken] = useState(null)
 
   const [isToggleOpenHours, setIsToggleOpenHours] = useState(false)
+
   const animationDropdown = useRef(new Animated.Value(0)).current
   const handleToggleOpenHoursAnimation = () => {
     const config = {
@@ -162,29 +192,15 @@ const Map = () => {
     longitudeDelta: LONGITUDE_DELTA
   }
 
-  const mapRef = useRef(null)
-  const cardScrollViewRef = useRef(null)
+  // số giây giữa các lần cập nhật vị trí
+  const UPDATE_INTERVAL = 3 
+  // khoảng cách ~m tối thiểu giữa hai vị trí mới để cập nhật
+  const DISTANCE_THRESHOLD = 2 
+  // hàm để cập nhật vị trí
+  let trackingUserLocation
+  const [isTrackingUserMode, setIsTrackingUserMode] = useState(false)
 
-  const [mapIndex, setMapIndex] = useState(0)
-  // eslint-disable-next-line prefer-const
-  let mapAnimation = new Animated.Value(0)
 
-  const interpolations = placesTextSearch?.map((place, index) => {
-    const inputRange = [
-      (index - 1) * CARD_WIDTH,
-      index * CARD_WIDTH,
-      ((index + 1) * CARD_WIDTH),
-    ]
-
-    const scale = mapAnimation.interpolate({
-      inputRange,
-      outputRange: [1, 2, 1],
-      extrapolate: 'clamp'
-    })
-
-    return { scale }
-  })
-  
   useEffect(() => {
     // Phuong: get permission's user about current location 
     (async () => {
@@ -193,12 +209,12 @@ const Map = () => {
         setErrorMsg('Permission to access location was denied')
         return
       }
-
+      
       const userLocation = await Location.getCurrentPositionAsync({
         enableHighAccuracy: true,
-        accuracy: Location.Accuracy.High,
+        accuracy: Location.Accuracy.BestForNavigation
       })
-      console.log('🚀 ~ file: Map.js:81 ~ userLocation', userLocation)
+
       const position = {
         latitude: userLocation.coords.latitude || 0,
         longitude: userLocation.coords.longitude || 0
@@ -225,16 +241,366 @@ const Map = () => {
       arrLatLng.push(latlngObj)
     })
     setCurrentCoorArr(arrLatLng)
+
+    // Lắng nghe sự kiện từ server
+    socketIoInstance.on('s_tracking_user_location_current', (data) => {
+      if (data.isCallNewApi) {
+        const coordinates = data.coorArrDirection.features[0].geometry.coordinates
+        const summary = data.coorArrDirection.features[0].properties.summary
+        const bbox = data.coorArrDirection.features[0].bbox
+        const arrDirection = coordinates.map(([longitude, latitude]) => ({ latitude, longitude }))
+        setCoorArrDirection(arrDirection)
+
+        // const edgePadding = {
+        //   top: 300,
+        //   right: 70,
+        //   bottom: 130,
+        //   left: 70
+        // }
+  
+        // handleFitCoors(arrDirection, edgePadding, true)
+        
+        setDistance(summary.distance / 1000) // ~ km
+        const minuttesTranformYet = summary.duration // ~ minutes
+
+        const days = Math.floor(minuttesTranformYet / 1440)
+        const hours =  Math.floor((minuttesTranformYet - (days * 1440)) / 60)
+        const minutes = Math.floor(minuttesTranformYet - (days * 1440) - (hours * 60))
+        const seconds = Math.floor((minuttesTranformYet - (days * 1440) - (hours * 60) - minutes) * 60)
+
+        setDays(days)
+        setHours(hours)
+        setMinutes(minutes)
+        setSeconds(seconds)
+      } else {
+        setCoorArrDirection(data.coorArrDirection)
+      }
+    })
   }, [])
 
+  const handleGetDirections = async (start, end, typeOri, typeDes, startCoor, endCoor) => {
+    console.log("MapScreen.jsx:258 ~ getDirections ~ call api")
+      // data = {
+      //   oriAddress: 'abc' || null,
+      //   desAddress: 'abc' || null,
+      //   oriPlaceId: sdgkl_27e921 || null,
+      //   desPlaceId: sdgkl_27e921 || null,
+      //   oriCoor: {
+      //      longitude: 10.214290,
+      //      latitude: 100.1283824
+      // } || null,
+      //   desCoor: {
+      //      longitude: 10.214290,
+      //      latitude: 100.1283824
+      // } || null,
+      //   modeORS: 'driving-car',
+      //   modeGCP: 'driving',
+      //   typeOri: 'place_id' || 'address' || 'coordinate',
+      //   typeDes: 'place_id' || 'address' || 'coordinate',
+      // }
+      
+      await getRouteDirectionAPI({
+        oriAddress: typeOri === 'address' ? start : null,
+        desAddress: typeDes === 'address' ? end : null,
+        oriPlaceId: typeOri === 'place_id' ? start : null,
+        desPlaceId: typeDes === 'place_id' ? end : null,
+        oriCoor: startCoor,
+        desCoor: endCoor,
+        modeORS: 'driving-car',
+        modeGCP: 'driving',
+        typeOri: typeOri,
+        typeDes: typeDes
+      }).then(data => {
+        console.log("🚀 ~ file: MapScreen.jsx:314 ~ handleGetDirections ~ data:", data.callFrom)
+        
+        if (data.callFrom === 'GCP') {
+          // directionsPolyLine: [
+          //   {
+          //     duration: number,
+          //     distance: number,
+          //     overview_polyline: [
+          //       {
+          //         latitude: number,
+          //         longitude: number
+          //       },...+900characters
+          //     ],
+          //     steps: [
+          //       {
+          //         duration: number,
+          //         distance: number,
+          //         html_instructions: string,
+          //         instructions: string,
+          //         polyline: [
+          //           {
+          //             latitude: number,
+          //             longitude: number
+          //           },...+900characters
+          //         ]
+
+          //       },...+900characters
+          //     ]
+          //   },
+          // ]
+          let dataToUpdate = []
+          data?.data?.routes?.map(route => {
+            const steps = []
+            route.legs[0].steps.map(step => {
+              const childStep = {
+                duration: step.distance,
+                distance: step.duration,
+                html_instructions: step.html_instructions,
+                instructions: null,
+                start_location: {
+                  latitude: step.start_location.lat,
+                  longitude: step.start_location.lng
+                },
+                end_location: {
+                  latitude: step.start_location.lat,
+                  longitude: step.start_location.lng
+                },
+                polyline: step.polyline.points
+              }
+              steps.push(childStep)
+            })
+            let childDataToUpdate = {
+              duration: route.legs[0].duration.value,
+              distance: route.legs[0].distance.value,
+              overview_polyline: route.overview_polyline.points,
+              steps: steps
+            }
+            dataToUpdate.push(childDataToUpdate)
+          })
+
+          const edgePadding = {
+            top: 300,
+            right: 70,
+            bottom: 130,
+            left: 70
+          }
+          
+          setDirectionsPolyLine(dataToUpdate)
+          // Cho nó focus vào 
+          console.log("dataToUpdate[0].overview_polyline.points:", dataToUpdate[0].overview_polyline)
+
+          handleFitCoors(dataToUpdate[0].overview_polyline, edgePadding, true)
+          // Hiển thị ngày giờ và khoảng cách
+          handleDatetimeAndDistance(dataToUpdate[0].distance, dataToUpdate[0].duration)
+        } else if (data.callFrom === 'ORS') {
+          let dataToUpdate = []
+          data?.data?.features?.map(feature => {
+            const steps = []
+            feature.properties.segments[0].steps.map(step => {
+              const childStep = {
+                duration: step.distance,
+                distance: step.duration,
+                html_instructions: null,
+                instructions: step.instruction,
+                start_location: step.start_location,
+                end_location: step.end_location,
+                polyline: step.polyline
+              }
+              steps.push(childStep)
+            })
+            let childDataToUpdate = {
+              duration: feature.properties.segments[0].duration,
+              distance: feature.properties.segments[0].distance,
+              overview_polyline: feature.geometry.coordinates,
+              steps: steps
+            }
+            dataToUpdate.push(childDataToUpdate)
+          })
+
+          const edgePadding = {
+            top: 300,
+            right: 70,
+            bottom: 130,
+            left: 70
+          }
+          setDirectionsPolyLine(dataToUpdate)
+          // Cho nó focus vào 
+          handleFitCoors(dataToUpdate[0].overview_polyline.points, edgePadding, true)
+          // Hiển thị ngày giờ và khoảng cách
+          handleDatetimeAndDistance(dataToUpdate[0].distance, dataToUpdate[0].duration)
+        }
+      })
+  }
+
+  const handleDatetimeAndDistance = (distance, duration) => {
+    setDistance(distance / 1000) // ~ km
+    const secondsTranformYet = duration // ~ second
+
+    const days = Math.floor(secondsTranformYet / 86400)
+    const hours =  Math.floor((secondsTranformYet - (days * 86400)) / 3600)
+    const minutes = Math.floor((secondsTranformYet - (days * 86400) - (hours * 3600)) / 60)
+    const seconds = Math.floor((secondsTranformYet - (days * 86400) - (hours * 3600) - (minutes* 60)))
+
+    setDays(days)
+    setHours(hours)
+    setMinutes(minutes)
+    setSeconds(seconds)
+  }
+
+  // const handleAnimationPolyline = (coordinates) => {
+  //   console.log("🚀 ~ file: MapScreen.jsx:328 ~ handleAnimationPolyline ~ coordinates:", coordinates.length)
+  //   let counter = 0
+  //   setIsAnimating(true)
+  //   const steps = Math.floor(coordinates.length / 30)
+  //   console.log("🚀 ~ file: MapScreen.jsx:332 ~ handleAnimationPolyline ~ steps:", steps)
+  //   const intervalId = setInterval(() => {
+  //     if (counter < coordinates.length) {
+  //       const coordinatesToAdd = []
+  //       for (let index = 1; index <= steps; index++) {
+  //         if(coordinates[counter+index])
+  //           coordinatesToAdd.push(coordinates[counter+index])
+  //       }
+  //       setCoorArrDirectionAnimation(prevCoords => [...prevCoords, ...coordinatesToAdd])
+  //       counter+=steps
+  //     } else {
+  //       clearInterval(intervalId)
+  //       setIsAnimating(false)
+  //     }
+  //   }, 1) // thêm mỗi tọa độ trong mảng sau mỗi 0.2 giây
+
+  //   return () => {
+  //     clearInterval(intervalId)
+  //   }
+  // }
+  const handleStartTrackingUserLocation = async () => {
+    // Chỉ bật khi mà người dùng bắt đầu tracking thôi 
+      setIsTrackingUserMode(true)
+      trackingUserLocation = await Location.watchPositionAsync({
+        enableHighAccuracy: true,
+        accuracy: Location.Accuracy.BestForNavigation,
+        timeInterval: UPDATE_INTERVAL * 1000,
+        distanceInterval: DISTANCE_THRESHOLD,
+      }, (userLocation) => {
+        console.log("🚀 ~ file: MapScreen.jsx:294 ~ handleStartTrackingUserLocation ~ userLocation:", userLocation)
+        const position = {
+          latitude: userLocation.coords.latitude || 0,
+          longitude: userLocation.coords.longitude || 0
+        }
+        setOrigin(position)
+        setLocationCurrent(position)
+        setArrPlaceInput([
+          {
+            description: 'My location',
+            geometry: { location: { lat: userLocation.coords.latitude, lng: userLocation.coords.longitude } },
+          }
+        ])
+      })
+  }
+
+  const handleRemoveTrackingUserLocation = () => trackingUserLocation.remove()
+
+  useEffect(() => {
+    if (isTrackingUserMode) {
+      socketIoInstance.emit('c_tracking_user_location_current', {
+        currentUserId: user ? user._id : temporaryUserId,
+        location: origin,
+        coorArrDirection: coorArrDirection,
+        profile: 'driving-car',
+        destination: destination
+      })
+    }
+  }, [origin])
+
+  const [isShowRefreshCard, setIsShowRefreshCard] = useState(false)
+  const mapRef = useRef(null)
+  const cardScrollViewRef = useRef(null)
+  
+  const loadMoreCardDebouncer = useMemo(() => debounce(
+    () => { handleLoadingMoreCard()}, 500),
+    [handleLoadingMoreCard, nextPageToken, placesTextSearch], 
+  )
+
+  const [mapIndex, setMapIndex] = useState(0)
+  let loadingRefreshCard = false
+  // eslint-disable-next-line prefer-const
+  let mapAnimation = new Animated.Value(-27.3333)
+
+  const handleLoadingMoreCard = () => {
+    console.log("🚀 ~ file: MapScreen.jsx:231 ~ handleLoadingMoreCard ~ nextPageToken:", nextPageToken)
+    if (nextPageToken && !loadingRefreshCard) {
+      loadingRefreshCard = true
+      let data = {
+        query: inputRef.current.getAddressText(),
+        sortBy: currentFilter.sortBy,
+        radius: currentFilter.radius,
+        location: currentFilter.location || locationCurrent,
+        pagetoken: nextPageToken
+      }
+  
+      if (currentFilter.priceLevels[0] !== 0 || currentFilter.priceLevels[1] !== 5) {
+        data = {
+          ...data,
+          minprice: currentFilter.priceLevels[0].toString(),
+          maxprice: currentFilter.priceLevels[1].toString()
+        }
+      }
+  
+      if (currentFilter.category !== FilterConstants.categories.ALL_CATEGORIES) {
+        data = {
+          ...data,
+          type: currentFilter.category
+        }
+      }
+      console.log("callapi")
+      console.log("🚀 ~ file: MapScreen.jsx:240 ~ handleLoadingMoreCard ~ data:", data)
+
+      
+      getMorePlacesTextSearchAPI(data).then((dataReturn) => {
+        console.log("duwx lieeuj trar về")
+  
+        if (dataReturn.nextPageToken){
+          console.log("Có nextPageToken")
+          setNextPageToken(dataReturn.nextPageToken)
+        } else {
+          console.log(" k Có nextPageToken")
+          setNextPageToken(null)
+        }
+
+        if (dataReturn.arrPlace) {
+          setPlacesTextSearch([
+            ...placesTextSearch,
+            ...dataReturn.arrPlace
+          ])
+          console.log("Có dataReturn.arrPlace")
+        } else {
+          console.log("K Có dataReturn.arrPlace")
+
+        }
+        setIsShowRefreshCard(false)
+        loadingRefreshCard = false
+      }).catch(err => {
+        setIsShowRefreshCard(false)
+        loadingRefreshCard = false
+      })
+  
+      
+    } else {
+      setIsShowRefreshCard(false)
+      loadingRefreshCard = false
+      toast.show("There's nowhere to load more!")
+    }
+  }
+  
   useEffect(() => {
     if (placesTextSearch) {
       mapAnimation.addListener(({ value }) => {
+        // console.log("🚀 ~ file: MapScreen.jsx:279 ~ mapAnimation.addListener ~ value:", value)
         // animate 30% away from landing on the next item
-        let index = Math.floor(value / CARD_WIDTH + 0.3)
+        let index = Math.floor((value / (CARD_WIDTH + 20)) + 0.3)
   
+        if (value >= (placesTextSearch.length - 1) * 320 && !loadingRefreshCard) {
+          setIsShowRefreshCard(true)
+          loadMoreCardDebouncer()
+        }
+        
+
         if (index >= placesTextSearch.length) {
           index = placesTextSearch.length - 1
+          // tại đây loading more 
+          console.log("Loading more")
         }
         if (index <= 0) {
           index = 0
@@ -253,10 +619,21 @@ const Map = () => {
             moveToMap(coordinate, 16, 90)
 
           }
-        }, 100)
+        }, 350)
       })
     }
-  }, [CARD_WIDTH, mapAnimation, mapIndex])
+  })
+
+  useEffect(() => {
+    if (isShowScrollCardPlace)
+      cardScrollViewRef.current.scrollTo({ x: -27.3333, y: 0, animated: true })
+  }, [isShowScrollCardPlace])
+
+  useEffect(() => {
+    return () => {
+      loadMoreCardDebouncer.cancel()
+    }
+  }, [])
 
   const moveToMap = async (position, zoom, pitch) => {
     mapRef.current?.animateCamera({
@@ -312,50 +689,33 @@ const Map = () => {
     handleFitCoors(arrPlace, edgePadding , true)
   }
 
-  const traceRouteOnReady = (args) => {
-    if (args) {
-      console.log("🚀 ~ file: MapScreen.jsx:301 ~ traceRouteOnReady ~ coordinates:", args.coordinates[0])
-      console.log("🚀 ~ file: MapScreen.jsx:301 ~ traceRouteOnReady ~ coordinates:", args.coordinates[args.coordinates.length])
-      console.log("🚀 ~ file: MapScreen.jsx:301 ~ traceRouteOnReady ~ fare:", args.fare)
-      console.log("🚀 ~ file: MapScreen.jsx:301 ~ traceRouteOnReady ~ waypointOrder:", args.waypointOrder)
-      setDistance(args.distance)
-      const minuttesTranformYet = args.duration
-
-      const days = Math.floor(minuttesTranformYet / 1440)
-      const hours =  Math.floor((minuttesTranformYet - (days * 1440)) / 60)
-      const minutes = Math.floor(minuttesTranformYet - (days * 1440) - (hours * 60))
-      const seconds = Math.floor((minuttesTranformYet - (days * 1440) - (hours * 60) - minutes) * 60)
-
-      setDays(days)
-      setHours(hours)
-      setMinutes(minutes)
-      setSeconds(seconds)
-    }
-  }
-
   const handleMarkerPress = (mapEventData) => {
-    console.log('mapEventData', mapEventData)
+    // console.log('mapEventData', mapEventData)
     // eslint-disable-next-line no-underscore-dangle
     const markerID = mapEventData._targetInst.return.key
+    console.log("🚀 ~ file: MapScreen.jsx:340 ~ handleMarkerPress ~ markerID:", markerID)
 
     let x = (markerID * CARD_WIDTH) + (markerID * 20)
     if (Platform.OS === 'ios') {
       x -= SPACING_FOR_CARD_INSET
     }
-
-    cardScrollViewRef.current.scrollTo({ x, y: 0, animated: true })
+    
+    setMapIndex(markerID)
+    cardScrollViewRef.current.scrollTo({ x, y: 0, animated: false })
   }
 
-  const handleRoutePress = (locationDes) => {
+  const handleRoutePress = (locationDes, desPlaceId) => {
     setShowDirections(true)
     setDestination(locationDes)
     setIsModeScrollOn(false)
     // Clone lại
     setPlaceDetailsClone(placeDetails)
     setIsOpenBottomSheet(false)
-    
+    // TH định vị chauw bắt kịp
     if (!origin) {
       setIsShowOptionRoute(true)
+    } else {
+      handleGetDirections(origin, desPlaceId, 'coordinate', 'place_id', origin, locationDes)
     }
   }
 
@@ -377,7 +737,7 @@ const Map = () => {
       query: addressText,
       sortBy: currentFilter.sortBy,
       radius: currentFilter.radius,
-      location: currentFilter.location,
+      location: currentFilter.location || locationCurrent,
     }
 
     if (currentFilter.priceLevels[0] !== 0 || currentFilter.priceLevels[1] !== 5) {
@@ -397,8 +757,15 @@ const Map = () => {
     console.log("🚀 ~ file: MapScreen.jsx:397 ~ getPlacesTextSearchAPI ~ data:", data)
 
     getPlacesTextSearchAPI(data).then((dataReturn) => {
-      if (dataReturn.nextPageToken)
+      if (dataReturn.nextPageToken) {
+        console.log("Có nextPageToken", dataReturn.nextPageToken)
         setNextPageToken(dataReturn.nextPageToken)
+      }
+      else {
+        console.log("K Có nextPageToken")
+        setNextPageToken(null)
+      }
+
       if (dataReturn.arrPlace) {
         // Đặt giá trị cho placesTextSearch
         setPlacesTextSearch(dataReturn.arrPlace)
@@ -416,7 +783,7 @@ const Map = () => {
         setPlaceDetails(null)
         // Không focus vào thnagừ search bar nữa
         inputRef.current?.blur()
-  
+        
         //  tổng hợp các arrPlace
         let arrPlace = []
         dataReturn.arrPlace.map(place => {
@@ -527,98 +894,59 @@ const Map = () => {
           strokeColor="#F85454"
         />
         
+        {/* Polyline chính + phụ */}
+        {
+          (directionsPolyLine && showDirections && origin && destination ) ? 
+            directionsPolyLine.map((directionPolyLine, index) => {
+              return (
+                <Polyline
+                  key={`polyline-${index}`}
+                  coordinates={directionPolyLine.overview_polyline} 
+                  strokeWidth={6} 
+                  strokeColor={selectedPolyLine === index ? app_c.HEX.third : app_c.HEX.ext_second}
+                  tappable={true}
+                  onPress={() => {
+                    console.log('call poly line')
+                    // Đặt lại index
+                    setSelectedPolyLine(index)
+                    // chỉnh ngày giờ và km
+                    handleDatetimeAndDistance(directionPolyLine.distance, directionPolyLine.duration)
+                  }}
+                  style={{ zIndex: selectedPolyLine === index ? 1 : 0}}
+                /> 
+              )
+            }) : null
+        }
+
+        
         {/* Arr marker show on map view */}
         {
           (placesTextSearch && !showDirections && !isOpenBottomSheet) ? 
           placesTextSearch.map((place, index) => {
-            const scaleStyle = {
-              transform: [
-                {
-                  scale: interpolations[index].scale,
-                },
-              ],
-            }
             const coordinate = {
               latitude: place.geometry.location.lat,
               longitude:  place.geometry.location.lng,
             }
-            // if (index === mapIndex) {
-            //   return (
-            //     <Animated.View
-            //       key={place.place_id}
-            //       style={[scaleStyle, {
-            //         elevation: 10
-            //       }]}
-            //     >
-            //       <Marker
-            //         key={index}
-            //         coordinate={coordinate}
-            //         onPress={(e) => handleMarkerPress(e)}
-            //       />
-            //     </Animated.View>
-            //   )
-            // } else 
+            if (index === mapIndex) {
               return (
-                <Animated.View
-                  key={place.id}
-                  style={[scaleStyle, {
-                    elevation: 10
-                  }]}
-                >
-                  <Marker
-                    key={index}
-                    coordinate={coordinate}
-                    onPress={(e) => handleMarkerPress(e)}
-                    pinColor={app_c.HEX.fourth}
-                  />
-                </Animated.View>
+                <Marker
+                  key={index}
+                  coordinate={coordinate}
+                  onPress={(e) => handleMarkerPress(e)}
+                />
+              )
+            } else 
+              return (
+                <Marker
+                  key={index}
+                  coordinate={coordinate}
+                  onPress={(e) => handleMarkerPress(e)}
+                  pinColor={app_c.HEX.ext_second}
+                  style={{transform: [{scaleX: 0.5}]}}
+                />
               )
           }) : 
           null
-        }
-
-        {
-          (showDirections && origin && destination ) ?
-          <MapViewDirections
-            origin={origin}
-            destination={destination}
-            apikey={map_api_key}
-            strokeColor='#0076CE'
-            strokeWidth={4}
-            language='vi'
-            mode={directionMode}
-            precision='high'
-            timePrecision='now'
-            optimizeWaypoints={true}
-            onStart={(params) => {
-              console.log(`Started routing between "${params.origin}" and "${params.destination}"`);
-              const arrOrigin = params.origin.split(',')
-              const arrDestination = params.destination.split(',')
-
-              const arrPlace = [{
-                latitude: arrOrigin[0],
-                longitude: arrOrigin[1]
-              }, {
-                latitude: arrDestination[0],
-                longitude: arrDestination[1]
-              }]
-              // console.log("🚀 ~ file: MapScreen.jsx:882 ~ Map ~ arrPlace:", arrPlace)
-              const edgePadding = {
-                top: 300,
-                right: 70,
-                bottom: 130,
-                left: 70
-              }
-              handleFitCoors(arrPlace, edgePadding , true)
-            }}
-            onReady={traceRouteOnReady}
-            onError={(errorMessage) => {
-              dispatch(updateNotif({
-                appearNotificationBottomSheet: true,
-                contentNotificationBottomSheet: errorMessage
-              }))
-            }}
-          /> : null
         }
       </MapView>
 
@@ -707,7 +1035,6 @@ const Map = () => {
               }
               // TH2: Khi user click vào tìm kiếm nhiều địa điểm ngay từ đầu
               else if (placesTextSearch && !placeDetails) {
-                console.log("Vaof ddaay")
                 setIsShowBackIcon(false)
                 setIsShowScrollCardPlace(false)
                 setPlacesTextSearch(null)
@@ -722,6 +1049,8 @@ const Map = () => {
                 setDestination(null)
                 inputRef.current?.setAddressText(previousTextSearch)
               }
+              setDirectionsPolyLine([])
+              setSelectedPolyLine(0)
             }}
           />
         </View>
@@ -838,24 +1167,38 @@ const Map = () => {
                   </TouchableOpacity>
                 </View>
                 <View style={styles.rightContainerFrame}>
-                  <View style={styles.routeInfoTimeContainer}>
-                    <View style={styles.routeInfoUnixTime}>
-                      <Text style={styles.routeInfoNumberTime}>{days === 0 ? '-' : days}</Text>
-                      <Text style={styles.routeInfoTextTime}>{days > 1 ? 'days' : 'day'}</Text>
+                  <View style={styles.rightContainerFrameInto}>
+                    <View style={styles.routeInfoTimeContainer}>
+                      <View style={styles.routeInfoUnixTime}>
+                        <Text style={styles.routeInfoNumberTime}>{days === 0 ? '-' : days}</Text>
+                        <Text style={styles.routeInfoTextTime}>{days > 1 ? 'days' : 'day'}</Text>
+                      </View>
+                      <View style={styles.routeInfoUnixTime}>
+                        <Text style={styles.routeInfoNumberTime}>{hours === 0 ? '-' : hours}</Text>
+                        <Text style={styles.routeInfoTextTime}>{hours > 1 ? 'hours' : 'hour'}</Text>
+                      </View>
+                      <View style={styles.routeInfoUnixTime}>
+                        <Text style={styles.routeInfoNumberTime}>{minutes === 0 ? '-' : minutes}</Text>
+                        <Text style={styles.routeInfoTextTime}>{minutes > 1 ? 'mins' : 'min'}</Text>
+                      </View>
                     </View>
-                    <View style={styles.routeInfoUnixTime}>
-                      <Text style={styles.routeInfoNumberTime}>{hours === 0 ? '-' : hours}</Text>
-                      <Text style={styles.routeInfoTextTime}>{hours > 1 ? 'hours' : 'hour'}</Text>
-                    </View>
-                    <View style={styles.routeInfoUnixTime}>
-                      <Text style={styles.routeInfoNumberTime}>{minutes === 0 ? '-' : minutes}</Text>
-                      <Text style={styles.routeInfoTextTime}>{minutes > 1 ? 'mins' : 'min'}</Text>
+                    <View style={styles.routeInfoTranportContainer}>
+                      <Text style={styles.routeInfoTranport}>{directionMode === 'DRIVING' ? 'Drive' : (directionMode === 'BICYCLING' ? 'Bicycle' : (directionMode === 'WALKING' ? 'Walk' : 'Transit'))}</Text>
+                      <Text style={styles.routeInfoTextTranport}>by</Text>
                     </View>
                   </View>
-                  <View style={styles.routeInfoTranportContainer}>
-                    <Text style={styles.routeInfoTranport}>{directionMode === 'DRIVING' ? 'Drive' : (directionMode === 'BICYCLING' ? 'Bicycle' : (directionMode === 'WALKING' ? 'Walk' : 'Transit'))}</Text>
-                    <Text style={styles.routeInfoTextTranport}>by</Text>
-                  </View>
+
+                  <TouchableOpacity 
+                    onPress={handleStartTrackingUserLocation}
+                    style={styles.btnStart}
+                  >
+                      <Text style={styles.textStart}>Start</Text>
+                      <FontAwesome5 
+                        name='location-arrow' 
+                        size={14} 
+                        color={app_c.HEX.primary}
+                      />
+                    </TouchableOpacity>
                 </View>
               </View> :
             <View style={styles.optionalContainer}>
@@ -882,33 +1225,69 @@ const Map = () => {
               <View style={styles.oriDesContainer}>
                 <TouchableOpacity 
                   onPress={() => {
+                    console.log("🚀 ~ file: MapScreen.jsx:1066 ~ Map ~ textOrigin:", textOrigin)
                     console.log("🚀 ~ file: MapScreen.jsx:887 ~ Map ~ oriRouteInfo:", oriRouteInfo)
-                    console.log("🚀 ~ file: MapScreen.jsx:899 ~ Map ~ desRouteInfo:", desRouteInfo)
+                    // console.log("🚀 ~ file: MapScreen.jsx:899 ~ Map ~ desRouteInfo:", desRouteInfo)
+
+                    let start, end, startCoor, endCoor, typeOri, typeDes
+                    
                     if (desInputRef.current.getAddressText().trim() !== '' && oriInputRef.current.getAddressText().trim() !== '') {
+                      setDirectionsPolyLine([])
+                      setSelectedPolyLine(0)
                       if (oriInputRef.current.getAddressText().trim() !== textOrigin && oriRouteInfo) {
                         if (oriRouteInfo?.description === 'My location') {
                           setTextOrigin(oriRouteInfo?.description)
+                          console.log("🚀 ~ file: MapScreen.jsx:1069 ~ Map ~ locationCurrent:", locationCurrent)
+                          start = locationCurrent
+                          typeOri = 'coordinate'
+                          startCoor = locationCurrent
                         } else {
                           setTextOrigin(oriRouteInfo?.name)
+                          setOrigin({
+                            latitude: oriRouteInfo?.geometry.location.lat,
+                            longitude: oriRouteInfo?.geometry.location.lng
+                          })
+                          // lúc này chắc chắn trong oriRouteInfo là người dùng đã chọn từ phần gọi ý cho nên lấy ra place_id từ đó 
+                          start = oriRouteInfo?.place_id
+                          startCoor = {
+                            latitude: oriRouteInfo?.geometry.location.lat,
+                            longitude: oriRouteInfo?.geometry.location.lng
+                          }
+                          typeOri = 'place_id'
                         }
-                        setOrigin({
-                          latitude: oriRouteInfo?.geometry.location.lat,
-                          longitude: oriRouteInfo?.geometry.location.lng
-                        })
-                      }
+                      } else if (oriInputRef.current.getAddressText().trim() === textOrigin && !oriRouteInfo) {
+                        start = locationCurrent
+                        typeOri = 'coordinate'
+                        startCoor = locationCurrent
+                      } 
+
                       if (desInputRef.current.getAddressText().trim() !== textDestination && desRouteInfo) {
                         if (desRouteInfo?.description === 'My location') {
                           setTextDestination(desRouteInfo?.description)
+                          end = locationCurrent
+                          typeDes = 'coordinate'
+                          endCoor = locationCurrent
                         } else {
                           setTextDestination(desRouteInfo?.name)
+                          setDestination({
+                            latitude: desRouteInfo?.geometry.location.lat,
+                            longitude: desRouteInfo?.geometry.location.lng
+                          })
+                          end = desRouteInfo?.place_id
+                          endCoor = {
+                            latitude: desRouteInfo?.geometry.location.lat,
+                            longitude: desRouteInfo?.geometry.location.lng
+                          }
+                          typeDes = 'place_id'
                         }
-                        setDestination({
-                          latitude: desRouteInfo?.geometry.location.lat,
-                          longitude: desRouteInfo?.geometry.location.lng
-                        })
-                        // setPlaceDetails(desRouteInfo)
                       }
                       setIsShowOptionRoute(false)
+                      console.log("🚀 ~ file: MapScreen.jsx:899 ~ Map ~ startCoor:", startCoor)
+                      console.log("🚀 ~ file: MapScreen.jsx:899 ~ Map ~ typeOri:", typeOri)
+                      console.log("🚀 ~ file: MapScreen.jsx:899 ~ Map ~ endCoor:", endCoor)
+                      console.log("🚀 ~ file: MapScreen.jsx:899 ~ Map ~ typeDes:", typeDes)
+
+                      handleGetDirections(start, end, typeOri, typeDes, startCoor, endCoor)
                     }
                   }}
                   style={styles.routeBtn}
@@ -1091,29 +1470,6 @@ const Map = () => {
               />
             </TouchableOpacity>
           }
-
-          {/* {
-            locationCurrent &&
-            <TouchableOpacity
-              style={[styles.circleBtn, {
-                backgroundColor: app_c.HEX.ext_third,
-                marginTop: 10
-              }]}
-              onPress={() => {
-                console.log("textSearchOrigin", textSearchOrigin)
-                console.log("textSearchDestination", textSearchDestination)
-                console.log("showDirections", showDirections)
-                console.log("origin", origin)
-                console.log("destination", destination)
-              }}
-            >
-              <MaterialCommunityIcons 
-                name='directions' 
-                size={25} 
-                color={app_c.HEX.primary}
-              />
-            </TouchableOpacity>
-          } */}
         </View> : null
       }
       
@@ -1123,6 +1479,7 @@ const Map = () => {
         <Animated.ScrollView
           ref={cardScrollViewRef}
           horizontal
+          snapToStart={false}
           pagingEnabled
           scrollEventThrottle={1}
           showsHorizontalScrollIndicator={false}
@@ -1130,13 +1487,13 @@ const Map = () => {
           snapToAlignment="center"
           style={[styles.cardScrollView, { opacity: (isOpenBottomSheet || showDirections) ? 0 : 1, bottom: (isOpenBottomSheet || showDirections) ? -400 : 110}]}
           contentInset={{
-            top: 0,
-            left: 0,
+            top: 0,   
+            left:SPACING_FOR_CARD_INSET,
             bottom: 0,
-            right: 25
+            right: SPACING_FOR_CARD_INSET
           }}
           contentContainerStyle={{
-            paddingRight: Platform.OS === 'android' ? 25 : 0
+            paddingHorizontal: Platform.OS === 'android' ? SPACING_FOR_CARD_INSET : 0
           }}
           onScroll={Animated.event(
             [
@@ -1151,64 +1508,142 @@ const Map = () => {
             { useNativeDriver: true }
           )}
         >
-          {placesTextSearch.map((place) => (
-            <View style={styles.card} key={place.place_id}>
-              {
-                place.photos ? 
-                <ImagePromise
-                  isTranformData={true}
-                  photoReference={place?.photos[0]}
-                  styleImage={styles.cardImage}
-                  map_api_key={map_api_key}
-                /> :
-                <View 
-                  style={styles.cardNoImage}
-                >
-                  <Text style={styles.noImageText}>No image</Text>
-                </View>
-              }
-              <View style={styles.textContent}>
-                <Text numberOfLines={1} style={styles.cardtitle}>{place.name}</Text>
-                <StarRating 
-                  ratings={place.rating} 
-                  reviews={place.user_ratings_total} 
-                  textRatingStyle={{...app_typo.fonts.body6}} 
-                  textReviewStyle={{...app_typo.fonts.body6}}
-                />
-                <Text
-                  numberOfLines={1}
-                  style={styles.cardDescription}
-                >
-                  {place.editorial_summary ? place.editorial_summary : place.formatted_address}
-                </Text>
-                <View style={styles.button}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      handleGetPlaceDetails(place.place_id)
-                    }}
-                    style={styles.scrollPlaceBtn}
+          {placesTextSearch.map((place, index) => {
+            return (
+              <View style={styles.card} key={`${place.place_id}-place-${index}`}>
+                {
+                  place.photos ? 
+                  <ImagePromise
+                    isTranformData={true}
+                    photoReference={place?.photos[0]}
+                    styleImage={styles.cardImage}
+                    map_api_key={map_api_key}
+                  /> :
+                  <View 
+                    style={styles.cardNoImage}
                   >
-                    <Text style={styles.textSign}>Tổng quan</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => {
-                      setTextDestination(place?.name)
-                      // setPlaceDetails(place)
-                      handleRoutePress({
-                        latitude: place.geometry.location.lat,
-                        longitude: place.geometry.location.lng
-                      })
-                    }}
-                    style={styles.scrollPlaceBtn}
+                    <Text style={styles.noImageText}>No image</Text>
+                  </View>
+                }
+                <View style={styles.textContent}>
+                  <Text numberOfLines={1} style={styles.cardtitle}>{place.name}</Text>
+                  <StarRating 
+                    ratings={place.rating} 
+                    reviews={place.user_ratings_total} 
+                    textRatingStyle={{...app_typo.fonts.body6}} 
+                    textReviewStyle={{...app_typo.fonts.body6}}
+                  />
+                  <Text
+                    numberOfLines={1}
+                    style={styles.cardDescription}
                   >
-                    <Text style={styles.textSign}>Đường đi</Text>
-                  </TouchableOpacity>
+                    {place.editorial_summary ? place.editorial_summary : place.formatted_address}
+                  </Text>
+                  <View style={styles.button}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        handleGetPlaceDetails(place.place_id)
+                      }}
+                      style={styles.scrollPlaceBtn}
+                    >
+                      <Text style={styles.textSign}>Tổng quan</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => {
+                        setTextDestination(place?.name)
+                        // setPlaceDetails(place)
+                        handleRoutePress({
+                          latitude: place.geometry.location.lat,
+                          longitude: place.geometry.location.lng
+                        }, place?.place_id)
+                      }}
+                      style={styles.scrollPlaceBtn}
+                    >
+                      <Text style={styles.textSign}>Đường đi</Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
+            )
+          })}
+          {
+            isShowRefreshCard &&
+            <View style={styles.refreshContainer}>
+              <ActivityIndicator size="small" color={app_c.HEX.fourth}/>
             </View>
-          ))}
+          }
         </Animated.ScrollView> : null
       }
+
+          {/* <Animated.ScrollView
+            ref={cardScrollViewRef}
+            horizontal
+            pagingEnabled
+            scrollEventThrottle={1}
+            showsHorizontalScrollIndicator={false}
+            snapToInterval={CARD_WIDTH + 20}
+            snapToAlignment="center"
+            style={[styles.cardScrollView, {bottom: 120, paddingHorizontal: 0}]}
+            contentInset={{
+              top: 0,   
+              left:SPACING_FOR_CARD_INSET,
+              bottom: 0,
+              right: SPACING_FOR_CARD_INSET
+            }}
+            contentContainerStyle={{
+              paddingRight: Platform.OS === 'android' ? SPACING_FOR_CARD_INSET : 0
+            }}
+            // onScroll={Animated.event(
+            //   [
+            //     {
+            //       nativeEvent: {
+            //         contentOffset: {
+            //           x: mapAnimation,
+            //         }
+            //       },
+            //     },
+            //   ],
+            //   { useNativeDriver: true }
+            // )}
+          >
+            {markers.map((marker) => {
+              return (
+                <View style={styles.card} key={marker.id}>
+                  <Image
+                    source={marker.image}
+                    style={styles.cardImage}
+                    resizeMode="cover"
+                  />
+                  <View style={styles.textContent}>
+                    <Text numberOfLines={1} style={styles.cardtitle}>{marker.title}</Text>
+                    <StarRating ratings={marker.rating} reviews={marker.reviews} />
+                    <Text
+                      numberOfLines={1}
+                      style={styles.cardDescription}
+                    >
+                      {marker.description}
+                    </Text>
+                    <View style={styles.button}>
+                      <TouchableOpacity
+                        onPress={() => handleExlorePress(marker.coordinate)}
+                        style={[styles.signIn, {
+                          borderColor: '#112D4E',
+                          borderWidth: 1
+                        }]}
+                      >
+                        <Text style={[styles.textSign, {
+                          color: '#112D4E'
+                        }]}
+                        >
+                          Explore Now
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </View>
+              )
+            })}
+          </Animated.ScrollView>  */}
       
       <BottomSheetScroll
         openTermCondition={isOpenBottomSheet}
@@ -1391,7 +1826,7 @@ const Map = () => {
                   handleRoutePress({
                     latitude: placeDetails.geometry.location.lat,
                     longitude: placeDetails.geometry.location.lng
-                  })
+                  }, placeDetails?.place_id)
                 }}
               >
                 <FontAwesome5 
@@ -1524,7 +1959,6 @@ const Map = () => {
               >
                 {
                   placeDetails.photos.map((photo, index) => {
-                    console.log('photo render')
                     const length = placeDetails?.photos.length
                     const stopLoopIndex = length % 3 === 0 ?  (length / 3) : (length /3) + 1
                     if (index < stopLoopIndex ) {
@@ -1684,6 +2118,8 @@ const Map = () => {
                   }}
                   bottomSheetExampleRef={bottomSheetExampleRef}
                   locationCurrent={locationCurrent}
+                  map_api_key={map_api_key}
+                  arrPlaceInput={arrPlaceInput}
                 />}
               </Stack.Screen>
 

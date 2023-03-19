@@ -20,6 +20,7 @@ import { selectCurrentFilter, updateCategories } from 'redux/filter/FilterSlice'
 import { FilterConstants } from 'utilities/constants'
 import { cloneDeep } from 'lodash'
 import { useEffect } from 'react'
+import { FlatList } from 'react-native'
 
 const Category = ({
   label,
@@ -81,55 +82,44 @@ const Category = ({
           <Text style={styles.rightHeaderBtnTextFilter}>Ok</Text>
         </TouchableOpacity>
       </View> 
-      </BottomSheetView>
-      <BottomSheetScrollView
-        contentContainerStyle={{
-          paddingHorizontal: 0,
-          paddingBottom: 120,
-          display: 'flex',
-          // paddingHorizontal: 18,
-          backgroundColor: app_c.HEX.primary
-        }}
-        showsVerticalScrollIndicator={false}
-      >
-        
-        <View style={styles.bodyFilterContainer}>
-          {
-            typesPlace.map((typePlace, index) => {
-              return (
-                <View 
-                  key={`type-${index}`}
-                  style={styles.cardContainer}
-                >
-                  {
-                    index !== 0 &&
-                    <View style={styles.saperate}/>
-                  }
-                  <TouchableOpacity 
-                  onPress={() => handlePressCategory(typePlace)}
-                  style={styles.cardCategoryContain}
-                  >
-                    <Text 
-                      style={[styles.cardCategoryText, {
-                        color: category === typePlace.id ? app_c.HEX.third : app_c.HEX.ext_third
-                      }]}
-                      
-                    >{typePlace[typePlace.id].en}</Text>
-                    {
-                      category === typePlace.id &&
-                      <Ionicons 
-                        name='md-checkmark-circle' 
-                        size={20} 
-                        color={app_c.HEX.third}
-                      />
-                    }
-                  </TouchableOpacity>
-                </View>
-              )
-            })
+      <FlatList
+          data={typesPlace}
+          keyExtractor={(item, index) => {`type-${index}`}}
+          style={styles.bodyFilterContainer}
+          renderItem={({item, index}) => 
+            <View 
+              key={`type-${index}`}
+              style={[styles.cardContainer, {
+                marginBottom: index === typesPlace.length - 1 ? 160 : 0
+              }]}
+            >
+              {
+                index !== 0 &&
+                <View style={styles.saperate}/>
+              }
+              <TouchableOpacity 
+              onPress={() => handlePressCategory(item)}
+              style={styles.cardCategoryContain}
+              >
+                <Text 
+                  style={[styles.cardCategoryText, {
+                    color: category === item.id ? app_c.HEX.third : app_c.HEX.ext_third
+                  }]}
+                  
+                >{item[item.id].en}</Text>
+                {
+                  category === item.id &&
+                  <Ionicons 
+                    name='md-checkmark-circle' 
+                    size={20} 
+                    color={app_c.HEX.third}
+                  />
+                }
+              </TouchableOpacity>
+            </View>
           }
-        </View>
-      </BottomSheetScrollView>
+        />
+      </BottomSheetView>
     </View>
   )
 }

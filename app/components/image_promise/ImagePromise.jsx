@@ -22,11 +22,9 @@ const ImagePromise = ({ photoReference, styleImage, map_api_key, pushArrImgBase6
     if (!isTranformData) {
       const res = await axios.get(`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${photoReference}&key=${map_api_key}`, {responseType: 'arraybuffer'})
       const urlBase64Decode = Buffer.from(res.data, 'binary').toString('base64')
-      console.log('url base64 decode!')
       setUrlBase64(urlBase64Decode)
       typeof pushArrImgBase64 === 'function' && pushArrImgBase64(`data:image/jpeg;base64,${urlBase64Decode}`)
     } else {
-      console.log('url base64 do not need decode!')
       setUrlBase64(photoReference)
       typeof pushArrImgBase64 === 'function' && pushArrImgBase64(`data:image/jpeg;base64,${photoReference}`)
     }

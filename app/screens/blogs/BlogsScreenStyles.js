@@ -9,5 +9,14 @@ export const styles = StyleSheet.create({
     backgroundColor: app_c.HEX.primary,
     justifyContent: 'center',
     alignItems: 'center',
-  }
+  },
+  text: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    padding: 12,
+    borderRadius: 4,
+    color: 'white',
+    backgroundColor: 'blue',
+    marginVertical: 8,
+  },
 })

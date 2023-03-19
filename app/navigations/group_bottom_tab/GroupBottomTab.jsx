@@ -20,8 +20,13 @@ import styles from './GroupBottomTabStyles'
 import { app_dms } from 'globals/styles'
 import { useEffect } from 'react'
 import { getPrivateKeysAPI } from 'request_api'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { updatePrivateKeys } from 'redux/manifold/ManifoldSlice'
+// Phương: Socket 
+
+import { selectCurrentUser, updateTemporaryUserId } from 'redux/user/UserSlice'
+import { v4 as uuidv4 } from 'uuid'
+import { socketIoInstance } from '../../../App'
 
 const tabIcon = {
 	'HomeScreen': {
@@ -139,10 +144,11 @@ const Tab = createBottomTabNavigator()
 const GroupBottomTab = () => {
 // Phuong: https://reactnavigation.org/docs/bottom-tab-navigator/
 
-// const myCart = useSelector(state => state.myCart)
-
 const navigation = useNavigation()
 const dispatch = useDispatch()
+const user = useSelector(selectCurrentUser)
+console.log("🚀 ~ file: GroupBottomTab.jsx:148 ~ GroupBottomTab ~ user:", user)
+
 
 const tabOffsetValue = useRef(new Animated.Value(centerDotDistance)).current
 const getWidth = () => {
@@ -151,8 +157,19 @@ const getWidth = () => {
 
 useEffect(() => {
 	getPrivateKeysAPI().then((res) => {
+		console.log("🚀 ~ file: GroupBottomTab.jsx:154 ~ getPrivateKeysAPI ~ res:", res)
 		dispatch(updatePrivateKeys(res))
 	})
+	// Truyền thằng user hiện tại (đã đăng nhập hoặc chưa server để lưu thông tin)
+	// kiểm tra thông tin id
+	let userId
+	if (user._id)
+		userId = user._id
+	else {
+		userId = uuidv4()
+		dispatch(updateTemporaryUserId(userId))
+	}
+	socketIoInstance.emit('c_user_login', userId)
 }, [])
 
 	return (

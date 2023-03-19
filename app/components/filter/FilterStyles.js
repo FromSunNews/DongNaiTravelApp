@@ -185,5 +185,21 @@ export const styles = StyleSheet.create({
     position: 'absolute',
     top: 250 / 2 - 2,
     left: (app_dms.screenWidth - 36) / 2 - 20
-  }
+  },
+  textInput: {
+    ...app_sh.rounded_8,
+    borderWidth: 1,
+    borderColor: app_c.HEX.ext_third,
+  },
+  listView: {
+    position: 'absolute',
+    top: 40,
+    ...app_shdw.type_2,
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: app_c.HEX.ext_third,
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
+  },
 })

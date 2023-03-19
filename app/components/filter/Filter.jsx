@@ -19,11 +19,16 @@ import { resetFilter, selectCurrentFilter, updateCategories, updateCurrentFilter
 import { FilterConstants } from 'utilities/constants'
 import { typesPlace } from 'utilities/mapdata'
 import { cloneDeep } from 'lodash'
+import InputAutoComplete from 'components/input_auto_complete/InputAutoComplete'
+import { useRef } from 'react'
+import { LogBox } from 'react-native'
 
 const Filter = ({
   locationCurrent,
   closeTermCondition,
-  bottomSheetExampleRef
+  bottomSheetExampleRef,
+  map_api_key,
+  arrPlaceInput
 }) => {
   const route = useRoute()
 
@@ -40,6 +45,14 @@ const Filter = ({
     longitude: 106.86912897974253, 
     longitudeDelta: 0.0032964348793029785
   }
+
+    useEffect(() => {
+        LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
+    }, [])
+
+  const inputRef = useRef(null)
+
+  const [isFocusedInput, setIsFocusedInput] = useState(false)
 
   const [category, setCategory] = useState(typesPlace.find( typePlace => typePlace.id === currentFilter.category) || null)
   const [coordinate, setCoordinate] = useState(null)
@@ -310,7 +323,7 @@ const Filter = ({
               <View style={styles.sectionSeclectMultipleHeaderRight}>
               </View>
             </View>
-            
+
             <MapView
               style={{
                 height: 250,
@@ -365,6 +378,30 @@ const Filter = ({
                 <Text style={styles.controlLocationText}>Save location</Text>
               </TouchableOpacity>
             }
+
+            {/* <View style={{position: 'absolute', left: 18, right: 18, top: 40}}>
+              <InputAutoComplete
+                placeholder='Choose a location'
+                onPlaceSelected={(details) => {
+                  console.log('details', {
+                    latitude: details.geometry.location.lat,
+                    longitude: details.geometry.location.lng,
+                  })
+                  setLocationToSave({
+                    latitude: details.geometry.location.lat,
+                    longitude: details.geometry.location.lng,
+                  })
+                }}
+                isFocusedInput={isFocusedInput}
+                handleFocus={(condition) => setIsFocusedInput(condition)}
+                inputRef={inputRef}
+                map_api_key={map_api_key}
+                predefinedPlaces={arrPlaceInput}
+                isHaveLeftButton={false}
+                textInputStyle={styles.textInput}
+                listViewStyle={styles.listView}
+              />
+            </View> */}
           </View>
         </View>
       </BottomSheetScrollView>

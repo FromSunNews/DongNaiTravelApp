@@ -24,9 +24,9 @@ export const filterSlice = createSlice({
       const filter = action.payload
       state.currentFilter = filter
     },
-    updateCategories: (state, action) => {
-      const categories = action.payload
-      state.currentFilter.categories = categories
+    category: (state, action) => {
+      const category = action.payload
+      state.currentFilter.category = category
     },
     updateSortBy: (state, action) => {
       const sortById = action.payload
