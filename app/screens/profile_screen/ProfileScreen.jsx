@@ -22,13 +22,7 @@ import {
 } from "react-native-vector-icons";
 import * as ImagePicker from "expo-image-picker";
 
-import {
-  Header,
-  RoundedRectangleButton,
-  BottomSheetScroll,
-  AppText,
-  AppHeader
-} from "components";
+import { Header, AppText, AppHeader, RectangleButton } from "components";
 import styles from "./ProfileScreenStyle";
 import { app_c, app_dms, app_sp } from "globals/styles";
 import { choiceSettingImage } from "utilities/choiceSettingImage";
@@ -38,23 +32,26 @@ const imageCover = {
   uri: "https://images.pexels.com/photos/1227511/pexels-photo-1227511.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
 };
 
-const user={
-  userId:1,
-  userName:'Thai Anh Duc',
-  userInFo:{
-    userFollower:20,
-    userFollowing:2,
-    userAddress:'Bien Hoa - Dong Nai'
+const user = {
+  userId: 1,
+  userName: "Thai Anh Duc",
+  userInFo: {
+    userFollower: 20,
+    userFollowing: 2,
+    userAddress: "Bien Hoa - Dong Nai",
   },
-  userSocial:{
-    userFacebook:'https://www.facebook.com/profile.php?id=100016839395108',
-    userYoutube:'https://www.facebook.com/profile.php?id=100016839395108',
-    userInstagram:'https://www.instagram.com/thai.a.duc/'
+  userSocial: {
+    userFacebook: "https://www.facebook.com/profile.php?id=100016839395108",
+    userYoutube: "https://www.facebook.com/profile.php?id=100016839395108",
+    userInstagram: "https://www.instagram.com/thai.a.duc/",
   },
-  userBio:'Thích màu hồng'
-}
+  userBio: "Thích màu hồng",
+};
 
-function Profile() {
+function ProfileScreen({
+  route,
+  navigation
+}) {
   const [openTermCondition, setOpenTermCondition] = useState(false);
   const [image, setImage] = useState(imageCover.uri);
 
@@ -77,7 +74,6 @@ function Profile() {
     <>
       <ScrollView style={styles.wrapper}>
         <View style={styles.container}>
-          <Header headerName="Profile" />
           <View style={{ ...app_dms.screenWidth }}>
             <View>
               <Image
@@ -118,19 +114,51 @@ function Profile() {
               <Text style={styles.user_name}>{user.userName}</Text>
             </View>
             <View style={styles.user_info_follow}>
-              <Text style={styles.user_follower}>{user.userInFo.userFollower} Follower</Text>
+              <Text style={styles.user_follower}>
+                {user.userInFo.userFollower} Follower
+              </Text>
               <Text>
                 <Entypo name="dot-single" size={20} color={app_c.HEX.fourth} />
               </Text>
-              <Text style={styles.user_following}>{user.userInFo.userFollowing} Following</Text>
+              <Text style={styles.user_following}>
+                {user.userInFo.userFollowing} Following
+              </Text>
             </View>
-            <RoundedRectangleButton />
+            <View style={styles.round_rectang_button_container}>
+              <RectangleButton
+                overrideShape="rounded_8"
+                isActive
+                activeColor="type_1"
+                typeOfButton="opacity"
+              >
+                {(isActive, currentLabelStyle) => (
+                  <AppText style={currentLabelStyle}>View Stats</AppText>
+                )}
+              </RectangleButton>
+              <RectangleButton overrideShape="rounded_8" typeOfButton="opacity" handlePressButton={() => navigation.navigate("EditProfileScreen")} >
+                {(isActive, currentLabelStyle) => (
+                  <AppText
+                    style={currentLabelStyle}
+                  >
+                    <Feather name="edit-2" /> Edit Profile
+                  </AppText>
+                )}
+              </RectangleButton>
+              <RectangleButton overrideShape="rounded_8" typeOfButton="opacity">
+                {(isActive, currentLabelStyle) => (
+                  <AppText
+                    style={[currentLabelStyle]}
+                    toScreen={{ screenName: "HomeScreen" }}
+                  >
+                    <Entypo name="dots-three-vertical" size={20} />
+                  </AppText>
+                )}
+              </RectangleButton>
+            </View>
             <View style={styles.user_infos}>
               <View style={styles.user_info_block}>
                 <Text style={styles.user_info_title}>Bio</Text>
-                <Text style={styles.user_bio_content}>
-                  {user.userBio}
-                </Text>
+                <Text style={styles.user_bio_content}>{user.userBio}</Text>
               </View>
             </View>
             <View style={styles.user_infos}>
@@ -144,7 +172,7 @@ function Profile() {
                   <Text style={styles.user_info_other_content}>
                     <Text>Live in </Text>
                     <Text style={styles.user_info_address}>
-                    {user.userInFo.userAddress}
+                      {user.userInFo.userAddress}
                     </Text>
                   </Text>
                 </View>
@@ -157,7 +185,7 @@ function Profile() {
                     style={styles.user_info_other_content}
                     hyperLink={user.userSocial.userFacebook}
                   >
-                   {user.userSocial.userFacebook}
+                    {user.userSocial.userFacebook}
                   </AppText>
                 </View>
                 <View style={styles.user_info_other}>
@@ -168,7 +196,8 @@ function Profile() {
                   <AppText
                     style={styles.user_info_other_content}
                     hyperLink={user.userSocial.userInstagram}
-                  >{user.userSocial.userInstagram}
+                  >
+                    {user.userSocial.userInstagram}
                   </AppText>
                 </View>
               </View>
@@ -176,7 +205,7 @@ function Profile() {
             <View style={styles.line_horizontal}></View>
           </View>
           <View style={styles.blog_block}>
-            <TouchableOpacity style={styles.btn_create_blog}>
+            <TouchableOpacity e={styles.btn_create_blog}>
               <MaterialCommunityIcons
                 style={{ color: app_c.HEX.ext_second, ...app_sp.ph_1 }}
                 name="pencil-outline"
@@ -184,7 +213,7 @@ function Profile() {
               />
               <Text style={styles.btn_create_blog_name}>Write new blog</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.btn_manage_blog}>
+            <TouchableOpacity e={styles.btn_manage_blog}>
               <Text style={styles.btn_manage_blog_name}>Manage blogs</Text>
             </TouchableOpacity>
             <View style={styles.blogs_list}>
@@ -207,7 +236,7 @@ function Profile() {
         }}
         childView={
           <View>
-            <TouchableOpacity 
+            <y 
               style={styles.choice_setting_image}
               onPress={pickImage}
             >
@@ -217,8 +246,8 @@ function Profile() {
                   style={styles.choice_setting_icon}
                 />
                 <Text style={styles.choice_setting_image_name}>Camera</Text>
-              </TouchableOpacity>
-            <TouchableOpacity 
+              </y>
+            <y 
               style={styles.choice_setting_image}
               onPress={pickImage}
             >
@@ -228,8 +257,8 @@ function Profile() {
                   style={styles.choice_setting_icon}
                 />
                 <Text style={styles.choice_setting_image_name}>Chọn ảnh từ thư viện</Text>
-              </TouchableOpacity>
-            <TouchableOpacity 
+              </y>
+            <y 
               style={styles.choice_setting_image}
               onPress={pickImage}
             >
@@ -239,11 +268,11 @@ function Profile() {
                   style={styles.choice_setting_icon}
                 />
                 <Text style={styles.choice_setting_image_name}>Chỉnh sửa ảnh</Text>
-              </TouchableOpacity>
+              </y>
           </View>
           //   choiceSettingImage.map((item) => (
           //   <>
-          //     <TouchableOpacity style={styles.choice_setting_image} key={item.id}>
+          //     <TouchableOpacity e={styles.choice_setting_image} key={item.id}>
           //       <Entypo
           //         name={item.icon}
           //         size={25}
@@ -266,4 +295,4 @@ function Profile() {
   );
 }
 
-export default Profile;
+export default ProfileScreen;

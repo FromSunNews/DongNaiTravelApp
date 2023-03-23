@@ -16,9 +16,12 @@ import ExploreScreen from 'screens/explore/ExploreScreen'
   import MapScreen from 'screens/map/MapScreen'
   import SettingScreen from 'screens/settings/SettingScreen'
   import ProfileScreen from 'screens/profile_screen/ProfileScreen'
+  import ProfileNavigator from 'navigations/profile_navigator/ProfileNavigator'
+
   
   import styles from './GroupBottomTabStyles'
   import { app_dms } from 'globals/styles'
+import SettingNavigator from 'navigations/setting_navigator/SettingNavigator'
   
   const tabIcon = {
       'HomeScreen': {
@@ -45,7 +48,7 @@ import ExploreScreen from 'screens/explore/ExploreScreen'
           isHighlight: false,
           size: 25
       },
-      'ProfileScreen': {
+      'SettingScreen': {
           inactive: 'person-circle-outline',
           active: 'person-circle',
           isHighlight: false,
@@ -136,7 +139,6 @@ import ExploreScreen from 'screens/explore/ExploreScreen'
     const getWidth = () => {
         return (app_dms.screenWidth) / 5
     }
-  
     const navigation = useNavigation()
     return (
           <SafeAreaView style={styles.container}>
@@ -179,13 +181,14 @@ import ExploreScreen from 'screens/explore/ExploreScreen'
                       </Tab.Screen>
   
                           <Tab.Screen
-                              name={'ProfileScreen'}
-                              component={ProfileScreen}
+                              name={'SettingScreen'}
+                              component={SettingNavigator}
                               options={{
                                   headerShown: false
                               }}>
-                                  
                           </Tab.Screen>
+  
+                          
                   </Tab.Navigator>
           </SafeAreaView>
     )

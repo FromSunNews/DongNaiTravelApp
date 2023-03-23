@@ -3,28 +3,28 @@ import {
   TouchableWithoutFeedback,
   TouchableHighlight,
   View,
-  Text
-} from 'react-native'
-import React from 'react'
+  Text,
+} from "react-native";
+import React from "react";
 
-import AppText from '../app_text/AppText'
+import AppText from "../app_text/AppText";
 
-import styles from './ButtonsStyles'
-import { app_shdw, app_sp, app_sh, app_c } from 'globals/styles'
+import styles from "./ButtonsStyles";
+import { app_shdw, app_sp, app_sh, app_c } from "globals/styles";
 
 const default_style = {
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'center',
+  flexDirection: "row",
+  alignItems: "center",
+  justifyContent: "center",
   minHeight: 30,
   maxHeight: 100,
   ...app_sp.ph_18,
   ...app_sp.pv_10,
-} 
+};
 
 /**
  * __Creator__: @NguyenAnhTuan1912
- * 
+ *
  * Rectangle button là những button hình chữ nhật ở trong app, tuỳ theo container cha mà chiều rộng của nó cũng sẽ thay đổi theo,
  * ngoài ra thì còn hỗ trợ việc "ghi đè shape" của nó như là capsule, rounded.
  * @param {object} props - Props của component.
@@ -54,89 +54,80 @@ const RectangleButton = ({
   activeColor = "type_1",
   boxShadowType = "",
   style = {},
-  handlePressButton = () => {}
+  handlePressButton = () => {},
 }) => {
-  let isChildrenFunc = typeof children === 'function' && React.isValidElement(children());
-  let shape = overrideShape !== 'none' ? app_sh[overrideShape] : {};
+  let isChildrenFunc =
+    typeof children === "function" && React.isValidElement(children());
+  let shape = overrideShape !== "none" ? app_sh[overrideShape] : {};
 
-  if(isDisable) {
+  if (isDisable) {
     return (
       <TouchableWithoutFeedback disabled={isDisable}>
-        <View style={{...default_style, ...style, ...styles.btn_disable}}>
-          <Text>
-            {
-              isChildrenFunc
-              ? children(isActive, {})
-              : children
-            }
-          </Text>
+        <View style={{ ...default_style, ...style, ...styles.btn_disable }}>
+          {isChildrenFunc ? children(isActive, {}) : children}
         </View>
       </TouchableWithoutFeedback>
     );
   }
-  
+
   let currentButtonStyle = {
     ...default_style,
     ...style,
     ...shape,
-    ...(
-      isActive
+    ...(isActive
       ? styles[`btn_active_${activeColor}`]
-      : styles[`btn_default_${defaultColor}`]
-  )};
-  let currentLabelStyle = isActive ? styles[`lbl_active_${activeColor}`] : styles[`lbl_default_${defaultColor}`];
+      : styles[`btn_default_${defaultColor}`]),
+  };
+  let currentLabelStyle = isActive
+    ? styles[`lbl_active_${activeColor}`]
+    : styles[`lbl_default_${defaultColor}`];
 
-  if(isOnlyContent) {
-    currentButtonStyle = {...style, ...shape};
+  if (isOnlyContent) {
+    currentButtonStyle = { ...style, ...shape };
   }
 
-  if(isTransparent) {
-    currentButtonStyle = {...default_style, ...style, ...shape};
+  if (isTransparent) {
+    currentButtonStyle = { ...default_style, ...style, ...shape };
     currentLabelStyle = {};
   }
 
-  if(boxShadowType !== "") {
-    currentButtonStyle = {...currentButtonStyle, ...app_shdw[boxShadowType]}
+  if (boxShadowType !== "") {
+    currentButtonStyle = { ...currentButtonStyle, ...app_shdw[boxShadowType] };
   }
 
   let ButtonComponent = TouchableWithoutFeedback;
   let ButtonComponentProps = {
-    style: currentButtonStyle
+    style: currentButtonStyle,
   };
 
-  if(typeOfButton === "opacity") {
+  if (typeOfButton === "opacity") {
     ButtonComponent = TouchableOpacity;
     ButtonComponentProps = {
-      style: currentButtonStyle
-    }
+      style: currentButtonStyle,
+    };
   }
 
-  if(typeOfButton === "highlight") {
+  if (typeOfButton === "highlight") {
     ButtonComponent = TouchableHighlight;
     ButtonComponentProps = {
       underlayColor: app_c.HEX.ext_third,
-      style: currentButtonStyle
-    }
+      style: currentButtonStyle,
+    };
   }
 
   return (
-    <ButtonComponent
-      {...ButtonComponentProps}
-      onPress={handlePressButton}
-    >
-      <View style={typeOfButton === "highlight" || typeOfButton === "opacity" ? {flexDirection: 'row'} : {...currentButtonStyle}}>
-      <Text>
-          {
-            isChildrenFunc
-            ? children(isActive, currentLabelStyle)
-            : children
-          }
-      </Text>
+    <ButtonComponent {...ButtonComponentProps} onPress={handlePressButton}>
+      <View
+        style={
+          typeOfButton === "highlight" || typeOfButton === "opacity"
+            ? { flexDirection: "row" }
+            : { ...currentButtonStyle }
+        }
+      >
+        {isChildrenFunc ? children(isActive, currentLabelStyle) : children}
       </View>
-      
     </ButtonComponent>
-    
-  )
-}
+  );
+};
 
-export default RectangleButton
+export default RectangleButton;

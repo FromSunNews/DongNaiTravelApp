@@ -37,6 +37,7 @@ const AppText = ({
   hyperLink,
   toScreen = { screenName: "", params: {} },
   ...props
+  
 }) => {
   let textStyle = React.useMemo(() => (
     fontStyle === "normal"

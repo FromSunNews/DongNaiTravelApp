@@ -2,6 +2,7 @@ import { StyleSheet } from "react-native";
 import { app_sp, app_dms, app_c, app_sh, app_typo, app_shdw } from "globals/styles";
 
 const styles = StyleSheet.create({
+ 
   wrapper: {
     width: app_dms.screenWidth,
     height: app_dms.screenHeight,
@@ -196,6 +197,12 @@ const styles = StyleSheet.create({
     color:app_c.HEX.fourth,
     fontWeight:'500',
   
+  },
+  round_rectang_button_container:{
+    flexDirection:'row',  
+    width:'100%',
+    justifyContent:"space-between",
+    ...app_sp.pt_12
   }
 
 })
