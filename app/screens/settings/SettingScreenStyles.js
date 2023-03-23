@@ -5,7 +5,7 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1, 
     ...app_sp.ph_16,
-    ...app_sp.pt_12
+    ...app_sp.pt_12,
   },
   option_setting:{
     justifyContent:'flex-start',
@@ -28,4 +28,8 @@ export const styles = StyleSheet.create({
     justifyContent:'center',
     alignItems:'center',
   },
+  option_setting_name:{
+    ...app_typo.fonts.normal.normal.h5,
+    color:app_c.HEX.fourth
+  }
 })

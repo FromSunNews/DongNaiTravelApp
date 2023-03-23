@@ -42,7 +42,7 @@ const SettingNavigator = () => {
       <SettingStack.Screen name="About" >
         {(props) => <AboutScreen {...props} />}
       </SettingStack.Screen>
-      <SettingStack.Screen name="Help and Support" >
+      <SettingStack.Screen name="Help & Support" >
         {(props) => <HelpAndSupportScreen {...props} />}
       </SettingStack.Screen>
 

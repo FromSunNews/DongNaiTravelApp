@@ -1,6 +1,6 @@
 import { AppText } from "components";
 import React, { useState,useRef } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity,LayoutAnimation, Platform, UIManager  } from "react-native";
 import {Entypo,AntDesign} from 'react-native-vector-icons'
 
 import { app_c, app_typo } from "globals/styles";
@@ -17,16 +17,21 @@ const options=[
   },
 ]
 
-const DropDown = ({name,isMode=false,isParagraph=false,children,icon,isDrop=true,handlePressButton=()=>{}}) => {
+
+
+const DropDown = ({name,isMode=false,isParagraph=false,children,icon,isDrop=true,handlePressButton=()=>{}, paragraphTitle}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(options[0].value);
   const [btnBgColor,setBtnBgColor]=useState(app_c.HEX.ext_primary)
-
-  const dropdownRef=useRef(null)
-
+ 
   const handleOptionChange = (optionValue) => {
     setSelectedOption(optionValue);
   };
+
+  // Thêm dòng này để cho phép LayoutAnimation hoạt động trên Android 
+  if (Platform.OS === 'android') {
+    UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
+  }
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -43,13 +48,17 @@ const DropDown = ({name,isMode=false,isParagraph=false,children,icon,isDrop=true
       handlePressButton(),
       setBtnBgColor(app_c.HEX.ext_primary)
     }
+    // Sử dụng hàm `LayoutAnimation.configureNext` để thiết lập kiểu animation cho dropdown
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
   };
+
+  
 
   return (
     <View  style={styles.dropdown} >
       <TouchableOpacity   onPress={toggleDropdown} style={{...styles.dropdown_btn,backgroundColor:btnBgColor}}>
         
-        <View ref={dropdownRef}  style={{justifyContent:'space-between',flexDirection:'row',width:'90%',}}>
+        <View style={{justifyContent:'space-between',flexDirection:'row',width:'90%',}}>
           <Text style={{...styles.dropdown_label}}>{icon}<View style={{alignItems:'center',paddingLeft:12}}><Text style={{fontSize:16,color:app_c.HEX.fourth,fontWeight:'500'}}>{name}</Text></View></Text>
          {isMode && 
          <View style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
@@ -84,8 +93,9 @@ const DropDown = ({name,isMode=false,isParagraph=false,children,icon,isDrop=true
           ))}
           {
             isParagraph && (
-              <View style={{marginTop:12,paddingLeft:12}}>
-                {children}
+              <View style={{paddingLeft:12}}>
+                <Text numberOfLines={2} style={{...app_typo.fonts.normal.bolder.h5,color:app_c.HEX.fourth,paddingBottom:4}}>{paragraphTitle}</Text>
+                <Text style={{...app_typo.fonts.normal.normal.sub0,color:app_c.HEX.fourth}}>{children}</Text>
               </View>
             )
           }
