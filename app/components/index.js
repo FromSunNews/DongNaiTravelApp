@@ -14,6 +14,10 @@ import HorizontalBlogCard from "./horizontal_blog_card/HorizontalBlogCard"
 import HorizontalBlogCardSkeleton from "./horizontal_blog_card/HorizontalBlogCardSkeleton"
 import HorizontalPlaceCard from "./horizontal_place_card/HorizontalPlaceCard"
 import HorizontalPlaceCardSkeleton from "./horizontal_place_card/HorizontalPlaceCardSkeleton"
+import VerticalPlaceCard from "./vertical_place_card/VerticalPlaceCard"
+import VerticalPlaceCardSkeleton from "./vertical_place_card/VerticalPlaceCardSkeleton"
+import VerticalBlogCard from "./vertical_blog_card/VerticalBlogCard"
+import VerticalBlogCardSkeleton from "./vertical_blog_card/VerticalBlogCardSkeleton"
 import Input from './input/Input'
 import Loading from './loading/Loading'
 import NotificationBottomSheet from './notification_bottom_sheet/NotificationBottomSheet'
@@ -36,6 +40,10 @@ export {
   HorizontalBlogCardSkeleton,
   HorizontalPlaceCard,
   HorizontalPlaceCardSkeleton,
+  VerticalPlaceCard,
+  VerticalPlaceCardSkeleton,
+  VerticalBlogCard,
+  VerticalBlogCardSkeleton,
   Input,
   Loading,
   NotificationBottomSheet,
