@@ -16,7 +16,7 @@ import ExploreScreen from 'screens/explore/ExploreScreen'
   import MapScreen from 'screens/map/MapScreen'
   import SettingScreen from 'screens/settings/SettingScreen'
   import ProfileScreen from 'screens/profile_screen/ProfileScreen'
-  import ProfileNavigator from 'navigations/profile_navigator/ProfileNavigator'
+  
 
   
   import styles from './GroupBottomTabStyles'

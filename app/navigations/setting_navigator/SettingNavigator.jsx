@@ -14,6 +14,7 @@ import HelpAndSupportScreen from "screens/help_and_support/HelpAndSupportScreen"
 import ReportsScreen from "screens/reports/ReportsScreen";
 
 const SettingStack = createNativeStackNavigator();
+const ProfileStack =createNativeStackNavigator();
 
 const SettingNavigator = () => {
   return (
@@ -45,6 +46,10 @@ const SettingNavigator = () => {
       <SettingStack.Screen name="Help & Support" >
         {(props) => <HelpAndSupportScreen {...props} />}
       </SettingStack.Screen>
+      
+      <ProfileStack.Screen name="EditProfile">
+        {(props)=><EditProfileScreen {...props}/>}
+      </ProfileStack.Screen>
 
     </SettingStack.Navigator>
   );

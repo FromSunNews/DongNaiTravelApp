@@ -103,6 +103,7 @@ const SettingScreen = ({ route, navigation }) => {
                 name={"Notification"}
                 isDrop={false}
                 handlePressButton={() => navigation.navigate("Notifications")}
+                idOption='UPDATE_FROM_FOLLOWING'
               />
             </View>
           </View>

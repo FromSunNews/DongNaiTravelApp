@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
     justifyContent:'center',
     alignItems:'center',
     flexDirection:'row',
-    ...app_sp.mt_22
+    ...app_sp.mt_22,
     
   },
   btn_create_blog_name:{

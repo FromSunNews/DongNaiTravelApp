@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState ,useRef,useEffect} from "react";
 import {
   StyleSheet,
   SafeAreaView,
@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   LayoutChangeEvent,
   Button,
+  Animated 
 } from "react-native";
 import {
   AntDesign,
@@ -21,11 +22,16 @@ import {
   MaterialCommunityIcons,
 } from "react-native-vector-icons";
 import * as ImagePicker from "expo-image-picker";
+import * as FileSystem from 'expo-file-system';
+
+
 
 import { Header, AppText, AppHeader, RectangleButton } from "components";
 import styles from "./ProfileScreenStyle";
 import { app_c, app_dms, app_sp } from "globals/styles";
 import { choiceSettingImage } from "utilities/choiceSettingImage";
+import ModalShowImage from "components/modal_show_image/ModalShowImage";
+import { BottomSheetScroll } from "components";
 
 //Đức: sử dụng expo picker để chọn ảnh tử local để upload lên
 const imageCover = {
@@ -48,39 +54,71 @@ const user = {
   userBio: "Thích màu hồng",
 };
 
-function ProfileScreen({
-  route,
-  navigation
-}) {
+
+function ProfileScreen({ route, navigation }) {
   const [openTermCondition, setOpenTermCondition] = useState(false);
   const [image, setImage] = useState(imageCover.uri);
+  const [selectedImage, setSelectedImage] = useState(null);
 
-  // const pickImage = async () => {
-  //   // No permissions request is necessary for launching the image library
-  //   let result = await ImagePicker.launchImageLibraryAsync({
-  //     mediaTypes: ImagePicker.MediaTypeOptions.All,
+  useEffect(() => {
+    // request permission to access media library if it hasn't been granted
+    (async () => {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+        alert('Sorry, we need media library permissions to make this work!');
+      }
+    })();
+  }, []);
+
+  async function pickImageFromLibrary() {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      setSelectedImage(result.uri);
+      console.log(result.uri)
+      // saveImage(result.uri);
+    }
+    
+  }
+
+  // take photo from camera
+  // async function pickImageFromCamera() {
+  //   let result = await ImagePicker.launchCameraAsync({
+  //     mediaTypes: ImagePicker.MediaTypeOptions.Images,
   //     allowsEditing: true,
   //     aspect: [4, 3],
   //     quality: 1,
   //   });
 
-  //   console.log(result);
-
-  //   if (!result.canceled) {
-  //     setImage(result.assets[0].uri);
+  //   if (!result.cancelled) {
+  //     setSelectedImage(result.uri);
+  //     saveImage(result.uri);
   //   }
-  // };
+  // }
+
+  // // save image to local storage
+  // async function saveImage(uri) {
+  //   const filename = uri.split('/').pop(); // get the filename of the image
+  //   const destination = `${FileSystem.documentDirectory}${filename}`; // create a path to the destination in local storage
+  //   await FileSystem.copyAsync({ from: uri, to: destination }); // copy the image to local storage
+  // }
   return (
     <>
       <ScrollView style={styles.wrapper}>
         <View style={styles.container}>
           <View style={{ ...app_dms.screenWidth }}>
             <View>
-              <Image
-                source={{ uri: image }}
-                resizeMode="cover"
-                style={styles.imageCover}
-              ></Image>
+              <View style={[{ height: 210, width: "100%",overflow:'hidden' ,backgroundColor:'#00000087'}]}>
+              {selectedImage && (
+                <ModalShowImage url={selectedImage} />
+              )}
+             
+              </View>
               <TouchableOpacity
                 style={styles.circle_icon}
                 onPress={() => setOpenTermCondition(!openTermCondition)}
@@ -135,11 +173,13 @@ function ProfileScreen({
                   <AppText style={currentLabelStyle}>View Stats</AppText>
                 )}
               </RectangleButton>
-              <RectangleButton overrideShape="rounded_8" typeOfButton="opacity" handlePressButton={() => navigation.navigate("EditProfileScreen")} >
+              <RectangleButton
+                overrideShape="rounded_8"
+                typeOfButton="opacity"
+                handlePressButton={() => navigation.navigate("EditProfile")}
+              >
                 {(isActive, currentLabelStyle) => (
-                  <AppText
-                    style={currentLabelStyle}
-                  >
+                  <AppText style={currentLabelStyle}>
                     <Feather name="edit-2" /> Edit Profile
                   </AppText>
                 )}
@@ -205,9 +245,9 @@ function ProfileScreen({
             <View style={styles.line_horizontal}></View>
           </View>
           <View style={styles.blog_block}>
-            <TouchableOpacity e={styles.btn_create_blog}>
+            <TouchableOpacity style={styles.btn_create_blog}>
               <MaterialCommunityIcons
-                style={{ color: app_c.HEX.ext_second, ...app_sp.ph_1 }}
+                style={{ color: app_c.HEX.ext_second, marginRight: 6 }}
                 name="pencil-outline"
                 size={18}
               />
@@ -227,7 +267,7 @@ function ProfileScreen({
           </View>
         </View>
       </ScrollView>
-      {/* <BottomSheetScroll
+      <BottomSheetScroll
         haveBtn={false}
         openTermCondition={openTermCondition}
         snapPoints={["25%", "50%", "74%"]}
@@ -236,61 +276,22 @@ function ProfileScreen({
         }}
         childView={
           <View>
-            <y 
+            <TouchableOpacity
               style={styles.choice_setting_image}
-              onPress={pickImage}
+              onPress={pickImageFromLibrary}
             >
               <Entypo
-                  name='images'
-                  size={25}
-                  style={styles.choice_setting_icon}
-                />
-                <Text style={styles.choice_setting_image_name}>Camera</Text>
-              </y>
-            <y 
-              style={styles.choice_setting_image}
-              onPress={pickImage}
-            >
-              <Entypo
-                  name='images'
-                  size={25}
-                  style={styles.choice_setting_icon}
-                />
-                <Text style={styles.choice_setting_image_name}>Chọn ảnh từ thư viện</Text>
-              </y>
-            <y 
-              style={styles.choice_setting_image}
-              onPress={pickImage}
-            >
-              <Entypo
-                  name='images'
-                  size={25}
-                  style={styles.choice_setting_icon}
-                />
-                <Text style={styles.choice_setting_image_name}>Chỉnh sửa ảnh</Text>
-              </y>
+                name="images"
+                size={25}
+                style={styles.choice_setting_icon}
+              />
+              <Text style={styles.choice_setting_image_name}>
+                Chọn ảnh từ thư viện
+              </Text>
+            </TouchableOpacity> 
           </View>
-          //   choiceSettingImage.map((item) => (
-          //   <>
-          //     <TouchableOpacity e={styles.choice_setting_image} key={item.id}>
-          //       <Entypo
-          //         name={item.icon}
-          //         size={25}
-          //         style={styles.choice_setting_icon}
-          //       />
-          //       <Text style={styles.choice_setting_image_name}>
-          //         {item.nameChoice}
-          //       </Text>
-          //     </TouchableOpacity>
-          //     <Button
-          //       title="Pick an image from camera roll"
-          //       onPress={pickImage}
-          //     />
-
-          //   </>
-          // ))
         }
-      /> */}
+      />
     </>
   );
 }
