@@ -36,7 +36,7 @@ const AppText = ({
   children,
   fontStyle = 'normal',
   weight = 'normal',
-  font = 'body1',
+  font = 'body0',
   color = 'fourth',
   hyperLink,
   toScreen = { screenName: "", params: {} },
@@ -55,11 +55,10 @@ const AppText = ({
 
   // Sẽ thêm hàm validate url sau, tạm thời dùng điệu kiện hyperLink !== ''
   if(hyperLink && hyperLink !== '') {
-    textCompleteStyle[0].color = app_c.HEX.third;
     return (
       <Text
         {...props}
-        style={textCompleteStyle}
+        style={[textCompleteStyle, { color: app_c.HEX.third }]}
         onPress={() => Linking.openURL(hyperLink)}
       >{children}
       </Text>
