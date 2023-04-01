@@ -76,14 +76,14 @@ const VerticalPlaceCard = ({ place, ...props }) => {
 
       {/* Content */}
       <View style={styles.card_content_container}>
-        <AppText numberOfLines={1} font="h5" style={app_sp.mb_6}>{place.name}</AppText>
+        <AppText numberOfLines={1} font="h4" style={app_sp.mb_6}>{place.name}</AppText>
 
         {/* Sub-information */}
         <View style={styles.card_content_sub_information_container}>
-          <AppText font="body3">
+          <AppText font="body2">
             <Ionicons name="star-outline" /> {place.ratingPoints}
           </AppText>
-          <AppText numberOfLines={1} font="body3">
+          <AppText numberOfLines={1} font="body2">
             <Ionicons name="location-outline" /> {place.location.city} - {place.location.province}
           </AppText>
         </View>
@@ -98,7 +98,7 @@ const VerticalPlaceCard = ({ place, ...props }) => {
         >
           {
             (isActive, currentLabelStyle) => (
-              <AppText font="body3" style={currentLabelStyle}>
+              <AppText font="body2" style={currentLabelStyle}>
                 <Ionicons name={isActive ? "heart" : "heart-outline"} style={currentLabelStyle} size={14} /> Like
               </AppText>
             )
@@ -112,7 +112,7 @@ const VerticalPlaceCard = ({ place, ...props }) => {
         >
           {
             (isActive, currentLabelStyle) => (
-              <AppText font="body3" style={currentLabelStyle}>
+              <AppText font="body2" style={currentLabelStyle}>
                 <Ionicons name={isActive ? "flag" : "flag-outline"} style={currentLabelStyle} size={14} /> Report
               </AppText>
             )

@@ -72,19 +72,19 @@ const VerticalBlogCard = ({ blog, ...props }) => {
           blog.user.avatar === ""
           ? (<Ionicons name="person-circle" color={app_c.HEX.ext_second} />)
           : (<Image source={{uri: blog.user.avatar}} />)
-        }<AppText font="body3">{" " + blog.user.name}</AppText>
+        }<AppText font="body2">{" " + blog.user.name}</AppText>
       </View>
 
       {/* Content */}
       <View style={styles.card_content_container}>
-        <AppText numberOfLines={2} font="h5" style={app_sp.mb_6}>{blog.name}</AppText>
+        <AppText numberOfLines={2} font="h4" style={app_sp.mb_6}>{blog.name}</AppText>
 
         {/* Sub-information */}
         <View style={styles.card_content_sub_information_container}>
-          <AppText font="body3">
+          <AppText font="body2">
             {DateTimeUtility.getShortDateString(blog.createdAt)}
           </AppText>
-          <AppText numberOfLines={1} font="body3">
+          <AppText numberOfLines={1} font="body2">
             {DateTimeUtility.toMinute(blog.readTime)} min read
           </AppText>
         </View>
@@ -99,7 +99,7 @@ const VerticalBlogCard = ({ blog, ...props }) => {
         >
           {
             (isActive, currentLabelStyle) => (
-              <AppText font="body3" style={currentLabelStyle}>
+              <AppText font="body2" style={currentLabelStyle}>
                 <Ionicons name={isActive ? "heart" : "heart-outline"} style={currentLabelStyle} size={14} /> Like
               </AppText>
             )
@@ -113,7 +113,7 @@ const VerticalBlogCard = ({ blog, ...props }) => {
         >
           {
             (isActive, currentLabelStyle) => (
-              <AppText font="body3" style={currentLabelStyle}>
+              <AppText font="body2" style={currentLabelStyle}>
                 <Ionicons name={isActive ? "flag" : "flag-outline"} style={currentLabelStyle} size={14} /> Report
               </AppText>
             )

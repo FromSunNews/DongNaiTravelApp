@@ -68,7 +68,7 @@ const HorizontalPlaceCard = ({place}) => {
           {
             place.isRecommended &&
             <View style={styles.card_recommended_mark_container}>
-              <AppText font="body3" color="ext_second">Recommended</AppText>
+              <AppText font="body2" color="ext_second">Recommended</AppText>
             </View>
           }
         </ImageBackground>
@@ -79,24 +79,24 @@ const HorizontalPlaceCard = ({place}) => {
         <View style={styles.card_content_container}>
           <View style={styles.card_tag_container}>
             {place.tags.map((tag, index) => (
-              <AppText font="body3" style={styles.card_text_color} key={tag.title}>{tag.title}{index < place.tags.length - 1 ? ", " : ""}</AppText>
+              <AppText font="body2" style={styles.card_text_color} key={tag.title}>{tag.title}{index < place.tags.length - 1 ? ", " : ""}</AppText>
             ))}
           </View>
           <View>
-            <AppText numberOfLines={1} font="h4" style={styles.card_title}>{place.name}</AppText>
-            <AppText style={styles.car_subtitle} font="body3">{place.location.city} - {place.location.province}</AppText>
+            <AppText numberOfLines={1} font="h3" style={styles.card_title}>{place.name}</AppText>
+            <AppText style={styles.car_subtitle} font="body2">{place.location.city} - {place.location.province}</AppText>
           </View>
           <View style={styles.card_information_container}>
             <View style={styles.card_information_col}>
-              <AppText font="body3" style={styles.card_text_color}>
+              <AppText font="body2" style={styles.card_text_color}>
                 <Ionicons name='star-outline' /> {place.ratingPoints}
               </AppText>
-              <AppText font="body3" style={styles.card_text_color}>
+              <AppText font="body2" style={styles.card_text_color}>
                 <Ionicons name='chatbubble-outline' /> {NumberUtility.toMetricNumber(place.numberOfReviews)}
               </AppText>
             </View>
             <View style={styles.card_information_col}>
-              <AppText font="body3" style={styles.card_text_color}>
+              <AppText font="body2" style={styles.card_text_color}>
                 <Ionicons name='eye-outline' /> {NumberUtility.toMetricNumber(place.numberOfVisited)}
               </AppText>
             </View>
@@ -123,7 +123,7 @@ const HorizontalPlaceCard = ({place}) => {
             overrideShape="capsule"
           >
             {(isActive, currentLabelStyle) => (
-              <AppText style={currentLabelStyle} font="body3">{isActive ? 'Visited' : 'Visit'}</AppText>
+              <AppText style={currentLabelStyle} font="body2">{isActive ? 'Visited' : 'Visit'}</AppText>
             )}
           </RectangleButton>
         </View>

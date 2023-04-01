@@ -23,6 +23,7 @@ import Loading from './loading/Loading'
 import NotificationBottomSheet from './notification_bottom_sheet/NotificationBottomSheet'
 import TagScrollView from "./tag_scroll_view/TagScrollView"
 import { SimpleBarChart } from "./app_chart/app_bar_chart/AppBarChart"
+import MarkFormat from "./mark_format/MarkFormat"
 
 export {
   AppText,
@@ -48,5 +49,6 @@ export {
   Loading,
   NotificationBottomSheet,
   TagScrollView,
-  SimpleBarChart
+  SimpleBarChart,
+  MarkFormat
 }
