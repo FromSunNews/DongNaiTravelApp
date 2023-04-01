@@ -10,9 +10,11 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { useNavigation } from '@react-navigation/native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
+import ExploreNavigator from 'navigations/explore_navigator/ExploreNavigator'
+import BlogsNavigator from 'navigations/blogs_navigator/BlogsNavigator'
 import HomeScreen from 'screens/home/HomeScreen'
-import ExploreScreen from 'screens/explore/ExploreScreen'
-import BlogsScreen from 'screens/blogs/BlogsScreen'
+// import ExploreScreen from 'screens/explore/ExploreScreen'
+// import BlogsScreen from 'screens/blogs/BlogsScreen'
 import MapScreen from 'screens/map/MapScreen'
 import SettingScreen from 'screens/settings/SettingScreen'
 
@@ -26,7 +28,7 @@ const tabIcon = {
 		isHighlight: false,
 		size: 25
 	},
-	'ExploreScreen': {
+	'ExploreNavigator': {
 		inactive: 'compass-outline',
 		active: 'compass',
 		isHighlight: false,
@@ -38,7 +40,7 @@ const tabIcon = {
 		isHighlight: true,
 		size: 25
 	},
-	'BlogsScreen': {
+	'BlogsNavigator': {
 		inactive: 'newspaper-outline',
 		active: 'newspaper',
 		isHighlight: false,
@@ -160,8 +162,8 @@ const getWidth = () => {
 						</Tab.Screen>
 
 						<Tab.Screen
-							name={'ExploreScreen'}
-							component={ExploreScreen}
+							name={'ExploreNavigator'}
+							component={ExploreNavigator}
 							options={{
 								headerShown: false
 							}}>
@@ -176,8 +178,8 @@ const getWidth = () => {
 						</Tab.Screen>
 
 						<Tab.Screen
-							name={'BlogsScreen'}
-							component={BlogsScreen}
+							name={'BlogsNavigator'}
+							component={BlogsNavigator}
 							options={{
 								headerShown: false
 							}}>
