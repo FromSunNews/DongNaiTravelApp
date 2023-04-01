@@ -44,9 +44,20 @@ const toMetricNumber = function (number) {
   return firstThreeDigit + ' ' + metrics[remainPartsLength - 1];
 };
 
+/**
+ * Trả về một số ngầu nhiên nằm trong khoảng `min` - `max`.
+ * @param {number} max Số lớn nhất có thể lấy ngẫu nhiên được.
+ * @param {number} min Số nhỏ nhất có thể lấy ngẫu nhiên được.
+ * @returns 
+ */
+const getRandomNumber = function(max = 10, min = 0) {
+  return Math.round(Math.random() * (max - min) + 1);
+}
+
 const NumberUtility = {
   toThousandsSeparatedNumber,
   toMetricNumber,
+  getRandomNumber
 };
 
 export default NumberUtility;
