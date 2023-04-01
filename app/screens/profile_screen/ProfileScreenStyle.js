@@ -8,7 +8,8 @@ const styles = StyleSheet.create({
     height: app_dms.screenHeight,
   },
   container: {
-    ...app_dms.screenWidth
+    ...app_dms.screenWidth,
+    paddingBottom:200 ,
   },
   imageCover: {
     width: '100%',
@@ -106,7 +107,7 @@ const styles = StyleSheet.create({
   },
   user_info_other:{
     flexDirection:'row',
-    ...app_sp.pt_6,
+    ...app_sp.pt_12,
     alignItems:'center'
   },
   user_info_other_icon:{
@@ -168,8 +169,7 @@ const styles = StyleSheet.create({
     color:app_c.HEX.fourth
   },
   blog_container:{
-    width:'100%',
-    height:165,
+  
     backgroundColor:app_c.HEX.sub_primary,
     ...app_sh.rounded_8,
     justifyContent:'center',

@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
 
   card_information_container: {
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
 
   card_information_col: {

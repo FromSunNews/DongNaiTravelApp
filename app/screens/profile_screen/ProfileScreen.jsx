@@ -26,17 +26,47 @@ import * as FileSystem from 'expo-file-system';
 
 
 
-import { Header, AppText, AppHeader, RectangleButton } from "components";
+import { Header,AppText, AppHeader, RectangleButton } from "components";
 import styles from "./ProfileScreenStyle";
 import { app_c, app_dms, app_sp } from "globals/styles";
 import { choiceSettingImage } from "utilities/choiceSettingImage";
 import ModalShowImage from "components/modal_show_image/ModalShowImage";
 import { BottomSheetScroll } from "components";
+import { HorizontalBlogCard } from "components";
 
 //Đức: sử dụng expo picker để chọn ảnh tử local để upload lên
 const imageCover = {
   uri: "https://images.pexels.com/photos/1227511/pexels-photo-1227511.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
 };
+
+const userBlogData= [
+  {
+    id: 'b1',
+    user: {
+      id: 'user1',
+      name: 'Lost Teach',
+      avatar: ''
+    },
+    name: 'Top 10 dia diem neu ghe qua khi du lich o Dong Nai',
+    avatar: '',
+    createdAt: 1675908513000,
+    readTime: 480,
+    isLiked: true
+  },
+  {
+    id: 'b2',
+    user: {
+      id: 'user1',
+      name: 'Lost Teach',
+      avatar: ''
+    },
+    name: 'Top 10 dia diem neu ghe qua khi du lich o Dong Nai',
+    avatar: '',
+    createdAt: 1675908513000,
+    readTime: 480,
+    isLiked: true
+  },
+]
 
 const user = {
   userId: 1,
@@ -170,7 +200,7 @@ function ProfileScreen({ route, navigation }) {
                 typeOfButton="opacity"
               >
                 {(isActive, currentLabelStyle) => (
-                  <AppText style={currentLabelStyle}>View Stats</AppText>
+                  <Text style={currentLabelStyle}>View Stats</Text>
                 )}
               </RectangleButton>
               <RectangleButton
@@ -179,19 +209,18 @@ function ProfileScreen({ route, navigation }) {
                 handlePressButton={() => navigation.navigate("EditProfile")}
               >
                 {(isActive, currentLabelStyle) => (
-                  <AppText style={currentLabelStyle}>
+                  <Text style={currentLabelStyle}>
                     <Feather name="edit-2" /> Edit Profile
-                  </AppText>
+                  </Text>
                 )}
               </RectangleButton>
               <RectangleButton overrideShape="rounded_8" typeOfButton="opacity">
                 {(isActive, currentLabelStyle) => (
-                  <AppText
+                  <Text
                     style={[currentLabelStyle]}
-                    toScreen={{ screenName: "HomeScreen" }}
                   >
                     <Entypo name="dots-three-vertical" size={20} />
-                  </AppText>
+                  </Text>
                 )}
               </RectangleButton>
             </View>
@@ -221,24 +250,26 @@ function ProfileScreen({ route, navigation }) {
                     style={styles.user_info_other_icon}
                     name="facebook"
                   />
-                  <AppText
+                  <Text
+                    key={1}
                     style={styles.user_info_other_content}
                     hyperLink={user.userSocial.userFacebook}
                   >
                     {user.userSocial.userFacebook}
-                  </AppText>
+                  </Text>
                 </View>
                 <View style={styles.user_info_other}>
                   <Entypo
                     style={styles.user_info_other_icon}
                     name="instagram"
                   />
-                  <AppText
+                  <Text
+                    key={2}
                     style={styles.user_info_other_content}
                     hyperLink={user.userSocial.userInstagram}
                   >
                     {user.userSocial.userInstagram}
-                  </AppText>
+                  </Text>
                 </View>
               </View>
             </View>
@@ -261,7 +292,11 @@ function ProfileScreen({ route, navigation }) {
                 <Text style={styles.blog_title}>Blogs</Text>
               </View>
               <View style={styles.blog_container}>
-                <Text>Đây là nơi chứa bài blog</Text>
+                {
+                  userBlogData.map(blog=>(
+                    <HorizontalBlogCard key={blog.id} blog={blog}/>
+                  ))
+                }
               </View>
             </View>
           </View>
