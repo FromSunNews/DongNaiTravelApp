@@ -1,13 +1,88 @@
-import { app_c, app_dms, app_sh, app_typo } from 'globals/styles'
+import { app_c, app_dms, app_sh, app_sp, app_typo } from 'globals/styles'
 
 import { StyleSheet } from 'react-native'
 import Constants from 'expo-constants'
 
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: app_c.HEX.primary,
+    ...app_sp.ph_16,
+    
+  },
+  home_content: {
+    width: '100%',
+    ...app_sp.pt_12,
+    paddingBottom:150
+  },
+  home_banner: {
+    height: 105,
+    backgroundColor: app_c.HEX.ext_third
+  },
+  home_temperature: {
+    ...app_sp.mt_16,
+    width: '100%',
+    height: 64,
+    ...app_sh.rounded_8,
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  temperature: {
+    width: 267,
+    height: 64,
+    backgroundColor: 'red',
+    flexDirection: 'row',
+    backgroundColor: app_c.HEX.ext_primary,
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    ...app_sh.rounded_8
+  },
+  temperature_degrees: {
+    width: 174,
+    height: 39,
+    
+    justifyContent:'center',
+    alignItems:'center'
+  },
+  temperature_degrees_info:{
+    ...app_typo.fonts.normal.normal.h1,
+    color:app_c.HEX.ext_second
+  },
+  temperature_other_info: {
+    width: 60,
+    height: 39,
+    justifyContent:'center',
+  },
+  temperature_reload: {
+    width: 64,
+    height: 64,
+    backgroundColor: app_c.HEX.ext_primary,
     justifyContent: 'center',
     alignItems: 'center',
+    ...app_sh.rounded_8
+  },
+  item: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    ...app_sh.rounded_8
+  },
+  category_header: {
+    ...app_sp.mt_22,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+
+  },
+  category_name: {
+    ...app_typo.fonts.normal.bolder.h3
+  },
+  category_option_list: {
+    ...app_sp.mt_12
+  },
+  category_list_item:{ 
+    ...app_sp.mt_12,
+    
   }
+
 })
+export default styles

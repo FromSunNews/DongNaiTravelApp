@@ -7,8 +7,8 @@ import EditProfileScreen from "screens/edit_profile/EditProfileScreen";
 import ProfileScreen from "screens/profile_screen/ProfileScreen";
 import BlogsScreen from "screens/blogs/BlogsScreen";
 import PlacesScreen from 'screens/places/PlacesScreen'
-import Notifications from "screens/notifications/NotificationsScreen";
-import NotificationsScreen from "screens/notifications/NotificationsScreen";
+import Notifications from "screens/setting_notifications/SettingNotificationsScreen";
+import NotificationsScreen from "screens/setting_notifications/SettingNotificationsScreen";
 import AboutScreen from "screens/about/AboutScreen";
 import HelpAndSupportScreen from "screens/help_and_support/HelpAndSupportScreen";
 import ReportsScreen from "screens/reports/ReportsScreen";

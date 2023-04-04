@@ -22,6 +22,7 @@ import ExploreScreen from 'screens/explore/ExploreScreen'
   import styles from './GroupBottomTabStyles'
   import { app_dms } from 'globals/styles'
 import SettingNavigator from 'navigations/setting_navigator/SettingNavigator'
+import HomeNavigator from 'navigations/home_navigator/HomeNavigator'
   
   const tabIcon = {
       'HomeScreen': {
@@ -150,7 +151,7 @@ import SettingNavigator from 'navigations/setting_navigator/SettingNavigator'
                   >
                           <Tab.Screen
                               name={'HomeScreen'}
-                              component={HomeScreen}
+                              component={HomeNavigator}
                               options={{
                                   headerShown: false
                               }}>

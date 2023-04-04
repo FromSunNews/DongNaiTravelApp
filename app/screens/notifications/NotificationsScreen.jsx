@@ -1,51 +1,59 @@
-import { View, Text, ScrollView } from 'react-native'
-import React, { useState } from 'react'
-import { Ionicons,FontAwesome,MaterialIcons } from 'react-native-vector-icons'
-import { selectCurrentNotifications } from "redux/setting/SettingSlice";
-import { useDispatch, useSelector } from "react-redux";
+import React from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import {AntDesign} from 'react-native-vector-icons'
+import styles from './NotificationsScreenStyle';
+import { AppText } from 'components';
+import { app_typo } from 'globals/styles';
 
-import styles from './NotificationsScreenStyles'
-import DropDown from 'components/drop_down/DropDown'
-
-
-const NotificationsScreen = () => {
-
-  const notifications=useSelector(selectCurrentNotifications)
-  const dispatch = useDispatch()
-  // console.log(notifications)
-
+const notifications = [
+  {
+    id: 1,
+    avatar: 'https://placeimg.com/50/50/people/1',
+    userName: 'John Doe',
+    contentNotification: 'vừa nhắc bạn ở một bài viết',
+  },
+  {
+    id: 2,
+    avatar: 'https://placeimg.com/50/50/people/2',
+    userName: 'Jane Smith',
+    contentNotification: 'vừa thích bài viết của bạn',
+  },
+  // And so on...
+];
+const Notification = ({ avatar, userName, contentNotification }) => {
   return (
-    <ScrollView style="container">
-      <View style={styles.notification_container}>
-        <View style={{...styles.dropdown_container}}>
-          <DropDown 
-            isMode= {true}
-            name={"Update from following"}
-            icon={<Ionicons name="people-outline" size={25}/>}
-            idOption={'UPDATE_FROM_FOLLOWING'}
-          />
-        </View>
-
-       <View style={{...styles.dropdown_container}}>
-          <DropDown 
-            isMode= {true}
-            name={"Comments"}
-            icon={<FontAwesome name="commenting-o" size={25}/>}
-            idOption={'COMMENTS'}
-          />
-       </View>
-
-        <View style={{...styles.dropdown_container}}> 
-          <DropDown 
-            isMode= {true}
-            name={"Events"}
-            icon={<MaterialIcons name="event-note" size={25}/>}
-            idOption={'EVENTS'}
-
-          />
-        </View>
+    <View style={styles.container_item}>
+      {avatar && <Image source={{ uri: avatar }} style={styles.avatar} />}
+      <View style={styles.content}>
+        <AppText style={styles.username}>{userName}</AppText>
+        <AppText style={styles.content_notification}>{contentNotification}</AppText>
       </View>
-    </ScrollView>
+    </View>
+  );
+};
+
+const NotificationsScreen = ({navigation}) => {
+
+  
+  return (
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.control} onPress={() => navigation.goBack()}>
+          <AntDesign name="left"  size={25}/>
+        </TouchableOpacity>
+        <AppText style={{...app_typo.fonts.normal.bolder.h2,marginLeft:20}}>Notification</AppText>
+      </View>
+      <View style={styles.notification_content}>
+        {notifications.map(notification => (
+          <Notification
+            key={notification.id}
+            avatar={notification.avatar}
+            userName={notification.userName}
+            contentNotification={notification.contentNotification}
+          />
+        ))}
+      </View>
+    </View>
   )
 }
 
