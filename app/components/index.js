@@ -21,7 +21,7 @@ import VerticalBlogCardSkeleton from "./vertical_blog_card/VerticalBlogCardSkele
 import Input from './input/Input'
 import Loading from './loading/Loading'
 import NotificationBottomSheet from './notification_bottom_sheet/NotificationBottomSheet'
-import TagScrollView from "./tag_scroll_view/TagScrollView"
+import TypeScrollView from "./type_scroll_view/TypeScrollView"
 import { SimpleBarChart } from "./app_chart/app_bar_chart/AppBarChart"
 import MarkFormat from "./mark_format/MarkFormat"
 
@@ -48,7 +48,7 @@ export {
   Input,
   Loading,
   NotificationBottomSheet,
-  TagScrollView,
+  TypeScrollView,
   SimpleBarChart,
   MarkFormat
 }

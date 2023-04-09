@@ -3,13 +3,14 @@ import React from 'react'
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
-import { TagScrollView, HorizontalBlogCard, HorizontalBlogCardSkeleton, BannerButton } from 'components'
+import { TypeScrollView, HorizontalBlogCard, HorizontalBlogCardSkeleton, BannerButton } from 'components'
 
 import styles from './BlogsScreenStyles'
 import { app_sp, app_c } from 'globals/styles'
 
 const BlogsScreen = () => {
   const [currentBlogs, setCurrentBlogs] = React.useState([]);
+  const [type, setType] = React.useState("");
 
   React.useEffect(() => {
     setTimeout(() => {
@@ -34,8 +35,9 @@ const BlogsScreen = () => {
         </BannerButton>
       </View>
       <View style={{backgroundColor: app_c.HEX.primary, ...app_sp.mv_10}}>
-        <TagScrollView 
-          concept="blogs"
+        <TypeScrollView
+          types='all;newest;popular;most_likes;most_comments'
+          callBack={setType}
           style={{...app_sp.ms_18, ...app_sp.pv_12}}
         />
       </View>
