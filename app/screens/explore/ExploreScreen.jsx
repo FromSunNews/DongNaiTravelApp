@@ -3,7 +3,7 @@ import React from 'react'
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
-import { TagScrollView, HorizontalPlaceCard, HorizontalPlaceCardSkeleton, BannerButton } from 'components'
+import { TypeScrollView, HorizontalPlaceCard, HorizontalPlaceCardSkeleton, BannerButton } from 'components'
 
 import styles from './ExploreScreenStyles'
 import { app_sp, app_c } from 'globals/styles'
@@ -15,12 +15,14 @@ import { app_sp, app_c } from 'globals/styles'
  */
 const ExploreScreen = () => {
   const [currentPlaces, setCurrentPlaces] = React.useState([]);
-
+  const [type, setType] = React.useState("");
   React.useEffect(() => {
     setTimeout(() => {
       setCurrentPlaces([...places]);
     }, 2000);
   }, []);
+
+  console.log(type);
 
   return (
     <ScrollView
@@ -39,13 +41,12 @@ const ExploreScreen = () => {
           Let’s see your location in map
         </BannerButton>
       </View>
-      <View style={{backgroundColor: app_c.HEX.primary, ...app_sp.mv_10}}>
-        <TagScrollView 
-          concept="places"
-          style={{...app_sp.ms_18, ...app_sp.pv_12}}
-        />
-      </View>
-
+      <TypeScrollView
+        types='all;recommended;popular;most_visit;most_favorite'
+        callBack={setType}
+        scrollStyle={[app_sp.ms_18, app_sp.pv_12]}
+        containerStyle={{backgroundColor: app_c.HEX.primary, ...app_sp.mv_10}}
+      />
       <View style={{...app_sp.mh_18, ...app_sp.mb_12}}>
         {
           currentPlaces.length === 0
