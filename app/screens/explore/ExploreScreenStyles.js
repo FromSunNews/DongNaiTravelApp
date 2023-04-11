@@ -1,12 +1,16 @@
-import { app_c, app_dms, app_sh, app_typo } from 'globals/styles'
+import { StyleSheet } from "react-native";
 
-import { StyleSheet } from 'react-native'
-import Constants from 'expo-constants'
+import { app_sp, app_dms, app_c } from "globals/styles";
 
-export const styles = StyleSheet.create({
-  container: {
-    backgroundColor: app_c.HEX.primary,
-    alignItems: 'center',
-    marginTop: 40
+const styles = StyleSheet.create({
+  scroll_view_container: {
+    height: app_dms.screenHeight,
+    backgroundColor: app_c.HEX.primary
+  },
+
+  place_cards_container: {
+    ...app_sp.mh_4
   }
-})
+});
+
+export default styles;

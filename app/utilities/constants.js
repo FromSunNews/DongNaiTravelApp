@@ -50,3 +50,6 @@ export const FilterConstants = {
     LEVEL_5: 'LEVEL_5'
   }
 }
+export const HEADER_HEIGHT = 50;
+export const ALPHABET = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+

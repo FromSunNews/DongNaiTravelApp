@@ -24,7 +24,7 @@ import { validateRegex } from 'utilities/functions'
 import ButtonText from 'components/button_text/ButtonText'
 import CheckBoxText from 'components/checkbox_text/CheckBoxText'
 import { signInUserAPI } from 'request_api'
-import { RectangleButton } from 'components'
+import { AppText, RectangleButton } from 'components'
 import { app_sp } from 'globals/styles'
 
 const SigninScreen = () => {
@@ -191,20 +191,22 @@ const SigninScreen = () => {
               </TouchableOpacity>
             </View>
 
-            <ButtonText
+            {/* <ButtonText
               label='Sign In'
               onPress={handleSubmit(onSubmit)}
-            />
+            /> */}
 
-            {/* <RectangleButton
+             <RectangleButton
               overrideShape="rounded_8"
               typeOfButton="opacity"
-              fontOfText='h4'
               defaultColor="type_4"
               style={{...app_sp.mt_12, ...app_sp.pv_16}}
               handlePressButton={handleSubmit(onSubmit)}
-            >Sign In</RectangleButton> */}
-            
+            >
+              {(isActive, currentLabelStyle) => (
+                <AppText font="h4" style={currentLabelStyle}>Sign In</AppText>
+              )}
+            </RectangleButton>
           </View>
           
           <View style={{ flex: 1}}></View>

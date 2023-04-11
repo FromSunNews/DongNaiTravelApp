@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
   },
 
   btn_default_type_2: {
-    backgroundColor: app_c.HEX.sub_primary
+    backgroundColor: app_c.HEX.primary
   },
 
   lbl_default_type_2: {
