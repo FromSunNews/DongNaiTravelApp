@@ -121,7 +121,7 @@ const Filter = ({
         >
           <Text style={styles.rightHeaderBtnTextFilter} onPress={() => dispatch(resetFilter())}>Reset</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTextFilter}>Category</Text>
+        <Text style={styles.headerTextFilter}>Filter</Text>
         <TouchableOpacity
           onPress={() => handlePressSaveBtn()}
           style={styles.rightHeaderBtnFilter}

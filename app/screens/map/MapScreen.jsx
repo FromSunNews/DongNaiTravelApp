@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useRef, useState, memo } from 'react'
 // Related to redux
 import { useDispatch, useSelector } from 'react-redux'
 import { selectCurrentManifold, updateNotif } from 'redux/manifold/ManifoldSlice'
-import { selectCurrentFilter } from 'redux/filter/FilterSlice'
+import { resetRoutes, selectCurrentFilter, updateRoutes } from 'redux/filter/FilterSlice'
 
 // Related to component of react native
 import {
@@ -18,7 +18,9 @@ import {
   Share,
   Keyboard,
   Linking,
-  ActivityIndicator
+  ActivityIndicator,
+  Image,
+  FlatList
 } from 'react-native'
 
 // Related to react navigation
@@ -29,27 +31,28 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import * as Location from 'expo-location'
 
 // Related to map
-import MapView, { Marker, Polygon, Polyline, PROVIDER_GOOGLE } from 'react-native-maps'
+import MapView, { Callout, Marker, Polygon, Polyline, PROVIDER_GOOGLE } from 'react-native-maps'
 import MapViewDirections from 'react-native-maps-directions'
+import { MapViewWithHeading, ArrowedPolyline } from 'react-native-maps-line-arrow'
 
 // Related to raw datas
 import { coordinates } from 'utilities/coordinates'
 import { typemapsearch } from 'utilities/typemapsearch'
-import { typesPlace, typeModeTransport } from 'utilities/mapdata'
+import { typesPlace, typeModeTransport, maneuverData, weatherIcons, mapTypes } from 'utilities/mapdata'
 import { FilterConstants } from 'utilities/constants'
 
 // Related to APis
-import { getRouteDirectionAPI, getMorePlacesTextSearchAPI, getPlaceDetailsAPI, getPlacesTextSearchAPI } from 'request_api'
+import { getRouteDirectionAPI, getMorePlacesTextSearchAPI, getPlaceDetailsAPI, getPlacesTextSearchAPI, getWeatherCurrentAPI, getWeatherForecastAPI, getMapUserAPI, updateMapUserAPI } from 'request_api'
 
 // Related to debounce
-import { debounce } from 'lodash'
+import { cloneDeep, debounce } from 'lodash'
 
 // Related to Styles
 import { styles } from './MapScreenStyles'
 import { app_c, app_dms, app_sh, app_shdw, app_typo } from 'globals/styles'
 
 // Related to components
-import { BottomSheetScroll } from 'components'
+import { BottomSheetScroll, CheckBoxText } from 'components'
 import ImagePromise from 'components/image_promise/ImagePromise'
 import ReviewSectionPromise from 'components/review_section_promise/ReviewSectionPromise'
 import Filter from 'components/filter/Filter'
@@ -61,10 +64,14 @@ import StarRating from 'components/star_rating/StarRating'
 // Related to Icons
 import Entypo from 'react-native-vector-icons/Entypo'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import Octicons from 'react-native-vector-icons/Octicons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import Foundation from 'react-native-vector-icons/Foundation'
+import Feather from 'react-native-vector-icons/Feather'
+import Fontisto from 'react-native-vector-icons/Fontisto'
 
 // Related to component notification
 import { useToast } from 'react-native-toast-notifications'
@@ -75,6 +82,13 @@ import * as Animatable from 'react-native-animatable'
 
 import { socketIoInstance } from '../../../App'
 import { selectCurrentUser, selectTemporaryUserId } from 'redux/user/UserSlice'
+import ImageModal from 'react-native-image-modal';
+import { PolyLineDirection } from 'components/polyline_direction/PolyLineDirection'
+import { BottomSheetScrollView, BottomSheetView, BottomSheetVirtualizedList } from '@gorhom/bottom-sheet'
+
+import { computeDestinationPoint } from 'geolib'
+import moment from 'moment/moment'
+import { selectCurrentMap, updateCurrentMap, updateMapDetails, updateMapTypes, updatePlaces, updateSuggestions } from 'redux/map/mapSlice'
 
 const Map = () => {
 // Phương: https://docs.expo.dev/versions/latest/sdk/map-view/
@@ -91,16 +105,25 @@ const Map = () => {
   const ors_api_key = useSelector(selectCurrentManifold).privateKeys?.ors_api_key[0]
 
   const dispatch = useDispatch()
+
   const currentFilter = useSelector(selectCurrentFilter)
+  const [routesFilter, setRoutesFilter] = useState(currentFilter.routes)
+
+  const currentMap = useSelector(selectCurrentMap)
+  console.log("🚀 ~ file: MapScreen.jsx:113 ~ currentMap:", currentMap)
 
   const CARD_HEIGHT = 240
   const CARD_WIDTH = app_dms.screenWidth * 0.8
   const SPACING_FOR_CARD_INSET = app_dms.screenWidth * 0.1 - 10
 
+  const [weather, setWeather] = useState(null)
+  const [weatherData, setWeatherData] = useState(null)
+
   const [origin, setOrigin] = useState('')
   const [textOrigin, setTextOrigin] = useState('')
   const [textSearchOrigin, setTextSearchOrigin] = useState('')
   
+  const [markerLongPress, setMarkerLongPress] = useState(null);
 
   const [destination, setDestination] = useState(null)
   const [textDestination, setTextDestination] = useState('')
@@ -109,14 +132,19 @@ const Map = () => {
   const [showDirections, setShowDirections] = useState(false)
 
   const [arrPlaceInput, setArrPlaceInput] = useState([])
+  const [arrPlaceInputMainSearch, setArrPlaceInputMainSearch] = useState([])
 
   const [distance, setDistance] = useState(0)
   const [days, setDays] = useState(0)
   const [hours, setHours] = useState(0)
   const [minutes, setMinutes] = useState(0)
   const [seconds, setSeconds] = useState(0)
-  const [directionMode, setDirectionMode] = useState('DRIVING')
+  const [directionModeGCP, setDirectionModeGCP] = useState('DRIVE')
+  const [directionModeORS, setDirectionModeORS] = useState('driving-car')
+  
   const [tagModeSelected, setTagModeSelected] = useState('1')
+
+  const [weatherSelected, setWeatherSelected] = useState(0)
   
 
   const [isModeScrollOn, setIsModeScrollOn] = useState(false)
@@ -148,22 +176,48 @@ const Map = () => {
   const oriInputRef = useRef(null)
   const desInputRef = useRef(null)
 
+  const calloutRef0 = useRef(null)
+  const calloutRef1 = useRef(null)
+  const calloutRef2 = useRef(null)
+  const [isShowCallout, setIsShowCallout] = useState(false)
+  
+
   const bottomSheetExampleRef = useRef(null)
   
   const [currentCoorArr, setCurrentCoorArr] = useState([])
   const [coorArrDirection, setCoorArrDirection] = useState([])
   const [directionsPolyLine, setDirectionsPolyLine] = useState([])
+  const [stepPolyLine, setStepPolyLine] = useState([])
+  const [stepPolyLineSelected, setStepPolyLineSelected] = useState(-1)
   const [selectedPolyLine, setSelectedPolyLine] = useState(0)
+  const [directionOriPlaceId, setDirectionOriPlaceId] = useState(null)
+  const [directionDesPlaceId, setDirectionDesPlaceId] = useState(null)
   
   const [arrPlaceToFitCoor, setArrPlaceToFitCoor] = useState([])
 
   const [isShowOptionRoute, setIsShowOptionRoute] = useState(false)
+  const [isShowRoutePanel, setIsShowRoutePanel] = useState(true)
+  
+  const [isShowDirectionsBottomSheet, setIsShowDirectionsBottomSheet] = useState(false)
+  const directionBottomSheetRef = useRef(null)
+
+  const [isShowWeatherBottomSheet, setIsShowWeatherBottomSheet] = useState(false)
+  const weatherBottomSheetRef = useRef(null)
+
+  const [isShowFilterDirectionBottomSheet, setIsShowFilterDirectionBottomSheet] = useState(false)
+  const filterDirectionBottomSheetRef = useRef(null)
+
+  const [isShowMapTypeBottomSheet, setIsShowMapTypeBottomSheet] = useState(false)
+  const mapTypeBottomSheetRef = useRef(null)
+
   const [oriRouteInfo, setOriRouteInfo] = useState(null)
   const [desRouteInfo, setDesRouteInfo] = useState(null)
 
   const [nextPageToken, setNextPageToken] = useState(null)
 
   const [isToggleOpenHours, setIsToggleOpenHours] = useState(false)
+
+  const [isResizeMode, setIsResizeMode] = useState("cover")
 
   const animationDropdown = useRef(new Animated.Value(0)).current
   const handleToggleOpenHoursAnimation = () => {
@@ -200,36 +254,65 @@ const Map = () => {
   let trackingUserLocation
   const [isTrackingUserMode, setIsTrackingUserMode] = useState(false)
 
+  useEffect(() => {
+    if (currentFilter.routes)
+      setRoutesFilter(currentFilter.routes)
+  }, [currentFilter.routes])
 
   useEffect(() => {
-    // Phuong: get permission's user about current location 
-    (async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync()
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied')
-        return
-      }
-      
-      const userLocation = await Location.getCurrentPositionAsync({
-        enableHighAccuracy: true,
-        accuracy: Location.Accuracy.BestForNavigation
+    if (currentMap.suggestions) {
+      const places = []
+      currentMap.suggestions.map((suggestion) => {
+        places.push({
+          description: suggestion.description,
+          geometry: suggestion.geometry,
+          place_id: suggestion.place_id
+        })
       })
+      setArrPlaceInputMainSearch(places)
+      console.log("🚀 ~ file: MapScreen.jsx:260 ~ useEffect ~ places:", places)
+    }
+  }, [currentMap.suggestions])
 
-      const position = {
-        latitude: userLocation.coords.latitude || 0,
-        longitude: userLocation.coords.longitude || 0
+  useEffect(() => {
+    // Nếu mà thằng location trong state nó tồn tại 
+    if (currentMap.userLocation) {
+      handleGetUserLocation()
+    }
+  }, [currentMap.userLocation])
+
+  const handleGetUserLocation = async () => {
+    setOrigin(currentMap.userLocation)
+    setLocationCurrent(currentMap.userLocation)
+    setArrPlaceInput([
+      {
+        description: 'My location',
+        geometry: { location: { lat: currentMap.userLocation.latitude, lng: currentMap.userLocation.longitude } },
       }
-      setOrigin(position)
-      setLocationCurrent(position)
-      setArrPlaceInput([
-        {
-          description: 'My location',
-          geometry: { location: { lat: userLocation.coords.latitude, lng: userLocation.coords.longitude } },
-        }
-      ])
-      setTextOrigin('My location')
-    })()
+    ])
+    setTextOrigin('My location')
+    // call api mapuser
+    await getMapUserAPI({
+      currentUserId: user ? user._id : temporaryUserId,
+    }).then(res => {
+      console.log("🚀 ~ file: MapScreen.jsx:308 ~ res:", res)
+      const dataToUpdate = {
+        ...currentMap,
+        places: res.places,
+        suggestions: res.suggestions,
+      }
+      console.log("============================================================================================")
 
+      console.log("🚀 ~ file: MapScreen.jsx:314 ~ dataToUpdate:", dataToUpdate)
+      dispatch(updateCurrentMap(dataToUpdate))
+    })
+    // call api weather
+    await getWeatherCurrentAPI(currentMap.userLocation).then(weatherData => {
+      setWeather(weatherData)
+    })
+  }
+  
+  useEffect(() => {
     //  Này để thêm mảng để hiện lên polyline (đường biên giới)
     const arrCoor = coordinates.geometries[0].coordinates[0][0]
     let arrLatLng = []
@@ -260,7 +343,7 @@ const Map = () => {
   
         // handleFitCoors(arrDirection, edgePadding, true)
         
-        setDistance(summary.distance / 1000) // ~ km
+        setDistance((summary.distance / 1000).toFixed(2)) // ~ km
         const minuttesTranformYet = summary.duration // ~ minutes
 
         const days = Math.floor(minuttesTranformYet / 1440)
@@ -278,26 +361,33 @@ const Map = () => {
     })
   }, [])
 
-  const handleGetDirections = async (start, end, typeOri, typeDes, startCoor, endCoor) => {
+  const handleGetDirections = async (start, end, typeOri, typeDes, startCoor, endCoor, modeGCP, modeORS, tagModeId, routeModifiers) => {
     console.log("MapScreen.jsx:258 ~ getDirections ~ call api")
-      // data = {
-      //   oriAddress: 'abc' || null,
-      //   desAddress: 'abc' || null,
-      //   oriPlaceId: sdgkl_27e921 || null,
-      //   desPlaceId: sdgkl_27e921 || null,
-      //   oriCoor: {
-      //      longitude: 10.214290,
-      //      latitude: 100.1283824
-      // } || null,
-      //   desCoor: {
-      //      longitude: 10.214290,
-      //      latitude: 100.1283824
-      // } || null,
-      //   modeORS: 'driving-car',
-      //   modeGCP: 'driving',
-      //   typeOri: 'place_id' || 'address' || 'coordinate',
-      //   typeDes: 'place_id' || 'address' || 'coordinate',
-      // }
+    // data = {
+    //   oriAddress: 'abc' || null,
+    //   desAddress: 'abc' || null,
+    //   oriPlaceId: sdgkl_27e921 || null,
+    //   desPlaceId: sdgkl_27e921 || null,
+    //   oriCoor: {
+    //      longitude: 10.214290,
+    //      latitude: 100.1283824
+    // } || null,
+    //   desCoor: {
+    //      longitude: 10.214290,
+    //      latitude: 100.1283824
+    // } || null,
+    //   modeORS: 'driving-car',
+    //   modeGCP: 'driving',
+    //   typeOri: 'place_id' || 'address' || 'coordinate',
+    //   typeDes: 'place_id' || 'address' || 'coordinate',
+    //   routeModifiers: {
+    //   avoidTolls: false,
+    //   avoidHighways: false,
+    //   avoidFerries: false,
+    //   avoidIndoor: false
+    //   },
+    //   languageCode: 'vi'
+    // }
       
       await getRouteDirectionAPI({
         oriAddress: typeOri === 'address' ? start : null,
@@ -306,127 +396,94 @@ const Map = () => {
         desPlaceId: typeDes === 'place_id' ? end : null,
         oriCoor: startCoor,
         desCoor: endCoor,
-        modeORS: 'driving-car',
-        modeGCP: 'driving',
+        modeORS: modeORS,
+        modeGCP: modeGCP,
         typeOri: typeOri,
-        typeDes: typeDes
-      }).then(data => {
-        console.log("🚀 ~ file: MapScreen.jsx:314 ~ handleGetDirections ~ data:", data.callFrom)
-        
-        if (data.callFrom === 'GCP') {
-          // directionsPolyLine: [
-          //   {
-          //     duration: number,
-          //     distance: number,
-          //     overview_polyline: [
-          //       {
-          //         latitude: number,
-          //         longitude: number
-          //       },...+900characters
-          //     ],
-          //     steps: [
-          //       {
-          //         duration: number,
-          //         distance: number,
-          //         html_instructions: string,
-          //         instructions: string,
-          //         polyline: [
-          //           {
-          //             latitude: number,
-          //             longitude: number
-          //           },...+900characters
-          //         ]
-
-          //       },...+900characters
-          //     ]
-          //   },
-          // ]
-          let dataToUpdate = []
-          data?.data?.routes?.map(route => {
-            const steps = []
-            route.legs[0].steps.map(step => {
-              const childStep = {
-                duration: step.distance,
-                distance: step.duration,
-                html_instructions: step.html_instructions,
-                instructions: null,
-                start_location: {
-                  latitude: step.start_location.lat,
-                  longitude: step.start_location.lng
-                },
-                end_location: {
-                  latitude: step.start_location.lat,
-                  longitude: step.start_location.lng
-                },
-                polyline: step.polyline.points
-              }
-              steps.push(childStep)
-            })
-            let childDataToUpdate = {
-              duration: route.legs[0].duration.value,
-              distance: route.legs[0].distance.value,
-              overview_polyline: route.overview_polyline.points,
-              steps: steps
-            }
-            dataToUpdate.push(childDataToUpdate)
-          })
-
-          const edgePadding = {
-            top: 300,
-            right: 70,
-            bottom: 130,
-            left: 70
-          }
+        typeDes: typeDes,
+        routeModifiers: routeModifiers,
+        // {
+        //   avoidTolls: false,
+        //   avoidHighways: false,
+        //   avoidFerries: false,
+        //   avoidIndoor: false
+        // },
+        languageCode: "vi"
+      }).then(dataReturn => {
+        console.log("🚀 ~ file: MapScreen.jsx:357 ~ handleGetDirections ~ dataReturn:", dataReturn)
+        if (dataReturn?.error) {
+          dispatch(updateNotif({
+            appearNotificationBottomSheet: true,
+            contentNotificationBottomSheet: "This route is not supported or not found!"
+          }))
+        } else {
+          setDirectionModeGCP(modeGCP)
+          setDirectionModeORS(modeORS)
+          setTagModeSelected(tagModeId)
+          console.log("🚀 ~ file: MapScreen.jsx:314 ~ handleGetDirections ~ dataReturn:", dataReturn.callFrom)
           
-          setDirectionsPolyLine(dataToUpdate)
-          // Cho nó focus vào 
-          console.log("dataToUpdate[0].overview_polyline.points:", dataToUpdate[0].overview_polyline)
-
-          handleFitCoors(dataToUpdate[0].overview_polyline, edgePadding, true)
-          // Hiển thị ngày giờ và khoảng cách
-          handleDatetimeAndDistance(dataToUpdate[0].distance, dataToUpdate[0].duration)
-        } else if (data.callFrom === 'ORS') {
-          let dataToUpdate = []
-          data?.data?.features?.map(feature => {
-            const steps = []
-            feature.properties.segments[0].steps.map(step => {
-              const childStep = {
-                duration: step.distance,
-                distance: step.duration,
-                html_instructions: null,
-                instructions: step.instruction,
-                start_location: step.start_location,
-                end_location: step.end_location,
-                polyline: step.polyline
-              }
-              steps.push(childStep)
-            })
-            let childDataToUpdate = {
-              duration: feature.properties.segments[0].duration,
-              distance: feature.properties.segments[0].distance,
-              overview_polyline: feature.geometry.coordinates,
-              steps: steps
+          if (dataReturn.callFrom === 'GCP') {
+            
+            setDirectionOriPlaceId(dataReturn.oriPlaceId)
+            setDirectionDesPlaceId(dataReturn.desPlaceId)
+            
+            const edgePadding = {
+              top: 330,
+              right: 40,
+              bottom: 150,
+              left: 40
             }
-            dataToUpdate.push(childDataToUpdate)
-          })
-
-          const edgePadding = {
-            top: 300,
-            right: 70,
-            bottom: 130,
-            left: 70
-          }
-          setDirectionsPolyLine(dataToUpdate)
-          // Cho nó focus vào 
-          handleFitCoors(dataToUpdate[0].overview_polyline.points, edgePadding, true)
-          // Hiển thị ngày giờ và khoảng cách
-          handleDatetimeAndDistance(dataToUpdate[0].distance, dataToUpdate[0].duration)
+            
+            setDirectionsPolyLine(dataReturn.data?.routes)
+            setSelectedPolyLine(0)
+            // Cho nó focus vào 
+  
+            handleFitCoors(dataReturn?.data?.routes[0]?.polyline, edgePadding, true)
+            // Hiển thị ngày giờ và khoảng cách
+            handleDatetimeAndDistance(dataReturn?.data?.routes[0]?.distanceMeters, dataReturn?.data?.routes[0]?.staticDuration)
+          } 
+          // else if (data.callFrom === 'ORS') {
+          //   let dataToUpdate = []
+          //   data?.data?.features?.map(feature => {
+          //     const steps = []
+          //     feature.properties.segments[0].steps.map(step => {
+          //       const childStep = {
+          //         duration: step.distance,
+          //         distance: step.duration,
+          //         html_instructions: null,
+          //         instructions: step.instruction,
+          //         start_location: step.start_location,
+          //         end_location: step.end_location,
+          //         polyline: step.polyline
+          //       }
+          //       steps.push(childStep)
+          //     })
+          //     let childDataToUpdate = {
+          //       duration: feature.properties.segments[0].duration,
+          //       distance: feature.properties.segments[0].distance,
+          //       overview_polyline: feature.geometry.coordinates,
+          //       steps: steps
+          //     }
+          //     dataToUpdate.push(childDataToUpdate)
+          //   })
+  
+          //   const edgePadding = {
+          //     top: 300,
+          //     right: 70,
+          //     bottom: 130,
+          //     left: 70
+          //   }
+          //   setDirectionsPolyLine(dataToUpdate)
+          //   // Cho nó focus vào 
+          //   handleFitCoors(dataToUpdate[0].overview_polyline.points, edgePadding, true)
+          //   // Hiển thị ngày giờ và khoảng cách
+          //   handleDatetimeAndDistance(dataToUpdate[0].distance, dataToUpdate[0].duration)
+          // }
         }
       })
   }
 
   const handleDatetimeAndDistance = (distance, duration) => {
-    setDistance(distance / 1000) // ~ km
+    setDistance((distance / 1000).toFixed(2)) // ~ km
     const secondsTranformYet = duration // ~ second
 
     const days = Math.floor(secondsTranformYet / 86400)
@@ -519,7 +576,7 @@ const Map = () => {
   let mapAnimation = new Animated.Value(-27.3333)
 
   const handleLoadingMoreCard = () => {
-    console.log("🚀 ~ file: MapScreen.jsx:231 ~ handleLoadingMoreCard ~ nextPageToken:", nextPageToken)
+    console.log("Loading more")
     if (nextPageToken && !loadingRefreshCard) {
       loadingRefreshCard = true
       let data = {
@@ -600,7 +657,7 @@ const Map = () => {
         if (index >= placesTextSearch.length) {
           index = placesTextSearch.length - 1
           // tại đây loading more 
-          console.log("Loading more")
+          
         }
         if (index <= 0) {
           index = 0
@@ -668,6 +725,7 @@ const Map = () => {
     inputRef.current?.setAddressText(details?.name)
     
     setIsModeScrollOn(false)
+    setArrImgBase64([details.photos])
     // moveToMap(position, 16)
 
     const arrPlace = [
@@ -715,7 +773,23 @@ const Map = () => {
     if (!origin) {
       setIsShowOptionRoute(true)
     } else {
-      handleGetDirections(origin, desPlaceId, 'coordinate', 'place_id', origin, locationDes)
+      let routeModifiers
+      if (directionModeGCP === 'DRIVE' || directionModeGCP === 'TWO_WHEELER') {
+        
+        routeModifiers = {
+          avoidTolls: routesFilter.find(item => item.id === 'avoidTolls').value,
+          avoidHighways: routesFilter.find(item => item.id === 'avoidHighways').value,
+          avoidFerries: routesFilter.find(item => item.id === 'avoidFerries').value
+        }
+      } else if (directionModeGCP === 'WALK') {
+        routeModifiers = {
+          avoidIndoor: routesFilter.find(item => item.id === 'avoidIndoor').value
+        }
+      } 
+      else if (directionModeGCP === 'BICYCLE') {
+        routeModifiers = null
+      }
+      handleGetDirections(origin, desPlaceId, 'coordinate', 'place_id', origin, locationDes, directionModeGCP, directionModeORS, tagModeSelected, routeModifiers)
     }
   }
 
@@ -840,10 +914,13 @@ const Map = () => {
       {/* <View style={styles.headerBox}>
         <Text style={styles.headerText}>Map</Text>
       </View> */}
-      <MapView
-        ref={mapRef}
+      <MapViewWithHeading
+        mapRef={mapRef}
         style={styles.map}
+        mapType={currentMap.mapTypes}
+        showsTraffic={currentMap.mapDetails}
         provider={PROVIDER_GOOGLE}
+        showsIndoors={true}
         initialRegion={INITIAL_POSITION}
         showsUserLocation={locationCurrent ? true : false}
         followsUserLocation
@@ -852,6 +929,14 @@ const Map = () => {
             handleGetPlaceDetails(e.nativeEvent.placeId)
           }
         }}
+        
+        onLongPress={(e) => {
+          setMarkerLongPress(e.nativeEvent.coordinate)
+        }}
+
+        onPress={(e) => {
+          setMarkerLongPress(null)
+        }}
         mapPadding={{
           top: 0,
           right: 0,
@@ -859,6 +944,11 @@ const Map = () => {
           left: 0
         }}
       >
+
+        {markerLongPress && (
+          <Marker coordinate={markerLongPress} />
+        )}
+
         {
         (origin && showDirections && (textDestination === 'My location' || textOrigin !== 'My location')) ? 
         <Marker 
@@ -888,6 +978,29 @@ const Map = () => {
         {/* Show my result when I search location */}
         {destination ? <Marker coordinate={destination} /> : null}
 
+        {/* Show all place I saved */}
+        {
+          (currentMap.places.length !== 0 && !placeDetails && !showDirections) ? 
+          currentMap.places.map(place => {
+            return (
+              <Marker 
+                key={place.place_id}
+                coordinate={place.coordinate}
+                // icon={{uri: place.icon}}
+                // pinColor={'white'}
+                tappable={true}
+                onPress={() => handleGetPlaceDetails(place.place_id)}
+              >
+                <View>
+                  <FontAwesome5 name="map-marker" size={30} color={app_c.HEX.third} style={{height: 30}}/>
+                  <FontAwesome name="suitcase" size={12} color={app_c.HEX.primary} style={{ position: 'absolute', top: 6, right: 5, height: 30}}/>
+                </View>
+              </Marker>
+            )
+          })
+          : null
+        }
+
         <Polyline
           coordinates={currentCoorArr}
           strokeWidth={1}
@@ -899,25 +1012,72 @@ const Map = () => {
           (directionsPolyLine && showDirections && origin && destination ) ? 
             directionsPolyLine.map((directionPolyLine, index) => {
               return (
-                <Polyline
-                  key={`polyline-${index}`}
-                  coordinates={directionPolyLine.overview_polyline} 
-                  strokeWidth={6} 
-                  strokeColor={selectedPolyLine === index ? app_c.HEX.third : app_c.HEX.ext_second}
-                  tappable={true}
-                  onPress={() => {
-                    console.log('call poly line')
+                <PolyLineDirection
+                  key={`PolyLineDirection-${index}`}
+                  calloutRef={index === 0 ? calloutRef0 : (index === 1 ? calloutRef1 : calloutRef2)}
+                  directionPolyLine={directionPolyLine}
+                  directionPolyLineIndex={index}
+                  selectedPolyLine={selectedPolyLine}
+                  onPressPolyLine={() => {
                     // Đặt lại index
                     setSelectedPolyLine(index)
                     // chỉnh ngày giờ và km
-                    handleDatetimeAndDistance(directionPolyLine.distance, directionPolyLine.duration)
+                    handleDatetimeAndDistance(directionPolyLine?.distanceMeters, directionPolyLine?.staticDuration)
+                    let edgePadding
+                    if (isShowDirectionsBottomSheet)
+                      edgePadding = {
+                        top: 30,
+                        right: 150,
+                        bottom: 400,
+                        left: 150
+                      }
+                    else 
+                      edgePadding = {
+                        top: 330,
+                        right: 40,
+                        bottom: 150,
+                        left: 40
+                      }
+
+                    // Cho nó focus vào 
+                    handleFitCoors(directionPolyLine?.polyline, edgePadding, true)
                   }}
-                  style={{ zIndex: selectedPolyLine === index ? 1 : 0}}
-                /> 
+                  onPressCallout={() => {
+                    if (index === 0 && calloutRef0.current !== null)
+                      calloutRef0?.current.hideCallout()
+                    else if (index === 1 && calloutRef1.current !== null)
+                      calloutRef1?.current.hideCallout()
+                    else if (index === 2 && calloutRef2.current !== null)
+                      calloutRef2?.current.hideCallout()
+                  }}
+                />
               )
             }) : null
         }
 
+        {/* Polyline cho việc hiển thị step */}
+        {
+          // stepPolyLine.length > 0 &&
+          // <Polyline
+          //   coordinates={stepPolyLine}
+          //   strokeWidth={10}
+          //   strokeColor='#1da1f2'
+          //   style={{ zIndex: 3}}
+          // />
+        }
+
+        {/* Polyline cho việc hiển thị arrow*/}
+        {
+          (stepPolyLine.length > 0) &&
+          <ArrowedPolyline
+            coordinates={stepPolyLine}
+            strokeWidth={8}
+            strokeColor='#32CD32'
+            style={{ zIndex: 3}}
+            addOnlyLastArrow={true}
+            arrowSize={20}
+          />
+        }
         
         {/* Arr marker show on map view */}
         {
@@ -948,7 +1108,7 @@ const Map = () => {
           }) : 
           null
         }
-      </MapView>
+      </MapViewWithHeading>
 
       {/* Phuong: click outside inputautocomplete */}
       {
@@ -962,103 +1122,196 @@ const Map = () => {
         />
       }
 
-      
+      {/* Phuong: click outside inputautocomplete in route label */}
+      {
+        (isFocusedDesInput || isFocusedOriInput) &&
+          <Pressable
+          style={styles.overlayBtn}
+          onPress={() => {
+            setIsFocusedOriInput(false)
+            setIsFocusedDesInput(false)
+            oriInputRef.current?.blur()
+            desInputRef.current?.blur()
+          }}
+        />
+      }
 
       {/* Phuong: Tag list */}
-      <ScrollView
-        horizontal
-        scrollEventThrottle={1}
-        showsHorizontalScrollIndicator={false}
-        height={40}
-        style={styles.tagList}
-        // Phương: Only Ios
-        contentInset={{
-          top: 0,
-          left: 0,
-          bottom: 0,
-          right: 25
-        }}
-        // Phương: For android
-        contentContainerStyle={{
-          paddingRight: Platform.OS === 'android' ? 25 : 0
-        }}
-      >
-        {
-          typemapsearch.map((item, index) => (
-            <TouchableOpacity
-              key={item.id}
-              style={[styles.tagContainer, {
-                backgroundColor: tagSelected === item.id ? app_c.HEX.fourth : app_c.HEX.primary
-              }]}
-              onPress={() => setTagSelected(item.id)}
-            >
-              <Text style={[styles.tagText, {
-                color: tagSelected === item.id ? app_c.HEX.primary : app_c.HEX.fourth
-              }]}
+      {
+        (!isShowDirectionsBottomSheet && isShowRoutePanel) &&
+        <ScrollView
+          horizontal
+          scrollEventThrottle={1}
+          showsHorizontalScrollIndicator={false}
+          height={40}
+          style={styles.tagList}
+          // Phương: Only Ios
+          contentInset={{
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 25
+          }}
+          // Phương: For android
+          contentContainerStyle={{
+            paddingRight: Platform.OS === 'android' ? 25 : 0
+          }}
+        >
+          {
+            typemapsearch.map((item, index) => (
+              <TouchableOpacity
+                key={item.id}
+                style={[styles.tagContainer, {
+                  backgroundColor: tagSelected === item.id ? app_c.HEX.third : app_c.HEX.primary
+                }]}
+                onPress={() => setTagSelected(item.id)}
               >
-                {item.title}
-              </Text>
-            </TouchableOpacity>
-          ))
-        }
-      </ScrollView>
+                <Text style={[styles.tagText, {
+                  color: tagSelected === item.id ? app_c.HEX.primary : app_c.HEX.fourth
+                }]}
+                >
+                  {item.title}
+                </Text>
+              </TouchableOpacity>
+            ))
+          }
+        </ScrollView>
+      }
 
-      {/* Phuong: Search bar */}
-      <View style={styles.seachTypeContainer}>
-        <View style={styles.searchContainer}>
-          <InputAutoComplete
-            onPlaceSelected={(details) => {
-              Keyboard.dismiss()
-              onPlaceSelected(details, 'destination')
-            }}
-            isFocusedInput={isFocusedInput}
-            handleFocus={(condition) => setIsFocusedInput(condition)}
-            inputRef={inputRef}
-            map_api_key={map_api_key}
-            handleGetAddressText={(addressText) => {
-              Keyboard.dismiss()
-              handleGetPlacesSearchText(addressText)
-            }}
-            placeholder='Where do you want to go?'
-            isShowBackIcon={isShowBackIcon}
-            isHaveRightButton={true}
-            handlePressFilter={() => setIsOpenBottomSheetFilter(true)}
-            handlePressBackIcon={() => {
-              // TH1: Khi user click vào 1 địa điểm ngay từ đầu
-              if (!placesTextSearch && placeDetails) {
-                setIsShowBackIcon(false)
-                setIsOpenBottomSheet(false)
-                setPlaceDetails(null)
-                setDestination(null)
-                setPlacesTextSearch(null)
-                inputRef.current?.clear()
-              }
-              // TH2: Khi user click vào tìm kiếm nhiều địa điểm ngay từ đầu
-              else if (placesTextSearch && !placeDetails) {
-                setIsShowBackIcon(false)
-                setIsShowScrollCardPlace(false)
-                setPlacesTextSearch(null)
-                setPlaceDetails(null)
-                setDestination(null)
-                inputRef.current?.clear()
-              }
-              // TH3: Khi người dùng search nheièu địa điểm và tìm trên bản đồ 1 địa điểm khác
-              else if (placesTextSearch && placeDetails) {
-                setIsOpenBottomSheet(false)
-                setPlaceDetails(null)
-                setDestination(null)
-                inputRef.current?.setAddressText(previousTextSearch)
-              }
-              setDirectionsPolyLine([])
-              setSelectedPolyLine(0)
+      {/* Stack map */}
+      {
+        (!isShowWeatherBottomSheet && !isShowScrollCardPlace && !isOpenBottomSheet && !isShowDirectionsBottomSheet && !showDirections) &&
+        <TouchableOpacity
+          style={[styles.circleBtn, {
+            backgroundColor: app_c.HEX.third,
+            marginTop: 10,
+            position: 'absolute',
+            top: 160,
+            right: 0,
+            width: 40,
+            height: 40
+          }]}
+          onPress={() => {
+            setIsShowMapTypeBottomSheet(true)
+          }}
+        >
+          <Octicons 
+            name='stack' 
+            size={20} 
+            color={app_c.HEX.primary}
+          />
+        </TouchableOpacity>
+      }
+
+      {/* Weather */}
+      {
+        (weather && !isShowWeatherBottomSheet && !isShowScrollCardPlace && !isOpenBottomSheet && !isShowDirectionsBottomSheet && !showDirections) &&
+        <TouchableOpacity 
+        onPress={() => {
+          // Call API
+          getWeatherForecastAPI(locationCurrent).then((weatherData) => {
+            setWeatherData(weatherData)
+            setIsShowWeatherBottomSheet(true)
+          })
+        }}
+        style={{
+          position: 'absolute',
+          bottom: 250,
+          right: 18,
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+          <Image 
+            source={weatherIcons[weather.weather[0].icon]}
+            style={{
+              height: 50,
+              width: 50,
+              marginLeft: 0,
+              ...app_shdw.type_4
             }}
           />
+          <View style={{
+            backgroundColor: app_c.HEX.third,
+            borderRadius: 8,
+            ...app_shdw.type_2,
+            justifyContent: 'center',
+            alignItems: 'center',
+            paddingHorizontal: 2,
+            marginTop: -5
+          }}>
+            <Text
+              style={{
+                color: app_c.HEX.primary,
+                ...app_typo.fonts.body6,
+                padding: 2
+              }}
+            >{weather.main.temp.toFixed(1)}°C</Text>
+          </View>
+        </TouchableOpacity>
+      }
+
+      {/* Phuong: Search bar */}
+      {
+        (!isShowDirectionsBottomSheet && isShowRoutePanel) && 
+        <View style={styles.seachTypeContainer}>
+          <View style={styles.searchContainer}>
+            <InputAutoComplete
+              onPlaceSelected={(details) => {
+                Keyboard.dismiss()
+                handleGetPlaceDetails(details.place_id)
+                // onPlaceSelected(details, 'destination')
+              }}
+              predefinedPlaces={arrPlaceInputMainSearch}
+              isFocusedInput={isFocusedInput}
+              handleFocus={(condition) => setIsFocusedInput(condition)}
+              inputRef={inputRef}
+              map_api_key={map_api_key}
+              handleGetAddressText={(addressText) => {
+                Keyboard.dismiss()
+                handleGetPlacesSearchText(addressText)
+              }}
+              placeholder='Where do you want to go?'
+              isShowBackIcon={isShowBackIcon}
+              isHaveRightButton={true}
+              handlePressFilter={() => setIsOpenBottomSheetFilter(true)}
+              handlePressBackIcon={() => {
+                // TH1: Khi user click vào 1 địa điểm ngay từ đầu
+                if (!placesTextSearch && placeDetails) {
+                  setIsShowBackIcon(false)
+                  setIsOpenBottomSheet(false)
+                  setPlaceDetails(null)
+                  setDestination(null)
+                  setPlacesTextSearch(null)
+                  inputRef.current?.clear()
+                }
+                // TH2: Khi user click vào tìm kiếm nhiều địa điểm ngay từ đầu
+                else if (placesTextSearch && !placeDetails) {
+                  setIsShowBackIcon(false)
+                  setIsShowScrollCardPlace(false)
+                  setPlacesTextSearch(null)
+                  setPlaceDetails(null)
+                  setDestination(null)
+                  inputRef.current?.clear()
+                }
+                // TH3: Khi người dùng search nheièu địa điểm và tìm trên bản đồ 1 địa điểm khác
+                else if (placesTextSearch && placeDetails) {
+                  setIsOpenBottomSheet(false)
+                  setPlaceDetails(null)
+                  setDestination(null)
+                  inputRef.current?.setAddressText(previousTextSearch)
+                }
+                setDirectionsPolyLine([])
+                setSelectedPolyLine(0)
+              }}
+            />
+          </View>
         </View>
-      </View>
+      }
 
       {/* Route's infomation */}
      {
-      showDirections &&
+      (showDirections && isShowRoutePanel) &&
       <>
         <View style={styles.containerRouteInfo}>
           <TouchableOpacity 
@@ -1069,8 +1322,15 @@ const Map = () => {
                 } else {
                   setShowDirections(false)
                   setIsShowOptionRoute(false)
+
                   setDestination(null)
                   setTextDestination('')
+
+                  setOrigin(locationCurrent)
+                  setTextOrigin('My location')
+
+                  setOriRouteInfo(null)
+                  setDesRouteInfo(null)
                 }
               } else {
                 if (isShowOptionRoute) {
@@ -1133,18 +1393,64 @@ const Map = () => {
           </TouchableOpacity>
           <Text style={styles.headerRouteInfo}>Your route's infomation</Text>
           {
+            isShowOptionRoute &&
+            <TouchableOpacity 
+              onPress={() => {
+                setIsShowFilterDirectionBottomSheet(true)
+              }}
+              style={styles.settingBtn}
+            >
+              <MaterialIcons
+                name="settings"
+                size={20}
+                color={app_c.HEX.ext_second}
+              />
+            </TouchableOpacity>
+          }
+          {
             !isShowOptionRoute ? 
               <View style={styles.frameRouteInfo}>
                 <View style={styles.leftContainerFrame}>
                   <TouchableOpacity 
                     onPress={() => {
-                      const temp = origin
-                      setOrigin(destination)
-                      setDestination(temp)
+                      let ori = origin
+                      let des = destination
+                      const currentOriText = textOrigin
+                      const currentDesText = textDestination
+
+                      setOrigin(des)
+                      setDestination(ori)
 
                       const temp2 = textOrigin
                       setTextOrigin(textDestination)
                       setTextDestination(temp2)
+
+                      if (!oriRouteInfo || !desRouteInfo) {
+                        if (currentOriText === 'My location') {
+                          setOriRouteInfo(desRouteInfo)
+                          setDesRouteInfo(arrPlaceInput[0])
+                        } else if (currentDesText === 'My location') {
+                          setDesRouteInfo(oriRouteInfo)
+                          setOriRouteInfo(arrPlaceInput[0])
+                        } else {
+                          const temp = oriRouteInfo
+                          setOriRouteInfo(desRouteInfo)
+                          setDesRouteInfo(temp)
+                        }
+                      } else {
+                        const temp = oriRouteInfo
+                        setOriRouteInfo(desRouteInfo)
+                        setDesRouteInfo(temp)
+                      }
+
+                      const routeModifiers = {
+                        avoidTolls: routesFilter.find(item => item.id === 'avoidTolls').value,
+                        avoidHighways: routesFilter.find(item => item.id === 'avoidHighways').value,
+                        avoidFerries: routesFilter.find(item => item.id === 'avoidFerries').value,
+                        avoidIndoor: routesFilter.find(item => item.id === 'avoidIndoor').value
+                      }
+
+                      handleGetDirections(directionDesPlaceId, directionOriPlaceId, 'place_id', 'place_id', des, ori, directionModeGCP, directionModeORS, tagModeSelected, routeModifiers)
                     }}
                     style={styles.changeOriDes}
                   >
@@ -1183,22 +1489,52 @@ const Map = () => {
                       </View>
                     </View>
                     <View style={styles.routeInfoTranportContainer}>
-                      <Text style={styles.routeInfoTranport}>{directionMode === 'DRIVING' ? 'Drive' : (directionMode === 'BICYCLING' ? 'Bicycle' : (directionMode === 'WALKING' ? 'Walk' : 'Transit'))}</Text>
+                      <Text style={styles.routeInfoTranport}>{directionModeGCP === 'DRIVE' ? 'Car' : (directionModeGCP === 'TWO_WHEELER' ? 'Motor' : (directionModeGCP === 'WALK' ? 'Walk' :  (directionModeGCP === 'BICYCLE' ? 'Bicycle' : 'Transit')))}</Text>
                       <Text style={styles.routeInfoTextTranport}>by</Text>
                     </View>
                   </View>
+                  
+                  <Text style={[styles.distanceText, {marginTop: 15, marginBottom: 10}]}>Summary: {distance}km</Text>
 
-                  <TouchableOpacity 
-                    onPress={handleStartTrackingUserLocation}
-                    style={styles.btnStart}
-                  >
-                      <Text style={styles.textStart}>Start</Text>
+                  <View style={styles.containerBtnOptionRoute}>
+                    <TouchableOpacity 
+                      onPress={() => {
+                        setIsShowRoutePanel(false)
+                        setIsShowDirectionsBottomSheet(true)
+                        
+                        const edgePadding = {
+                          top: 30,
+                          right: 150,
+                          bottom: 400,
+                          left: 150
+                        }
+
+                        handleFitCoors(directionsPolyLine[selectedPolyLine]?.polyline, edgePadding, true)
+                      }}
+                      style={[styles.btnStart, {
+                        backgroundColor: app_c.HEX.ext_second
+                      }]}
+                    >
+                      <Text style={styles.textStart}>Directions</Text>
                       <FontAwesome5 
-                        name='location-arrow' 
-                        size={14} 
+                        name='list-ul'
+                        size={12} 
                         color={app_c.HEX.primary}
                       />
                     </TouchableOpacity>
+
+                    <TouchableOpacity 
+                      onPress={handleStartTrackingUserLocation}
+                      style={[styles.btnStart, {marginLeft: 12}]}
+                    >
+                      <Text style={styles.textStart}>Start</Text>
+                      <FontAwesome5 
+                        name='location-arrow'
+                        size={12} 
+                        color={app_c.HEX.primary}
+                      />
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View> :
             <View style={styles.optionalContainer}>
@@ -1227,22 +1563,23 @@ const Map = () => {
                   onPress={() => {
                     console.log("🚀 ~ file: MapScreen.jsx:1066 ~ Map ~ textOrigin:", textOrigin)
                     console.log("🚀 ~ file: MapScreen.jsx:887 ~ Map ~ oriRouteInfo:", oriRouteInfo)
-                    // console.log("🚀 ~ file: MapScreen.jsx:899 ~ Map ~ desRouteInfo:", desRouteInfo)
 
                     let start, end, startCoor, endCoor, typeOri, typeDes
                     
+                    // TH nếu 2 thằng đều không rỗng
                     if (desInputRef.current.getAddressText().trim() !== '' && oriInputRef.current.getAddressText().trim() !== '') {
+                      if (oriInputRef.current.getAddressText().trim() === desInputRef.current.getAddressText().trim()) {
+                        return
+                      }
+                      // Phải reset lại
                       setDirectionsPolyLine([])
                       setSelectedPolyLine(0)
-                      if (oriInputRef.current.getAddressText().trim() !== textOrigin && oriRouteInfo) {
-                        if (oriRouteInfo?.description === 'My location') {
-                          setTextOrigin(oriRouteInfo?.description)
-                          console.log("🚀 ~ file: MapScreen.jsx:1069 ~ Map ~ locationCurrent:", locationCurrent)
-                          start = locationCurrent
-                          typeOri = 'coordinate'
-                          startCoor = locationCurrent
-                        } else {
-                          setTextOrigin(oriRouteInfo?.name)
+                      // TH1 nếu nó không phải là My location
+                      if (oriInputRef.current.getAddressText().trim() !== 'My location' && oriRouteInfo) {
+                          if (oriRouteInfo.name)
+                            setTextOrigin(oriRouteInfo.name)
+                          else 
+                            setTextOrigin(oriRouteInfo.description)
                           setOrigin({
                             latitude: oriRouteInfo?.geometry.location.lat,
                             longitude: oriRouteInfo?.geometry.location.lng
@@ -1254,21 +1591,25 @@ const Map = () => {
                             longitude: oriRouteInfo?.geometry.location.lng
                           }
                           typeOri = 'place_id'
-                        }
-                      } else if (oriInputRef.current.getAddressText().trim() === textOrigin && !oriRouteInfo) {
+                      } else if (oriInputRef.current.getAddressText().trim() === 'My location') {
+                        console.log('TH ori banwg My location va khong co oriRouteInfo')
                         start = locationCurrent
                         typeOri = 'coordinate'
                         startCoor = locationCurrent
+
+                        setTextOrigin('My location')
+                        setOrigin(locationCurrent)
                       } 
 
-                      if (desInputRef.current.getAddressText().trim() !== textDestination && desRouteInfo) {
-                        if (desRouteInfo?.description === 'My location') {
-                          setTextDestination(desRouteInfo?.description)
-                          end = locationCurrent
-                          typeDes = 'coordinate'
-                          endCoor = locationCurrent
-                        } else {
-                          setTextDestination(desRouteInfo?.name)
+                      console.log("🚀 ~ file: MapScreen.jsx:1384 ~ Map ~ desInputRef.current.getAddressText().trim():", desInputRef.current.getAddressText().trim())
+                      console.log("🚀 ~ file: MapScreen.jsx:1383 ~ Map ~ desRouteInfo:", desRouteInfo)
+
+                      if (desInputRef.current.getAddressText().trim() !== 'My location' && desRouteInfo) {
+                        console.log('TH des khong bang My location va co desRouteInfo')
+                          if (desRouteInfo.name)
+                            setTextDestination(desRouteInfo.name)
+                          else 
+                            setTextDestination(desRouteInfo.description)
                           setDestination({
                             latitude: desRouteInfo?.geometry.location.lat,
                             longitude: desRouteInfo?.geometry.location.lng
@@ -1279,15 +1620,34 @@ const Map = () => {
                             longitude: desRouteInfo?.geometry.location.lng
                           }
                           typeDes = 'place_id'
-                        }
                       }
+                      else if (desInputRef.current.getAddressText().trim() === 'My location') {
+                        console.log('TH des la My location')
+                        end = locationCurrent
+                        typeDes = 'coordinate'
+                        endCoor = locationCurrent
+                        setDestination(locationCurrent)
+                        setTextDestination('My location')
+                      } 
                       setIsShowOptionRoute(false)
-                      console.log("🚀 ~ file: MapScreen.jsx:899 ~ Map ~ startCoor:", startCoor)
-                      console.log("🚀 ~ file: MapScreen.jsx:899 ~ Map ~ typeOri:", typeOri)
-                      console.log("🚀 ~ file: MapScreen.jsx:899 ~ Map ~ endCoor:", endCoor)
-                      console.log("🚀 ~ file: MapScreen.jsx:899 ~ Map ~ typeDes:", typeDes)
+                      let routeModifiers
+                      console.log("🚀 ~ file: MapScreen.jsx:1542 ~ Map ~ tagModeSelected:", tagModeSelected)
+                      if (directionModeGCP === 'DRIVE' || directionModeGCP === 'TWO_WHEELER') {
+                        routeModifiers = {
+                          avoidTolls: (routesFilter.find(item => item.id === 'avoidTolls')).value,
+                          avoidHighways: (routesFilter.find(item => item.id === 'avoidHighways')).value,
+                          avoidFerries: (routesFilter.find(item => item.id === 'avoidFerries')).value
+                        }
+                        console.log("🚀 ~ file: MapScreen.jsx:1556 ~ Map ~ routeModifiers:", routeModifiers)
+                      } else if (directionModeGCP === 'WALK') {
+                        routeModifiers = {
+                          avoidIndoor: routesFilter.find(item => item.id === 'avoidIndoor').value
+                        }
+                      } else if (directionModeGCP === 'BICYCLE') {
+                        routeModifiers = null
+                      }
 
-                      handleGetDirections(start, end, typeOri, typeDes, startCoor, endCoor)
+                      handleGetDirections(start, end, typeOri, typeDes, startCoor, endCoor, directionModeGCP, directionModeORS, tagModeSelected, routeModifiers)
                     }
                   }}
                   style={styles.routeBtn}
@@ -1298,13 +1658,18 @@ const Map = () => {
                   <InputAutoComplete
                     placeholder='Choose a destination place'
                     onPlaceSelected={(details) => {
+                      // if (!details.place_id) { 
+                      //   setTextOrigin(details.description)
+                      // }
                       setDesRouteInfo(details)
+                      setIsFocusedDesInput(false)
                     }}
                     isFocusedInput={isFocusedDesInput}
                     handleFocus={(condition) => setIsFocusedDesInput(condition)}
                     inputRef={desInputRef}
                     map_api_key={map_api_key}
-                    predefinedPlaces={arrPlaceInput}
+                    predefinedPlaces={[...arrPlaceInput, ...arrPlaceInputMainSearch]}
+                    predefinedPlacesDescriptionStyle={styles.predefinedPlacesDescription}
                     // handleGetAddressText={(addressText) => {
                     //   Keyboard.dismiss()
                     //   handleGetPlacesSearchText(addressText)
@@ -1319,13 +1684,18 @@ const Map = () => {
                   <InputAutoComplete
                     placeholder='Choose an origin place'
                     onPlaceSelected={(details) => {
+                      // Thằng đầy đủ nó có trả về plcae_id
+                      // if (!details.place_id) { 
+                      //   setTextOrigin(details.description)
+                      // }
                       setOriRouteInfo(details)
+                      setIsFocusedOriInput(false)
                     }}
                     isFocusedInput={isFocusedOriInput}
                     handleFocus={(condition) => setIsFocusedOriInput(condition)}
                     inputRef={oriInputRef}
                     map_api_key={map_api_key}
-                    predefinedPlaces={arrPlaceInput}
+                    predefinedPlaces={[...arrPlaceInput, ...arrPlaceInputMainSearch]}
                     // handleGetAddressText={(addressText) => {
                     //   Keyboard.dismiss()
                     //   handleGetPlacesSearchText(addressText)
@@ -1405,8 +1775,39 @@ const Map = () => {
                     backgroundColor: tagModeSelected === item.id ? app_c.HEX.fourth : app_c.HEX.primary
                   }]}
                   onPress={() => {
-                    setDirectionMode(item.mode)
-                    setTagModeSelected(item.id)
+                    if (directionModeGCP !== item.modeGCP) {
+                      let start, end, typeDes, typeOri
+                      if (directionOriPlaceId) {
+                        start = directionOriPlaceId
+                        typeOri='place_id'
+                      } else {
+                        start = origin
+                        typeOri='coordinate'
+                      }
+  
+                      if (directionDesPlaceId) {
+                        end = directionDesPlaceId
+                        typeDes = 'place_id'
+                      } else {
+                        end = origin
+                        typeDes ='coordinate'
+                      }
+                      let routeModifiers
+                      if (item.modeGCP === 'DRIVE' || item.modeGCP === 'TWO_WHEELER') {
+                        routeModifiers = {
+                          avoidTolls: routesFilter.find(item => item.id === 'avoidTolls').value,
+                          avoidHighways: routesFilter.find(item => item.id === 'avoidHighways').value,
+                          avoidFerries: routesFilter.find(item => item.id === 'avoidFerries').value
+                        }
+                      } else if (directionModeGCP === 'WALK') {
+                        routeModifiers = {
+                          avoidIndoor: routesFilter.find(item => item.id === 'avoidIndoor').value
+                        }
+                      } else if (item.modeGCP === 'BICYCLE') {
+                        routeModifiers = null
+                      }
+                      handleGetDirections(start, end, typeOri, typeDes, origin, destination, item.modeGCP, item.modeORS, item.id, routeModifiers)
+                    }
                   }}
                 >
                   <FontAwesome5
@@ -1427,11 +1828,11 @@ const Map = () => {
           </ScrollView>
         }
       </>
-     }
-      
+    }
+
       {/* Phuong: Button beside */}
       {
-        (!isShowScrollCardPlace && !isOpenBottomSheet) ?
+        (!isShowWeatherBottomSheet && !isShowScrollCardPlace && !isOpenBottomSheet && !isShowDirectionsBottomSheet && !showDirections) ?
         <View
           style={styles.besideBtn}
         >
@@ -1470,9 +1871,159 @@ const Map = () => {
               />
             </TouchableOpacity>
           }
+          
         </View> : null
       }
+
+      {/* Phuong: Arrow step */}
+      {
+        (stepPolyLineSelected !== -1) &&
+        <View style={{
+          position: 'absolute',
+          right: 18,
+          top: 40,
+          height: 45,
+         display: 'flex',
+         alignItems: 'center',
+         flexDirection: 'row',
+         ...app_shdw.type_3
+        }}>
+          {/* Nút backstep */}
+          <TouchableOpacity 
+          onPress={() => {
+            if (stepPolyLineSelected !== 0) {
+              if (stepPolyLineSelected !== 1) {
+                // Mới đầu di chuyên máy quay đến start và end location
+                const edgePadding = {
+                  top: 30,
+                  right: 70,
+                  bottom: 450,
+                  left: 70
+                }
+
+                console.log("🚀 ~ file: MapScreen.jsx:1631 ~ Map ~ stepPolyLineSelected:", stepPolyLineSelected)
+                const step = directionsPolyLine[selectedPolyLine]?.legs[0]?.steps[stepPolyLineSelected-2]
+                handleFitCoors([step?.startLocation?.latLng, step?.endLocation?.latLng], edgePadding, true)
+                // Sau đó đặt thanh màu khác để biết đó là thằng step
+                setStepPolyLine(step?.polyline)
+                // Kéo bottomSheet xuống dưới để nhìn
+                directionBottomSheetRef?.current.snapToIndex(1)
+                // Đặt để biết thằng nào chọn r
+                setStepPolyLineSelected(stepPolyLineSelected-1)
+              } else {
+                const edgePadding = {
+                  top: 30,
+                  right: 150,
+                  bottom: 450,
+                  left: 150
+                }
+                // Mình sẽ tạo ra thêm 2 thằng nữa để phục vụ animate ngay chỗ mình
+                const freeCoor1 = computeDestinationPoint(
+                  origin,
+                  1000,
+                  180
+                )
+
+                const freeCoor2 = computeDestinationPoint(
+                  origin,
+                  1000,
+                  0
+                )
+
+                console.log("🚀 ~ file: MapScreen.jsx:1661 ~ Map ~ stepPolyLineSelected:", stepPolyLineSelected)
+
+                handleFitCoors([freeCoor1, origin, freeCoor2], edgePadding, true)
+                // Kéo bottomSheet xuống dưới để nhìn
+                directionBottomSheetRef?.current.snapToIndex(1)
+                // Đặt để biết thằng nào chọn r
+                setStepPolyLineSelected(stepPolyLineSelected-1)
+                // Nên đặt thằng setStepPolyLine về []
+                setStepPolyLine([])
+              }
+            }
+          }} 
+          style={{height: 45, width: 45, borderTopLeftRadius: 4, borderBottomLeftRadius: 5, borderWidth: 1, borderColor: app_c.HEX.ext_third, alignItems: 'center', justifyContent: 'center',  backgroundColor: app_c.HEX.primary}}>
+            <Ionicons 
+              name='md-chevron-back' 
+              size={35} 
+              color={ directionsPolyLine[selectedPolyLine]?.legs[0]?.steps[stepPolyLineSelected - 1] ? app_c.HEX.ext_second : app_c.HEX.ext_third}
+            />
+          </TouchableOpacity>
+
+          {/* Nút nextstep */}
+          <TouchableOpacity 
+          onPress={() => {
+            if (stepPolyLineSelected !== directionsPolyLine[selectedPolyLine]?.legs[0]?.steps.length) {
+              //  if (stepPolyLineSelected === )
+              // Mới đầu di chuyên máy quay đến start và end location
+              const edgePadding = {
+                top: 30,
+                right: 70,
+                bottom: 450,
+                left: 70
+              }
+              const index = stepPolyLineSelected
+              console.log("🚀 ~ file: MapScreen.jsx:1692 ~ Map ~ stepPolyLineSelected:", stepPolyLineSelected)
+              const step = directionsPolyLine[selectedPolyLine]?.legs[0]?.steps[index]
+
+              handleFitCoors([step?.startLocation?.latLng, step?.endLocation?.latLng], edgePadding, true)
+              // Sau đó đặt thanh màu khác để biết đó là thằng step
+              setStepPolyLine(step?.polyline)
+              // Kéo bottomSheet xuống dưới để nhìn
+              directionBottomSheetRef?.current.snapToIndex(1)
+              // Đặt để biết thằng nào chọn r
+              setStepPolyLineSelected(index+1)
+            }
+          }}
+          style={{height: 45, width: 45, borderTopRightRadius: 4, borderBottomRightRadius: 5, borderWidth: 1, borderColor: app_c.HEX.ext_third, alignItems: 'center', justifyContent: 'center', backgroundColor: app_c.HEX.primary}}>
+            <Ionicons 
+              name='md-chevron-forward' 
+              size={35} 
+              color={ directionsPolyLine[selectedPolyLine]?.legs[0]?.steps[stepPolyLineSelected] ? app_c.HEX.ext_second : app_c.HEX.ext_third}
+            />
+          </TouchableOpacity>
+        </View>
+      }
       
+      {
+        isShowScrollCardPlace && 
+        <TouchableOpacity
+          style={[styles.circleBtn, {
+            backgroundColor: app_c.HEX.primary,
+            position: 'absolute',
+            bottom: CARD_HEIGHT + 130 + 10,
+            right: 0
+          }]}
+          onPress={() => {
+            //  tổng hợp các arrPlace
+            let arrPlace = []
+            placesTextSearch.map(place => {
+              const placeObj = {
+                latitude: place.geometry.location.lat,
+                longitude: place.geometry.location.lng,
+              }
+              arrPlace.push(placeObj)
+            })
+      
+            const edgePadding = {
+              top: 130,
+              right: 70,
+              bottom: 150,
+              left: 70
+            }
+      
+            handleFitCoors(arrPlace, edgePadding, true)
+            setArrPlaceToFitCoor(arrPlace)
+          }}
+        >
+          <Foundation 
+            name='arrows-in' 
+            size={20} 
+            color={app_c.HEX.third}
+          />
+        </TouchableOpacity>
+      }
+
       {/* Phuong: Scroll cards place */}
       {
         isShowScrollCardPlace ? 
@@ -1644,7 +2195,604 @@ const Map = () => {
               )
             })}
           </Animated.ScrollView>  */}
+
       
+
+      {/* weather bottomsheet */}
+      {
+        (weatherData && isShowWeatherBottomSheet) &&
+        <BottomSheetExample
+          bottomSheetExampleRef={weatherBottomSheetRef}
+          openTermCondition={isShowWeatherBottomSheet}
+          closeTermCondition={() => {
+            if (placeDetails) {
+              setIsOpenBottomSheet(true)
+            } else {
+              setWeatherData(null)
+            }
+            setIsShowWeatherBottomSheet(false)
+            setWeatherSelected(0)
+          }}
+          snapPoints={['30%', '60%', '100%']}
+          haveBtn={false}
+          haveOverlay={false}
+          bottomView={{
+            paddingHorizontal: 0,
+            paddingBottom: 120,
+          }}
+          childView={
+            <View style={{ backgroundColor: app_c.HEX.primary, flex: 1}}>
+              <BottomSheetView>
+                <Text style={{
+                  color: app_c.HEX.fourth,
+                  ...app_typo.fonts.h2,
+                  paddingTop: 15,
+                  paddingLeft: 18,
+                  paddingBottom: 10
+                }}>Thời tiết</Text>
+                <View style={{
+                  width: '100%',
+                  paddingHorizontal: 18,
+                  alignItems: 'center',
+                }}>
+                  <View style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-around',
+                    width: '100%',
+                  }}>
+                    {
+                      weatherSelected === 0 &&
+                      <View style={{
+                        alignItems: 'center',
+                      }}>
+                          <Text style={{
+                            color: app_c.HEX.third,
+                            ...app_typo.fonts.h4
+                          }}>{weatherSelected === 0 ? moment(new Date(weatherData.weatherCurrent.sys.sunrise * 1000)).format("kk:mm") : "Không có dữ liệu"}</Text>
+                        <Image source={require('../../assets/images/weather/sunrise.png')} style={{
+                          height: 45,
+                          width: 45,
+                        }}/>
+                        <Text style={{
+                          color: app_c.HEX.ext_second,
+                          ...app_typo.fonts.h5
+                        }}>Bình minh</Text>
+                      </View>
+                    }
+
+                    <View style={{
+                      alignItems: 'center',
+                      flex: 1
+                    }}>
+                      <Text style={{ 
+                        color: app_c.HEX.fourth,
+                        ...app_typo.fonts.h3
+                      }}>{weatherData.nameGeocoding}</Text>
+
+                      <Image source={weatherSelected === 0 ? weatherIcons[weatherData.weatherCurrent.weather[0].icon] : weatherIcons[weatherData.weatherForecast[weatherSelected-1].weather[0].icon]} style={{
+                        height: 120,
+                        width: 120,
+                        ...app_shdw.type_3,
+                        marginVertical: -20
+                      }}/>
+                      <Text style={{
+                        color: app_c.HEX.fourth,
+                        ...app_typo.fonts.h0
+                      }}>{weatherSelected === 0 ? weatherData.weatherCurrent.main.temp.toFixed(1) : weatherData.weatherForecast[weatherSelected-1].main.temp.toFixed(1)}°C</Text>
+
+                      <Text style={{
+                        color: app_c.HEX.fourth,
+                        ...app_typo.fonts.h3,
+                        textAlign: 'center',
+                        marginVertical: 5
+                      }}>{weatherSelected === 0 ? weatherData.weatherCurrent.weather[0].description : weatherData.weatherForecast[weatherSelected-1].weather[0].description}</Text>
+
+                      
+                    <View style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      }}>
+                        
+                      <Text style={{
+                        color: '#018749',
+                        ...app_typo.fonts.h5
+                      }}>Thấp: {weatherSelected === 0 ? weatherData.weatherCurrent.main.temp_min.toFixed(1) : weatherData.weatherForecast[weatherSelected-1].main.temp_min.toFixed(1)}°C</Text>
+                      
+                      <View style={{
+                        height: 20,
+                        width: 1,
+                        backgroundColor: app_c.HEX.ext_second,
+                        marginHorizontal: 5,
+                        marginBottom: 5
+                      }}/>
+
+                      <Text style={{
+                        color: '#CC0000',
+                        ...app_typo.fonts.h5
+                      }}>Cao: {weatherSelected === 0 ? weatherData.weatherCurrent.main.temp_max.toFixed(1) : weatherData.weatherForecast[weatherSelected-1].main.temp_max.toFixed(1)}°C</Text>
+                      </View>
+
+                      <Text style={{
+                        color: app_c.HEX.ext_second,
+                        ...app_typo.fonts.h5
+                      }}>Cảm thấy như: {weatherSelected === 0 ? weatherData.weatherCurrent.main.feels_like.toFixed(1) : weatherData.weatherForecast[weatherSelected-1].main.feels_like.toFixed(1)}°C</Text> 
+                    </View>
+
+                    {
+                      weatherSelected === 0 &&
+                      <View style={{
+                        alignItems: 'center',
+                      }}>
+                          <Text style={{
+                            color: app_c.HEX.third,
+                            ...app_typo.fonts.h4
+                          }}>{weatherSelected === 0 ? moment(new Date(weatherData.weatherCurrent.sys.sunset * 1000)).format("kk:mm") : "Không có dữ liệu"}</Text>
+                        <Image source={require('../../assets/images/weather/sunset.png')} style={{
+                          height: 50,
+                          width: 50,
+                        }}/>
+                        <Text style={{
+                          color: app_c.HEX.ext_second,
+                          ...app_typo.fonts.h5
+                        }}>Hoàng hôn</Text>
+                      </View>
+                    }
+                  </View>
+                </View>
+
+                <View style={{
+                  marginHorizontal: 18,
+                  backgroundColor: app_c.HEX.ext_primary,
+                  borderRadius: 8,
+                  height: 110,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginTop: 15,
+                  flexDirection: 'row',
+                  ...app_shdw.type_2
+                }}>
+                  <View style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: (app_dms.screenWidth - 36) / 4
+                  }}>
+                    <Text
+                      style={{
+                        color: app_c.HEX.third,
+                      ...app_typo.fonts.h4
+                      }}
+                    >{weatherSelected === 0 ? weatherData.weatherCurrent.wind.speed.toFixed(1) : weatherData.weatherForecast[weatherSelected-1].wind.speed.toFixed(1)}km/h</Text>
+                    <MaterialCommunityIcons 
+                      name='weather-windy' 
+                      size={25} 
+                      color={app_c.HEX.ext_second}
+                      style={{
+                        marginVertical: 8
+                      }}
+                    />
+                    <Text style={{
+                      color: app_c.HEX.ext_second,
+                      ...app_typo.fonts.h5
+                    }}>Tốc độ gió</Text>
+                  </View>
+                  <View style={{
+                    height: '100%',
+                    width: 1.5,
+                    backgroundColor: app_c.HEX.primary
+                  }}/>
+
+                  <View style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: (app_dms.screenWidth - 36) / 4
+                  }}>
+                    <Text
+                      style={{
+                        color: app_c.HEX.third,
+                      ...app_typo.fonts.h4
+                      }}
+                    >{weatherSelected === 0 ? weatherData.weatherCurrent.main.humidity : weatherData.weatherForecast[weatherSelected-1].main.humidity}%</Text>
+                    <Entypo 
+                      name='water' 
+                      size={25} 
+                      color={app_c.HEX.ext_second}
+                      style={{
+                        marginVertical: 8
+                      }}
+                    />
+                    <Text style={{
+                      color: app_c.HEX.ext_second,
+                      ...app_typo.fonts.h5
+                    }}>Độ ẩm</Text>
+                  </View>
+                  <View style={{
+                    height: '100%',
+                    width: 1.5,
+                    backgroundColor: app_c.HEX.primary
+                  }}/>
+
+                  <View style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: (app_dms.screenWidth - 36) / 4
+                  }}>
+                    <Text
+                      style={{
+                        color: app_c.HEX.third,
+                      ...app_typo.fonts.h4
+                      }}
+                    >{weatherSelected === 0 ? weatherData.weatherCurrent.clouds.all : weatherData.weatherForecast[weatherSelected-1].clouds.all}%</Text>
+                    <Entypo 
+                      name='cloud' 
+                      size={25} 
+                      color={app_c.HEX.ext_second}
+                      style={{
+                        marginVertical: 8
+                      }}
+                    />
+                    <Text style={{
+                      color: app_c.HEX.ext_second,
+                      ...app_typo.fonts.h5
+                    }}>Mây</Text>
+                  </View>
+                  <View style={{
+                    height: '100%',
+                    width: 1.5,
+                    backgroundColor: app_c.HEX.primary
+                  }}/>
+
+                  <View style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: (app_dms.screenWidth - 36) / 4
+                  }}>
+                    <Text
+                      style={{
+                        color: app_c.HEX.third,
+                      ...app_typo.fonts.h4
+                      }}
+                    >{weatherSelected === 0 ? (weatherData.weatherCurrent.visibility/1000).toFixed(1) : (weatherData.weatherForecast[weatherSelected-1].visibility/1000).toFixed(1)}km</Text>
+                    <MaterialCommunityIcons 
+                      name='weather-fog' 
+                      size={30} 
+                      color={app_c.HEX.ext_second}
+                      style={{
+                        marginVertical: 7
+                      }}
+                    />
+                    <Text style={{
+                      color: app_c.HEX.ext_second,
+                      ...app_typo.fonts.h5
+                    }}>Tầm nhìn</Text>
+                  </View>
+                </View>
+
+                <Text style={{
+                  marginLeft: 18,
+                  marginTop: 20,
+                  color: app_c.HEX.ext_second,
+                  ...app_typo.fonts.h4
+                }}>Dự báo 5 ngày / 3h</Text>
+
+                <FlatList 
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  data={weatherData.weatherForecast}
+                  keyExtractor={(item, index) => `weather-${index}`}
+                  contentContainerStyle={{ paddingHorizontal: 18 }}
+                  style={{
+                    marginTop: 10,
+                    width: '100%'
+                  }}
+                  renderItem={({item, index}) => {
+                    let dateTimeData
+                    // if (index === 0) {
+                    //   dateTimeData = weatherData.weatherCurrent
+                    // } else {
+                      dateTimeData = item
+                    // }
+                    const date = moment(new Date(dateTimeData.dt * 1000)).format("DD/MM/YYYY")
+                    const time = moment(new Date(dateTimeData.dt * 1000)).format("kk:mm")
+                    return (
+                      <>
+                        { index === 0 &&
+                          <TouchableOpacity
+                            onPress={() => {
+                              setWeatherSelected(0)
+                            }}
+                            style={{
+                              height: 150,
+                              width: 90,
+                              borderRadius: '50%',
+                              backgroundColor: weatherSelected === 0 ? app_c.HEX.third : app_c.HEX.ext_primary,
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              marginLeft: 0,
+                              ...app_shdw.type_2,
+                              marginBottom: 20
+                            }}
+                            >
+                            <Text style={{
+                              color: weatherSelected === 0 ? app_c.HEX.primary : app_c.HEX.ext_second,
+                              ...app_typo.fonts.h5
+                            }}>{moment(new Date(weatherData.weatherCurrent.dt * 1000)).format("DD/MM/YYYY")}</Text>
+                            <Text style={{
+                              color: weatherSelected === 0 ? app_c.HEX.primary : app_c.HEX.ext_second,
+                              ...app_typo.fonts.h5
+                            }}>{moment(new Date(weatherData.weatherCurrent.dt * 1000)).format("kk:mm")}</Text>
+                            <Image source={weatherIcons[weatherData.weatherCurrent.weather[0].icon]} style={{
+                              height: 50,
+                              width: 50,
+                              ...app_shdw.type_2,
+                              marginVertical: -5
+                            }}/>
+                            <Text style={{
+                              color: weatherSelected === 0 ? app_c.HEX.primary : app_c.HEX.ext_second,
+                              ...app_typo.fonts.h3
+                            }}>{weatherData.weatherCurrent.main.temp.toFixed(1)}°C</Text>
+                          </TouchableOpacity>
+                        }
+
+                        <TouchableOpacity
+                          onPress={() => {
+                            setWeatherSelected(index+1)
+                          }}
+                          style={{
+                            height: 150,
+                            width: 90,
+                            borderRadius: '50%',
+                            backgroundColor: weatherSelected === index+1 ? app_c.HEX.third : app_c.HEX.ext_primary,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginLeft: 20,
+                            ...app_shdw.type_2,
+                            marginBottom: 20
+                          }}
+                          >
+                          <Text style={{
+                            color: weatherSelected === index+1 ? app_c.HEX.primary : app_c.HEX.ext_second,
+                            ...app_typo.fonts.h5
+                          }}>{date}</Text>
+                          <Text style={{
+                            color: weatherSelected === index+1 ? app_c.HEX.primary : app_c.HEX.ext_second,
+                            ...app_typo.fonts.h5
+                          }}>{time}</Text>
+                          <Image source={weatherIcons[dateTimeData.weather[0].icon]} style={{
+                            height: 50,
+                            width: 50,
+                            ...app_shdw.type_2,
+                            marginVertical: -5
+                          }}/>
+                          <Text style={{
+                            color: weatherSelected === index+1 ? app_c.HEX.primary : app_c.HEX.ext_second,
+                            ...app_typo.fonts.h3
+                          }}>{dateTimeData.main.temp.toFixed(1)}°C</Text>
+                        </TouchableOpacity>
+                      </>
+                    )
+                  }
+                  }
+                />
+              </BottomSheetView>
+            </View>
+          }
+        />
+      }
+
+      {/* filter for route */}
+      {
+        isShowFilterDirectionBottomSheet &&
+        <BottomSheetExample
+          bottomSheetExampleRef={filterDirectionBottomSheetRef}
+          openTermCondition={isShowFilterDirectionBottomSheet}
+          closeTermCondition={() => {
+            setIsShowFilterDirectionBottomSheet(false)
+            setRoutesFilter(currentFilter.routes)
+          }}
+          snapPoints={['20%', '50%']}
+          haveBtn={false}
+          haveOverlay={true}
+          bottomView={{
+            paddingHorizontal: 0,
+            paddingBottom: 120,
+          }}
+          childView={
+            <View style={{ backgroundColor: app_c.HEX.primary, flex: 1}}>
+              <BottomSheetView>
+                <View style={styles.headerTextFilterContainer}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      dispatch(resetRoutes())
+                    }}
+                    style={styles.leftHeaderBtnFilter}
+                  >
+                    <Text style={styles.rightHeaderBtnTextFilter}>Reset</Text>
+                  </TouchableOpacity>
+                  <Text style={styles.headerTextFilter}>Setting</Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      dispatch(updateRoutes(routesFilter))
+                      setIsShowFilterDirectionBottomSheet(false)
+                    }}
+                    style={styles.rightHeaderBtnFilter}
+                  >
+                    <Text style={styles.rightHeaderBtnTextFilter}>Save</Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={{ marginTop: 10, paddingHorizontal: 18}}>
+                  {
+                    routesFilter.map((route, index) => {
+                      if (index !== routesFilter.length -1)
+                      return (
+                        <View 
+                          key={`route-filter${route.id}`}
+                        >
+                          {
+                            index === 0 &&
+                            <Text style={styles.titleBottomSheet}>Dành cho xe máy và xe hơi</Text>
+                          }
+                          <CheckBoxText 
+                            label={route.label.vi}
+                            onPress={() => {
+                              const restOfRoutes = routesFilter.filter((item => item.id !== route.id))
+                              const routeToUpdate = cloneDeep(route)
+
+                              routeToUpdate.value = !route.value
+                              restOfRoutes.splice(index, 0, routeToUpdate)
+                              
+                              setRoutesFilter(restOfRoutes)
+                          }}
+                            isChecked={route.value}
+                          />
+                        </View>
+                      )
+                      else 
+                      return (
+                        <View 
+                          key={`route-filter${route.id}`}
+                        >
+                          <View style={styles.saperate}/>
+                          <Text style={[styles.titleBottomSheet,{ marginTop: 10}]}>Dành cho người đi bộ</Text>
+                            <CheckBoxText
+                              label={route.label.vi}
+                              onPress={() => {
+                                const restOfRoutes = routesFilter.filter((item => item.id !== route.id))
+                                const routeToUpdate = cloneDeep(route)
+
+                                routeToUpdate.value = !route.value
+                                restOfRoutes.splice(index,0,routeToUpdate)
+
+                                setRoutesFilter(restOfRoutes)
+                            }}
+                              isChecked={route.value}
+                            />
+                        </View>
+                      )
+                    })
+                  }
+
+                </View>
+
+              </BottomSheetView>
+            </View>
+          }
+        />
+      }
+
+      {/* Bottomsheet for map type */}
+      {
+        isShowMapTypeBottomSheet &&
+        <BottomSheetExample
+          bottomSheetExampleRef={mapTypeBottomSheetRef}
+          openTermCondition={isShowMapTypeBottomSheet}
+          closeTermCondition={() => {
+            setIsShowMapTypeBottomSheet(false)
+          }}
+          snapPoints={['40%', '80%']}
+          haveBtn={false}
+          haveOverlay={true}
+          bottomView={{
+            paddingHorizontal: 0,
+            paddingBottom: 120,
+          }}
+          childView={
+            <View style={{ backgroundColor: app_c.HEX.primary, flex: 1}}>
+              <BottomSheetView>
+                <Text style={[styles.headerTextFilter,{ marginLeft: 18}]}>Setting Map</Text>
+                <View style={{ marginTop: 15}}>
+                  <Text style={[styles.titleBottomSheet, {color: app_c.HEX.ext_second, paddingHorizontal: 18}]}>Loại bản đồ</Text>
+                  <View 
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginTop: 5
+                  }}>
+                    <FlatList 
+                      horizontal
+                      showsHorizontalScrollIndicator={false}
+                      data={mapTypes}
+                      keyExtractor={item => `map-${item.id}`}
+                      contentContainerStyle={{ paddingHorizontal: 18 }}
+                      style={{
+                        width: '100%',
+                        marginBottom: 10
+                      }}
+                      renderItem={({item, index}) => {
+                        console.log("🚀 ~ file: MapScreen.jsx:2711 ~ currentMap.mapTypes:", currentMap.mapTypes)
+                        if (index !== mapTypes.length -1)
+                        return (
+                          <TouchableOpacity
+                            onPress={() => {
+                              dispatch(updateMapTypes(item.id))
+                            }}
+                            style={{
+                              marginLeft: index === 0 ? 0 : 15,
+                              marginRight: index === mapTypes.length - 1 ? 45 : 0,
+                              flexDirection: 'column',
+                              alignItems: 'center',
+                            }}
+                          >
+                            <Image source={item.image} 
+                            resizeMode= 'center'
+                            style={{
+                              height: 120,
+                              width: 120,
+                              borderRadius: 18,
+                              borderWidth: currentMap.mapTypes === item.id ? 2 : 0,
+                              borderColor: currentMap.mapTypes === item.id ? app_c.HEX.third : 'transparent',
+                              ...app_shdw.type_2
+                            }}/>
+                            <Text style={{
+                              color: currentMap.mapTypes === item.id ? app_c.HEX.third : app_c.HEX.ext_second,
+                              ...app_typo.fonts.h5,
+                              marginTop: 10
+                            }}>{item.vi}</Text>
+                          </TouchableOpacity>
+                        )
+                      }}
+                    />
+                  </View>
+                </View>
+                <View style={styles.saperate}/>
+                <Text style={[styles.titleBottomSheet, {color: app_c.HEX.ext_second, paddingHorizontal: 18, marginTop: 15}]}>Chi tiết bản đồ</Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    dispatch(updateMapDetails(!currentMap.mapDetails))
+                  }}
+                  style={{
+                    marginLeft: 18,
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    alignSelf: 'flex-start',
+                    marginTop: 10,
+                  }}
+                >
+                  <Image source={mapTypes[mapTypes.length -1].image} 
+                  resizeMode= 'center'
+                  style={{
+                    height: 120,
+                    width: 120,
+                    borderRadius: 18,
+                    borderWidth: currentMap.mapDetails ? 2 : 0,
+                    borderColor: currentMap.mapDetails ? app_c.HEX.third : 'transparent',
+                    ...app_shdw.type_2
+                  }}/>
+                  <Text style={{
+                    color: currentMap.mapDetails ? app_c.HEX.third : app_c.HEX.ext_second,
+                    ...app_typo.fonts.h5,
+                    marginTop: 10
+                  }}>{mapTypes[mapTypes.length -1].vi}</Text>
+                </TouchableOpacity>
+
+
+              </BottomSheetView>
+            </View>
+          }
+        />
+      }
+
+      {/* bottom sheet for details */}
       <BottomSheetScroll
         openTermCondition={isOpenBottomSheet}
         closeTermCondition={() => {
@@ -1774,6 +2922,7 @@ const Map = () => {
               <Text style={[styles.formattedAddress, { marginTop: 5}]}>Địa chỉ: {placeDetails?.formatted_address}</Text>
             }
 
+
             {
               placeDetails?.formatted_phone_number &&
               <Text style={styles.formattedAddress}>Số điện thoại: {placeDetails?.formatted_phone_number}</Text>
@@ -1783,6 +2932,33 @@ const Map = () => {
               placeDetails?.website &&
               <Text style={styles.formattedAddress}>Website: {placeDetails?.website}</Text>
             }
+
+            <View style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginTop: -5,
+              marginBottom: 10
+            }}>
+              <TouchableOpacity onPress={() => {
+                setIsOpenBottomSheet(false)
+                // Call API
+                getWeatherForecastAPI({
+                  longitude: placeDetails.geometry.location.lng,
+                  latitude: placeDetails.geometry.location.lat
+                }).then((weatherData) => {
+                  setWeatherData(weatherData)
+                  setIsShowWeatherBottomSheet(true)
+                })
+              }}>
+                <Text style={[styles.weatherText, { marginTop: 5}]}>Thời tiết tại đây</Text>
+              </TouchableOpacity>
+              <Image source={require('../../assets/images/weather/weather.png')} style={{
+                height: 30,
+                width: 30,
+                marginLeft: 10,
+                marginBottom: 5
+              }}/>
+            </View>
             
             <ScrollView
               horizontal
@@ -1893,33 +3069,100 @@ const Map = () => {
                 </TouchableOpacity>
               }
 
-              <TouchableOpacity
-                style={styles.controlContainer}
-                onPress={() => {
-                  const arrCoor = coordinates.geometries[0].coordinates[0][0]
-                  // console.log("🚀 ~ file: MapScreen.jsx:776 ~ Map ~ arrCoor", arrCoor)
-                  let arrLatLng = []
-                  arrCoor.map(coor => {
-                    // console.log("🚀 ~ file: MapScreen.jsx:778 ~ Map ~ coor", coor)
-                    let latlngObj = {
-                      latitude: coor[1],
-                      longitude: coor[0]
+              {
+                placeDetails &&
+                <TouchableOpacity
+                  style={[styles.controlContainer, {
+                    backgroundColor: currentMap.places.find(place => place.place_id === placeDetails.place_id) ? app_c.HEX.third : app_c.HEX.primary
+                  }]}
+                  onPress={async () => {
+                    const exsitPlace = currentMap.places.find(place => place.place_id === placeDetails.place_id)
+                    console.log("🚀 ~ file: MapScreen.jsx:2951 ~ onPress={ ~ exsitPlace:", exsitPlace)
+                    if (exsitPlace) {
+                      const placeToUpdate = currentMap.places.filter(place => place.place_id !== placeDetails.place_id)
+                      dispatch(updatePlaces(placeToUpdate))
+                      await updateMapUserAPI({
+                        currentUserId: user ? user._id : temporaryUserId,
+                        savedPlaces: placeToUpdate
+                      }).catch((err) => dispatch(updatePlaces(exsitPlace)))
+                    } else {
+                      const dataToUpdate = [
+                        {
+                          place_id: placeDetails.place_id,
+                          icon: placeDetails.icon,
+                          coordinate: {
+                            longitude: placeDetails.geometry.location.lng,
+                            latitude: placeDetails.geometry.location.lat
+                          },
+                          icon_background_color: placeDetails.icon_background_color
+                        },
+                        ...currentMap.places
+                      ]
+                      console.log("🚀 ~ file: MapScreen.jsx:2977 ~ onPress={ ~ dataToUpdate:", dataToUpdate)
+                      dispatch(updatePlaces(dataToUpdate))
+                      await updateMapUserAPI({
+                        currentUserId: user ? user._id : temporaryUserId,
+                        savedPlaces: dataToUpdate
+                      }).catch((err) => dispatch(updatePlaces(exsitPlace)))
                     }
-                    arrLatLng.push(latlngObj)
-                  })
-                  // console.log("cor", arrLatLng)
-                }}
-              >
-                <FontAwesome5 
-                  name='bookmark' 
-                  size={20} 
-                  color={app_c.HEX.third}
-                />
-                <Text style={[styles.controlText, {
-                  color: app_c.HEX.third
-                }]}
-                >Lưu</Text>
-              </TouchableOpacity>
+                  }}
+                >
+                  <FontAwesome5 
+                    name='map-marker-alt' 
+                    size={20} 
+                    color={currentMap.places.find(place => place.place_id === placeDetails.place_id) ? app_c.HEX.primary : app_c.HEX.third}
+                  />
+                  <Text style={[styles.controlText, {
+                    color:currentMap.places.find(place => place.place_id === placeDetails.place_id) ? app_c.HEX.primary : app_c.HEX.third
+                  }]}
+                  >{currentMap.places.find(place => place.place_id === placeDetails.place_id) ? 'Đã lưu tọa độ' : 'Lưu tọa độ'}</Text>
+                </TouchableOpacity>
+              }
+
+              {
+                placeDetails &&
+                <TouchableOpacity
+                  style={[styles.controlContainer, {
+                    backgroundColor: currentMap.suggestions.find(place => place.place_id === placeDetails.place_id) ? app_c.HEX.third : app_c.HEX.primary
+                  }]}
+                  onPress={async () => {
+                    const exsitPlace = currentMap.suggestions.find(place => place.place_id === placeDetails.place_id)
+                    if (exsitPlace) {
+                      const placeToUpdate = currentMap.suggestions.filter(place => place.place_id !== placeDetails.place_id)
+                      console.log("🚀 ~ file: MapScreen.jsx:2980 ~ Map ~ placeToUpdate:", placeToUpdate)
+                      dispatch(updateSuggestions(placeToUpdate))
+                      await updateMapUserAPI({
+                        currentUserId: user ? user._id : temporaryUserId,
+                        savedSuggestions: placeToUpdate
+                      }).catch((err) => dispatch(updateSuggestions(exsitPlace)))
+                    } else {
+                      const placeToUpdate = [
+                        {
+                          place_id: placeDetails.place_id,
+                          description: placeDetails.name,
+                          geometry: placeDetails.geometry
+                        },
+                        ...currentMap.suggestions
+                      ]
+                      dispatch(updateSuggestions(placeToUpdate))
+                      await updateMapUserAPI({
+                        currentUserId: user ? user._id : temporaryUserId,
+                        savedSuggestions: placeToUpdate
+                      }).catch((err) => dispatch(updateSuggestions(exsitPlace)))
+                    }
+                  }}
+                >
+                  <FontAwesome5 
+                    name='list' 
+                    size={20} 
+                    color={currentMap.suggestions.find(place => place.place_id === placeDetails.place_id) ? app_c.HEX.primary : app_c.HEX.third}
+                  />
+                  <Text style={[styles.controlText, {
+                    color:currentMap.suggestions.find(place => place.place_id === placeDetails.place_id) ? app_c.HEX.primary : app_c.HEX.third
+                  }]}
+                  >{currentMap.suggestions.find(place => place.place_id === placeDetails.place_id) ? 'Đã lưu gợi ý' : 'Lưu gợi ý'}</Text>
+                </TouchableOpacity>
+              }
 
               <TouchableOpacity
                 style={styles.controlContainer}
@@ -1963,49 +3206,91 @@ const Map = () => {
                     const stopLoopIndex = length % 3 === 0 ?  (length / 3) : (length /3) + 1
                     if (index < stopLoopIndex ) {
                       let endIndexImg = ((index + 1) * 3) - 1
-                      if (placeDetails?.photos[0]?.photo_reference) {
-                        if (placeDetails?.photos[endIndexImg-2]?.photo_reference)
+                      if (placeDetails?.photos) {
+                        if (placeDetails?.photos[endIndexImg-2])
                         return (
                           <View 
                             key={index}
                             style={styles.containerImg}
                           >
-                            <ImagePromise
-                              isTranformData={false}
-                              photoReference={placeDetails?.photos[endIndexImg-2]?.photo_reference}
-                              styleImage={styles.imgBigger}
-                              map_api_key={map_api_key}
-                              pushArrImgBase64={index ===0 ? (data) => setArrImgBase64([...arrImgBase64, data]) : null}
-                            />
+                            <>
+                                  <Image 
+                                    style={[styles.imgBigger, { position: 'absolute', backgroundColor: app_c.HEX.ext_third, bottom: 0}]}
+                                    source={{uri: placeDetails?.photos[endIndexImg-2]}}
+                                  /> 
+                                  <ImageModal
+                                      swipeToDismiss={true}
+                                      resizeMode={isResizeMode}
+                                      modalImageResizeMode="contain"
+                                      imageBackgroundColor="transparent"
+                                      style={[styles.imgBigger, {  opacity: 0 }]}
+                                      source={{uri: placeDetails?.photos[endIndexImg-2]}}
+                                      onOpen={() => {
+                                        setIsResizeMode("contain")
+                                        console.log("contain")
+                                      }}
+                                      willClose={() => {
+                                        setIsResizeMode("cover")
+                                        console.log("cover")
+                                      }}
+                                    />
+                                </> 
                             {
-                              placeDetails?.photos[endIndexImg-1]?.photo_reference ?
+                              placeDetails?.photos[endIndexImg-1] ?
                               <View style={[styles.containerImgSmaller, {
                                 marginRight: 10
                               }]}> 
                                 {
-                                  placeDetails?.photos[endIndexImg-1]?.photo_reference ?
-                                  <ImagePromise
-                                    isTranformData={false}
-                                    photoReference={placeDetails?.photos[endIndexImg-1]?.photo_reference}
-                                    styleImage={[styles.imgSmaller, {
-                                      marginBottom: 5
-                                    }]}
-                                    map_api_key={map_api_key}
-                                    // pushArrImgBase64={(data) => setArrImgBase64([...arrImgBase64, data])}
-                                  /> :
+                                  placeDetails?.photos[endIndexImg-1] ?
+                                  <>
+                                    <Image 
+                                      style={[styles.imgSmaller, { marginBottom: 5, position: 'absolute', backgroundColor: app_c.HEX.ext_third, top: 0}]}
+                                      source={{uri: placeDetails?.photos[endIndexImg-1]}}
+                                    /> 
+                                    <ImageModal
+                                        swipeToDismiss={true}
+                                        resizeMode={isResizeMode}
+                                        modalImageResizeMode="contain"
+                                        imageBackgroundColor="transparent"
+                                        style={[styles.imgSmaller, { marginBottom: 5, opacity: 0 }]}
+                                        source={{uri: placeDetails?.photos[endIndexImg-1]}}
+                                        onOpen={() => {
+                                          setIsResizeMode("contain")
+                                          console.log("contain")
+                                        }}
+                                        willClose={() => {
+                                          setIsResizeMode("cover")
+                                          console.log("cover")
+                                        }}
+                                      />
+                                  </>
+                                   :
                                   <View style={styles.imgEmply}/>
                                 }
                                 {
-                                  placeDetails?.photos[endIndexImg]?.photo_reference ?
-                                  <ImagePromise
-                                    isTranformData={false}
-                                    photoReference={placeDetails?.photos[endIndexImg]?.photo_reference}
-                                    styleImage={[styles.imgSmaller, {
-                                      marginTop: 5
-                                    }]}
-                                    map_api_key={map_api_key}
-                                    // pushArrImgBase64={(data) => setArrImgBase64([...arrImgBase64, data])}
-                                  /> :
+                                  placeDetails?.photos[endIndexImg] ?
+                                  <>
+                                  <Image 
+                                    style={[styles.imgSmaller, { marginTop: 5, position: 'absolute', backgroundColor: app_c.HEX.ext_third, bottom: 0}]}
+                                    source={{uri: placeDetails?.photos[endIndexImg]}}
+                                  /> 
+                                  <ImageModal
+                                      swipeToDismiss={true}
+                                      resizeMode={isResizeMode}
+                                      modalImageResizeMode="contain"
+                                      imageBackgroundColor="transparent"
+                                      style={[styles.imgSmaller, { marginTop: 5, opacity: 0 }]}
+                                      source={{uri: placeDetails?.photos[endIndexImg]}}
+                                      onOpen={() => {
+                                        setIsResizeMode("contain")
+                                        console.log("contain")
+                                      }}
+                                      willClose={() => {
+                                        setIsResizeMode("cover")
+                                        console.log("cover")
+                                      }}
+                                    />
+                                </> :
                                   <View style={styles.imgEmplyGray}/>
                                 }
                               </View> : null
@@ -2019,13 +3304,6 @@ const Map = () => {
                             key={index}
                             style={styles.containerImg}
                           >
-                            <ImagePromise
-                              isTranformData={true}
-                              photoReference={placeDetails?.photos[endIndexImg-2]}
-                              styleImage={styles.imgBigger}
-                              map_api_key={map_api_key}
-                              pushArrImgBase64={index ===0 ? (data) => setArrImgBase64([...arrImgBase64, data]) : null}
-                            />
                             {
                               placeDetails?.photos[endIndexImg-1] &&
                               <View style={[styles.containerImgSmaller, {
@@ -2134,6 +3412,330 @@ const Map = () => {
               </Stack.Screen>
             </Stack.Navigator>
           </NavigationContainer>
+        }
+      />
+
+      <BottomSheetExample
+        bottomSheetExampleRef={directionBottomSheetRef}
+        openTermCondition={isShowDirectionsBottomSheet}
+        closeTermCondition={() => {
+          setIsShowRoutePanel(true)
+          setIsShowDirectionsBottomSheet(false)
+          const edgePadding = {
+            top: 330,
+            right: 40,
+            bottom: 150,
+            left: 40
+          }
+          handleFitCoors(directionsPolyLine[selectedPolyLine]?.polyline, edgePadding, true)
+          // Đặt lại stepPolyLineSelected
+          setStepPolyLineSelected(-1)
+          // Đặt lại stepPolyLine
+          setStepPolyLine([])
+        }}
+        snapPoints={['20%', '50%', '90%']}
+        haveBtn={false}
+        haveOverlay={false}
+        bottomView={{
+          paddingHorizontal: 0,
+          paddingBottom: 120,
+        }}
+        childView={
+          <View style={{ backgroundColor: app_c.HEX.primary, flex: 1}}>
+            <BottomSheetView>
+              <View style={styles.headerBottomSheetDirection}>
+                <Text style={styles.titleBottomSheetDirection}>{directionsPolyLine[selectedPolyLine]?.description}</Text>
+                <Text style={styles.timeBottomSheetDirection}>{days !== 0 ? `${days} day${days > 1 ? 's ' : ' '}` : ''}{hours !== 0 ? `${hours} hour${hours > 1 ? 's ' : ' '}` : ''}{minutes !== 0 ? `${minutes} min${minutes > 1 ? 's' : ''}` : ''} {`(${distance} km)`}</Text>
+                {
+                  directionsPolyLine[selectedPolyLine]?.warnings &&
+                  directionsPolyLine[selectedPolyLine]?.warnings.map((warning, index) => {
+                    return (
+                      <View style={styles.warningContainerBottomSheetDirection}>
+                        <FontAwesome
+                          name='warning'
+                          size={20} 
+                          color={app_c.HEX.third}
+                        />
+                        <Text style={styles.warningBottomSheetDirection}>{warning}</Text>
+                      </View>
+                    )
+                  })
+                }
+              </View>
+              <ScrollView
+                horizontal
+                scrollEventThrottle={1}
+                showsHorizontalScrollIndicator={false}
+                height={40}
+                style={styles.controlListContainer}
+                // Phương: Only Ios
+                contentInset={{
+                  top: 0,
+                  left: 0,
+                  bottom: 0,
+                  right: 25
+                }}
+                // Phương: For android
+                contentContainerStyle={{
+                  paddingRight: Platform.OS === 'android' ? 25 : 0
+                }}
+              >
+                <TouchableOpacity
+                  style={styles.controlContainer}
+                  onPress={() => {
+                    setIsShowRoutePanel(true)
+                    setIsShowDirectionsBottomSheet(false)
+                    const edgePadding = {
+                      top: 280,
+                      right: 30,
+                      bottom: 110,
+                      left: 30
+                    }
+                    handleFitCoors(directionsPolyLine[selectedPolyLine]?.polyline, edgePadding, true)
+                    // Đặt lại stepPolyLineSelected
+                    setStepPolyLineSelected(-1)
+                    // Đặt lại stepPolyLine
+                    setStepPolyLine([])
+                  }}
+                >
+                  <FontAwesome 
+                    name='map' 
+                    size={20} 
+                    color={app_c.HEX.third}
+                  />
+                  <Text style={[styles.controlText, {
+                    color: app_c.HEX.third
+                  }]}
+                  >Xem bản đồ</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.controlContainer}
+                  onPress={() => {
+                    setIsShowRoutePanel(true)
+                    setIsShowDirectionsBottomSheet(false)
+                    const edgePadding = {
+                      top: 280,
+                      right: 30,
+                      bottom: 110,
+                      left: 30
+                    }
+                    handleFitCoors(directionsPolyLine[selectedPolyLine]?.polyline, edgePadding, true)
+                    // Đặt lại stepPolyLineSelected
+                    setStepPolyLineSelected(-1)
+                    // Đặt lại stepPolyLine
+                    setStepPolyLine([])
+                  }}
+                >
+                  <FontAwesome5 
+                    name='location-arrow' 
+                    size={20} 
+                    color={app_c.HEX.third}
+                  />
+                  <Text style={[styles.controlText, {
+                    color: app_c.HEX.third
+                  }]}
+                  >Bắt đầu</Text>
+                </TouchableOpacity>
+
+                {/* <TouchableOpacity
+                  style={styles.controlContainer}
+                  onPress={() => {
+                    
+                  }}
+                >
+                  <FontAwesome
+                    name='bookmark' 
+                    size={20} 
+                    color={app_c.HEX.third}
+                  />
+                  <Text style={[styles.controlText, {
+                    color: app_c.HEX.third
+                  }]}
+                  >Lưu</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.controlContainer}
+                  onPress={() => handleShareButton()}
+                >
+                  <FontAwesome5
+                    name='share' 
+                    size={20} 
+                    color={app_c.HEX.third}
+                  />
+                  <Text style={[styles.controlText, {
+                    color: app_c.HEX.third
+                  }]}
+                  >Chia sẻ</Text>
+                </TouchableOpacity> */}
+              </ScrollView>
+              <View style={{
+                width: '100%',
+                height: 1,
+                backgroundColor: app_c.HEX.ext_third
+              }}/>
+            </BottomSheetView>
+            
+            <BottomSheetVirtualizedList
+              data={directionsPolyLine[selectedPolyLine]?.legs[0]?.steps}
+              keyExtractor={(item, index) => `step-${index}`}
+              getItemCount={(data) => data.length}
+              getItem={(data, index) => data[index]}
+              contentContainerStyle={{
+                paddingBottom: 120,
+                display: 'flex',
+                marginTop: 20,
+                backgroundColor: app_c.HEX.primary
+              }}
+              renderItem={({item, index}) => {
+                let data, title, icon, desc, data1, title1, icon1, desc1
+                
+                  if (item?.navigationInstruction) {
+                    data = (maneuverData.find(m => m.id === item?.navigationInstruction.maneuver))
+                    title = data?.vi
+                    icon =  data?.icon
+                    desc = item?.navigationInstruction.instructions
+                  } else {
+                    data = (maneuverData.find(m => m.id === 'STRAIGHT'))
+                    title = data?.vi
+                    icon =  data?.icon
+                    desc = 'Đi thẳng về phía trước'
+                  }
+
+                  if (index === 0) {
+                    data1 = (maneuverData.find(m => m.id === 'LOCATION'))
+                    title1 = data1?.vi
+                    icon1 =  data1?.icon
+                    desc1 = data1?.desc_vi
+                  }
+                
+                const distanceStep = item.distanceMeters
+                const secondsTranformYet = item.staticDuration
+
+                const daysStep = Math.floor(secondsTranformYet / 86400)
+                const hoursStep =  Math.floor((secondsTranformYet - (daysStep * 86400)) / 3600)
+                const minutesStep = Math.floor((secondsTranformYet - (daysStep * 86400) - (hoursStep * 3600)) / 60)
+                const secondsStep = Math.floor((secondsTranformYet - (daysStep * 86400) - (hoursStep * 3600) - (minutesStep * 60)) )
+                if (index !== 0) {
+                  // if (item?.navigationInstruction) {
+                    return (
+                      <TouchableOpacity style={[styles.containerDirections, {backgroundColor: stepPolyLineSelected===index+1 ? app_c.HEX.ext_primary : app_c.HEX.primary}]} onPress={() => {
+                        // Mới đầu di chuyên máy quay đến start và end location
+                        const edgePadding = {
+                          top: 30,
+                          right: 70,
+                          bottom: 450,
+                          left: 70
+                        }
+                        handleFitCoors([item?.startLocation?.latLng, item?.endLocation?.latLng], edgePadding, true)
+                        // Sau đó đặt thanh màu khác để biết đó là thằng step
+                        setStepPolyLine(item?.polyline)
+                        // Kéo bottomSheet xuống dưới để nhìn
+                        directionBottomSheetRef?.current.snapToIndex(1)
+                        // Đặt để biết thằng nào chọn r
+                        setStepPolyLineSelected(index+1)
+                      }}>
+                        <View style={styles.containerTextDirections}>
+                          <Text style={styles.tilteDirections}>{title}</Text>
+                          <Text style={styles.descDirections}>{desc}</Text>
+                          <View style={styles.timeContainerDirections}>
+                            <Text style={styles.timecDirections}>{daysStep !== 0 ? `${daysStep} day${daysStep > 1 ? 's ' : ' '}` : ''}{hoursStep !== 0 ? `${hoursStep} hour${hoursStep > 1 ? 's ' : ' '}` : ''}{minutesStep !== 0 ? `${minutesStep} min${minutesStep > 1 ? 's ' : ' '}` : ''}{secondsStep !== 0 ? `${secondsStep} second${secondsStep > 1 ? 's' : ''}` : ''}</Text>
+                            <Octicons
+                              name='dot-fill'
+                              size={10}
+                              color={app_c.HEX.ext_second}
+                              style={{ marginHorizontal: 5}}
+                            />
+                            <Text style={styles.discDirections}>{distanceStep}m</Text>
+                          </View>
+                        </View>
+                        <View style={styles.containerIconDirection}>
+                          <Image source={icon} style={{height: 30, width: 30, tintColor: app_c.HEX.ext_second}}/>
+                        </View>
+                      </TouchableOpacity>
+                    )
+                  // }
+                }
+                else 
+                  return (
+                    <>
+                      <TouchableOpacity style={[styles.containerDirections, {backgroundColor: stepPolyLineSelected===0 ? app_c.HEX.ext_primary : app_c.HEX.primary}]} onPress={() => {
+                        const edgePadding = {
+                          top: 30,
+                          right: 150,
+                          bottom: 450,
+                          left: 150
+                        }
+                        // Mình sẽ tạo ra thêm 2 thằng nữa để phục vụ animate ngay chỗ mình
+                        const freeCoor1 = computeDestinationPoint(
+                          origin,
+                          1000,
+                          180
+                        )
+
+                        const freeCoor2 = computeDestinationPoint(
+                          origin,
+                          1000,
+                          0
+                        )
+
+                        handleFitCoors([freeCoor1, origin, freeCoor2], edgePadding, true)
+                        // Kéo bottomSheet xuống dưới để nhìn
+                        directionBottomSheetRef?.current.snapToIndex(1)
+                        // Đặt để biết thằng nào chọn r
+                        setStepPolyLineSelected(index)
+                        // Nên đặt thằng setStepPolyLine về []
+                        setStepPolyLine([])
+                      }}>
+                      <View style={styles.containerTextDirections}>
+                        <Text style={styles.tilteDirections}>{title1}</Text>
+                        <Text style={styles.descDirections}>{desc1}</Text>
+                      </View>
+                      <View style={styles.containerIconDirection}>
+                        <Image source={icon1} style={{height: 30, width: 30, tintColor: app_c.HEX.ext_second}}/>
+                      </View>
+                      </TouchableOpacity>
+
+                      <TouchableOpacity style={[styles.containerDirections, {backgroundColor: stepPolyLineSelected===index+1 ? app_c.HEX.ext_primary : app_c.HEX.primary}]} onPress={() => {
+                        // Mới đầu di chuyên máy quay đến start và end location
+                        const edgePadding = {
+                          top: 30,
+                          right: 70,
+                          bottom: 450,
+                          left: 70
+                        }
+                        handleFitCoors([item?.startLocation?.latLng, item?.endLocation?.latLng], edgePadding, true)
+                        // Sau đó đặt thanh màu khác để biết đó là thằng step
+                        setStepPolyLine(item?.polyline)
+                        // Kéo bottomSheet xuống dưới để nhìn
+                        directionBottomSheetRef?.current.snapToIndex(1)
+                        // Đặt để biết thằng nào chọn r
+                        setStepPolyLineSelected(index+1)
+                      }}>
+                        <View style={styles.containerTextDirections}>
+                          <Text style={styles.tilteDirections}>{title}</Text>
+                          <Text style={styles.descDirections}>{desc}</Text>
+                          <View style={styles.timeContainerDirections}>
+                            <Text style={styles.timecDirections}>{daysStep !== 0 ? `${daysStep} day${daysStep > 1 ? 's ' : ' '}` : ''}{hoursStep !== 0 ? `${hoursStep} hour${hoursStep > 1 ? 's ' : ' '}` : ''}{minutesStep !== 0 ? `${minutesStep} min${minutesStep > 1 ? 's ' : ' '}` : ''}{secondsStep !== 0 ? `${secondsStep} second${secondsStep > 1 ? 's' : ''}` : ''}</Text>
+                            <Octicons
+                              name='dot-fill'
+                              size={10}
+                              color={app_c.HEX.ext_second}
+                              style={{ marginHorizontal: 5}}
+                            />
+                            <Text style={styles.discDirections}>{distanceStep}m</Text>
+                          </View>
+                        </View>
+                        <View style={styles.containerIconDirection}>
+                          <Image source={icon} style={{height: 30, width: 30, tintColor: app_c.HEX.ext_second}}/>
+                        </View>
+                      </TouchableOpacity>
+                    </>
+                  )
+              }}
+            />
+          </View>
         }
       />
     </>

@@ -5,9 +5,8 @@ import Constants from 'expo-constants'
 
 export const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: app_c.HEX.primary,
-    justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 40
   }
 })

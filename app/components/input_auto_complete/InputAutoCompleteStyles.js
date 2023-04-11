@@ -25,12 +25,15 @@ export const styles = StyleSheet.create({
   },
   row: {
     backgroundColor: app_c.HEX.primary,
+    borderRadius: 4,
   },
   poweredContainer: {
     backgroundColor: app_c.HEX.primary,
   },
   listView: {
     backgroundColor: app_c.HEX.primary,
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8
   },
   predefinedPlacesDescription: {
     ...app_typo.fonts.h5,

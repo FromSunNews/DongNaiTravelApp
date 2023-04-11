@@ -25,8 +25,13 @@ import { updatePrivateKeys } from 'redux/manifold/ManifoldSlice'
 // Phương: Socket 
 
 import { selectCurrentUser, updateTemporaryUserId } from 'redux/user/UserSlice'
+import 'react-native-get-random-values'
 import { v4 as uuidv4 } from 'uuid'
 import { socketIoInstance } from '../../../App'
+import { updateUserLocation } from 'redux/map/mapSlice'
+
+// Related to Expo
+import * as Location from 'expo-location'
 
 const tabIcon = {
 	'HomeScreen': {
@@ -163,13 +168,38 @@ useEffect(() => {
 	// Truyền thằng user hiện tại (đã đăng nhập hoặc chưa server để lưu thông tin)
 	// kiểm tra thông tin id
 	let userId
-	if (user._id)
+	if (user?._id)
 		userId = user._id
 	else {
 		userId = uuidv4()
+		console.log("🚀 ~ file: GroupBottomTab.jsx:175 ~ useEffect ~ userId:", userId)
 		dispatch(updateTemporaryUserId(userId))
 	}
+
 	socketIoInstance.emit('c_user_login', userId)
+}, [])
+
+useEffect(() => {
+	// Phương: Xin quyền cảu người dùng để lấy location
+	(async () => {
+		const { status } = await Location.requestForegroundPermissionsAsync()
+		if (status !== 'granted') {
+			return
+		}
+		
+		const userLocation = await Location.getCurrentPositionAsync({
+			enableHighAccuracy: true,
+			accuracy: Location.Accuracy.BestForNavigation
+		})
+
+		const location = {
+			latitude: userLocation.coords.latitude || 0,
+			longitude: userLocation.coords.longitude || 0
+		}
+		console.log("🚀 ~ file: GroupBottomTab.jsx:197 ~ location:", location)
+		// Lưu vào state
+		dispatch(updateUserLocation(location))
+	})()
 }, [])
 
 	return (

@@ -155,7 +155,7 @@ export const styles = StyleSheet.create({
   headerTextFilter: {
     color: app_c.HEX.fourth,
     ...app_typo.fonts.h3,
-    paddingLeft: 5
+    marginRight: 5
   },
   rightHeaderBtnFilter: {
     paddingVertical: 5,

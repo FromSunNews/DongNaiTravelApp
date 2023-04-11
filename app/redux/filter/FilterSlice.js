@@ -9,7 +9,41 @@ const initialState = {
     sortBy: FilterConstants.sortBy[0].id,
     priceLevels: [0, 5],
     radius: '5000',
-    location: null
+    location: null,
+    routes: [
+      {
+        id: 'avoidTolls',
+        label: {
+          en: 'Avoid toll roads',
+          vi: 'Tránh đoạn đường thu phí'
+        },
+        value: false
+      },
+      {
+        id: 'avoidHighways',
+        label: {
+          en: 'Avoid the highway',
+          vi: 'Tránh đường cao tốc'
+        },
+        value: false
+      },
+      {
+        id: 'avoidFerries',
+        label: {
+          en: 'Avoid the ferry',
+          vi: 'Tránh phà'
+        },
+        value: false
+      },
+      {
+        id: 'avoidIndoor',
+        label: {
+          en: 'Avoid indoor navigation',
+          vi: 'Tránh điều hướng trong nhà'
+        },
+        value: false
+      },
+    ]
   }
 }
 
@@ -42,15 +76,59 @@ export const filterSlice = createSlice({
     },
     resetFilter: (state) => {
       state.currentFilter = {
+        ...state.currentFilter,
         category: FilterConstants.categories.ALL_CATEGORIES,
         sortBy: FilterConstants.sortBy[0].id,
         priceLevels: [0, 5],
         radius: '5000',
         location: null
       }
-      
       console.log('reset filter', state.currentFilter)
-    }
+    },
+    updateRoutes: (state, action) => {
+      const routes = action.payload
+      state.currentFilter.routes = routes
+    },
+    resetRoutes: (state) => {
+      state.currentFilter = {
+        ...state.currentFilter,
+        routes: [
+          {
+            id: 'avoidTolls',
+            label: {
+              en: 'Avoid toll roads',
+              vi: 'Tránh đoạn đường thu phí'
+            },
+            value: false
+          },
+          {
+            id: 'avoidHighways',
+            label: {
+              en: 'Avoid the highway',
+              vi: 'Tránh đường cao tốc'
+            },
+            value: false
+          },
+          {
+            id: 'avoidFerries',
+            label: {
+              en: 'Avoid the ferry',
+              vi: 'Tránh phà'
+            },
+            value: false
+          },
+          {
+            id: 'avoidIndoor',
+            label: {
+              en: 'Avoid indoor navigation',
+              vi: 'Tránh điều hướng trong nhà'
+            },
+            value: false
+          },
+        ]
+      }
+    },
+    
   }
 })
 
@@ -63,7 +141,9 @@ export const {
   updateSortBy,
   updatePriceLevels,
   updateRadius,
-  resetFilter
+  resetFilter,
+  updateRoutes,
+  resetRoutes,
 } = filterSlice.actions
 
 // Phương: Selectors: mục đích là dành cho các components bên dưới gọi bằng useSelector() tới nó để lấy dữ liệu từ trong redux store ra sử dụng

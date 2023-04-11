@@ -53,7 +53,7 @@ const InputAutoComplete = ({
           row: styles.row,
           poweredContainer: styles.poweredContainer,
           listView: [styles.listView, listViewStyle],
-          predefinedPlacesDescription: styles.predefinedPlacesDescription
+          predefinedPlacesDescription: [styles.predefinedPlacesDescription, predefinedPlacesDescriptionStyle]
         }}
         renderLeftButton={() => {
           if (isHaveLeftButton) {
@@ -65,7 +65,7 @@ const InputAutoComplete = ({
                   <FontAwesome
                     name="search"
                     size={18}
-                    color={app_c.HEX.fourth}
+                    color={app_c.HEX.third}
                     style={styles.iconSearch}
                   />
                 </TouchableOpacity>
@@ -78,7 +78,7 @@ const InputAutoComplete = ({
                   <MaterialIcons
                     name="arrow-back-ios"
                     size={25}
-                    color={app_c.HEX.fourth}
+                    color={app_c.HEX.third}
                     style={styles.iconBack}
                   />
                 </TouchableOpacity>
@@ -97,7 +97,7 @@ const InputAutoComplete = ({
                   <FontAwesome
                     name="filter"
                     size={20}
-                    color={app_c.HEX.fourth}
+                    color={app_c.HEX.third}
                     style={styles.iconFilter}
                   />
                 </TouchableOpacity>
@@ -113,8 +113,8 @@ const InputAutoComplete = ({
         fetchDetails={true}
         debounce={200}
         onPress={(data, details) => {
-          console.log("🚀 ~ file: InputAutoComplete.jsx:47 ~ InputAutoComplete ~ data", data)
-          console.log("🚀 ~ file: InputAutoComplete.jsx:38 ~ InputAutoComplete ~ details", details)
+          // console.log("🚀 ~ file: InputAutoComplete.jsx:47 ~ InputAutoComplete ~ data", data)
+          // console.log("🚀 ~ file: InputAutoComplete.jsx:38 ~ InputAutoComplete ~ details", details)
           onPlaceSelected(details)
         }}
       />

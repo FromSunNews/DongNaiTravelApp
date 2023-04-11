@@ -1014,6 +1014,55 @@ export const typesPlace = [
       vi: 'Quảng trường thành phố'
     }
   },
+  {
+    id: 'homestay',
+    homestay: {
+      en: 'Homestay',
+      vi: 'Homestay'
+    }
+  },
+  {
+    id: 'guest_house',
+    guest_house: {
+      en: 'Guest house',
+      vi: 'Nhà nghỉ'
+    }
+  },
+  {
+    id: 'resort',
+    resort: {
+      en: 'Resort',
+      vi: 'Khu nghỉ dưỡng'
+    }
+  },
+  {
+    id: 'ecotourism',
+    ecotourism: {
+      en: 'Ecotourism',
+      vi: 'Du lịch sinh thái'
+    }
+  },
+  {
+    id: 'take_photo',
+    take_photo: {
+      en: 'Take photos',
+      vi: 'Điểm chụp hình'
+    }
+  },
+  {
+    id: 'tourist_area',
+    tourist_area: {
+      en: 'Tourist area',
+      vi: 'Khu du lịch'
+    }
+  },
+  {
+    id: 'scenic_spots',
+    scenic_spots: {
+      en: 'Scenic spots',
+      vi: 'Danh lam thắng cảnh'
+    }
+  },
 ]
 
 // export const typesPlace = [
@@ -2034,31 +2083,214 @@ export const typeModeTransport = [
     id: '1',
     title: 'Car',
     icon: 'car',
-    mode: 'DRIVING'
+    modeGCP: 'DRIVE',
+    modeORS: 'driving-car',
   },
   {
     id: '2',
     title: 'Motorcycle',
     icon: 'motorcycle',
-    mode: 'DRIVING'
+    modeGCP: 'TWO_WHEELER',
+    modeORS: 'driving-car',
   },
   {
     id: '3',
     title: 'Bicyle',
     icon: 'bicycle',
-    mode: 'BICYCLING'
-
+    modeGCP: 'BICYCLE',
+    modeORS: 'cycling-regular',
   },
   {
     id: '4',
     title: 'Walk',
     icon: 'walking',
-    mode: 'WALKING'
+    modeGCP: 'WALK',
+    modeORS: 'foot-walking'
+  },
+  // {
+  //   id: '5',
+  //   title: 'Transit',
+  //   icon: 'bus',
+  //   modeGCP: 'TRANSIT',
+  //   modeORS: 'cycling-road'
+  // }
+]
+
+export const maneuverData = [
+  {
+    id: 'MANEUVER_UNSPECIFIED',
+    en: 'Not used',
+    vi: 'Không được sử dụng',
+    icon: require('../assets/images/step/MANEUVER_UNSPECIFIED.png')
   },
   {
-    id: '5',
-    title: 'Transit',
-    icon: 'bus',
-    mode: 'TRANSIT'
+    id: 'LOCATION',
+    en: 'Location',
+    vi: 'Vị trí khởi hành',
+    desc_vi: 'Bắt đầu từ vị trí khởi hành của bạn',
+    desc_en: 'Start from your destination',
+    icon: require('../assets/images/step/LOCATION.png')
+  },
+  {
+    id: 'TURN_SLIGHT_LEFT',
+    en: 'Turn slightly to the left',
+    vi: 'Rẽ nhẹ sang trái',
+    icon: require('../assets/images/step/TURN_SLIGHT_LEFT.png')
+  },
+  {
+    id: 'TURN_SHARP_LEFT',
+    en: 'Turn sharply to the left',
+    vi: 'Khúc quanh gắt qua bên trái',
+    icon: require('../assets/images/step/TURN_SHARP_LEFT.png')
+  },
+  {
+    id: 'UTURN_LEFT',
+    en: 'Make a left u-turn',
+    vi: 'Rẽ hình chữ U sang trái',
+    icon: require('../assets/images/step/UTURN_LEFT.png')
+  },
+  {
+    id: 'TURN_LEFT',
+    en: 'Turn left',
+    vi: 'Rẽ sang trái',
+    icon: require('../assets/images/step/TURN_LEFT.png')
+  },
+  {
+    id: 'TURN_SLIGHT_RIGHT',
+    en: 'Turn slightly to the right',
+    vi: 'Rẽ nhẹ sang phải',
+    icon: require('../assets/images/step/TURN_SLIGHT_RIGHT.png')
+  },
+  {
+    id: 'TURN_SHARP_RIGHT',
+    en: 'Turn sharply to the right',
+    vi: 'Khúc quanh gắt qua bên phải',
+    icon: require('../assets/images/step/TURN_SHARP_RIGHT.png')
+  },
+  {
+    id: 'UTURN_RIGHT',
+    en: 'Make a right u-turn',
+    vi: 'Rẽ hình chữ U sang phải',
+    icon: require('../assets/images/step/UTURN_RIGHT.png')
+  },
+  {
+    id: 'TURN_RIGHT',
+    en: 'Turn right',
+    vi: 'Rẽ phải',
+    icon: require('../assets/images/step/TURN_RIGHT.png')
+  },
+  {
+    id: 'STRAIGHT',
+    en: 'Go straight',
+    vi: 'Đi thẳng',
+    icon: require('../assets/images/step/STRAIGHT.png')
+  },
+  {
+    id: 'RAMP_LEFT',
+    en: 'Take the left ramp',
+    vi: 'Đi theo đoạn đường bên trái',
+    icon: require('../assets/images/step/RAMP_LEFT.png')
+  },
+  {
+    id: 'RAMP_RIGHT',
+    en: 'Take the right ramp',
+    vi: 'Đi theo đoạn đường bên phải',
+    icon: require('../assets/images/step/RAMP_RIGHT.png')
+  },
+  {
+    id: 'MERGE',
+    en: 'Merge into traffic',
+    vi: 'Hợp nhất vào đường xe chạy',
+    icon: require('../assets/images/step/MERGE.png')
+  },
+  {
+    id: 'FORK_LEFT',
+    en: 'Take the left fork',
+    vi: 'Rẽ sang đoạn đường bên trái',
+    icon: require('../assets/images/step/FORK_LEFT.png')
+  },
+  {
+    id: 'FORK_RIGHT',
+    en: 'Take the right fork',
+    vi: 'Rẽ sang đoạn đường bên phải',
+    icon: require('../assets/images/step/FORK_RIGHT.png')
+  },
+  {
+    id: 'FERRY',
+    en: 'Take the ferry',
+    vi: 'Đi phà',
+    icon: require('../assets/images/step/FERRY.png')
+  },
+  {
+    id: 'FERRY_TRAIN',
+    en: 'Take the train leading onto the ferry',
+    vi: 'Đi tàu dẫn đến phà',
+    icon: require('../assets/images/step/FERRY_TRAIN.png')
+  },
+  {
+    id: 'ROUNDABOUT_LEFT',
+    en: 'Turn left at the roundabout',
+    vi: 'Rẽ trái tại vòng xoay',
+    icon: require('../assets/images/step/ROUNDABOUT_RIGHT.png')
+  },
+  {
+    id: 'ROUNDABOUT_RIGHT',
+    en: 'Turn right at the roundabout',
+    vi: 'Rẽ phải tại vòng xoay',
+    icon: require('../assets/images/step/ROUNDABOUT_RIGHT.png')
+  },  
+]
+
+export const weatherIcons = {
+  "01d": require('../assets/images/weather/01d.png'),
+  "01n": require('../assets/images/weather/01n.png'), 
+  "02d": require('../assets/images/weather/02d.png'),
+  "02n": require('../assets/images/weather/02n.png'),
+  "03d": require('../assets/images/weather/03d.png'), 
+  "03n": require('../assets/images/weather/03n.png'), 
+  "04d": require('../assets/images/weather/04d.png'), 
+  "04n": require('../assets/images/weather/04n.png'), 
+  "09d": require('../assets/images/weather/09d.png'),
+  "09n": require('../assets/images/weather/09n.png'),
+  "10d": require('../assets/images/weather/10d.png'),
+  "10n": require('../assets/images/weather/10n.png'),
+  "11d": require('../assets/images/weather/11d.png'),
+  "11n": require('../assets/images/weather/11n.png'),
+  "13d": require('../assets/images/weather/13d.png'),
+  "13n": require('../assets/images/weather/13n.png'),
+  "50d": require('../assets/images/weather/50d.png'), 
+  "50n": require('../assets/images/weather/50n.png')
+}
+
+export const mapTypes = [
+  {
+    id: 'standard',
+    vi: 'Tiêu chuẩn',
+    en: 'Standard',
+    image: require('../assets/images/map_type/standard.jpg')
+  },
+  {
+    id: 'satellite',
+    vi: 'Vệ tinh',
+    en: 'Satellite',
+    image: require('../assets/images/map_type/satellite.jpg')
+  },
+  {
+    id: 'hybrid',
+    vi: 'Kết hợp',
+    en: 'Hybrid',
+    image: require('../assets/images/map_type/hybrid.jpg')
+  },
+  {
+    id: 'terrain',
+    vi: 'Địa hình',
+    en: 'Terrain',
+    image: require('../assets/images/map_type/terrain.jpg')
+  },
+  {
+    id: 'traffic',
+    vi: 'Giao thông',
+    en: 'Traffic',
+    image: require('../assets/images/map_type/traffic.jpg')
   }
 ]

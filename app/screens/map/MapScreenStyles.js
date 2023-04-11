@@ -253,7 +253,8 @@ export const styles = StyleSheet.create({
   },
   controlListContainer:{
     paddingHorizontal: 18,
-    marginTop: 10
+    marginTop: 5,
+    marginBottom: 20
   },
   controlContainer: {
     display: 'flex',
@@ -288,7 +289,8 @@ export const styles = StyleSheet.create({
   containerImgSmaller: {
     display: 'flex',
     flexDirection: 'column',
-    marginLeft: 10
+    marginLeft: 10,
+    overflow: 'hidden',
   }, 
   imgSmaller: {
     width: 155,
@@ -311,6 +313,12 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 18,
     color: app_c.HEX.ext_second,
     ...app_typo.fonts.body5,
+    marginBottom: 5
+  },
+  weatherText: {
+    paddingLeft: 18,
+    color: app_c.HEX.third,
+    ...app_typo.fonts.h5,
     marginBottom: 5
   },
   openHoursContainer: {
@@ -348,7 +356,8 @@ export const styles = StyleSheet.create({
     top: 0,
     right: 0,
     left: 0,
-    backgroundColor: app_c.HEX.primary
+    backgroundColor: app_c.HEX.primary,
+    ...app_shdw.type_2
   },
   backbtn: {
     width: 35,
@@ -360,6 +369,18 @@ export const styles = StyleSheet.create({
     position: 'absolute',
     ...app_shdw.type_2,
     left: 18,
+    top: 40
+  },
+  settingBtn: {
+    width: 35,
+    height: 35,
+    borderRadius: '50%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: app_c.HEX.primary,
+    position: 'absolute',
+    ...app_shdw.type_2,
+    right: 18,
     top: 40
   },
   iconBack: {
@@ -404,7 +425,7 @@ export const styles = StyleSheet.create({
     borderStyle: 'dashed',
     borderWidth: 1,
     height: '110%',
-    width: '45%',
+    width: '42%',
     marginLeft: -2,
     paddingLeft: 14,
     paddingRight: 12,
@@ -432,13 +453,13 @@ export const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    paddingRight: 12
+    paddingRight: 0
   },
   rightContainerFrameInto: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingRight: 12
+    marginRight: 15
   },
   routeInfoTimeContainer: {
     display: 'flex',
@@ -449,7 +470,7 @@ export const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    marginRight: 5,
+    marginRight: 8,
   },
   routeInfoNumberTime: {
     color: app_c.HEX.ext_second,
@@ -462,21 +483,30 @@ export const styles = StyleSheet.create({
   routeInfoTranportContainer: {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   routeInfoTranport: {
     color: app_c.HEX.ext_second,
-    ...app_typo.fonts.h4,
+    ...app_typo.fonts.h3,
+  },
+  distanceText: {
+    color: app_c.HEX.ext_second,
+    ...app_typo.fonts.h5,
+    marginRight: 15
   },
   routeInfoTextTranport: {
     color: app_c.HEX.ext_second,
     ...app_typo.fonts.body5,
   },
+  containerBtnOptionRoute: {
+    flexDirection: 'row',
+    width: '100%',
+    paddingRight: 12
+  },
   btnStart: {
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    marginTop: 10,
-    ...app_sh.rounded_8,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+    ...app_sh.rounded_4,
     backgroundColor: app_c.HEX.third,
     flexDirection: 'row',
     alignItems: 'center',
@@ -484,6 +514,7 @@ export const styles = StyleSheet.create({
   textStart: {
     color: app_c.HEX.primary,
     ...app_typo.fonts.h5,
+    fontSize: 13,
     marginRight: 5
   },
   optionalContainer: {
@@ -519,7 +550,7 @@ export const styles = StyleSheet.create({
     borderBottomRightRadius: 8,
   },
   predefinedPlacesDescription: {
-    ...app_typo.fonts.h4,
+    ...app_typo.fonts.h5,
     color: app_c.HEX.third
   },
   routeBtn: {
@@ -583,4 +614,109 @@ export const styles = StyleSheet.create({
     color: app_c.HEX.third,
     ...app_typo.fonts.h4
   },
+  headerBottomSheetDirection: {
+    paddingBottom: 10,
+    paddingHorizontal: 18,
+  },
+  timeBottomSheetDirection: {
+    color: app_c.HEX.ext_second,
+    ...app_typo.fonts.h3,
+    marginTop: 3,
+  },
+  titleBottomSheetDirection: {
+    color: app_c.HEX.fourth,
+    ...app_typo.fonts.h2,
+  },
+  warningContainerBottomSheetDirection: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10
+},
+  warningBottomSheetDirection: {
+    color: app_c.HEX.ext_second,
+    ...app_typo.fonts.h5,
+    marginLeft: 10
+  },
+  containerDirections: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    paddingVertical: 20
+  },
+  containerTextDirections: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+    flex: 0.8,
+    textAlign: 'justify',
+    paddingHorizontal: 18
+  },
+  tilteDirections: {
+    color: app_c.HEX.fourth,
+    ...app_typo.fonts.h4,
+  },
+  descDirections: {
+    color: app_c.HEX.ext_second,
+    ...app_typo.fonts.body5,
+    marginTop: 5
+  },
+  timeContainerDirections: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 5
+  },
+  timecDirections: {
+    color: app_c.HEX.ext_second,
+    ...app_typo.fonts.h5,
+  },
+  discDirections: {
+    color: app_c.HEX.ext_second,
+    ...app_typo.fonts.h5,
+  },
+  containerIconDirection: {
+    flex: 0.2,
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerTextFilterContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 18,
+    paddingBottom:8,
+    backgroundColor: app_c.HEX.primary,
+  },
+  headerTextFilter: {
+    color: app_c.HEX.fourth,
+    ...app_typo.fonts.h3,
+    marginRight: 5
+  },
+  rightHeaderBtnFilter: {
+  },
+  leftHeaderBtnFilter: {
+  },
+  rightHeaderBtnTextFilter: {
+    color: app_c.HEX.third,
+    ...app_typo.fonts.h4,
+  },
+  titleBottomSheet:{
+    color: app_c.HEX.fourth,
+    ...app_typo.fonts.h4,
+    marginBottom: 10
+  },
+  saperate: {
+    height: 1,
+    borderBottomWidth: 1,
+    width: '100%',
+    borderColor: app_c.HEX.ext_third,
+    marginTop: 15,
+    marginBottom: 5,
+    borderRadius: 2
+  }
+  
 })
