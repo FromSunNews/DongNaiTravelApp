@@ -15,6 +15,6 @@ export const styles = StyleSheet.create({
     marginLeft: 5,
     padding: 5,
     paddingRight: 0,
-    ...app_typo.body4
+    ...app_typo.fonts.body5
   }
 })

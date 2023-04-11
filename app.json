@@ -23,6 +23,14 @@
     },
     "web": {
       "favicon": "./app/assets/images/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "expo-av",
+        {
+          "microphonePermission": "Allow DongNaiTravelApp to access your microphone."
+        }
+      ]
+    ]
   }
 }

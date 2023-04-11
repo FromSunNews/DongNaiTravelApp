@@ -6,6 +6,7 @@ const initialState = {
     appearNotificationBottomSheet: false,
     contentNotificationBottomSheet: '',
     isLoading: false,
+    privateKeys: null
   }
 }
 
@@ -26,6 +27,9 @@ export const manifoldSlice = createSlice({
     },
     updateLoading: (state, action) => {
       state.currentManifold.isLoading = action.payload
+    },
+    updatePrivateKeys: (state, action) => {
+      state.currentManifold.privateKeys = action.payload
     }
   }
 })
@@ -36,7 +40,8 @@ export const manifoldSlice = createSlice({
 export const { 
   updateCurrentManifold,
   updateLoading,
-  updateNotif
+  updateNotif,
+  updatePrivateKeys
   // Phương
 } = manifoldSlice.actions
 

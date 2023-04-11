@@ -18,7 +18,14 @@ import { injectStore } from 'axios/authorizedAxiosInstance'
 injectStore(store)
 
 import { injectStoreRequest } from 'request_api'
-import { app_c } from 'globals/styles'
+import { app_c, app_typo } from 'globals/styles'
+import { ToastProvider } from 'react-native-toast-notifications'
+
+// Phương: này là dùng cho socket
+import { io } from 'socket.io-client'
+import { API_ROOT } from 'utilities/constants'
+export const socketIoInstance = io(API_ROOT)
+
 injectStoreRequest(store)
 
 export default function App() {
@@ -44,29 +51,37 @@ export default function App() {
   }
 
   return (
-    <Provider store={store}>
-      <PersistGate loading={<Text>Loading...</Text>} persistor={persistor}>
-        {/* Phuong: anh huong den signin va sign up */}
-        {/* <SafeAreaView style={{backgroundColor: app_c.HEX.primary}}>
-          <StatusBar style="auto" />
-        </SafeAreaView> */}
+    // Phương: https://github.com/arnnis/react-native-toast-notifications
+    // Phương: mục dích để hiển thị những thông báo nhanh cho người dùng
+    <ToastProvider
+      normalColor={app_c.HEX.third}
+      offsetBottom={120}
+      textStyle={{ ...app_typo.fonts.h5, color: app_c.HEX.primary }}
+    >
+      <Provider store={store}>
+        <PersistGate loading={<Text>Loading...</Text>} persistor={persistor}>
+          {/* Phuong: anh huong den signin va sign up */}
+          {/* <SafeAreaView style={{backgroundColor: app_c.HEX.primary}}>
+            <StatusBar style="auto" />
+          </SafeAreaView> */}
 
-        <StatusBar 
-          barStyle='dark-content'
-          backgroundColor={app_c.HEX.primary}
-        />
-        
-        <NavigationContainer>
-          <AuthNavigator/>
-        </NavigationContainer>
-        
-        {/*Phuong: Hien thong bao cho toan he thong => test thu vao redux manifold => appearNotificationBottomSheet: true */}
-        <NotificationBottomSheet />
+          <StatusBar 
+            barStyle='dark-content'
+            backgroundColor={app_c.HEX.third}
+          />
+          
+          <NavigationContainer>
+            <AuthNavigator/>
+          </NavigationContainer>
+          
+          {/*Phuong: Hien thong bao cho toan he thong => test thu vao redux manifold => appearNotificationBottomSheet: true */}
+          <NotificationBottomSheet />
 
-        {/*Phuong: loading cho toan he thong => test thu vao redux manifold => isLoading: true */}
-        <Loading />
+          {/*Phuong: loading cho toan he thong => test thu vao redux manifold => isLoading: true */}
+          <Loading />
 
-      </PersistGate>
-    </Provider>
+        </PersistGate>
+      </Provider>
+    </ToastProvider>
   )
 }

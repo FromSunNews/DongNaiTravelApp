@@ -50,3 +50,53 @@ export const resetPasswordAPI = async (data) => {
   return request.data
 }
 
+export const getPrivateKeysAPI = async () => {
+  const request = await authorizedAxiosInstance.get(`${API_ROOT}/v1/map/private_keys`)
+  return request.data
+}
+
+export const getPlaceDetailsAPI = async (data) => {
+  const request = await authorizedAxiosInstance.post(`${API_ROOT}/v1/map/place_details`, data)
+  return request.data
+}
+
+export const getPlacesTextSearchAPI = async (data) => {
+  const request = await authorizedAxiosInstance.post(`${API_ROOT}/v1/map/places_text_search`, data)
+  return request.data
+}
+
+export const getMorePlacesTextSearchAPI = async (data) => {
+  const request = await axios.post(`${API_ROOT}/v1/map/places_text_search`, data)
+  return request.data
+}
+
+export const getRouteDirectionAPI = async (data) => {
+  const request = await authorizedAxiosInstance.post(`${API_ROOT}/v1/direction/route_direction`, data)
+  return request.data
+}
+
+export const getWeatherCurrentAPI = async (data) => {
+  const request = await axios.post(`${API_ROOT}/v1/map/weather_current`, data)
+  return request.data
+}
+
+export const getWeatherForecastAPI = async (data) => {
+  const request = await authorizedAxiosInstance.post(`${API_ROOT}/v1/map/weather_forecast`, data)
+  return request.data
+}
+
+
+export const getGeocodingReverseAPI = async (data) => {
+  const request = await axios.post(`${API_ROOT}/v1/map/geocoding_reverse`, data)
+  return request.data
+}
+
+export const getMapUserAPI = async (data) => {
+  const request = await axios.post(`${API_ROOT}/v1/users/get_map_user`, data)
+  return request.data
+}
+
+export const updateMapUserAPI = async (data) => {
+  const request = await axios.post(`${API_ROOT}/v1/users/update_map_user`, data)
+  return request.data
+}

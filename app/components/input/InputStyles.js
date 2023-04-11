@@ -15,6 +15,7 @@ export const styles = StyleSheet.create({
   input: {
     color: app_c.HEX.fourth,
     paddingHorizontal: 4,
+    paddingVertical: 10,
     backgroundColor: app_c.HEX.primary
   },
   icon: {
