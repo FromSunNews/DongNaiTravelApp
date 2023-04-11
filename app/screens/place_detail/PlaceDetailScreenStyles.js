@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   },
 
   pd_content_container: {
-    flex: 1
+    width: '100%',
   },
 
   pd_content_article: {
@@ -49,7 +49,6 @@ const styles = StyleSheet.create({
 
   pd_content_image_row_container: {
     flex: 1,
-    flexWrap: 'wrap',
     flexDirection: 'column'
   },
 

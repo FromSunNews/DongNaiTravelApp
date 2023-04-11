@@ -196,7 +196,7 @@ const SigninScreen = () => {
               onPress={handleSubmit(onSubmit)}
             /> */}
 
-            <RectangleButton
+             <RectangleButton
               overrideShape="rounded_8"
               typeOfButton="opacity"
               defaultColor="type_4"
@@ -214,7 +214,6 @@ const SigninScreen = () => {
       </TouchableWithoutFeedback>
       <View style={styles.containerFooter}>
         <TouchableOpacity
-
           style={{alignSelf: 'center'}}
           onPress={() => navigation.replace('GroupBottomTab')}
         >

@@ -147,8 +147,8 @@ const PlaceDetailScreen = () => {
           
           {/* Tabs */}
           <AppTabSlider>
-            <AppTabSlider.Slide name="about" component={() => <AboutSlide />} />
-            <AppTabSlider.Slide name="reviews" component={() => <ReviewsSlide />} />
+            <AppTabSlider.Child name="about" component={() => <AboutSlide />} />
+            <AppTabSlider.Child name="reviews" component={() => <ReviewsSlide />} />
           </AppTabSlider>
           
           <View style={{height: 100}}></View>
