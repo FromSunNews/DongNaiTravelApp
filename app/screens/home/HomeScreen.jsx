@@ -173,15 +173,20 @@ const HomeScreen = ({navigation}) => {
     })
   }
 
-  const getCurrentLocationAsync = async () => {
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== "granted") {
-      console.log("Permission denied");
-      return;
-    }
-    let location = await Location.getCurrentPositionAsync({});
-    setLocation(location);
-  };
+  // const getCurrentLocationAsync = async () => {
+  //   let { status } = await Location.requestForegroundPermissionsAsync();
+  //   if (status !== "granted") {
+  //     console.log("Permission denied");
+  //     return;
+  //   }
+  //   let location = await Location.getCurrentPositionAsync({});
+  //   setLocation(location);
+  // };
+
+  const handleReloadLocation = ()=>{
+    getCurrentWeather()
+    console.log(123)
+  }
 
 
   console.log(celsius)
@@ -191,11 +196,11 @@ const HomeScreen = ({navigation}) => {
   console.log(cloud)
   console.log(vision)
   console.log(desWeather)
-  console.log(location)
+  // console.log(location)
 
   useEffect(()=>{
     getCurrentWeather()
-    getCurrentLocationAsync()
+    // getCurrentLocationAsync()
   },[])
 
 
@@ -264,7 +269,7 @@ const HomeScreen = ({navigation}) => {
               </View>
             </View>
           </View>
-          <TouchableOpacity style={styles.temperature_reload}>
+          <TouchableOpacity style={styles.temperature_reload} onPress={handleReloadLocation}>
             <Ionicons name="reload-sharp" size={30} color={app_c.HEX.fourth} />
           </TouchableOpacity>
         </View>
