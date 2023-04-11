@@ -17,9 +17,12 @@ import HomeScreen from 'screens/home/HomeScreen'
 // import BlogsScreen from 'screens/blogs/BlogsScreen'
 import MapScreen from 'screens/map/MapScreen'
 import SettingScreen from 'screens/settings/SettingScreen'
+import SettingNavigator from 'navigations/setting_navigator/SettingNavigator'
 
 import styles from './GroupBottomTabStyles'
 import { app_dms } from 'globals/styles'
+import HomeNavigator from 'navigations/home_navigator/HomeNavigator'
+
 import { useEffect } from 'react'
 import { getPrivateKeysAPI } from 'request_api'
 import { useDispatch, useSelector } from 'react-redux'
@@ -214,7 +217,7 @@ useEffect(() => {
 				>
 						<Tab.Screen
 							name={'HomeScreen'}
-							component={HomeScreen}
+							component={HomeNavigator}
 							options={{
 								headerShown: false
 							}}>
@@ -246,7 +249,7 @@ useEffect(() => {
 
 						<Tab.Screen
 							name={'SettingScreen'}
-							component={SettingScreen}
+							component={SettingNavigator}
 							options={{
 								headerShown: false
 							}}>

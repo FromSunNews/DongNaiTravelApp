@@ -117,6 +117,22 @@ const AppHeader = ({
                 <Ionicons name="search-outline" size={18} style={currentLabelStyle} />
               )}
             />
+            
+            {
+              screenName==='Home' && (
+                <View style={{paddingLeft:10}}>
+                  <CircleButton
+                    defaultColor="type_2"
+                    boxShadowType="type_1"
+                    typeOfButton="opacity"
+                    onPress={() => navigation.navigate('Notification')}
+                    setIcon={(isActive, currentLabelStyle) => (
+                    <Ionicons name="notifications-sharp" size={18} style={currentLabelStyle} />
+                    )}
+                  />
+                </View>
+              )
+            }
           </View>
         )
       }

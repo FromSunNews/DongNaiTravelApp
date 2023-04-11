@@ -18,6 +18,7 @@ import CreatePost from 'screens/create_post/CreatePostScreen'
 import ForgotPasswordScreen from 'screens/fogot_password/ForgotPasswordScreen'
 import OtpScreen from 'screens/otp/OtpScreen'
 import ResetPasswordScreen from 'screens/reset_password/ResetPasswordScreen'
+import ProfileScreen from 'screens/profile_screen/ProfileScreen'
 
 const AuthNavigator = () => {
   // Phuong: https://reactnavigation.org/docs/getting-started
@@ -56,7 +57,7 @@ const AuthNavigator = () => {
         options={{ header: () => null }} 
       />
       {/* Phuong: Đối với signin va signup thì nếu mà người dùng đăng nhập r muốn logout ra thì vẫn phải hiện ra thôi*/}
-      <AppStack.Screen 
+       <AppStack.Screen 
         name="SigninScreen" 
         component={SigninScreen} 
         options={{ header: () => null }} 

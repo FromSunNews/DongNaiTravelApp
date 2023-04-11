@@ -4,7 +4,14 @@ import { API_ROOT } from 'utilities/constants'
 
 // Phương: Khởi tạo giá trị của một Slice trong redux
 const initialState = {
-  currentSetting: null
+  currentSetting: null,
+  notification: {
+    updateFromFollowing:true,
+    comments:true,
+    events:true,
+  }
+
+
 }
 
 // Phương: tạm thời cho setting được lấy về từ DB, có thể về sau sẽ đổi sang LocalStorage
@@ -27,7 +34,24 @@ export const settingSlice = createSlice({
     updateCurrentSetting: (state, action) => {
       const setting = action.payload
       state.currentSetting = setting
-    }
+    },
+    updateComments: (state, action) => {
+      const updateComments = action.payload
+      state.notification.comments = updateComments
+    },
+    updateFromFollowing: (state, action) => {
+      const updateFromFollowing = action.payload
+      state.notification.updateFromFollowing = updateFromFollowing
+    },
+    updateEvents: (state, action) => {
+      const updateEvents = action.payload
+      state.notification.events = updateEvents 
+    },
+    updateDarkMode: (state, action) => {
+      const updateDarkMode = action.payload
+      state.darkMode = updateDarkMode 
+    },
+
   },
   extraReducers: (builder) => {
     builder.addCase(fetchSettingAPI.fulfilled, (state, action) => {
@@ -43,12 +67,25 @@ export const settingSlice = createSlice({
 // Phương: Để ý ở trên thì không thấy properties actions đâu cả, bởi vì những cái actions này đơn giản là được thằng redux tạo tự động theo tên của reducer nhé.
 export const { 
   updateCurrentSetting,
+  updateFromFollowing,
+  updateComments,
+  updateEvents,
+  updateDarkMode
   // Phương
 } = settingSlice.actions
 
 // Phương: Selectors: mục đích là dành cho các components bên dưới gọi bằng useSelector() tới nó để lấy dữ liệu từ trong redux store ra sử dụng
 export const selectCurrentSetting = (state) => {
   return state.setting.currentSetting
+}
+
+export const selectCurrentNotifications = (state) => {
+  return state.setting.notification
+}
+
+
+export const selectCurrentDarkMode = (state) => {
+  return state.setting.darkMode
 }
 
 // Phương: Export default cái settingReducer của chúng ta để combineReducers trong store

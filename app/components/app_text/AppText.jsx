@@ -41,6 +41,7 @@ const AppText = ({
   hyperLink,
   toScreen = { screenName: "", params: {} },
   ...props
+  
 }) => {
   let stylePropIsArray = props.style instanceof Array;
 
