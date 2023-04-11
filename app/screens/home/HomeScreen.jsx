@@ -1,12 +1,16 @@
 import { View, Text, Button, TouchableOpacity, FlatList, ScrollView } from "react-native";
 import React, { useEffect,useState } from "react";
-import { Ionicons, Entypo,Fontisto,FontAwesome5} from "react-native-vector-icons";
+import { Ionicons, Entypo,Fontisto,FontAwesome5,MaterialCommunityIcons} from "react-native-vector-icons";
 
 import styles from "./HomeScreenStyles";
 import { app_c, app_sp, app_typo } from "globals/styles";
 import { AppText, HorizontalPlaceCard, RectangleButton,HorizontalBlogCard } from "components";
-import TabSlideCategory from "components/tab_slide_category/TabSlideCategory";
+import TabSlideCategoryPlace from "components/tab_slide_category_place/TabSlideCategoryPlace";
+import TabSlideCategoryBlog from "components/tab_slide_category_blog/TabSlideCategoryBlog";
 
+import { getWeatherCurrentAPI } from "request_api";
+import * as Location from "expo-location";
+ 
 const listOptionPlace = [
   {
     id: 0,
@@ -135,31 +139,68 @@ const Item = ({ item, onPress, backgroundColor, textColor }) => (
   </TouchableOpacity>
 );
 
-const HomeScreen = () => {
+
+
+const HomeScreen = ({navigation}) => {
   const [selectedId, setSelectedId] = useState(0);
   const [selectedIdOptionBlog,setSelectedIdOptionBlog] = useState (0)
 
   //template
-  const [celsius, setCelsius] = useState(31);
-  const [fahrenheit, setFahrenheit] = useState('');
+  const [celsius, setCelsius] = useState(null);
+  const [desWeather, setDesWeather] = useState(null);
+  const [humidity, setHumidity] = useState(null);
+  const [cloud, setCloud] = useState(null);
+  const [vision, setVision] = useState(null);
+  const [wind, setWind] = useState(null);
+  const [location,setLocation] = useState(null)  
+  function capitalizeFirstLetter(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+  
+  const getCurrentWeather= async ()=>{
+    const location={
+      "longitude": 106.477261,
+      "latitude": 10.437055
+  }
+    await getWeatherCurrentAPI(location)
+    .then(data => {
+      setCelsius(data.main.temp.toFixed(1))
+      setHumidity(data.main.humidity)
+      setWind(data.wind.speed.toFixed(1))
+      setCloud(data.clouds.all)
+      setVision(data.visibility / 1000)
+      setDesWeather(data.weather[0].description)
+    })
+  }
+
+  const getCurrentLocationAsync = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      console.log("Permission denied");
+      return;
+    }
+    let location = await Location.getCurrentPositionAsync({});
+    setLocation(location);
+  };
+
+
+  console.log(celsius)
+
+  console.log(humidity)
+  console.log(wind)
+  console.log(cloud)
+  console.log(vision)
+  console.log(desWeather)
+  console.log(location)
 
   useEffect(()=>{
-    const convertedValue = (celsius * 9/5) + 32;
-    setFahrenheit(convertedValue.toFixed(0));
-  },[celsius])
+    getCurrentWeather()
+    getCurrentLocationAsync()
+  },[])
 
-  const renderItem = ({ item }) => {
-    const backgroundColor = item.id === selectedId  ? app_c.HEX.fourth : app_c.HEX.ext_primary;
-    const color = item.id === selectedId ? app_c.HEX.ext_primary : app_c.HEX.fourth;
-    return (
-      <Item
-        item={item}
-        onPress={() => setSelectedId(item.id)}
-        backgroundColor={backgroundColor}
-        textColor={color}
-      />
-    );
-  };
+
+ 
+  
 
   return (
     <ScrollView style={styles.container}>
@@ -173,63 +214,79 @@ const HomeScreen = () => {
         <View style={styles.home_temperature}>
           <View style={styles.temperature}>
             <View style={styles.temperature_degrees}>
-              <AppText style={styles.temperature_degrees_info}>{`${celsius}°C - ${fahrenheit}°F`}</AppText>
+              {
+                celsius !== null && (
+                  <AppText style={styles.temperature_degrees_info}>{`${celsius}°C`}</AppText>
+                )
+              }
+              {
+                desWeather !== null && (
+                  <AppText style={[styles.temperature_degrees_info,{fontSize:16}]}>{capitalizeFirstLetter(desWeather)}</AppText>
+                )
+              }
             </View>
             <View style={styles.temperature_other_info}>
-              <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.sub1,paddingVertical:1}}><Fontisto name='wind' size={13} color={app_c.HEX.ext_second}/>{` `+ `15 km/h`}</AppText>
-              <AppText style={{...app_typo.fonts.normal.normal.sub1,paddingVertical:1}}><FontAwesome5 name='cloud-rain' size={15} color={app_c.HEX.ext_second}/>{` `+ `Rain`}</AppText>
+              <View style={[styles.temperature_other_info_half]}>
+                <View style={styles.temperature_other_info_quarter}>
+                  <Fontisto name='wind' size={15} color={app_c.HEX.ext_second}/>
+                  {
+                    wind !== null && (
+                    <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.sub0,paddingHorizontal:8,}}>{`${wind}`+`km/h`}</AppText>
+                    )
+                  }
+                </View>
+                <View style={styles.temperature_other_info_quarter}>
+                      <Entypo name='water' size={15} color={app_c.HEX.ext_second}/>
+                      {
+                        humidity !== null && (
+                          <AppText style={{...app_typo.fonts.normal.normal.sub0,paddingHorizontal:8}}>{`${humidity}`+`%`}</AppText>
+                        )
+                      }
+                </View>
+              </View>
+              <View style={styles.temperature_other_info_half}>
+                <View style={styles.temperature_other_info_quarter}>
+                  <Entypo name='cloud' size={15} color={app_c.HEX.ext_second}/>
+                  {
+                    cloud !== null && (
+                      <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.sub0,paddingHorizontal:8}}>{`${cloud}`+`km/h`}</AppText>
+                    )
+                  }
+                </View>
+               <View style={styles.temperature_other_info_quarter}>
+                  <MaterialCommunityIcons name='weather-fog' size={15} color={app_c.HEX.ext_second}/>
+                  {
+                    vision !== null && (
+                      <AppText style={{...app_typo.fonts.normal.normal.sub0,paddingHorizontal:8}}>{`${vision}`+`km`}</AppText>
+                    )
+                  }
+               </View>
+              </View>
             </View>
           </View>
           <TouchableOpacity style={styles.temperature_reload}>
             <Ionicons name="reload-sharp" size={30} color={app_c.HEX.fourth} />
           </TouchableOpacity>
         </View>
+
+        {/* Place and Blog*/}
         <View style={styles.home_category}>
-          <TouchableOpacity style={styles.category_header} >
+          <TouchableOpacity style={styles.category_header} onPress={()=>navigation.navigate("ExploreScreen")}>
             <AppText style={styles.category_name}>Place</AppText>
-              <AppText><Entypo name="chevron-small-right" size={30}/></AppText>
+            <AppText><Entypo name="chevron-small-right" size={40}/></AppText>
           </TouchableOpacity>
-
-          <View style={{paddingVertical:20}}>
-            <TabSlideCategory />
+          <View style={{paddingVertical:12}}>
+            <TabSlideCategoryPlace />
           </View>
-
-          <View style={{paddingVertical:20}}>
-            <TabSlideCategory />
-          </View>
-          <ScrollView style={styles.category_list_item} horizontal={true} showsHorizontalScrollIndicator={false}>
-            {
-              listPlaces.map(place=>(
-                <HorizontalPlaceCard place={place} key={place.id}/>
-              ))
-            }
-          </ScrollView>
-
         </View>
         <View style={styles.home_category}>
-          <TouchableOpacity style={styles.category_header} >
+          <TouchableOpacity style={styles.category_header} onPress={()=>navigation.navigate("BlogsScreen")} >
             <AppText style={styles.category_name}>Blog</AppText>
-              <AppText><Entypo name="chevron-small-right" size={30}/></AppText>
+            <AppText><Entypo name="chevron-small-right" size={40}/></AppText>
           </TouchableOpacity>
-          <View style={styles.category_option_list}>
-            <FlatList
-              horizontal={true}
-              data={listOptionBlog}
-              renderItem={renderItem}
-              keyExtractor={(item) => item.id.toString()}
-              extraData={selectedId}
-              showsHorizontalScrollIndicator={false}
-            />
+          <View style={{paddingVertical:12}}>
+            <TabSlideCategoryBlog />
           </View>
-          <ScrollView style={styles.category_list_item}  showsHorizontalScrollIndicator={false}>
-            {
-              listBlogs.map(blog=>(
-                <HorizontalBlogCard blog={blog} key={blog.id.toString()} />
-              ))
-            }
-            <FlatList/>
-          </ScrollView>
-
         </View>
       </View>
     </ScrollView>

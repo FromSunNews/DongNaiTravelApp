@@ -5197,6 +5197,11 @@
   "resolved" "https://registry.npmjs.org/expo-keep-awake/-/expo-keep-awake-11.0.1.tgz"
   "version" "11.0.1"
 
+"expo-location@^15.1.1":
+  "integrity" "sha512-hoKRlmi6Ya+NeZ72Zt385SDcSsIDpJI60TCBVO+Hc9xfKA9Hyminyyo5WiwI8J03igmPTCl8Y37MxBNKY9AWkg=="
+  "resolved" "https://registry.npmjs.org/expo-location/-/expo-location-15.1.1.tgz"
+  "version" "15.1.1"
+
 "expo-manifests@~0.4.0":
   "integrity" "sha512-IdZjIYDxx4nH0Gb3X4T4/2YknmR/jSLxymAS0m7SfJ9V7Vlu/y0p3lNwUys9/JzihxX9PDIuOi/Y4/uqL6TlXg=="
   "resolved" "https://registry.npmjs.org/expo-manifests/-/expo-manifests-0.4.0.tgz"

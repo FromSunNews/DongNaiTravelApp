@@ -7,8 +7,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: app_c.HEX.primary,
-    ...app_sp.ph_16,
     
+    ...app_sp.ph_16,
   },
   home_content: {
     width: '100%',
@@ -31,7 +31,6 @@ const styles = StyleSheet.create({
   temperature: {
     width: 267,
     height: 64,
-    backgroundColor: 'red',
     flexDirection: 'row',
     backgroundColor: app_c.HEX.ext_primary,
     justifyContent: 'space-around',
@@ -39,21 +38,32 @@ const styles = StyleSheet.create({
     ...app_sh.rounded_8
   },
   temperature_degrees: {
-    width: 174,
-    height: 39,
-    
+    width: 100,
+    height: '100%',
     justifyContent:'center',
-    alignItems:'center'
+    alignItems:'center',
   },
   temperature_degrees_info:{
     ...app_typo.fonts.normal.normal.h1,
     color:app_c.HEX.ext_second
   },
-  temperature_other_info: {
-    width: 60,
-    height: 39,
-    justifyContent:'center',
+  temperature_other_info_half: {
+    width: 140,
+    height: 20,
+    flexDirection:'row',
+    alignItems:"center",
+    // marginTop:3,
+    paddingRight:12
   },
+  temperature_other_info_quarter:{
+    flexDirection:'row',
+    width:'60%',
+
+  },
+  temperature_other_info:{
+    width:140,
+  },
+
   temperature_reload: {
     width: 64,
     height: 64,
@@ -68,10 +78,10 @@ const styles = StyleSheet.create({
     ...app_sh.rounded_8
   },
   category_header: {
-    ...app_sp.mt_22,
+    ...app_sp.mt_12,
     flexDirection: 'row',
     justifyContent: 'space-between',
-
+    alignItems:'center',
   },
   category_name: {
     ...app_typo.fonts.normal.bolder.h3

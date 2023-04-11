@@ -4,13 +4,13 @@ import { StyleSheet } from "react-native";
 const styles=StyleSheet.create({
   tab:{
     paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingVertical: 10,
     borderRadius: 8,
     backgroundColor: app_c.HEX.ext_primary,
   },
   active:{
     paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingVertical: 10,
     borderRadius: 8,
     backgroundColor:app_c.HEX.fourth,
    

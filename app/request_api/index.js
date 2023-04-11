@@ -50,3 +50,7 @@ export const resetPasswordAPI = async (data) => {
   return request.data
 }
 
+export const getWeatherCurrentAPI = async (data) => {
+  const request = await axios.post(`${API_ROOT}/v1/map/weather_current`, data)
+  return request.data
+}

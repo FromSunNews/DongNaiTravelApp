@@ -71,19 +71,19 @@ const HorizontalBlogCard = ({blog}) => {
               blog.user.avatar === ""
               ? (<Ionicons name="person-circle" color={app_c.HEX.ext_second} />)
               : (<Image source={{uri: blog.user.avatar}} />)
-            }<AppText font="body3" style={styles.card_text_color}>{" " + blog.user.name}</AppText>
+            }<AppText font="body2" style={styles.card_text_color}>{" " + blog.user.name}</AppText>
           </View>
           <View>
-            <AppText numberOfLines={2} font="h4" style={styles.card_title}>{blog.name}</AppText>
+            <AppText numberOfLines={2} font="h3" style={styles.card_title}>{blog.name}</AppText>
           </View>
           <View style={styles.card_information_container}>
             <View style={styles.card_information_col}>
-              <AppText font="body3" style={styles.card_text_color}>
+              <AppText font="body2" style={styles.card_text_color}>
                 {DateTimeUtility.getShortDateString(blog.createdAt)}
               </AppText>
             </View>
             <View style={{...styles.card_information_col, alignItems: 'flex-end'}}>
-              <AppText font="body3" style={styles.card_text_color}>
+              <AppText font="body2" style={styles.card_text_color}>
                 <Ionicons name='time-outline' /> {DateTimeUtility.toMinute(blog.readTime)} min
               </AppText>
             </View>
