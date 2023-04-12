@@ -20,11 +20,11 @@ export const styles = StyleSheet.create({
   textHeader: {
     color: app_c.HEX.fourth,
     marginBottom: 20,
-    ...app_typo.fonts.h1
+    ...app_typo.fonts.normal.bolder.h1
   },
   textInfo: {
     color: app_c.HEX.fourth,
-    ...app_typo.fonts.body4,
+    ...app_typo.fonts.normal.normal.body0,
   },
   image: {
     width: app_dms.screenWidth - 18 * 2,
@@ -35,7 +35,7 @@ export const styles = StyleSheet.create({
   textError: {
     color: '#F32424',
     marginTop: 5,
-    ...app_typo.fonts.body5
+    ...app_typo.fonts.normal.normal.body1
   },
   containerLabel: {
     alignItems: 'center',
@@ -46,6 +46,6 @@ export const styles = StyleSheet.create({
   labelSignin: {
     padding: 5,
     color: app_c.HEX.third,
-    ...app_typo.fonts.h5
+    ...app_typo.fonts.normal.bolder.h5
   }
 })

@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   label: {
-    ...app_typo.fonts.introText,
+    ...app_typo.fonts.normal.title.h1,
     color: app_c.HEX.fourth
   }
 })

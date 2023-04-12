@@ -21,7 +21,7 @@ export const styles = StyleSheet.create({
     color: app_c.HEX.fourth,
     marginTop: 10,
     // marginTop: 15,
-    ...app_typo.fonts.h3
+    ...app_typo.fonts.normal.bolder.h3
   },
   map: {
     flex: 1,
@@ -119,7 +119,7 @@ export const styles = StyleSheet.create({
   },
   noImageText: {
     color: app_c.HEX.ext_third,
-    ...app_typo.fonts.h3
+    ...app_typo.fonts.normal.bolder.h3
   },
   textContent: {
     flex: 2,
@@ -127,12 +127,12 @@ export const styles = StyleSheet.create({
   },
   cardtitle: {
     color: app_c.HEX.fourth,
-    ...app_typo.fonts.h5
+    ...app_typo.fonts.normal.bolder.h5
   },
   cardDescription: {
     marginTop: 2,
     color: app_c.HEX.fourth,
-    ...app_typo.fonts.body6
+    ...app_typo.fonts.normal.normal.body2
   },
   markerWrap: {
     alignItems: 'center',
@@ -189,7 +189,7 @@ export const styles = StyleSheet.create({
   },
   headerBottomSheet: {
     color: app_c.HEX.fourth,
-    ...app_typo.fonts.body2,
+    ...app_typo.fonts.normal.bolder.h1,
     paddingTop: 15,
     paddingLeft: 18,
     paddingBottom: 10,
@@ -221,7 +221,8 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 2,
     color: app_c.HEX.primary,
-    ...app_typo.fonts.h5
+    fontSize: 14,
+    fontWeight: 'bold'
   },  
   timeContainer: {
     display: 'flex',
@@ -231,7 +232,7 @@ export const styles = StyleSheet.create({
   textTimeDirection: {
     marginLeft: 5,
     color: app_c.HEX.ext_second,
-    ...app_typo.fonts.body5
+    ...app_typo.fonts.normal.normal.body1
   },
   dropDownContainer: {
     overflow: 'hidden',
@@ -243,12 +244,12 @@ export const styles = StyleSheet.create({
     paddingVertical: 2
   },
   textStatus: {
-    ...app_typo.fonts.h5,
+    ...app_typo.fonts.normal.bolder.h5,
     fontSize: 14
   },
   textTimeOpen: {
     color: app_c.HEX.ext_second,
-    ...app_typo.fonts.body5,
+    ...app_typo.fonts.normal.normal.body1,
     marginRight: 5
   },
   controlListContainer:{
@@ -270,7 +271,7 @@ export const styles = StyleSheet.create({
   },
   controlText: {
     marginLeft: 10,
-    ...app_typo.fonts.body5,
+    ...app_typo.fonts.normal.normal.body1,
   },
   imgListContainer:{
     paddingHorizontal: 18,
@@ -312,13 +313,13 @@ export const styles = StyleSheet.create({
   formattedAddress: {
     paddingHorizontal: 18,
     color: app_c.HEX.ext_second,
-    ...app_typo.fonts.body5,
+    ...app_typo.fonts.normal.normal.body1,
     marginBottom: 5
   },
   weatherText: {
     paddingLeft: 18,
     color: app_c.HEX.third,
-    ...app_typo.fonts.h5,
+    ...app_typo.fonts.normal.bolder.h5,
     marginBottom: 5
   },
   openHoursContainer: {
@@ -336,15 +337,15 @@ export const styles = StyleSheet.create({
   },
   weekdayText: {
     color: app_c.HEX.ext_second,
-    ...app_typo.fonts.body5,
+    ...app_typo.fonts.normal.normal.body1,
   },
   spaceForWeekdayText: {
     flex: 4
   },
   headerReview: {
     paddingHorizontal: 18,
-    color: app_c.HEX.fourth,
-    ...app_typo.fonts.body2,
+    color: app_c.HEX.ext_second,
+    ...app_typo.fonts.normal.bolder.h3,
     marginTop: 20
   },
   containerRouteInfo: {
@@ -388,7 +389,7 @@ export const styles = StyleSheet.create({
   },
   headerRouteInfo: {
     color: app_c.HEX.ext_second,
-    ...app_typo.fonts.h4,
+    ...app_typo.fonts.normal.bolder.h4,
     marginTop: 50
   },
   frameRouteInfo: {
@@ -433,18 +434,18 @@ export const styles = StyleSheet.create({
   },
   originText: {
     color: app_c.HEX.ext_second,
-    ...app_typo.fonts.h4,
+    ...app_typo.fonts.normal.bolder.h4,
     textDecorationLine: 'underline',
     paddingRight: 10
   },
   toText: {
     color: app_c.HEX.ext_second,
-    ...app_typo.fonts.body4,
+    ...app_typo.fonts.normal.normal.body0,
     marginVertical: 5
   },
   detinationText: {
     color: app_c.HEX.ext_second,
-    ...app_typo.fonts.h4,
+    ...app_typo.fonts.normal.bolder.h4,
     textDecorationLine: 'underline',
     paddingRight: 10
 
@@ -474,11 +475,11 @@ export const styles = StyleSheet.create({
   },
   routeInfoNumberTime: {
     color: app_c.HEX.ext_second,
-    ...app_typo.fonts.h3,
+    ...app_typo.fonts.normal.bolder.h3,
   },
   routeInfoTextTime: {
     color: app_c.HEX.ext_second,
-    ...app_typo.fonts.body5,
+    ...app_typo.fonts.normal.normal.body1,
   },
   routeInfoTranportContainer: {
     display: 'flex',
@@ -487,16 +488,16 @@ export const styles = StyleSheet.create({
   },
   routeInfoTranport: {
     color: app_c.HEX.ext_second,
-    ...app_typo.fonts.h3,
+    ...app_typo.fonts.normal.bolder.h3,
   },
   distanceText: {
     color: app_c.HEX.ext_second,
-    ...app_typo.fonts.h5,
+    ...app_typo.fonts.normal.bolder.h5,
     marginRight: 15
   },
   routeInfoTextTranport: {
     color: app_c.HEX.ext_second,
-    ...app_typo.fonts.body5,
+    ...app_typo.fonts.normal.normal.body1,
   },
   containerBtnOptionRoute: {
     flexDirection: 'row',
@@ -513,7 +514,7 @@ export const styles = StyleSheet.create({
   },
   textStart: {
     color: app_c.HEX.primary,
-    ...app_typo.fonts.h5,
+    ...app_typo.fonts.normal.bolder.h5,
     fontSize: 13,
     marginRight: 5
   },
@@ -550,7 +551,7 @@ export const styles = StyleSheet.create({
     borderBottomRightRadius: 8,
   },
   predefinedPlacesDescription: {
-    ...app_typo.fonts.h5,
+    ...app_typo.fonts.normal.bolder.h5,
     color: app_c.HEX.third
   },
   routeBtn: {
@@ -565,7 +566,7 @@ export const styles = StyleSheet.create({
   },
   routeBtnText: {
     color: app_c.HEX.primary,
-    ...app_typo.fonts.h5,
+    ...app_typo.fonts.normal.bolder.h5,
   },
   tagContainerTrans: {
     display: 'flex',
@@ -599,7 +600,7 @@ export const styles = StyleSheet.create({
   },
   headerTextFilter: {
     color: app_c.HEX.fourth,
-    ...app_typo.fonts.h3,
+    ...app_typo.fonts.normal.bolder.h3,
     paddingLeft: 5
   },
   rightHeaderBtnFilter: {
@@ -612,7 +613,7 @@ export const styles = StyleSheet.create({
   },
   rightHeaderBtnTextFilter: {
     color: app_c.HEX.third,
-    ...app_typo.fonts.h4
+    ...app_typo.fonts.normal.bolder.h4
   },
   headerBottomSheetDirection: {
     paddingBottom: 10,
@@ -620,12 +621,12 @@ export const styles = StyleSheet.create({
   },
   timeBottomSheetDirection: {
     color: app_c.HEX.ext_second,
-    ...app_typo.fonts.h3,
+    ...app_typo.fonts.normal.bolder.h3,
     marginTop: 3,
   },
   titleBottomSheetDirection: {
     color: app_c.HEX.fourth,
-    ...app_typo.fonts.h2,
+    ...app_typo.fonts.normal.bolder.h2,
   },
   warningContainerBottomSheetDirection: {
     display: 'flex',
@@ -635,7 +636,7 @@ export const styles = StyleSheet.create({
 },
   warningBottomSheetDirection: {
     color: app_c.HEX.ext_second,
-    ...app_typo.fonts.h5,
+    ...app_typo.fonts.normal.bolder.h5,
     marginLeft: 10
   },
   containerDirections: {
@@ -655,11 +656,11 @@ export const styles = StyleSheet.create({
   },
   tilteDirections: {
     color: app_c.HEX.fourth,
-    ...app_typo.fonts.h4,
+    ...app_typo.fonts.normal.bolder.h4,
   },
   descDirections: {
     color: app_c.HEX.ext_second,
-    ...app_typo.fonts.body5,
+    ...app_typo.fonts.normal.normal.body1,
     marginTop: 5
   },
   timeContainerDirections: {
@@ -670,11 +671,11 @@ export const styles = StyleSheet.create({
   },
   timecDirections: {
     color: app_c.HEX.ext_second,
-    ...app_typo.fonts.h5,
+    ...app_typo.fonts.normal.bolder.h5,
   },
   discDirections: {
     color: app_c.HEX.ext_second,
-    ...app_typo.fonts.h5,
+    ...app_typo.fonts.normal.bolder.h5,
   },
   containerIconDirection: {
     flex: 0.2,
@@ -693,7 +694,7 @@ export const styles = StyleSheet.create({
   },
   headerTextFilter: {
     color: app_c.HEX.fourth,
-    ...app_typo.fonts.h3,
+    ...app_typo.fonts.normal.bolder.h3,
     marginRight: 5
   },
   rightHeaderBtnFilter: {
@@ -702,11 +703,11 @@ export const styles = StyleSheet.create({
   },
   rightHeaderBtnTextFilter: {
     color: app_c.HEX.third,
-    ...app_typo.fonts.h4,
+    ...app_typo.fonts.normal.bolder.h4,
   },
   titleBottomSheet:{
     color: app_c.HEX.fourth,
-    ...app_typo.fonts.h4,
+    ...app_typo.fonts.normal.bolder.h4,
     marginBottom: 10
   },
   saperate: {

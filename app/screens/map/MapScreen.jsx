@@ -32,7 +32,6 @@ import * as Location from 'expo-location'
 
 // Related to map
 import MapView, { Callout, Marker, Polygon, Polyline, PROVIDER_GOOGLE } from 'react-native-maps'
-import MapViewDirections from 'react-native-maps-directions'
 import { MapViewWithHeading, ArrowedPolyline } from 'react-native-maps-line-arrow'
 
 // Related to raw datas
@@ -93,7 +92,6 @@ import { selectCurrentMap, updateCurrentMap, updateMapDetails, updateMapTypes, u
 const Map = () => {
 // Phương: https://docs.expo.dev/versions/latest/sdk/map-view/
 // Phương: https://www.npmjs.com/package/react-native-google-places-autocomplete
-// Phương: https://www.npmjs.com/package/react-native-maps-directions
 
   const Stack = createNativeStackNavigator()
   const navigation = useNavigation()
@@ -282,6 +280,7 @@ const Map = () => {
   }, [currentMap.userLocation])
 
   const handleGetUserLocation = async () => {
+    console.log('currentMap.userLocation', currentMap.userLocation)
     setOrigin(currentMap.userLocation)
     setLocationCurrent(currentMap.userLocation)
     setArrPlaceInput([
@@ -292,20 +291,20 @@ const Map = () => {
     ])
     setTextOrigin('My location')
     // call api mapuser
-    await getMapUserAPI({
-      currentUserId: user ? user._id : temporaryUserId,
-    }).then(res => {
-      console.log("🚀 ~ file: MapScreen.jsx:308 ~ res:", res)
-      const dataToUpdate = {
-        ...currentMap,
-        places: res.places,
-        suggestions: res.suggestions,
-      }
-      console.log("============================================================================================")
+    // await getMapUserAPI({
+    //   currentUserId: user?._id ? user._id : temporaryUserId,
+    // }).then(res => {
+    //   console.log("🚀 ~ file: MapScreen.jsx:308 ~ res:", res)
+    //   const dataToUpdate = {
+    //     ...currentMap,
+    //     places: res.places,
+    //     suggestions: res.suggestions,
+    //   }
+    //   console.log("============================================================================================")
 
-      console.log("🚀 ~ file: MapScreen.jsx:314 ~ dataToUpdate:", dataToUpdate)
-      dispatch(updateCurrentMap(dataToUpdate))
-    })
+    //   console.log("🚀 ~ file: MapScreen.jsx:314 ~ dataToUpdate:", dataToUpdate)
+    //   dispatch(updateCurrentMap(dataToUpdate))
+    // })
     // call api weather
     await getWeatherCurrentAPI(currentMap.userLocation).then(weatherData => {
       setWeather(weatherData)
@@ -1243,7 +1242,7 @@ const Map = () => {
             <Text
               style={{
                 color: app_c.HEX.primary,
-                ...app_typo.fonts.body6,
+                ...app_typo.fonts.normal.normal.body2,
                 padding: 2
               }}
             >{weather.main.temp.toFixed(1)}°C</Text>
@@ -2081,8 +2080,8 @@ const Map = () => {
                   <StarRating 
                     ratings={place.rating} 
                     reviews={place.user_ratings_total} 
-                    textRatingStyle={{...app_typo.fonts.body6}} 
-                    textReviewStyle={{...app_typo.fonts.body6}}
+                    textRatingStyle={{...app_typo.fonts.normal.normal.body2}} 
+                    textReviewStyle={{...app_typo.fonts.normal.normal.body2}}
                   />
                   <Text
                     numberOfLines={1}
@@ -2225,7 +2224,7 @@ const Map = () => {
               <BottomSheetView>
                 <Text style={{
                   color: app_c.HEX.fourth,
-                  ...app_typo.fonts.h2,
+                  ...app_typo.fonts.normal.bolder.h1,
                   paddingTop: 15,
                   paddingLeft: 18,
                   paddingBottom: 10
@@ -2248,7 +2247,7 @@ const Map = () => {
                       }}>
                           <Text style={{
                             color: app_c.HEX.third,
-                            ...app_typo.fonts.h4
+                            ...app_typo.fonts.normal.bolder.h4
                           }}>{weatherSelected === 0 ? moment(new Date(weatherData.weatherCurrent.sys.sunrise * 1000)).format("kk:mm") : "Không có dữ liệu"}</Text>
                         <Image source={require('../../assets/images/weather/sunrise.png')} style={{
                           height: 45,
@@ -2256,7 +2255,7 @@ const Map = () => {
                         }}/>
                         <Text style={{
                           color: app_c.HEX.ext_second,
-                          ...app_typo.fonts.h5
+                          ...app_typo.fonts.normal.bolder.h5
                         }}>Bình minh</Text>
                       </View>
                     }
@@ -2266,8 +2265,8 @@ const Map = () => {
                       flex: 1
                     }}>
                       <Text style={{ 
-                        color: app_c.HEX.fourth,
-                        ...app_typo.fonts.h3
+                        color: app_c.HEX.ext_second,
+                        ...app_typo.fonts.normal.bolder.h3
                       }}>{weatherData.nameGeocoding}</Text>
 
                       <Image source={weatherSelected === 0 ? weatherIcons[weatherData.weatherCurrent.weather[0].icon] : weatherIcons[weatherData.weatherForecast[weatherSelected-1].weather[0].icon]} style={{
@@ -2277,13 +2276,13 @@ const Map = () => {
                         marginVertical: -20
                       }}/>
                       <Text style={{
-                        color: app_c.HEX.fourth,
-                        ...app_typo.fonts.h0
+                        color: app_c.HEX.ext_second,
+                        ...app_typo.fonts.normal.bolder.h0
                       }}>{weatherSelected === 0 ? weatherData.weatherCurrent.main.temp.toFixed(1) : weatherData.weatherForecast[weatherSelected-1].main.temp.toFixed(1)}°C</Text>
 
                       <Text style={{
-                        color: app_c.HEX.fourth,
-                        ...app_typo.fonts.h3,
+                        color: app_c.HEX.ext_second,
+                        ...app_typo.fonts.normal.bolder.h3,
                         textAlign: 'center',
                         marginVertical: 5
                       }}>{weatherSelected === 0 ? weatherData.weatherCurrent.weather[0].description : weatherData.weatherForecast[weatherSelected-1].weather[0].description}</Text>
@@ -2296,7 +2295,7 @@ const Map = () => {
                         
                       <Text style={{
                         color: '#018749',
-                        ...app_typo.fonts.h5
+                        ...app_typo.fonts.normal.bolder.h5
                       }}>Thấp: {weatherSelected === 0 ? weatherData.weatherCurrent.main.temp_min.toFixed(1) : weatherData.weatherForecast[weatherSelected-1].main.temp_min.toFixed(1)}°C</Text>
                       
                       <View style={{
@@ -2309,13 +2308,13 @@ const Map = () => {
 
                       <Text style={{
                         color: '#CC0000',
-                        ...app_typo.fonts.h5
+                        ...app_typo.fonts.normal.bolder.h5
                       }}>Cao: {weatherSelected === 0 ? weatherData.weatherCurrent.main.temp_max.toFixed(1) : weatherData.weatherForecast[weatherSelected-1].main.temp_max.toFixed(1)}°C</Text>
                       </View>
 
                       <Text style={{
                         color: app_c.HEX.ext_second,
-                        ...app_typo.fonts.h5
+                        ...app_typo.fonts.normal.bolder.h5
                       }}>Cảm thấy như: {weatherSelected === 0 ? weatherData.weatherCurrent.main.feels_like.toFixed(1) : weatherData.weatherForecast[weatherSelected-1].main.feels_like.toFixed(1)}°C</Text> 
                     </View>
 
@@ -2326,7 +2325,7 @@ const Map = () => {
                       }}>
                           <Text style={{
                             color: app_c.HEX.third,
-                            ...app_typo.fonts.h4
+                            ...app_typo.fonts.normal.bolder.h4
                           }}>{weatherSelected === 0 ? moment(new Date(weatherData.weatherCurrent.sys.sunset * 1000)).format("kk:mm") : "Không có dữ liệu"}</Text>
                         <Image source={require('../../assets/images/weather/sunset.png')} style={{
                           height: 50,
@@ -2334,7 +2333,7 @@ const Map = () => {
                         }}/>
                         <Text style={{
                           color: app_c.HEX.ext_second,
-                          ...app_typo.fonts.h5
+                          ...app_typo.fonts.normal.bolder.h5
                         }}>Hoàng hôn</Text>
                       </View>
                     }
@@ -2360,7 +2359,7 @@ const Map = () => {
                     <Text
                       style={{
                         color: app_c.HEX.third,
-                      ...app_typo.fonts.h4
+                      ...app_typo.fonts.normal.bolder.h4
                       }}
                     >{weatherSelected === 0 ? weatherData.weatherCurrent.wind.speed.toFixed(1) : weatherData.weatherForecast[weatherSelected-1].wind.speed.toFixed(1)}km/h</Text>
                     <MaterialCommunityIcons 
@@ -2373,7 +2372,7 @@ const Map = () => {
                     />
                     <Text style={{
                       color: app_c.HEX.ext_second,
-                      ...app_typo.fonts.h5
+                      ...app_typo.fonts.normal.bolder.h5
                     }}>Tốc độ gió</Text>
                   </View>
                   <View style={{
@@ -2390,7 +2389,7 @@ const Map = () => {
                     <Text
                       style={{
                         color: app_c.HEX.third,
-                      ...app_typo.fonts.h4
+                      ...app_typo.fonts.normal.bolder.h4
                       }}
                     >{weatherSelected === 0 ? weatherData.weatherCurrent.main.humidity : weatherData.weatherForecast[weatherSelected-1].main.humidity}%</Text>
                     <Entypo 
@@ -2403,7 +2402,7 @@ const Map = () => {
                     />
                     <Text style={{
                       color: app_c.HEX.ext_second,
-                      ...app_typo.fonts.h5
+                      ...app_typo.fonts.normal.bolder.h5
                     }}>Độ ẩm</Text>
                   </View>
                   <View style={{
@@ -2420,7 +2419,7 @@ const Map = () => {
                     <Text
                       style={{
                         color: app_c.HEX.third,
-                      ...app_typo.fonts.h4
+                      ...app_typo.fonts.normal.bolder.h4
                       }}
                     >{weatherSelected === 0 ? weatherData.weatherCurrent.clouds.all : weatherData.weatherForecast[weatherSelected-1].clouds.all}%</Text>
                     <Entypo 
@@ -2433,7 +2432,7 @@ const Map = () => {
                     />
                     <Text style={{
                       color: app_c.HEX.ext_second,
-                      ...app_typo.fonts.h5
+                      ...app_typo.fonts.normal.bolder.h5
                     }}>Mây</Text>
                   </View>
                   <View style={{
@@ -2450,7 +2449,7 @@ const Map = () => {
                     <Text
                       style={{
                         color: app_c.HEX.third,
-                      ...app_typo.fonts.h4
+                      ...app_typo.fonts.normal.bolder.h4
                       }}
                     >{weatherSelected === 0 ? (weatherData.weatherCurrent.visibility/1000).toFixed(1) : (weatherData.weatherForecast[weatherSelected-1].visibility/1000).toFixed(1)}km</Text>
                     <MaterialCommunityIcons 
@@ -2463,7 +2462,7 @@ const Map = () => {
                     />
                     <Text style={{
                       color: app_c.HEX.ext_second,
-                      ...app_typo.fonts.h5
+                      ...app_typo.fonts.normal.bolder.h5
                     }}>Tầm nhìn</Text>
                   </View>
                 </View>
@@ -2472,7 +2471,7 @@ const Map = () => {
                   marginLeft: 18,
                   marginTop: 20,
                   color: app_c.HEX.ext_second,
-                  ...app_typo.fonts.h4
+                  ...app_typo.fonts.normal.bolder.h4
                 }}>Dự báo 5 ngày / 3h</Text>
 
                 <FlatList 
@@ -2515,11 +2514,11 @@ const Map = () => {
                             >
                             <Text style={{
                               color: weatherSelected === 0 ? app_c.HEX.primary : app_c.HEX.ext_second,
-                              ...app_typo.fonts.h5
+                              ...app_typo.fonts.normal.bolder.h5
                             }}>{moment(new Date(weatherData.weatherCurrent.dt * 1000)).format("DD/MM/YYYY")}</Text>
                             <Text style={{
                               color: weatherSelected === 0 ? app_c.HEX.primary : app_c.HEX.ext_second,
-                              ...app_typo.fonts.h5
+                              ...app_typo.fonts.normal.bolder.h5
                             }}>{moment(new Date(weatherData.weatherCurrent.dt * 1000)).format("kk:mm")}</Text>
                             <Image source={weatherIcons[weatherData.weatherCurrent.weather[0].icon]} style={{
                               height: 50,
@@ -2529,7 +2528,7 @@ const Map = () => {
                             }}/>
                             <Text style={{
                               color: weatherSelected === 0 ? app_c.HEX.primary : app_c.HEX.ext_second,
-                              ...app_typo.fonts.h3
+                              ...app_typo.fonts.normal.bolder.h3
                             }}>{weatherData.weatherCurrent.main.temp.toFixed(1)}°C</Text>
                           </TouchableOpacity>
                         }
@@ -2552,11 +2551,11 @@ const Map = () => {
                           >
                           <Text style={{
                             color: weatherSelected === index+1 ? app_c.HEX.primary : app_c.HEX.ext_second,
-                            ...app_typo.fonts.h5
+                            ...app_typo.fonts.normal.bolder.h5
                           }}>{date}</Text>
                           <Text style={{
                             color: weatherSelected === index+1 ? app_c.HEX.primary : app_c.HEX.ext_second,
-                            ...app_typo.fonts.h5
+                            ...app_typo.fonts.normal.bolder.h5
                           }}>{time}</Text>
                           <Image source={weatherIcons[dateTimeData.weather[0].icon]} style={{
                             height: 50,
@@ -2566,7 +2565,7 @@ const Map = () => {
                           }}/>
                           <Text style={{
                             color: weatherSelected === index+1 ? app_c.HEX.primary : app_c.HEX.ext_second,
-                            ...app_typo.fonts.h3
+                            ...app_typo.fonts.normal.bolder.h3
                           }}>{dateTimeData.main.temp.toFixed(1)}°C</Text>
                         </TouchableOpacity>
                       </>
@@ -2745,7 +2744,7 @@ const Map = () => {
                             }}/>
                             <Text style={{
                               color: currentMap.mapTypes === item.id ? app_c.HEX.third : app_c.HEX.ext_second,
-                              ...app_typo.fonts.h5,
+                              ...app_typo.fonts.normal.bolder.h5,
                               marginTop: 10
                             }}>{item.vi}</Text>
                           </TouchableOpacity>
@@ -2780,7 +2779,7 @@ const Map = () => {
                   }}/>
                   <Text style={{
                     color: currentMap.mapDetails ? app_c.HEX.third : app_c.HEX.ext_second,
-                    ...app_typo.fonts.h5,
+                    ...app_typo.fonts.normal.bolder.h5,
                     marginTop: 10
                   }}>{mapTypes[mapTypes.length -1].vi}</Text>
                 </TouchableOpacity>
@@ -2866,8 +2865,8 @@ const Map = () => {
                   ratings={placeDetails?.rating} 
                   reviews={placeDetails?.user_ratings_total} 
                   containerStyle={styles.starRating}
-                  textRatingStyle={{color: app_c.HEX.ext_second, ...app_typo.fonts.body5}}
-                  textReviewStyle={{color: app_c.HEX.ext_second, ...app_typo.fonts.body5}}
+                  textRatingStyle={{color: app_c.HEX.ext_second, ...app_typo.fonts.normal.normal.body1}}
+                  textReviewStyle={{color: app_c.HEX.ext_second, ...app_typo.fonts.normal.normal.body1}}
                 />
               }
 

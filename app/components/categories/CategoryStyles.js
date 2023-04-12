@@ -23,7 +23,7 @@ export const styles = StyleSheet.create({
   },
   sectionSeclectMultipleHeaderLeft: {
     color: app_c.HEX.fourth,
-    ...app_typo.fonts.h4
+    ...app_typo.fonts.normal.bolder.h4
   },
   sectionSeclectMultipleHeaderRight: {
     flexDirection: 'row',
@@ -31,7 +31,7 @@ export const styles = StyleSheet.create({
   },
   multipleHeaderRightText: {
     color: app_c.HEX.ext_second,
-    ...app_typo.fonts.h5,
+    ...app_typo.fonts.normal.bolder.h5,
     marginRight: 5
   },
   sectionSeclectMultipleBodyContainer: {
@@ -56,7 +56,7 @@ export const styles = StyleSheet.create({
   },
   bodySelectAllText: {
     color: app_c.HEX.ext_third,
-    ...app_typo.fonts.h5,
+    ...app_typo.fonts.normal.bolder.h5,
     borderWidth: 1,
     paddingVertical: 5,
     borderColor: app_c.HEX.ext_third,
@@ -68,7 +68,7 @@ export const styles = StyleSheet.create({
   bodyItemText: {
     marginRight: 5,
     color: app_c.HEX.primary,
-    ...app_typo.fonts.h5,
+    ...app_typo.fonts.normal.bolder.h5,
   },
   sectionRadioList: {
     flexDirection: 'column',
@@ -82,7 +82,7 @@ export const styles = StyleSheet.create({
   },
   sectionRadioItemText: {
     color: app_c.HEX.ext_second,
-    ...app_typo.fonts.h5,
+    ...app_typo.fonts.normal.bolder.h5,
   },
   sectionRadiusContainer: {
     flexDirection: 'row',
@@ -101,7 +101,7 @@ export const styles = StyleSheet.create({
   },
   sectionRadiusText: {
     color: app_c.HEX.ext_second,
-    ...app_typo.fonts.h4,
+    ...app_typo.fonts.normal.bolder.h4,
   },
   controlLocationBtn: {
     width: '100%',
@@ -112,7 +112,7 @@ export const styles = StyleSheet.create({
   },
   controlLocationText: {
     color: app_c.HEX.third,
-    ...app_typo.fonts.h4,
+    ...app_typo.fonts.normal.bolder.h4,
   },
   btn: {
     display: 'flex',
@@ -126,7 +126,7 @@ export const styles = StyleSheet.create({
     borderRadius: 8,
   },
   btnText: {
-    ...app_typo.fonts.h4,
+    ...app_typo.fonts.normal.bolder.h4,
     color: app_c.HEX.primary,
     fontWeight: '600'
   },
@@ -142,7 +142,7 @@ export const styles = StyleSheet.create({
   },
   headerTextFilter: {
     color: app_c.HEX.fourth,
-    ...app_typo.fonts.h3,
+    ...app_typo.fonts.normal.bolder.h3,
     paddingLeft: 5
   },
   rightHeaderBtnFilter: {
@@ -156,7 +156,7 @@ export const styles = StyleSheet.create({
   },
   rightHeaderBtnTextFilter: {
     color: app_c.HEX.third,
-    ...app_typo.fonts.h4,
+    ...app_typo.fonts.normal.bolder.h4,
     paddingVertical: 5,
     paddingRight: 0,
     paddingLeft: 10
@@ -172,7 +172,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 10
   },
   cardCategoryText: {
-    ...app_typo.fonts.h5
+    ...app_typo.fonts.normal.bolder.h5
   },
   saperate: {
     height: 1,

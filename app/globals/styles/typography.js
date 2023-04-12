@@ -9,6 +9,9 @@ const APP_FONT_SIZE_18 = 18
 const APP_FONT_SIZE_20 = 20
 const APP_FONT_SIZE_24 = 24
 const APP_FONT_SIZE_30 = 30
+const APP_FONT_SIZE_35 = 35
+const APP_FONT_SIZE_40 = 40
+const APP_FONT_SIZE_45 = 45
 
 const APP_FONT_DECORATION_DASED = 'dashed'
 const APP_FONT_DECORATION_DOTTED = 'dotted'
@@ -111,6 +114,13 @@ const fonts = {
       // Sub
       sub0: { fontFamily: "Roboto-Thin", fontSize: APP_FONT_SIZE_14},
       sub1: { fontFamily: "Roboto-Thin", fontSize: APP_FONT_SIZE_12},
+    },
+
+    title: {
+      h0: { fontFamily: "Roboto-Black", fontSize: APP_FONT_SIZE_45},
+      h1: { fontFamily: "Roboto-Black", fontSize: APP_FONT_SIZE_40},
+      h2: { fontFamily: "Roboto-Black", fontSize: APP_FONT_SIZE_35},
+      h3: { fontFamily: "Roboto-Black", fontSize: APP_FONT_SIZE_30},
     }
   },
 

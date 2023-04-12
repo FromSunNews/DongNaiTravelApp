@@ -21,13 +21,13 @@ export const styles = StyleSheet.create({
   textHeader: {
     color: app_c.HEX.fourth,
     marginBottom: 20,
-    ...app_typo.fonts.h1
+    ...app_typo.fonts.normal.bolder.h1
   },
   textError: {
     flex: 1,
     color: '#F32424',
     marginTop: 5,
-    ...app_typo.fonts.body5,
+    ...app_typo.fonts.normal.normal.body1,
     alignSelf: 'flex-start',
   },
   label: {
@@ -37,7 +37,7 @@ export const styles = StyleSheet.create({
     paddingRight: 0,
   },
   smallLabel: {
-    ...app_typo.fonts.body5,
+    ...app_typo.fonts.normal.normal.body1,
     color: app_c.HEX.fourth,
     marginBottom: 0,
     marginTop: 30,

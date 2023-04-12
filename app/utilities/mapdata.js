@@ -1063,6 +1063,13 @@ export const typesPlace = [
       vi: 'Danh lam thắng cảnh'
     }
   },
+  {
+    id: 'hotel',
+    hotel: {
+      en: 'Hotel',
+      vi: 'Khách sạn'
+    }
+  },
 ]
 
 // export const typesPlace = [
