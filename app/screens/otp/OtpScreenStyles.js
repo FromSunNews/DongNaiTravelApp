@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
   textHeader: {
     color: app_c.HEX.fourth,
     marginBottom: 0,
-    ...app_typo.fonts.h1,
+    ...app_typo.fonts.normal.bolder.h1,
     marginTop: Constants.statusBarHeight,
     alignSelf: 'flex-start'
   },
@@ -31,7 +31,7 @@ export const styles = StyleSheet.create({
   },
   label: {
     color: app_c.HEX.fourth,
-    ...app_typo.fonts.body4,
+    ...app_typo.fonts.normal.normal.body0,
     marginBottom: 30,
     alignSelf: 'center'
   },
@@ -55,7 +55,7 @@ export const styles = StyleSheet.create({
   cellText: {
     textAlign: 'center',
     color: app_c.HEX.fourth,
-    ...app_typo.fonts.h2
+    ...app_typo.fonts.normal.bolder.h2
   },
   bottomView: {
     flexDirection: 'row',
@@ -72,7 +72,7 @@ export const styles = StyleSheet.create({
   textChange: {
     alignItems: 'center', 
     color: app_c.HEX.third,
-    ...app_typo.fonts.h5
+    ...app_typo.fonts.normal.bolder.h5
   }, 
   btnChangeResend: {
     width: 150,
@@ -83,6 +83,6 @@ export const styles = StyleSheet.create({
   },
   textResend: {
     alignItems: 'center',
-    ...app_typo.fonts.h5
+    ...app_typo.fonts.normal.bolder.h5
   }
 })

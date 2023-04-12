@@ -56,7 +56,7 @@ export default function App() {
     <ToastProvider
       normalColor={app_c.HEX.third}
       offsetBottom={120}
-      textStyle={{ ...app_typo.fonts.h5, color: app_c.HEX.primary }}
+      textStyle={{ ...app_typo.fonts.normal.bolder.h5, color: app_c.HEX.primary }}
     >
       <Provider store={store}>
         <PersistGate loading={<Text>Loading...</Text>} persistor={persistor}>

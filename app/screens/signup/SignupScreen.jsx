@@ -115,7 +115,7 @@ const SignupScreen = () => {
           </TouchableWithoutFeedback> */}
             <View style={styles.container}>
               <View style={styles.content}>
-              <Text style={styles.textHeader}>Sign up</Text>
+              <Text style={styles.textHeader}>Sign Up</Text>
 
               <Text style={[styles.smallLabel,{ marginTop: 0}]}>Introduce yourself</Text>
 
@@ -370,7 +370,7 @@ const SignupScreen = () => {
                   <TouchableOpacity
                     onPress={() => navigation.pop()}
                   >
-                    <Text style={styles.labelSignup}>Sign in</Text>
+                    <Text style={styles.labelSignup}>Sign In</Text>
                   </TouchableOpacity>
                 </View>
             </View>

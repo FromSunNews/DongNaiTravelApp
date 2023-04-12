@@ -117,7 +117,7 @@ const SigninScreen = () => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={{flex: 1}}>
           <View style={styles.content}>
-          <Text style={styles.textHeader}>Sign in</Text>
+          <Text style={styles.textHeader}>Sign In</Text>
             <Image
               style={styles.image}
               source={require('assets/images/illutration1.png')}

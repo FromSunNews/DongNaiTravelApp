@@ -48,12 +48,12 @@ export const styles = StyleSheet.create({
     borderRadius: 8,
   },
   btnText: {
-    ...app_typo.fonts.h4,
+    ...app_typo.fonts.normal.bolder.h4,
     color: app_c.HEX.primary,
     fontWeight: '600'
   },
   headerText: {
-    ...app_typo.fonts.h4,
+    ...app_typo.fonts.normal.bolder.h4,
     color: app_c.HEX.fourth,
     marginTop: 20,
   },

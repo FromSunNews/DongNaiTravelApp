@@ -1,15 +1,17 @@
-import { View, Text, Button, TouchableOpacity, FlatList, ScrollView } from "react-native";
-import React, { useEffect,useState } from "react";
-import { Ionicons, Entypo,Fontisto,FontAwesome5,MaterialCommunityIcons} from "react-native-vector-icons";
+import { View, Text, Button, TouchableOpacity, FlatList, ScrollView } from "react-native"
+import React, { useEffect,useState } from "react"
+import { Ionicons, Entypo,Fontisto,FontAwesome5,MaterialCommunityIcons} from "react-native-vector-icons"
 
-import styles from "./HomeScreenStyles";
-import { app_c, app_sp, app_typo } from "globals/styles";
-import { AppText, HorizontalPlaceCard, RectangleButton,HorizontalBlogCard } from "components";
-import TabSlideCategoryPlace from "components/tab_slide_category_place/TabSlideCategoryPlace";
-import TabSlideCategoryBlog from "components/tab_slide_category_blog/TabSlideCategoryBlog";
+import styles from "./HomeScreenStyles"
+import { app_c, app_sp, app_typo } from "globals/styles"
+import { AppText, HorizontalPlaceCard, RectangleButton,HorizontalBlogCard } from "components"
+import TabSlideCategoryPlace from "components/tab_slide_category_place/TabSlideCategoryPlace"
+import TabSlideCategoryBlog from "components/tab_slide_category_blog/TabSlideCategoryBlog"
 
-import { getWeatherCurrentAPI } from "request_api";
-import * as Location from "expo-location";
+import { getWeatherCurrentAPI } from "request_api"
+import * as Location from "expo-location"
+import { useSelector } from "react-redux"
+import { selectCurrentMap } from "redux/map/mapSlice"
  
 const listOptionPlace = [
   {
@@ -32,7 +34,7 @@ const listOptionPlace = [
     id: 4,
     title: "Perfect Star",
   },
-];
+]
 
 const listOptionBlog=[
   {
@@ -137,31 +139,32 @@ const Item = ({ item, onPress, backgroundColor, textColor }) => (
   >
     <AppText style={[styles.title, { color: textColor }]}>{item.title}</AppText>
   </TouchableOpacity>
-);
+)
 
 
 
 const HomeScreen = ({navigation}) => {
-  const [selectedId, setSelectedId] = useState(0);
+
+  const currentMap = useSelector(selectCurrentMap)
+
+  const [selectedId, setSelectedId] = useState(0)
   const [selectedIdOptionBlog,setSelectedIdOptionBlog] = useState (0)
 
+  const [showPanelWeather, setShowPanelWeather] = useState(false)
   //template
-  const [celsius, setCelsius] = useState(null);
-  const [desWeather, setDesWeather] = useState(null);
-  const [humidity, setHumidity] = useState(null);
-  const [cloud, setCloud] = useState(null);
-  const [vision, setVision] = useState(null);
-  const [wind, setWind] = useState(null);
-  const [location,setLocation] = useState(null)  
+  const [celsius, setCelsius] = useState(null)
+  const [desWeather, setDesWeather] = useState(null)
+  const [humidity, setHumidity] = useState(null)
+  const [cloud, setCloud] = useState(null)
+  const [vision, setVision] = useState(null)
+  const [wind, setWind] = useState(null)
+  // const [location,setLocation] = useState(null)  
   function capitalizeFirstLetter(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
+    return str.charAt(0).toUpperCase() + str.slice(1)
   }
   
-  const getCurrentWeather= async ()=>{
-    const location={
-      "longitude": 106.477261,
-      "latitude": 10.437055
-  }
+  const getCurrentWeather= async (location)=>{
+
     await getWeatherCurrentAPI(location)
     .then(data => {
       setCelsius(data.main.temp.toFixed(1))
@@ -173,19 +176,8 @@ const HomeScreen = ({navigation}) => {
     })
   }
 
-  // const getCurrentLocationAsync = async () => {
-  //   let { status } = await Location.requestForegroundPermissionsAsync();
-  //   if (status !== "granted") {
-  //     console.log("Permission denied");
-  //     return;
-  //   }
-  //   let location = await Location.getCurrentPositionAsync({});
-  //   setLocation(location);
-  // };
-
   const handleReloadLocation = ()=>{
     getCurrentWeather()
-    console.log(123)
   }
 
 
@@ -199,13 +191,14 @@ const HomeScreen = ({navigation}) => {
   // console.log(location)
 
   useEffect(()=>{
-    getCurrentWeather()
+    if (currentMap.userLocation) {
+      getCurrentWeather(currentMap.userLocation)
+      // Phương: Hiển thị thằng panelWeather lên
+      setShowPanelWeather(true)
+    }
     // getCurrentLocationAsync()
-  },[])
+  },[currentMap.userLocation])
 
-
- 
-  
 
   return (
     <ScrollView style={styles.container}>
@@ -216,63 +209,67 @@ const HomeScreen = ({navigation}) => {
             hay sự kiện gì đó ở một địa điểm nào đó
           </Text>
         </View>
-        <View style={styles.home_temperature}>
-          <View style={styles.temperature}>
-            <View style={styles.temperature_degrees}>
-              {
-                celsius !== null && (
-                  <AppText style={styles.temperature_degrees_info}>{`${celsius}°C`}</AppText>
-                )
-              }
-              {
-                desWeather !== null && (
-                  <AppText style={[styles.temperature_degrees_info,{fontSize:16}]}>{capitalizeFirstLetter(desWeather)}</AppText>
-                )
-              }
-            </View>
-            <View style={styles.temperature_other_info}>
-              <View style={[styles.temperature_other_info_half]}>
-                <View style={styles.temperature_other_info_quarter}>
-                  <Fontisto name='wind' size={15} color={app_c.HEX.ext_second}/>
-                  {
-                    wind !== null && (
-                    <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.sub0,paddingHorizontal:8,}}>{`${wind}`+`km/h`}</AppText>
-                    )
-                  }
+
+        {
+          showPanelWeather &&
+          <View style={styles.home_temperature}>
+            <View style={styles.temperature}>
+              <View style={styles.temperature_degrees}>
+                {
+                  celsius !== null && (
+                    <AppText style={styles.temperature_degrees_info}>{`${celsius}°C`}</AppText>
+                  )
+                }
+                {
+                  desWeather !== null && (
+                    <AppText style={[styles.temperature_degrees_info,{fontSize:16}]}>{capitalizeFirstLetter(desWeather)}</AppText>
+                  )
+                }
+              </View>
+              <View style={styles.temperature_other_info}>
+                <View style={[styles.temperature_other_info_half]}>
+                  <View style={styles.temperature_other_info_quarter}>
+                    <Fontisto name='wind' size={15} color={app_c.HEX.ext_second}/>
+                    {
+                      wind !== null && (
+                      <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.sub0,paddingHorizontal:8,}}>{`${wind}`+`km/h`}</AppText>
+                      )
+                    }
+                  </View>
+                  <View style={styles.temperature_other_info_quarter}>
+                        <Entypo name='water' size={15} color={app_c.HEX.ext_second}/>
+                        {
+                          humidity !== null && (
+                            <AppText style={{...app_typo.fonts.normal.normal.sub0,paddingHorizontal:8}}>{`${humidity}`+`%`}</AppText>
+                          )
+                        }
+                  </View>
                 </View>
+                <View style={styles.temperature_other_info_half}>
+                  <View style={styles.temperature_other_info_quarter}>
+                    <Entypo name='cloud' size={15} color={app_c.HEX.ext_second}/>
+                    {
+                      cloud !== null && (
+                        <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.sub0,paddingHorizontal:8}}>{`${cloud}`+`%`}</AppText>
+                      )
+                    }
+                  </View>
                 <View style={styles.temperature_other_info_quarter}>
-                      <Entypo name='water' size={15} color={app_c.HEX.ext_second}/>
-                      {
-                        humidity !== null && (
-                          <AppText style={{...app_typo.fonts.normal.normal.sub0,paddingHorizontal:8}}>{`${humidity}`+`%`}</AppText>
-                        )
-                      }
+                    <MaterialCommunityIcons name='weather-fog' size={15} color={app_c.HEX.ext_second}/>
+                    {
+                      vision !== null && (
+                        <AppText style={{...app_typo.fonts.normal.normal.sub0,paddingHorizontal:8}}>{`${vision}`+`km`}</AppText>
+                      )
+                    }
+                </View>
                 </View>
               </View>
-              <View style={styles.temperature_other_info_half}>
-                <View style={styles.temperature_other_info_quarter}>
-                  <Entypo name='cloud' size={15} color={app_c.HEX.ext_second}/>
-                  {
-                    cloud !== null && (
-                      <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.sub0,paddingHorizontal:8}}>{`${cloud}`+`km/h`}</AppText>
-                    )
-                  }
-                </View>
-               <View style={styles.temperature_other_info_quarter}>
-                  <MaterialCommunityIcons name='weather-fog' size={15} color={app_c.HEX.ext_second}/>
-                  {
-                    vision !== null && (
-                      <AppText style={{...app_typo.fonts.normal.normal.sub0,paddingHorizontal:8}}>{`${vision}`+`km`}</AppText>
-                    )
-                  }
-               </View>
-              </View>
             </View>
+            <TouchableOpacity style={styles.temperature_reload} onPress={handleReloadLocation}>
+              <Ionicons name="reload-sharp" size={30} color={app_c.HEX.fourth} />
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity style={styles.temperature_reload} onPress={handleReloadLocation}>
-            <Ionicons name="reload-sharp" size={30} color={app_c.HEX.fourth} />
-          </TouchableOpacity>
-        </View>
+        }
 
         {/* Place and Blog*/}
         <View style={styles.home_category}>
@@ -295,7 +292,7 @@ const HomeScreen = ({navigation}) => {
         </View>
       </View>
     </ScrollView>
-  );
-};
+  )
+}
 
-export default HomeScreen;
+export default HomeScreen
