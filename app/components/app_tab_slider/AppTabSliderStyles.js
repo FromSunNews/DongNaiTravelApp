@@ -5,7 +5,6 @@ import { app_sp, app_c, app_dms } from "globals/styles";
 const styles = StyleSheet.create({
   slider_container: {
     flex: 1,
-    width: '100%'
   },
 
   slider_button_container: {
@@ -22,7 +21,22 @@ const styles = StyleSheet.create({
 
   slide_container: {
     flex: 1,
-    flexGrow: 1
+    flexGrow: 1,
+    ...app_sp.mt_18
+  },
+
+  slide: {
+    position: "absolute",
+    width: "100%",
+    opacity: 0,
+    zIndex: -1,
+    top: 0,
+    left: 0
+  },
+
+  slide_show: {
+    opacity: 1,
+    zIndex: 1
   }
 });
 
