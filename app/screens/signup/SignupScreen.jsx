@@ -73,7 +73,8 @@ const SignupScreen = () => {
         contentNotificationBottomSheet: 'You should agree with Terms and Conditions'
       }))
     else {
-      const birthday = (new Date(data.birthday)).getTime() / 1000
+      const birthday = (moment(data.birthday, 'DD/MM/YYYY')).toDate()
+      console.log('birthday', birthday)
       const userSignUp = {
         email: data.email,
         firstName: data.firstName,

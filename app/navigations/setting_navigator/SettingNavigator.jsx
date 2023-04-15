@@ -12,6 +12,9 @@ import NotificationsScreen from "screens/setting_notifications/SettingNotificati
 import AboutScreen from "screens/about/AboutScreen";
 import HelpAndSupportScreen from "screens/help_and_support/HelpAndSupportScreen";
 import ReportsScreen from "screens/reports/ReportsScreen";
+import CreatePost from "screens/create_post/CreatePostScreen";
+import BlogDetailScreen from "screens/blog_detail/BlogDetailScreen";
+import ViewStatsScreen from "screens/view_stats/ViewStatsScreen";
 
 const SettingStack = createNativeStackNavigator();
 const ProfileStack =createNativeStackNavigator();
@@ -47,8 +50,32 @@ const SettingNavigator = () => {
         {(props) => <HelpAndSupportScreen {...props} />}
       </SettingStack.Screen>
       
-      <ProfileStack.Screen name="EditProfile">
+      <ProfileStack.Screen name="EditProfileScreen">
         {(props)=><EditProfileScreen {...props}/>}
+      </ProfileStack.Screen>
+      <ProfileStack.Screen 
+        name="CreatePostScreen"
+        options={{
+         title: 'Create Post',
+       }}
+      >
+        {(props)=><CreatePost {...props}/>}
+      </ProfileStack.Screen>
+      <ProfileStack.Screen 
+        name="BlogDetailScreen"
+        options={{
+         title: 'Blog Detail',
+       }}
+      >
+        {(props)=><BlogDetailScreen {...props}/>}
+      </ProfileStack.Screen>
+      <ProfileStack.Screen 
+        name="ViewStatsScreen"
+        options={{
+         title: 'View Stats',
+       }}
+      >
+        {(props)=><ViewStatsScreen {...props}/>}
       </ProfileStack.Screen>
 
     </SettingStack.Navigator>

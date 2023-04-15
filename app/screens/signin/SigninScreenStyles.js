@@ -18,7 +18,7 @@ export const styles = StyleSheet.create({
   },
   image: {
     width: app_dms.screenWidth - 18 * 2,
-    height: 260,
+    height: app_dms.screenHeight * 30 / 100,
     resizeMode: 'contain',
     marginBottom: 10,
   },
@@ -85,7 +85,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 10
+    paddingBottom:40
   },
   labelNoAccount: {
     color: app_c.HEX.fourth,

@@ -7,6 +7,7 @@ import React from 'react'
 
 import ComponentUtility from 'utilities/component'
 import DateTimeUtility from 'utilities/datetime'
+import { useNavigation } from '@react-navigation/native'
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
@@ -55,7 +56,8 @@ import { ViewProps } from 'types/index.d'
  */
 const VerticalBlogCard = ({ blog, ...props }) => {
   const containerStyle = ComponentUtility.mergeStyle([styles.card, blog.isRecommended ? {} : {}], props.style);
-
+  // useNavagation to make when onPress Image of Blog => toScreen BlogDetailScreen
+  const navigation = useNavigation() 
   return (
     <View {...props} style={containerStyle}>
       {/* Image */}
@@ -63,6 +65,7 @@ const VerticalBlogCard = ({ blog, ...props }) => {
         isOnlyContent
         typeOfButton="none"
         overrideShape="rounded_4"
+        onPress={()=>navigation.navigate("BlogDetailScreen")}
       >
         <Image source={{ uri: blog.avatar ? blog.avatar : undefined }} style={styles.card_image} />
       </RectangleButton>
