@@ -57,6 +57,7 @@ import { ViewProps } from 'types/index.d'
  */
 const VerticalPlaceCard = ({ place, ...props }) => {
   const containerStyle = ComponentUtility.mergeStyle([styles.card, place.isRecommended ? {} : {}], props.style);
+  //Đức: create navigation for Image Place onPress=> toScreen DetailPlaceScreen
   const navigation = useNavigation()
   return (
     <View {...props} style={containerStyle}>

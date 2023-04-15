@@ -195,7 +195,7 @@ const HomeScreen = ({navigation}) => {
                   <TouchableOpacity onPress={()=>navigation.navigate("BlogDetailScreen")}>
                     <VerticalBlogCard blog={blog} key={blog.id} style={{ marginLeft: index !== 0 ? 16 : 0, marginRight : currentBlogs.length - 1 === index ? 36 : 0}}/>
                   </TouchableOpacity>
-               )
+                )
               }
             </ScrollView>
           </View>

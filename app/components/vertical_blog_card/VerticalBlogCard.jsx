@@ -56,7 +56,7 @@ import { ViewProps } from 'types/index.d'
  */
 const VerticalBlogCard = ({ blog, ...props }) => {
   const containerStyle = ComponentUtility.mergeStyle([styles.card, blog.isRecommended ? {} : {}], props.style);
-  // useNavagation to make when onPress Image of Blog => toScreen BlogDetailScreen
+  //Đức useNavagation to make when onPress Image of Blog => toScreen BlogDetailScreen
   const navigation = useNavigation() 
   return (
     <View {...props} style={containerStyle}>
