@@ -5,6 +5,25 @@ import styles from './NotificationsScreenStyle';
 import { AppText } from 'components';
 import { app_typo } from 'globals/styles';
 
+const categoryNotification=[
+  {
+    categoryId:0,
+    category:'đã nhắc đến bạn trong một bình luận'
+  },
+  {
+    categoryId:1,
+    category:'đã bắt đầu theo giỏi bạn'
+  },
+  {
+    categoryId:2,
+    category:'đã thích bài viết của bạn'
+  },
+  {
+    categoryId:3,
+    category:'đã thích bài viết của bạn'
+  },
+]
+
 const notifications = [
   {
     id: 1,

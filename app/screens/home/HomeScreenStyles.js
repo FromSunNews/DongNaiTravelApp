@@ -8,7 +8,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: app_c.HEX.primary,
     
-    ...app_sp.ph_16,
   },
   home_content: {
     width: '100%',
@@ -16,44 +15,52 @@ const styles = StyleSheet.create({
     paddingBottom:150
   },
   home_banner: {
+    marginHorizontal:16,
     height: 105,
     backgroundColor: app_c.HEX.ext_third
   },
   home_temperature: {
+    paddingHorizontal:16,
     ...app_sp.mt_16,
     width: '100%',
     height: 64,
     ...app_sh.rounded_8,
-    justifyContent: 'space-between',
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent:'space-between'
   },
   temperature: {
-    width: 267,
+    width: 272,
     height: 64,
     flexDirection: 'row',
     backgroundColor: app_c.HEX.ext_primary,
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     alignItems: 'center',
     ...app_sh.rounded_8
   },
   temperature_degrees: {
-    width: 100,
+    width: 120,
     height: '100%',
     justifyContent:'center',
     alignItems:'center',
+    
   },
   temperature_degrees_info:{
     ...app_typo.fonts.normal.normal.h1,
     color:app_c.HEX.ext_second
   },
+  temperature_other_info:{
+  
+  },
   temperature_other_info_half: {
-    width: 140,
+    width:130,
     height: 20,
     flexDirection:'row',
     alignItems:"center",
+    justifyContent:'space-between',
     // marginTop:3,
-    paddingRight:12
+    
+    
   },
   temperature_other_info_quarter:{
     flexDirection:'row',
@@ -82,6 +89,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems:'center',
+    paddingHorizontal:16,
   },
   category_name: {
     ...app_typo.fonts.normal.bolder.h3
