@@ -43,11 +43,12 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent:'center',
     alignItems:'center',
+   
     
   },
   temperature_degrees_info:{
     ...app_typo.fonts.normal.normal.h1,
-    color:app_c.HEX.ext_second
+    color:app_c.HEX.ext_second,
   },
   temperature_other_info:{
   
@@ -57,7 +58,7 @@ const styles = StyleSheet.create({
     height: 20,
     flexDirection:'row',
     alignItems:"center",
-    justifyContent:'space-between',
+    justifyContent:'space-around',
     // marginTop:3,
     
     

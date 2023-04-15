@@ -12,6 +12,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import AppText from 'components/app_text/AppText'
 import RectangleButton from 'components/buttons/RectangleButton'
 import CircleButton from 'components/buttons/CircleButton'
+import { useNavigation } from '@react-navigation/native'
 
 import styles from './VerticalPlaceCardStyles'
 import { app_c, app_sh, app_sp } from 'globals/styles'
@@ -56,7 +57,8 @@ import { ViewProps } from 'types/index.d'
  */
 const VerticalPlaceCard = ({ place, ...props }) => {
   const containerStyle = ComponentUtility.mergeStyle([styles.card, place.isRecommended ? {} : {}], props.style);
-
+  //Đức: create navigation for Image Place onPress=> toScreen DetailPlaceScreen
+  const navigation = useNavigation()
   return (
     <View {...props} style={containerStyle}>
       {/* Image */}
@@ -64,6 +66,7 @@ const VerticalPlaceCard = ({ place, ...props }) => {
         isOnlyContent
         typeOfButton="none"
         overrideShape="rounded_4"
+        onPress={()=>navigation.navigate("PlaceDetailScreen")}
       >
         <Image source={{ uri: place.avatar }} style={styles.card_image} />
       </RectangleButton>

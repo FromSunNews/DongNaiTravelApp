@@ -4,7 +4,17 @@ import { Ionicons, Entypo,Fontisto,FontAwesome5,MaterialCommunityIcons} from "re
 
 import styles from "./HomeScreenStyles"
 import { app_c, app_sp, app_typo } from "globals/styles"
-import { AppText, HorizontalPlaceCard, RectangleButton,HorizontalBlogCard,TypeScrollView,VerticalBlogCardSkeleton,VerticalBlogCard,VerticalPlaceCard,VerticalPlaceCardSkeleton } from "components"
+import { 
+  AppText, 
+  HorizontalPlaceCard, 
+  RectangleButton,
+  HorizontalBlogCard,
+  TypeScrollView,
+  VerticalBlogCardSkeleton,
+  VerticalBlogCard,
+  VerticalPlaceCard,
+  VerticalPlaceCardSkeleton,
+} from "components"
 import TabSlideCategoryPlace from "components/tab_slide_category_place/TabSlideCategoryPlace"
 import TabSlideCategoryBlog from "components/tab_slide_category_blog/TabSlideCategoryBlog"
 
@@ -70,7 +80,7 @@ const HomeScreen = ({navigation}) => {
   },[currentMap.userLocation])
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.home_content}>
         <View style={styles.home_banner}>
           <Text>
@@ -85,32 +95,32 @@ const HomeScreen = ({navigation}) => {
             <View style={styles.temperature}>
               <View style={styles.temperature_degrees}>
                 {
-                  celsius !== null && (
-                    <AppText style={[styles.temperature_degrees_info,{fontSize:22}]}>{`${celsius}°C`}</AppText>
-                  )
+                  celsius  ? (
+                    <AppText style={[styles.temperature_degrees_info,{fontSize:22,marginTop:-4}]}>{`${celsius}°C`}</AppText>
+                  ): <AppText style={[styles.temperature_degrees_info,{fontSize:22,marginTop:-4}]}><Entypo name="minus"/><Entypo name="minus"/>{`°C`}</AppText>
                 }
                 {
-                  desWeather !== null && (
-                    <AppText numberOfLines={1} style={[styles.temperature_degrees_info,{fontSize:14,paddingHorizontal:4}]}>{capitalizeFirstLetter(desWeather)}</AppText>
-                  )
+                  desWeather ? (
+                    <AppText numberOfLines={2}  style={[styles.temperature_degrees_info,{fontSize:13,paddingHorizontal:4,textAlign:"center"}]}>{capitalizeFirstLetter(desWeather)}</AppText>
+                  ) : <AppText numberOfLines={2}  style={[styles.temperature_degrees_info,{fontSize:13,paddingHorizontal:4,textAlign:"center"}]}>Đang tải...</AppText>
                 }
               </View>
               <View style={styles.temperature_other_info}>
                 <View style={[styles.temperature_other_info_half]}>
                   <View style={styles.temperature_other_info_quarter}>
-                    <Fontisto name='wind' size={15} color={app_c.HEX.ext_second}/>
+                    <Fontisto name='wind' size={14} color={app_c.HEX.ext_second}/>
                     {
-                      wind !== null && (
+                      wind ?(
                       <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.sub0,paddingHorizontal:8}}>{`${wind}`}<Text style={{fontSize:12}}>km/h</Text></AppText>
-                      )
+                      ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.sub0,marginTop:4}}><Entypo name="minus"/><Entypo name="minus"/><Text style={{fontSize:12}}>km/h</Text></AppText>
                     }
                   </View>
-                  <View style={styles.temperature_other_info_quarter}>
+                  <View style={[styles.temperature_other_info_quarter,{ paddingLeft:12}]}>
                         <Entypo name='water' size={15} color={app_c.HEX.ext_second}/>
                         {
-                          humidity !== null && (
+                          humidity ? (
                             <AppText style={{...app_typo.fonts.normal.normal.sub0,paddingHorizontal:8}}>{`${humidity}`}<Text style={{fontSize:12}}>%</Text></AppText>
-                          )
+                          ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.sub0,marginTop:4}}><Entypo name="minus"/><Entypo name="minus"/><Text style={{fontSize:12}}>%</Text></AppText>
                         }
                   </View>
                 </View>
@@ -118,17 +128,17 @@ const HomeScreen = ({navigation}) => {
                   <View style={styles.temperature_other_info_quarter}>
                     <Entypo name='cloud' size={15} color={app_c.HEX.ext_second}/>
                     {
-                      cloud !== null && (
+                      cloud ? (
                         <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.sub0,paddingHorizontal:8}}>{`${cloud}`+`%`}</AppText>
-                      )
+                      ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.sub0,marginTop:4}}><Entypo name="minus"/><Entypo name="minus"/><Text style={{fontSize:12}}>%</Text></AppText>
                     }
                   </View>
-                  <View style={styles.temperature_other_info_quarter}>
+                  <View style={[styles.temperature_other_info_quarter,{paddingLeft:12}]}>
                       <MaterialCommunityIcons name='weather-fog' size={15} color={app_c.HEX.ext_second}/>
                       {
-                        vision !== null && (
-                          <AppText style={{...app_typo.fonts.normal.normal.sub0,paddingHorizontal:8}}>{`${vision}`}<Text style={{fontSize:12}}>km</Text></AppText>
-                        )
+                        vision ? (
+                          <AppText style={{...app_typo.fonts.normal.normal.sub0,paddingHorizontal:8}}>{`${vision.toFixed(1)}`}<Text style={{fontSize:12}}>km</Text></AppText>
+                        ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.sub0,marginTop:4}}><Entypo name="minus"/><Entypo name="minus"/><Text style={{fontSize:12}}>km</Text></AppText>
                       }
                   </View>
                 </View>
@@ -150,14 +160,17 @@ const HomeScreen = ({navigation}) => {
             types='all;recommended;popular;most_visit;most_favorite'
             callBack={setTypePlace}
             scrollStyle={[{paddingLeft:16}, app_sp.pv_12]}
-            containerStyle={{backgroundColor: app_c.HEX.primary}}
+            containerStyle={{backgroundColor: app_c.HEX.primary,  }}
           />
           <View style={{ ...app_sp.mb_12}}>
             <ScrollView horizontal={true} style={{paddingBottom:10, paddingLeft:16}} showsHorizontalScrollIndicator={false}>
               {
                 currentPlaces.length === 0
-                ? [1, 2, 3].map((value, index) => <VerticalPlaceCardSkeleton key={value + index} />)
-                : currentPlaces.map((place, index) => <VerticalPlaceCard place={place} key={place.id} style={{ marginLeft: place.id !== places[0].id ? 16 : 0,}}/>)
+                ? [1, 2, 3].map((value, index) => <VerticalPlaceCardSkeleton key={value + index} style={{ marginLeft: index !== 0 ? 16 : 0,}}/>)
+                : currentPlaces.map((place, index) => 
+                  <TouchableOpacity onPress={()=>navigation.navigate("PlaceDetailScreen")}>
+                    <VerticalPlaceCard place={place} key={place.id} style={{ marginLeft: index !== 0 ? 16 : 0, marginRight : currentPlaces.length - 1 === index ? 36 : 0}}/>
+                  </TouchableOpacity>)
               }
             </ScrollView>
           </View>
@@ -177,11 +190,15 @@ const HomeScreen = ({navigation}) => {
             <ScrollView horizontal={true} style={{paddingBottom:10,paddingLeft:16}} showsHorizontalScrollIndicator={false}>
               {
                 currentBlogs.length === 0
-                ? [1, 2, 3].map((value, index) => <VerticalBlogCardSkeleton key={value + index} />)
-                : currentBlogs.map((blog, index) => <VerticalBlogCard blog={blog} key={blog.id} style={{ marginLeft: blog.id !== blogs[0].id ? 16 : 0,}}/>)
+                ? [1, 2, 3].map((value, index) => <VerticalBlogCardSkeleton key={value + index} style={{  marginLeft: index !== 0 ? 16 : 0,}} />)
+                : currentBlogs.map((blog, index) => 
+                  <TouchableOpacity onPress={()=>navigation.navigate("BlogDetailScreen")}>
+                    <VerticalBlogCard blog={blog} key={blog.id} style={{ marginLeft: index !== 0 ? 16 : 0, marginRight : currentBlogs.length - 1 === index ? 36 : 0}}/>
+                  </TouchableOpacity>
+                )
               }
             </ScrollView>
-          </View>DƯ
+          </View>
         </View>
       </View>
     </ScrollView>

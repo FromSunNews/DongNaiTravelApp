@@ -40,61 +40,13 @@ import { updateNotif } from "redux/manifold/ManifoldSlice";
 import { Buffer } from 'buffer'
 
 //Đức: sử dụng expo picker để chọn ảnh tử local để upload lên
-const imageCover = {
-  uri: "https://images.pexels.com/photos/1227511/pexels-photo-1227511.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-};
 
-const userBlogData= [
-  {
-    id: 'b1',
-    user: {
-      id: 'user1',
-      name: 'Lost Teach',
-      avatar: ''
-    },
-    name: 'Top 10 dia diem neu ghe qua khi du lich o Dong Nai',
-    avatar: '',
-    createdAt: 1675908513000,
-    readTime: 480,
-    isLiked: true
-  },
-  {
-    id: 'b2',
-    user: {
-      id: 'user1',
-      name: 'Lost Teach',
-      avatar: ''
-    },
-    name: 'Top 10 dia diem neu ghe qua khi du lich o Dong Nai',
-    avatar: '',
-    createdAt: 1675908513000,
-    readTime: 480,
-    isLiked: true
-  },
-]
-
-const user = {
-  userId: 1,
-  userName: "Thai Anh Duc",
-  userInFo: {
-    userFollower: 20,
-    userFollowing: 2,
-    userAddress: "Bien Hoa - Dong Nai",
-  },
-  userSocial: {
-    userFacebook: "https://www.facebook.com/profile.php?id=100016839395108",
-    userYoutube: "https://www.facebook.com/profile.php?id=100016839395108",
-    userInstagram: "https://www.instagram.com/thai.a.duc/",
-  },
-  userBio: "Thích màu hồng",
-};
 
 
 function ProfileScreen({ route, navigation }) {
   const currentUser = useSelector(selectCurrentUser)
   const dispatch = useDispatch()
   const [openTermCondition, setOpenTermCondition] = useState(false);
-  const [image, setImage] = useState(imageCover.uri);
   const [selectedImage, setSelectedImage] = useState(null);
   const [uploadImageType, setUploadImageType] = useState(null)
   // useEffect(() => {
@@ -250,6 +202,7 @@ function ProfileScreen({ route, navigation }) {
                 isActive
                 activeColor="type_1"
                 typeOfButton="opacity"
+                onPress={() => navigation.navigate("ViewStatsScreen")}
               >
                 {(isActive, currentLabelStyle) => (
                   <Text style={currentLabelStyle}>View Stats</Text>
@@ -258,7 +211,7 @@ function ProfileScreen({ route, navigation }) {
               <RectangleButton
                 overrideShape="rounded_8"
                 typeOfButton="opacity"
-                handlePressButton={() => navigation.navigate("EditProfile")}
+                onPress={() => navigation.navigate("EditProfileScreen")}
               >
                 {(isActive, currentLabelStyle) => (
                   <Text style={[currentLabelStyle, {paddingHorizontal: 16}]}>
@@ -302,33 +255,33 @@ function ProfileScreen({ route, navigation }) {
                     style={styles.user_info_other_icon}
                     name="facebook"
                   />
-                  <Text
+                  <AppText
                     key={1}
                     style={styles.user_info_other_content}
                     hyperLink={user.userSocial.userFacebook}
                   >
                     {user.userSocial.userFacebook}
-                  </Text>
+                  </AppText>
                 </View>
                 <View style={styles.user_info_other}>
                   <Entypo
                     style={styles.user_info_other_icon}
                     name="instagram"
                   />
-                  <Text
+                  <AppText
                     key={2}
                     style={styles.user_info_other_content}
                     hyperLink={user.userSocial.userInstagram}
                   >
                     {user.userSocial.userInstagram}
-                  </Text>
+                  </AppText>
                 </View>
               </View>
             </View>
             <View style={styles.line_horizontal}></View>
           </View>
           <View style={styles.blog_block}>
-            <TouchableOpacity style={styles.btn_create_blog}>
+            <TouchableOpacity style={styles.btn_create_blog} onPress={()=>navigation.navigate("CreatePostScreen")}>
               <MaterialCommunityIcons
                 style={{ color: app_c.HEX.ext_second, marginRight: 6 }}
                 name="pencil-outline"
@@ -346,7 +299,9 @@ function ProfileScreen({ route, navigation }) {
               <View style={styles.blog_container}>
                 {
                   userBlogData.map(blog=>(
-                    <HorizontalBlogCard key={blog.id} blog={blog}/>
+                    <RectangleButton onPress={()=>navigation.navigate("BlogDetailScreen")}>
+                      <HorizontalBlogCard key={blog.id} blog={blog}/> 
+                    </RectangleButton>
                   ))
                 }
               </View>
@@ -384,3 +339,48 @@ function ProfileScreen({ route, navigation }) {
 }
 
 export default ProfileScreen;
+
+const userBlogData= [
+  {
+    id: 'b1',
+    user: {
+      id: 'user1',
+      name: 'Lost Teach',
+      avatar: ''
+    },
+    name: 'Top 10 dia diem neu ghe qua khi du lich o Dong Nai',
+    avatar: '',
+    createdAt: 1675908513000,
+    readTime: 480,
+    isLiked: true
+  },
+  {
+    id: 'b2',
+    user: {
+      id: 'user1',
+      name: 'Lost Teach',
+      avatar: ''
+    },
+    name: 'Top 10 dia diem neu ghe qua khi du lich o Dong Nai',
+    avatar: '',
+    createdAt: 1675908513000,
+    readTime: 480,
+    isLiked: true
+  },
+]
+
+const user = {
+  userId: 1,
+  userName: "Thai Anh Duc",
+  userInFo: {
+    userFollower: 20,
+    userFollowing: 2,
+    userAddress: "Bien Hoa - Dong Nai",
+  },
+  userSocial: {
+    userFacebook: "https://www.facebook.com/profile.php?id=100016839395108",
+    userYoutube: "https://www.facebook.com/profile.php?id=100016839395108",
+    userInstagram: "https://www.instagram.com/thai.a.duc/",
+  },
+  userBio: "Thích màu hồng",
+};
