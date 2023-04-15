@@ -21,7 +21,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   sectionSeclectMultipleHeaderLeft: {
-    color: app_c.HEX.fourth,
+    color: app_c.HEX.ext_second,
     ...app_typo.fonts.normal.bolder.h4
   },
   sectionSeclectMultipleHeaderRight: {
@@ -56,7 +56,7 @@ export const styles = StyleSheet.create({
   },
   bodySelectAllText: {
     color: app_c.HEX.third,
-    ...app_typo.fonts.normal.bolder.h5,
+    ...app_typo.fonts.normal.lighter.h5,
     borderWidth: 1,
     paddingVertical: 10,
     borderColor: app_c.HEX.third,
@@ -68,7 +68,7 @@ export const styles = StyleSheet.create({
   bodyItemText: {
     marginRight: 5,
     color: app_c.HEX.primary,
-    ...app_typo.fonts.normal.bolder.h5,
+    ...app_typo.fonts.normal.lighter.h5,
   },
   sectionRadioList: {
     flexDirection: 'column',
@@ -81,7 +81,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 5
   },
   sectionRadioItemText: {
-    ...app_typo.fonts.normal.bolder.h5,
+    ...app_typo.fonts.normal.lighter.h5,
   },
   sectionRadiusContainer: {
     flexDirection: 'row',
@@ -100,7 +100,7 @@ export const styles = StyleSheet.create({
   },
   sectionRadiusText: {
     color: app_c.HEX.ext_second,
-    ...app_typo.fonts.normal.bolder.h4,
+    ...app_typo.fonts.normal.lighter.h4,
   },
   controlLocationBtn: {
     width: '100%',
@@ -114,7 +114,7 @@ export const styles = StyleSheet.create({
   },
   controlLocationText: {
     color: app_c.HEX.third,
-    ...app_typo.fonts.normal.bolder.h4,
+    ...app_typo.fonts.normal.lighter.h4,
   },
   btn: {
     display: 'flex',
@@ -128,7 +128,7 @@ export const styles = StyleSheet.create({
     borderRadius: 8,
   },
   btnText: {
-    ...app_typo.fonts.normal.bolder.h4,
+    ...app_typo.fonts.normal.lighter.h4,
     color: app_c.HEX.primary,
     fontWeight: '600'
   },
@@ -154,7 +154,7 @@ export const styles = StyleSheet.create({
   },
   headerTextFilter: {
     color: app_c.HEX.fourth,
-    ...app_typo.fonts.normal.bolder.h3,
+    ...app_typo.fonts.normal.lighter.h1,
     marginRight: 5
   },
   rightHeaderBtnFilter: {

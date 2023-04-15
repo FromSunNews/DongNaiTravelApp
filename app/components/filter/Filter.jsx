@@ -284,7 +284,7 @@ const Filter = ({
                             }}></View>
                             <Text style={{
                               color: app_c.HEX.ext_second,
-                              ...app_typo.fonts.normal.bolder.h5
+                              ...app_typo.fonts.normal.lighter.h5
                             }}>
                                 Level {e.currentValue}</Text>
                         </View>

@@ -27,6 +27,11 @@ export const signInUserAPI = async (data) => {
   return request.data
 }
 
+export const updateUserAPI = async (data) => {
+  const request = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/update`, data)
+  return request.data
+}
+
 export const refreshTokenAPI = async () => {
   const request = await authorizedAxiosInstance.get(`${API_ROOT}/v1/users/refresh_token`, {
     refreshToken: store.getState().user.currentUser?.refreshToken
@@ -51,7 +56,7 @@ export const resetPasswordAPI = async (data) => {
 }
 
 export const getPrivateKeysAPI = async () => {
-  const request = await authorizedAxiosInstance.get(`${API_ROOT}/v1/map/private_keys`)
+  const request = await axios.get(`${API_ROOT}/v1/map/private_keys`)
   return request.data
 }
 

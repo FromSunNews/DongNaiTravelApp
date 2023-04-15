@@ -33,6 +33,11 @@ import { choiceSettingImage } from "utilities/choiceSettingImage";
 import ModalShowImage from "components/modal_show_image/ModalShowImage";
 import { BottomSheetScroll } from "components";
 import { HorizontalBlogCard } from "components";
+import { updateUserAPI } from "request_api";
+import { useDispatch, useSelector } from "react-redux";
+import { selectCurrentUser, updateCurrentUser } from "redux/user/UserSlice";
+import { updateNotif } from "redux/manifold/ManifoldSlice";
+import { Buffer } from 'buffer'
 
 //Đức: sử dụng expo picker để chọn ảnh tử local để upload lên
 const imageCover = {
@@ -86,34 +91,68 @@ const user = {
 
 
 function ProfileScreen({ route, navigation }) {
+  const currentUser = useSelector(selectCurrentUser)
+  const dispatch = useDispatch()
   const [openTermCondition, setOpenTermCondition] = useState(false);
   const [image, setImage] = useState(imageCover.uri);
   const [selectedImage, setSelectedImage] = useState(null);
-
-  useEffect(() => {
-    // request permission to access media library if it hasn't been granted
-    (async () => {
-      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (status !== 'granted') {
-        alert('Sorry, we need media library permissions to make this work!');
-      }
-    })();
-  }, []);
+  const [uploadImageType, setUploadImageType] = useState(null)
+  // useEffect(() => {
+  //   // request permission to access media library if it hasn't been granted
+  //   (async () => {
+  //     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+  //     if (status !== 'granted') {
+  //       alert('Sorry, we need media library permissions to make this work!');
+  //     }
+  //   })();
+  // }, []);
 
   async function pickImageFromLibrary() {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
 
-    if (!result.cancelled) {
-      setSelectedImage(result.uri);
-      console.log(result.uri)
-      // saveImage(result.uri);
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      alert('Sorry, we need media library permissions to make this work!');
+      setUploadImageType(null)
+    } else {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: uploadImageType === 'UploadCoverPhoto' ? [4, 3] : [4, 4],
+        quality: 0.5,
+        base64: true
+      });
+  
+      if (!result.canceled) {
+        console.log(result.assets[0])
+        //  Khi lấy được uri dạng base64 r thì mới đầu cập nhật ảnh trước để đáp ứng UI
+        setSelectedImage(result.assets[0].uri);
+        // Sau đó tiếp tục callapi để chuyển base64 về cho BE xử lý
+
+        let dataToUpdate 
+        if (uploadImageType === 'UploadCoverPhoto') {
+          dataToUpdate = {
+            currentUserId: currentUser._id ?? null,
+            coverPhoto: result.assets[0].base64
+          }
+        } else if (uploadImageType === 'UploadAvatar') {
+          dataToUpdate = {
+            currentUserId: currentUser._id ?? null,
+            avatar: result.assets[0].base64
+          }
+        }
+        await updateUserAPI(dataToUpdate).then((dataUser) => {
+          // Cập nhật state user
+          dispatch(updateCurrentUser(dataUser))
+        }).catch((err) => {
+          dispatch(updateNotif({
+            appearNotificationBottomSheet: true,
+            contentNotificationBottomSheet: `An error occurred while uploading the photo!. ${err}`
+          }))
+        })
+      } else {
+        setUploadImageType(null)
+      }
     }
-    
   }
 
   // take photo from camera
@@ -143,15 +182,18 @@ function ProfileScreen({ route, navigation }) {
         <View style={styles.container}>
           <View style={{ ...app_dms.screenWidth }}>
             <View>
-              <View style={[{ height: 210, width: "100%",overflow:'hidden' ,backgroundColor:'#00000087'}]}>
-              {selectedImage && (
-                <ModalShowImage url={selectedImage} />
+              <View style={[{ height: 210, width: "100%", overflow:'hidden' ,backgroundColor:'#00000087'}]}>
+              {currentUser.coverPhoto && (
+                <ModalShowImage url={currentUser.coverPhoto} />
               )}
              
               </View>
               <TouchableOpacity
                 style={styles.circle_icon}
-                onPress={() => setOpenTermCondition(!openTermCondition)}
+                onPress={() => {
+                  setUploadImageType('UploadCoverPhoto')
+                  setOpenTermCondition(!openTermCondition)
+                }}
               >
                 <AntDesign name="camerao" style={styles.icon_camera} />
               </TouchableOpacity>
@@ -160,14 +202,24 @@ function ProfileScreen({ route, navigation }) {
 
           <View style={styles.profile_avatar}>
             <View style={styles.circle_avatar}>
-              <Ionicons
-                name="ios-person-circle-outline"
-                style={styles.avatar}
-                color={app_c.HEX.fourth}
-              />
+              {currentUser.avatar && (
+                <Image 
+                  source={{uri: currentUser.avatar}}
+                  style={{
+                    height: 120,
+                    width: 120,
+                    borderRadius: 60,
+                    resizeMode: 'cover'
+                  }}
+                  
+                />
+              )}
               <TouchableOpacity
                 style={styles.avatar_icon}
-                onPress={() => setOpenTermCondition(!openTermCondition)}
+                onPress={() => {
+                  setUploadImageType('UploadAvatar')
+                  setOpenTermCondition(!openTermCondition)
+                }}
               >
                 <AntDesign
                   name="camerao"
@@ -209,7 +261,7 @@ function ProfileScreen({ route, navigation }) {
                 handlePressButton={() => navigation.navigate("EditProfile")}
               >
                 {(isActive, currentLabelStyle) => (
-                  <Text style={currentLabelStyle}>
+                  <Text style={[currentLabelStyle, {paddingHorizontal: 16}]}>
                     <Feather name="edit-2" /> Edit Profile
                   </Text>
                 )}

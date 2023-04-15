@@ -20,7 +20,7 @@ import { updateCurrentUser } from 'redux/user/UserSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
 import { selectCurrentWareHouse, updateCurrentWareHouse } from 'redux/warehouse/WareHouseSlice'
-import { validateRegex } from 'utilities/functions'
+import FunctionsUtility from 'utilities/functions'
 import ButtonText from 'components/button_text/ButtonText'
 import CheckBoxText from 'components/checkbox_text/CheckBoxText'
 import { signInUserAPI } from 'request_api'
@@ -64,10 +64,11 @@ const SigninScreen = () => {
   }, [warehouse.emailName, warehouse.password])
 
   const onSubmit = async (data) => {
+    console.log("🚀 ~ file: SigninScreen.jsx:67 ~ onSubmit ~ data:", data)
     if (data.emailname && data.password) {
       // Phuong: check emailname is email or username
       let user 
-      if (validateRegex(data.emailname, EMAIL_RULE)) {
+      if (FunctionsUtility.validateRegex(data.emailname, EMAIL_RULE)) {
         user = {
           email: data.emailname,
           password : data.password
@@ -78,6 +79,7 @@ const SigninScreen = () => {
           password : data.password
         }
       }
+      console.log("🚀 ~ file: SigninScreen.jsx:78 ~ onSubmit ~ user:", user)
       // Phuong: call Api
       signInUserAPI(user).then((res) => {
         console.log("🚀 ~ file: Signin.js:73 ~ onSubmit ~ res", res)
@@ -191,22 +193,22 @@ const SigninScreen = () => {
               </TouchableOpacity>
             </View>
 
-            {/* <ButtonText
+            <ButtonText
               label='Sign In'
               onPress={handleSubmit(onSubmit)}
-            /> */}
+            />
 
-             <RectangleButton
+             {/* <RectangleButton
               overrideShape="rounded_8"
               typeOfButton="opacity"
               defaultColor="type_4"
               style={{...app_sp.mt_12, ...app_sp.pv_16}}
-              handlePressButton={handleSubmit(onSubmit)}
+              onPress={() => handleSubmit(onSubmit)}
             >
               {(isActive, currentLabelStyle) => (
                 <AppText font="h4" style={currentLabelStyle}>Sign In</AppText>
               )}
-            </RectangleButton>
+            </RectangleButton> */}
           </View>
           
           <View style={{ flex: 1}}></View>
