@@ -36,13 +36,14 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   circle_avatar: {
-    width: 110,
-    height: 110,
-    backgroundColor: app_c.HEX.primary,
-    borderRadius: 60,
+    width: 130,
+    height: 130,
     justifyContent: 'center',
     alignItems: "center",
-    marginTop: -60,
+    marginTop: -65,
+    borderRadius: 65,
+    backgroundColor: app_c.HEX.primary,
+    ...app_shdw.type_1
   },
   avatar: {
     marginTop: -4,

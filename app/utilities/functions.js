@@ -96,9 +96,14 @@ function deepCompare(a, b) {
   return check;
 }
 
+function validateRegex(text, regex) {
+  return regex.test(text)
+}
+
 const FunctionsUtility = {
   getHeaderTitle,
-  deepCompare
+  deepCompare,
+  validateRegex
 }
 
 export default FunctionsUtility;

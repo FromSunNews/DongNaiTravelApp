@@ -189,7 +189,7 @@ export const styles = StyleSheet.create({
   },
   headerBottomSheet: {
     color: app_c.HEX.fourth,
-    ...app_typo.fonts.normal.bolder.h1,
+    ...app_typo.fonts.normal.lighter.h1,
     paddingTop: 15,
     paddingLeft: 18,
     paddingBottom: 10,
@@ -221,8 +221,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 2,
     color: app_c.HEX.primary,
-    fontSize: 14,
-    fontWeight: 'bold'
+    ...app_typo.fonts.normal.lighter.h5
   },  
   timeContainer: {
     display: 'flex',
@@ -514,7 +513,7 @@ export const styles = StyleSheet.create({
   },
   textStart: {
     color: app_c.HEX.primary,
-    ...app_typo.fonts.normal.bolder.h5,
+    ...app_typo.fonts.normal.lighter.h5,
     fontSize: 13,
     marginRight: 5
   },
@@ -694,8 +693,8 @@ export const styles = StyleSheet.create({
   },
   headerTextFilter: {
     color: app_c.HEX.fourth,
-    ...app_typo.fonts.normal.bolder.h3,
-    marginRight: 5
+    ...app_typo.fonts.normal.lighter.h1,
+    marginRight: 10
   },
   rightHeaderBtnFilter: {
   },
@@ -706,7 +705,7 @@ export const styles = StyleSheet.create({
     ...app_typo.fonts.normal.bolder.h4,
   },
   titleBottomSheet:{
-    color: app_c.HEX.fourth,
+    color: app_c.HEX.ext_second,
     ...app_typo.fonts.normal.bolder.h4,
     marginBottom: 10
   },
