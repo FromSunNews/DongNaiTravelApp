@@ -18,11 +18,11 @@ import HomeScreen from 'screens/home/HomeScreen'
 import MapScreen from 'screens/map/MapScreen'
 import SettingScreen from 'screens/settings/SettingScreen'
 import SettingNavigator from 'navigations/setting_navigator/SettingNavigator'
-import HomeNavigator from 'navigations/home_navigator/HomeNavigator'
-
 
 import styles from './GroupBottomTabStyles'
 import { app_dms } from 'globals/styles'
+import HomeNavigator from 'navigations/home_navigator/HomeNavigator'
+
 import { useEffect } from 'react'
 import { getPrivateKeysAPI } from 'request_api'
 import { useDispatch, useSelector } from 'react-redux'

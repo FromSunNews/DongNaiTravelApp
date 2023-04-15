@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
   textHeader: {
     color: app_c.HEX.fourth,
     marginBottom: 20,
-    ...app_typo.fonts.h1
+    ...app_typo.fonts.normal.title.h3
   },
   image: {
     width: app_dms.screenWidth - 18 * 2,
@@ -25,7 +25,7 @@ export const styles = StyleSheet.create({
   textError: {
     color: '#F32424',
     marginTop: 5,
-    ...app_typo.fonts.body5
+    ...app_typo.fonts.normal.normal.h5
   },
   containerReFor:{
     display: 'flex',
@@ -46,7 +46,7 @@ export const styles = StyleSheet.create({
   },
   textFor: {
     color: app_c.HEX.third,
-    ...app_typo.fonts.h5,
+    ...app_typo.fonts.normal.bolder.h5,
     padding: 5,
     paddingRight: 0,
   },
@@ -60,12 +60,12 @@ export const styles = StyleSheet.create({
     marginTop: 10,
     padding: 5,
     color: app_c.HEX.third,
-    ...app_typo.fonts.h5
+    ...app_typo.fonts.normal.bolder.h5
   },
   labelSocial: {
     marginTop: 5,
     color: app_c.HEX.fourth,
-    ...app_typo.fonts.body5,
+    ...app_typo.fonts.normal.normal.body1,
     alignSelf: 'center',
   },
   containerSocialBtn:{
@@ -89,11 +89,11 @@ export const styles = StyleSheet.create({
   },
   labelNoAccount: {
     color: app_c.HEX.fourth,
-    ...app_typo.fonts.body5
+    ...app_typo.fonts.normal.normal.body1
   },
   labelSignup: {
     padding: 5,
     color: app_c.HEX.third,
-    ...app_typo.fonts.h5
+    ...app_typo.fonts.normal.bolder.h5
   }
 })

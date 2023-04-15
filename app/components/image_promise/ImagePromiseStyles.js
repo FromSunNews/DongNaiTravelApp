@@ -29,12 +29,12 @@ export const styles = StyleSheet.create({
   },
   authorName: {
     color: app_c.HEX.fourth,
-    ...app_typo.fonts.h5,
+    ...app_typo.fonts.normal.bolder.h5,
     marginBottom: 3
   },
   textContent: {
     marginTop: 10,
     color: app_c.HEX.fourth,
-    ...app_typo.fonts.body5
+    ...app_typo.fonts.normal.normal.body1
   },
 })

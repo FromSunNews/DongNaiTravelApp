@@ -59,6 +59,7 @@ const BottomSheetScroll = ({
             showsVerticalScrollIndicator={false}
           >
             {childView}
+
             {
               haveBtn && 
               <TouchableOpacity
@@ -68,7 +69,6 @@ const BottomSheetScroll = ({
                 <Text style={styles.btnText}>{labelBtn}</Text>
               </TouchableOpacity>
             }
-
           </BottomSheetScrollView>
         </BottomSheet>
       </> 

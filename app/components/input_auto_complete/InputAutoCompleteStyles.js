@@ -36,7 +36,7 @@ export const styles = StyleSheet.create({
     borderBottomRightRadius: 8
   },
   predefinedPlacesDescription: {
-    ...app_typo.fonts.h5,
+    ...app_typo.fonts.normal.bolder.h5,
     color: app_c.HEX.third,
   },
   overlayBtn: {

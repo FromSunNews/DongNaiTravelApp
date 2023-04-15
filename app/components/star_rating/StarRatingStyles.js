@@ -13,11 +13,11 @@ export const StarRatingStyles = StyleSheet.create({
   textReviews: {
     marginLeft: 5,
     color: app_c.HEX.fourth,
-    ...app_typo.fonts.body5
+    ...app_typo.fonts.normal.normal.body1
   },
   textRatings: {
     marginRight: 5,
     color: app_c.HEX.fourth,
-    ...app_typo.fonts.body5
+    ...app_typo.fonts.normal.normal.body1
   }
 })
