@@ -10,6 +10,7 @@ import { userReducer } from 'redux/user/UserSlice'
 import { manifoldReducer } from 'redux/manifold/ManifoldSlice'
 import { warehouseReducer } from 'redux/warehouse/WareHouseSlice'
 import { filterReducer } from 'redux/filter/FilterSlice'
+import { languageReducer } from 'redux/language/LanguageSlice'
 
 // https://www.npmjs.com/package/redux-persist
 // https://blog.logrocket.com/use-redux-persist-react-native/
@@ -37,7 +38,8 @@ const reducers = combineReducers({
   user: userReducer,
   manifold: manifoldReducer,
   warehouse: warehouseReducer,
-  filter: filterReducer
+  filter: filterReducer,
+  language: languageReducer,
 })
 
 const persistedReducers = persistReducer(persistConfig, reducers)

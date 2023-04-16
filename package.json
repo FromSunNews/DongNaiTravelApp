@@ -71,7 +71,8 @@
     "react-redux": "^8.0.5",
     "redux-persist": "^6.0.0",
     "socket.io-client": "^4.6.1",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "expo-localization": "~14.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

@@ -1,6 +1,13 @@
-import { View, Text ,ScrollView} from "react-native";
+import { View, Text , ScrollView} from "react-native";
 import React from "react";
-import { Ionicons,Entypo,Octicons,MaterialIcons ,AntDesign,Feather,Foundation,Fontisto} from "react-native-vector-icons";
+import { 
+  Ionicons, 
+  Entypo, 
+  AntDesign, 
+  Feather, 
+  Foundation, 
+  Fontisto
+} from "react-native-vector-icons";
 import { useDispatch, useSelector } from 'react-redux'
 import { selectCurrentUser, signOutUserAPI } from 'redux/user/UserSlice'
 import { useNavigation } from '@react-navigation/native'
@@ -92,6 +99,7 @@ const SettingScreen = ({ route, navigation }) => {
               icon={<Entypo name="light-up" size={25}/>}
               isMode={true}
               name={"Dark Mode"}
+              idOption='DARK_MODE'
               />
             </View>
           </View>
