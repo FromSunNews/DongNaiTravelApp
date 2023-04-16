@@ -87,7 +87,7 @@ export const styles = StyleSheet.create({
     height: 35,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: '50%',
+    borderRadius: 17.5,
     ...app_shdw.type_1,
     marginTop: CARD_HEIGHT / 2 - 35/2,
     marginLeft: 10
@@ -176,7 +176,7 @@ export const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: '50%',
+    borderRadius: 25,
     marginRight: 18,
     ...app_shdw.type_2
   },
@@ -362,7 +362,7 @@ export const styles = StyleSheet.create({
   backbtn: {
     width: 35,
     height: 35,
-    borderRadius: '50%',
+    borderRadius: 17.5,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: app_c.HEX.primary,
@@ -374,7 +374,7 @@ export const styles = StyleSheet.create({
   settingBtn: {
     width: 35,
     height: 35,
-    borderRadius: '50%',
+    borderRadius: 17.5,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: app_c.HEX.primary,
@@ -408,7 +408,7 @@ export const styles = StyleSheet.create({
   changeOriDes: {
     width: 40,
     height: 40,
-    borderRadius: '50%',
+    borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: app_c.HEX.primary,
