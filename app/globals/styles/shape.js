@@ -2,11 +2,11 @@ import { StyleSheet } from "react-native"
 
 const shape = StyleSheet.create({
   capsule: {
-    borderRadius: '100000000000%',
+    borderRadius: 1000,
   },
 
   circle: {
-    borderRadius: '100000000000%',
+    borderRadius: 1000,
     aspectRatio: 1
   },
 

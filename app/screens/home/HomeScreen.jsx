@@ -181,7 +181,7 @@ const HomeScreen = ({navigation}) => {
                 : currentBlogs.map((blog, index) => <VerticalBlogCard blog={blog} key={blog.id} style={{ marginLeft: blog.id !== blogs[0].id ? 16 : 0,}}/>)
               }
             </ScrollView>
-          </View>DƯ
+          </View>
         </View>
       </View>
     </ScrollView>

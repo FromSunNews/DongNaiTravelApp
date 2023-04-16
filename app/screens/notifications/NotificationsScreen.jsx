@@ -55,8 +55,6 @@ const Notification = ({ avatar, userName, contentNotification ,date}) => {
 };
 
 const NotificationsScreen = ({navigation}) => {
-
-  
   return (
     <View style={styles.container}>
       {/* <View style={styles.header}>

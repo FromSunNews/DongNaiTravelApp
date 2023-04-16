@@ -1,7 +1,7 @@
 import { View, Text, ScrollView } from 'react-native'
 import React, { useState } from 'react'
 import { Ionicons,FontAwesome,MaterialIcons } from 'react-native-vector-icons'
-import { selectCurrentNotifications } from "redux/setting/SettingSlice";
+import { selectCurrentSetting} from "redux/setting/SettingSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 import styles from './SettingNotificationsScreenStyles'
@@ -10,9 +10,8 @@ import DropDown from 'components/drop_down/DropDown'
 
 const SettingNotificationsScreen = () => {
 
-  const notifications=useSelector(selectCurrentNotifications)
+  const currentSetting = useSelector(selectCurrentSetting)
   const dispatch = useDispatch()
-  // console.log(notifications)
 
   return (
     <ScrollView style="container">

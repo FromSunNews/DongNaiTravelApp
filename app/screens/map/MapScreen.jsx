@@ -959,7 +959,7 @@ const Map = () => {
         >
           <View style={{
             backgroundColor: app_c.HEX.primary,
-            borderRadius: '50%',
+            borderRadius: 12.5,
             height: 25,
             width: 25,
           }}>
@@ -2503,7 +2503,7 @@ const Map = () => {
                             style={{
                               height: 150,
                               width: 90,
-                              borderRadius: '50%',
+                              borderRadius: 45,
                               backgroundColor: weatherSelected === 0 ? app_c.HEX.third : app_c.HEX.ext_primary,
                               justifyContent: 'center',
                               alignItems: 'center',
@@ -2540,7 +2540,7 @@ const Map = () => {
                           style={{
                             height: 150,
                             width: 90,
-                            borderRadius: '50%',
+                            borderRadius: 45,
                             backgroundColor: weatherSelected === index+1 ? app_c.HEX.third : app_c.HEX.ext_primary,
                             justifyContent: 'center',
                             alignItems: 'center',

@@ -1,5 +1,5 @@
-import { AppText } from "components";
-import React, { useState, useRef, memo } from "react";
+import { AppText } from "components"
+import React, { useState, useRef, memo } from "react"
 import {
   View,
   Text,
@@ -7,27 +7,14 @@ import {
   LayoutAnimation,
   Platform,
   UIManager,
-} from "react-native";
-import { Entypo, AntDesign } from "react-native-vector-icons";
+} from "react-native"
+import { Entypo, AntDesign } from "react-native-vector-icons"
 
-import { app_c, app_typo } from "globals/styles";
-import styles from "./DropDownStyle";
-import { useDispatch, useSelector } from "react-redux";
-import { selectCurrentNotifications, updateComments, updateFromFollowing ,updateEvents} from "redux/setting/SettingSlice";
-import { useEffect } from "react";
-
-const options = [
-  {
-    label: "Bật",
-    value: true,
-  },
-  {
-    label: "Tắt",
-    value: false,
-  },
-];
-
-
+import { app_c, app_typo } from "globals/styles"
+import styles from "./DropDownStyle"
+import { selectCurrentSetting, updateDarkMode, updateNotification } from "redux/setting/SettingSlice"
+import { useDispatch, useSelector } from "react-redux"
+import { useEffect } from "react"
 
 const DropDown = ({
   name,
@@ -43,75 +30,88 @@ const DropDown = ({
   isComment,
   isEvent,
 }) => {
-  const notifications=useSelector(selectCurrentNotifications)
+  const currentSetting = useSelector(selectCurrentSetting)
+  console.log("🚀 ~ file: DropDown.jsx:34 ~ currentSetting:", currentSetting)
   const dispatch = useDispatch()
   
-  const[count,setCount]=useState(0)
-
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [btnBgColor, setBtnBgColor] = useState(app_c.HEX.ext_primary);
+  const [isOpen, setIsOpen] = useState(false)
+  const [selectedOption, setSelectedOption] = useState(null)
+  const [btnBgColor, setBtnBgColor] = useState(app_c.HEX.ext_primary)
  
 
   useEffect(() => {
     if (idOption ==='UPDATE_FROM_FOLLOWING' ) {
-      setSelectedOption(notifications.updateFromFollowing)
+      setSelectedOption(currentSetting.notification.updateFromFollowing)
     }
     if (idOption === 'COMMENTS') {
-      setSelectedOption(notifications.updateComments)
+      setSelectedOption(currentSetting.notification.comments)
     }
     if (idOption === 'EVENTS') {
-      setSelectedOption(notifications.updateEvents)
+      setSelectedOption(currentSetting.notification.events)
     }
-  }, [])
-
+    if (idOption === 'DARK_MODE') {
+      setSelectedOption(currentSetting.darkMode)
+    }
+  }, [currentSetting])
 
   const handleOptionChange = () => {
-    const data = !selectedOption
-    // cat nhat giao die
-    setSelectedOption(data)
+    let data 
     // cat nhat state
-    if(idOption ==='UPDATE_FROM_FOLLOWING')
-    {
-      console.log( `FromFollowing ${data}`)
-      dispatch(updateFromFollowing(data))
+    if (idOption === 'DARK_MODE') {
+      console.log( `DARK_MODE`)
+      data = !selectedOption
+      dispatch(updateDarkMode(data))
+    } else {
+      if (idOption ==='UPDATE_FROM_FOLLOWING')
+      {
+        console.log( `FromFollowing`)
+        data = {
+          ...currentSetting.notification,
+          updateFromFollowing: !selectedOption
+        }
+      }
+      if (idOption ==='COMMENTS')
+      {
+        console.log( `Comment`)
+        data = {
+          ...currentSetting.notification,
+          comments: !selectedOption
+        }
+      }
+      if (idOption ==='EVENTS')
+      {
+        console.log( `Event`)
+        data = {
+          ...currentSetting.notification,
+          events: !selectedOption
+        }
+      }
+      console.log("🚀 ~ file: DropDown.jsx:85 ~ handleOptionChange ~ data:", data)
+      dispatch(updateNotification(data))
     }
-    if(idOption ==='COMMENTS')
-    {
-      console.log( `Comment ${data}`)
-      dispatch(updateComments(data))
-    }
-    if(idOption ==='EVENTS')
-    {
-      console.log( `Event ${data}`)
-      dispatch(updateEvents(data))
-    }
-    console.log(notifications)
-    setCount(count+1)
-    console.log(count)
-  };
+  }
 
   // Thêm dòng này để cho phép LayoutAnimation hoạt động trên Android
   if (Platform.OS === "android") {
     UIManager.setLayoutAnimationEnabledExperimental &&
-      UIManager.setLayoutAnimationEnabledExperimental(true);
+      UIManager.setLayoutAnimationEnabledExperimental(true)
   }
 
   const toggleDropdown = () => {
-    setIsOpen(!isOpen);
+    setIsOpen(!isOpen)
     // set background color for dropdown when onPress
     if (!isOpen) {
-      setBtnBgColor(app_c.HEX.sub_third);
+      setBtnBgColor(app_c.HEX.sub_third)
     } else {
-      setBtnBgColor(app_c.HEX.ext_primary);
+      setBtnBgColor(app_c.HEX.ext_primary)
     }
     if (!isDrop) {
       handlePressButton(),
-      setBtnBgColor(app_c.HEX.ext_primary);
+      setBtnBgColor(app_c.HEX.ext_primary)
     }
     // Sử dụng hàm `LayoutAnimation.configureNext` để thiết lập kiểu animation cho dropdown
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-  };
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+  }
 
   return (
     <View style={styles.dropdown}>
@@ -148,7 +148,7 @@ const DropDown = ({
                 alignItems: "center",
               }}
             >
-              {!selectedOption ? (
+              {selectedOption ? (
                 <AppText style={{...styles.dropdown_label,...styles.dropdown_label_mode,}}>Bật</AppText>
               ) : (
                 <AppText style={{...styles.dropdown_label,...styles.dropdown_label_mode,}}>Tắt</AppText>
@@ -167,13 +167,30 @@ const DropDown = ({
           {isMode &&
             <>
               <TouchableOpacity
-                onPress={() => handleOptionChange()}
+                onPress={() => {
+                  if (!selectedOption)
+                    handleOptionChange()
+                }}
+              >
+                <View style={styles.dropdown_content}>
+                  <View style={styles.circle_outline}>
+                    {selectedOption && <View style={styles.circle}></View> }
+                  </View>
+                  <Text style={styles.option_name}>Bật</Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => {
+                  if (selectedOption)
+                    handleOptionChange()
+                }}
               >
                 <View style={styles.dropdown_content}>
                   <View style={styles.circle_outline}>
                     {!selectedOption && <View style={styles.circle}></View> }
                   </View>
-                  <Text style={styles.option_name}>{!selectedOption ? 'Bật' : 'Tắt'}</Text>
+                  <Text style={styles.option_name}>Tắt</Text>
                 </View>
               </TouchableOpacity>
             </>
@@ -210,7 +227,7 @@ const DropDown = ({
         </View>
       )}
     </View>
-  );
-};
+  )
+}
 
-export default memo(DropDown) ;
+export default memo(DropDown) 
