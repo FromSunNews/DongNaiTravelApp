@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
   },
   container: {
     ...app_dms.screenWidth,
-    paddingBottom:200 ,
+    paddingBottom:200,
   },
   imageCover: {
     width: '100%',
@@ -132,7 +132,6 @@ const styles = StyleSheet.create({
   // start blog block
   blog_block:{
     width:'100%',
-    ...app_sp.ph_16,
   },
   btn_create_blog:{
     width:'100%',
@@ -159,14 +158,16 @@ const styles = StyleSheet.create({
   },
   btn_manage_blog_name:{
     ...app_typo.sz_5,
-    color:app_c.HEX.primary
+    color:app_c.HEX.primary,
+    ...app_sp.ph_16
   }, 
   blog_title_container:{
     ...app_sp.mt_22,
+    paddingHorizontal:16
   },
   blog_title:{
-    ...app_typo.size.sz_16,
-    fontWeight:'bold',
+    ...app_typo.size.sz_18,
+    fontWeight: 'bold',
     color:app_c.HEX.fourth
   },
   blog_container:{

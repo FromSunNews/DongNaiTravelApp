@@ -121,6 +121,7 @@ const SigninScreen = () => {
       extraScrollHeight={40}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
+      showsVerticalScrollIndicator={false}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={{flex: 1}}>
