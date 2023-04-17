@@ -163,13 +163,13 @@ const HomeScreen = ({navigation}) => {
             containerStyle={{backgroundColor: app_c.HEX.primary,  }}
           />
           <View style={{ ...app_sp.mb_12}}>
-            <ScrollView horizontal={true} style={{paddingBottom:10, paddingLeft:16}} showsHorizontalScrollIndicator={false}>
+            <ScrollView horizontal={true} style={{ paddingBottom:12,paddingLeft:16}} showsHorizontalScrollIndicator={false}>
               {
                 currentPlaces.length === 0
                 ? [1, 2, 3].map((value, index) => <VerticalPlaceCardSkeleton key={value + index} style={{ marginLeft: index !== 0 ? 16 : 0,}}/>)
                 : currentPlaces.map((place, index) => 
-                  <TouchableOpacity onPress={()=>navigation.navigate("PlaceDetailScreen")}>
-                    <VerticalPlaceCard place={place} key={place.id} style={{ marginLeft: index !== 0 ? 16 : 0, marginRight : currentPlaces.length - 1 === index ? 36 : 0}}/>
+                  <TouchableOpacity key={place.id} onPress={()=>navigation.navigate("PlaceDetailScreen")}>
+                    <VerticalPlaceCard place={place}  style={{ marginLeft: index !== 0 ? 16 : 0, marginRight : currentPlaces.length - 1 === index ? 36 : 0}}/>
                   </TouchableOpacity>)
               }
             </ScrollView>
@@ -192,8 +192,8 @@ const HomeScreen = ({navigation}) => {
                 currentBlogs.length === 0
                 ? [1, 2, 3].map((value, index) => <VerticalBlogCardSkeleton key={value + index} style={{  marginLeft: index !== 0 ? 16 : 0,}} />)
                 : currentBlogs.map((blog, index) => 
-                  <TouchableOpacity onPress={()=>navigation.navigate("BlogDetailScreen")}>
-                    <VerticalBlogCard blog={blog} key={blog.id} style={{ marginLeft: index !== 0 ? 16 : 0, marginRight : currentBlogs.length - 1 === index ? 36 : 0}}/>
+                  <TouchableOpacity key={blog.id} onPress={()=>navigation.navigate("BlogDetailScreen")}>
+                    <VerticalBlogCard blog={blog}  style={{ marginLeft: index !== 0 ? 16 : 0, marginRight : currentBlogs.length - 1 === index ? 36 : 0}}/>
                   </TouchableOpacity>
                 )
               }
