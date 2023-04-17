@@ -30,8 +30,8 @@ const styles = StyleSheet.create({
     justifyContent:'space-between'
   },
   temperature: {
-    width: 272,
-    height: 64,
+    width: app_dms.screenWidth * 0.72,
+    height: app_dms.screenWidth * 0.17,
     flexDirection: 'row',
     backgroundColor: app_c.HEX.ext_primary,
     justifyContent: 'space-between',
@@ -43,7 +43,6 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent:'center',
     alignItems:'center',
-   
     
   },
   temperature_degrees_info:{
@@ -69,12 +68,12 @@ const styles = StyleSheet.create({
 
   },
   temperature_other_info:{
-    width:140,
+    width:145,
   },
 
   temperature_reload: {
-    width: 64,
-    height: 64,
+    width: app_dms.screenWidth * 0.17,
+    height: app_dms.screenWidth * 0.17,
     backgroundColor: app_c.HEX.ext_primary,
     justifyContent: 'center',
     alignItems: 'center',
@@ -102,6 +101,7 @@ const styles = StyleSheet.create({
     ...app_sp.mt_12,
     
   }
+ 
 
 })
 export default styles
