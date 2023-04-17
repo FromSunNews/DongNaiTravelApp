@@ -32,7 +32,8 @@ import * as Location from 'expo-location'
 
 // Related to map
 import MapView, { Callout, Marker, Polygon, Polyline, PROVIDER_GOOGLE } from 'react-native-maps'
-import { MapViewWithHeading, ArrowedPolyline } from 'react-native-maps-line-arrow'
+// import { MapViewWithHeading, ArrowedPolyline } from 'react-native-maps-line-arrow'
+import { MapViewWithHeading, ArrowedPolyline } from 'libs/react-native-maps-line-arrow'
 
 // Related to raw datas
 import { coordinates } from 'utilities/coordinates'
@@ -55,7 +56,6 @@ import { BottomSheetScroll, CheckBoxText } from 'components'
 import ImagePromise from 'components/image_promise/ImagePromise'
 import ReviewSectionPromise from 'components/review_section_promise/ReviewSectionPromise'
 import Filter from 'components/filter/Filter'
-import BottomSheetExample from 'components/bottom_sheet/BottomSheetExample'
 import Category from 'components/categories/Category'
 import InputAutoComplete from 'components/input_auto_complete/InputAutoComplete'
 import StarRating from 'components/star_rating/StarRating'
@@ -83,11 +83,12 @@ import { socketIoInstance } from '../../../App'
 import { selectCurrentUser, selectTemporaryUserId } from 'redux/user/UserSlice'
 import ImageModal from 'react-native-image-modal';
 import { PolyLineDirection } from 'components/polyline_direction/PolyLineDirection'
-import { BottomSheetScrollView, BottomSheetView, BottomSheetVirtualizedList } from '@gorhom/bottom-sheet'
+import { BottomSheetFlatList, BottomSheetScrollView, BottomSheetView, BottomSheetVirtualizedList } from '@gorhom/bottom-sheet'
 
 import { computeDestinationPoint } from 'geolib'
 import moment from 'moment/moment'
 import { selectCurrentMap, updateCurrentMap, updateMapDetails, updateMapTypes, updatePlaces, updateSuggestions } from 'redux/map/mapSlice'
+import BottomSheetExample from '../../components/bottom_sheet/BottomSheetExample'
 
 const Map = () => {
 // Phương: https://docs.expo.dev/versions/latest/sdk/map-view/
@@ -792,11 +793,12 @@ const Map = () => {
     }
   }
 
-  const handleGetPlaceDetails = (placeId) => {
+  const handleGetPlaceDetails = (placeId, androidPoiClick) => {
     // console.log("🚀 ~ file: MapScreen.jsx:273 ~ handleGetPlaceDetails ~ e", e.nativeEvent.placeId)
     const data = {
-      placeId: placeId
-    }
+        placeId: placeId,
+        androidPoiClick: androidPoiClick
+      }
     // console.log("🚀 ~ file: MapScreen.jsx:277 ~ handleGetPlaceDetails ~ data", data)
     getPlaceDetailsAPI(data).then((placeDetails) => {
       // console.log("🚀 ~ file: MapScreen.jsx:279 ~ getPlaceDetailsAPI ~ placeDetails", placeDetails)
@@ -919,13 +921,21 @@ const Map = () => {
         mapType={currentMap.mapTypes}
         showsTraffic={currentMap.mapDetails}
         provider={PROVIDER_GOOGLE}
-        showsIndoors={true}
+        showsIndoors={false}
         initialRegion={INITIAL_POSITION}
         showsUserLocation={locationCurrent ? true : false}
         followsUserLocation
+        toolbarEnabled={false}
+        showsCompass={false}
+        showsMyLocationButton={false}
         onPoiClick={e => {
           if (!showDirections) {
-            handleGetPlaceDetails(e.nativeEvent.placeId)
+            console.log("🚀 ~ file: MapScreen.jsx:930 ~ e.nativeEvent.placeId:", e.nativeEvent.placeId)
+            if (Platform.OS === 'ios') {
+              handleGetPlaceDetails(e.nativeEvent.placeId, false)
+            } else if (Platform.OS === 'android') {
+              handleGetPlaceDetails(e.nativeEvent.placeId, true)
+            }
           }
         }}
         
@@ -988,7 +998,7 @@ const Map = () => {
                 // icon={{uri: place.icon}}
                 // pinColor={'white'}
                 tappable={true}
-                onPress={() => handleGetPlaceDetails(place.place_id)}
+                onPress={() => {handleGetPlaceDetails(place.place_id, false)}}
               >
                 <View>
                   <FontAwesome5 name="map-marker" size={30} color={app_c.HEX.third} style={{height: 30}}/>
@@ -1185,7 +1195,7 @@ const Map = () => {
             backgroundColor: app_c.HEX.third,
             marginTop: 10,
             position: 'absolute',
-            top: 160,
+            top: 120,
             right: 0,
             width: 40,
             height: 40
@@ -1257,8 +1267,9 @@ const Map = () => {
           <View style={styles.searchContainer}>
             <InputAutoComplete
               onPlaceSelected={(details) => {
+                console.log("🚀 ~ file: MapScreen.jsx:1261 ~ details:", details?.place_id)
                 Keyboard.dismiss()
-                handleGetPlaceDetails(details.place_id)
+                handleGetPlaceDetails(details.place_id, false)
                 // onPlaceSelected(details, 'destination')
               }}
               predefinedPlaces={arrPlaceInputMainSearch}
@@ -1493,7 +1504,7 @@ const Map = () => {
                     </View>
                   </View>
                   
-                  <Text style={[styles.distanceText, {marginTop: 15, marginBottom: 10}]}>Summary: {distance}km</Text>
+                  <Text style={[styles.distanceText, {marginTop: Platform.OS === 'ios' ? 15 : 5, marginBottom: Platform.OS === 'ios' ? 10 : 5}]}>Summary: {distance}km</Text>
 
                   <View style={styles.containerBtnOptionRoute}>
                     <TouchableOpacity 
@@ -1880,7 +1891,7 @@ const Map = () => {
         <View style={{
           position: 'absolute',
           right: 18,
-          top: 40,
+          top: 20,
           height: 45,
          display: 'flex',
          alignItems: 'center',
@@ -2092,7 +2103,7 @@ const Map = () => {
                   <View style={styles.button}>
                     <TouchableOpacity
                       onPress={() => {
-                        handleGetPlaceDetails(place.place_id)
+                        handleGetPlaceDetails(place.place_id, false)
                       }}
                       style={styles.scrollPlaceBtn}
                     >
@@ -2202,6 +2213,7 @@ const Map = () => {
         (weatherData && isShowWeatherBottomSheet) &&
         <BottomSheetExample
           bottomSheetExampleRef={weatherBottomSheetRef}
+          enableContentPanningGesture={Platform.OS === 'android' ? false : true}
           openTermCondition={isShowWeatherBottomSheet}
           closeTermCondition={() => {
             if (placeDetails) {
@@ -2220,7 +2232,7 @@ const Map = () => {
             paddingBottom: 120,
           }}
           childView={
-            <View style={{ backgroundColor: app_c.HEX.primary, flex: 1}}>
+            <View style={{ backgroundColor: app_c.HEX.primary}}>
               <BottomSheetView>
                 <Text style={{
                   color: app_c.HEX.fourth,
@@ -2474,17 +2486,19 @@ const Map = () => {
                   ...app_typo.fonts.normal.lighter.h4
                 }}>Dự báo 5 ngày / 3h</Text>
 
-                <FlatList 
+                <FlatList
                   horizontal
+                  nestedScrollEnabled={true}
                   showsHorizontalScrollIndicator={false}
                   data={weatherData.weatherForecast}
                   keyExtractor={(item, index) => `weather-${index}`}
                   contentContainerStyle={{ paddingHorizontal: 18 }}
                   style={{
-                    marginTop: 10,
+                    marginTop: 18,
                     width: '100%'
                   }}
                   renderItem={({item, index}) => {
+                    console.log('index', index)
                     let dateTimeData
                     // if (index === 0) {
                     //   dateTimeData = weatherData.weatherCurrent
@@ -2532,7 +2546,7 @@ const Map = () => {
                             }}>{weatherData.weatherCurrent.main.temp.toFixed(1)}°C</Text>
                           </TouchableOpacity>
                         }
-
+      
                         <TouchableOpacity
                           onPress={() => {
                             setWeatherSelected(index+1)
@@ -2589,7 +2603,7 @@ const Map = () => {
             setIsShowFilterDirectionBottomSheet(false)
             setRoutesFilter(currentFilter.routes)
           }}
-          snapPoints={['20%', '50%']}
+          snapPoints={['20%', '55%']}
           haveBtn={false}
           haveOverlay={true}
           bottomView={{
@@ -2684,6 +2698,7 @@ const Map = () => {
         isShowMapTypeBottomSheet &&
         <BottomSheetExample
           bottomSheetExampleRef={mapTypeBottomSheetRef}
+          enableContentPanningGesture={Platform.OS === 'android' ? false : true}
           openTermCondition={isShowMapTypeBottomSheet}
           closeTermCondition={() => {
             setIsShowMapTypeBottomSheet(false)
@@ -2960,6 +2975,7 @@ const Map = () => {
             </View>
             
             <ScrollView
+              nestedScrollEnabled={false}
               horizontal
               scrollEventThrottle={1}
               showsHorizontalScrollIndicator={false}
@@ -3183,6 +3199,7 @@ const Map = () => {
               placeDetails?.photos ?
               <ScrollView
                 horizontal
+                nestedScrollEnabled={false}
                 scrollEventThrottle={1}
                 showsHorizontalScrollIndicator={false}
                 height={320}
@@ -3200,7 +3217,7 @@ const Map = () => {
                 }}
               >
                 {
-                  placeDetails.photos.map((photo, index) => {
+                  placeDetails?.photos.map((photo, index) => {
                     const length = placeDetails?.photos.length
                     const stopLoopIndex = length % 3 === 0 ?  (length / 3) : (length /3) + 1
                     if (index < stopLoopIndex ) {
@@ -3289,7 +3306,8 @@ const Map = () => {
                                         console.log("cover")
                                       }}
                                     />
-                                </> :
+                                </> 
+                                :
                                   <View style={styles.imgEmplyGray}/>
                                 }
                               </View> : null
@@ -3342,7 +3360,8 @@ const Map = () => {
                     }
                   })
                 }
-              </ScrollView> : 
+              </ScrollView>
+              : 
               null
             }
 

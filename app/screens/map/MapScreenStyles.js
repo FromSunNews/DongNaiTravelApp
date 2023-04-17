@@ -1,6 +1,6 @@
 import Constants from 'expo-constants'
 import { app_c, app_dms, app_sh, app_shdw, app_sp, app_typo } from 'globals/styles'
-import { Dimensions, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 
 
 const CARD_HEIGHT = 240
@@ -28,9 +28,7 @@ export const styles = StyleSheet.create({
   },
   seachTypeContainer: {
     position: 'absolute',
-    // +20
-    top: 60,  
-    // top: 80,
+    top: (18),
     width: '100%',
   },
   searchContainer: {
@@ -72,7 +70,7 @@ export const styles = StyleSheet.create({
   tagList: {
     paddingLeft: 18,
     position: 'absolute',
-    top: 125,
+    top: 85,
   },
   cardScrollView: {
     position: 'absolute',
@@ -369,7 +367,7 @@ export const styles = StyleSheet.create({
     position: 'absolute',
     ...app_shdw.type_2,
     left: 18,
-    top: 40
+    top: 0
   },
   settingBtn: {
     width: 35,
@@ -381,15 +379,14 @@ export const styles = StyleSheet.create({
     position: 'absolute',
     ...app_shdw.type_2,
     right: 18,
-    top: 40
+    top: 0
   },
   iconBack: {
     marginLeft: 8,
   },
   headerRouteInfo: {
     color: app_c.HEX.ext_second,
-    ...app_typo.fonts.normal.bolder.h4,
-    marginTop: 50
+    ...app_typo.fonts.normal.bolder.h4
   },
   frameRouteInfo: {
     display: 'flex',
@@ -420,16 +417,17 @@ export const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    borderBottomRightRadius: '130%',
-    borderTopRightRadius: '130%',
+    borderBottomRightRadius: 200,
+    borderTopRightRadius: 200,
     borderStyle: 'dashed',
     borderWidth: 1,
     height: '110%',
-    width: '42%',
+    width: app_dms.screenWidth * 40 / 100,
     marginLeft: -2,
     paddingLeft: 14,
     paddingRight: 12,
-    borderColor: app_c.HEX.ext_second
+    borderColor: app_c.HEX.ext_second,
+    borderWidth: 1
   },
   originText: {
     color: app_c.HEX.ext_second,
@@ -585,7 +583,7 @@ export const styles = StyleSheet.create({
   tagListTrans: {
     paddingLeft: 18,
     position: 'absolute',
-    top: 250,
+    top: 205,
   },
   headerTextFilterContainer: {
     display: 'flex',

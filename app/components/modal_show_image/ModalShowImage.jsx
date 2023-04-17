@@ -8,6 +8,7 @@ import { selectCurrentNotifications } from 'redux/notifications/NotificationsSli
 
 
 const ModalShowImage = ({ url }) => {
+console.log("🚀 ~ file: ModalShowImage.jsx:11 ~ ModalShowImage ~ url:", url)
 
 
   const [isImageOpen, setImageOpen] = useState(false);
@@ -43,7 +44,7 @@ const ModalShowImage = ({ url }) => {
     <View style={styles.container}>
       <TouchableWithoutFeedback onPress={openImage}>
         <Image
-          source={ {url }}
+          source={{uri: url}}
           style={styles.logo}
           onLayout={handleImageLayout}
           resizeMode='contain'
@@ -54,7 +55,7 @@ const ModalShowImage = ({ url }) => {
         <TouchableWithoutFeedback onPress={closeImage}>
           <View style={styles.modal}>
             <Image
-              source={ {url} }
+              source={{uri: url}}
               style={[styles.fullLogo, imageSize]}
               resizeMode="contain"
             />
