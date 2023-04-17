@@ -161,4 +161,53 @@ export const languageData = {
       en: 'Already have an account?'
     }
   },
+  forgotPasswordScreen: {
+    text_header: {
+      vi: 'Quên Mật Khẩu',
+      en: 'Forgot Password'
+    },
+    desc: {
+      vi: 'Nhập email của bạn, chúng tôi sẽ gửi mã OTP đến email của bạn để đặt lại mật khẩu. Xin lưu ý rằng OTP chỉ có hiệu lực trong 2 phút!',
+      en: 'Enter your email, we will send an OTP to your email to reset your password. Please note that the OTP is only valid for 2 minutes!'
+    },
+    email_address: {
+      vi: 'Địa chỉ Email',
+      en: 'Email Address'
+    },
+    enter_email_address: {
+      vi: 'Nhập email của bạn...',
+      en: 'Enter your email address...'
+    },
+    send_otp: {
+      vi: 'Gửi OTP',
+      en: 'Send OTP'
+    },
+    go_back: {
+      vi: 'Quay lại đăng nhập',
+      en: 'Go back sign in'
+    }
+
+  },
+  homeScreen: {
+    desWeather: {
+      vi: 'Đang tải...',
+      en: 'Loading...'
+    },
+    title_place: {
+      vi: 'Địa điểm',
+      en: 'Place'
+    },
+    title_Blog: {
+      vi: 'Blog',
+      en: 'Blog'
+    },
+    like: {
+      vi: 'Thích',
+      en: 'Like'
+    },
+    report: {
+      vi: 'Báo cáo',
+      en: 'Report'
+    }
+  }
 }

@@ -7,15 +7,20 @@ import { app_c } from 'globals/styles'
 import { ButtonText, Input } from 'components'
 import { Controller, useForm } from 'react-hook-form'
 import { EMAIL_RULE, EMAIL_RULE_MESSAGE, FIELD_REQUIRED_MESSAGE } from 'utilities/validators'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
 import { Image } from 'react-native'
 import { sendOtpAPI } from 'request_api'
+import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
 
 const ForgotPasswordScreen = () => {
 
   const dispatch = useDispatch()
   const navigation = useNavigation()
+  
+  const langCode = useSelector(selectCurrentLanguage).languageCode
+  const langData = useSelector(selectCurrentLanguage).data?.forgotPasswordScreen
+  const formData = useSelector(selectCurrentLanguage).data?.form
 
   const { control, handleSubmit, formState: { errors } } = useForm ({
     defaultValues: {
@@ -50,32 +55,32 @@ const ForgotPasswordScreen = () => {
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.container}>
               <View style={styles.content}>
-                <Text style={styles.textHeader}>Forgot Password</Text>
+                <Text style={styles.textHeader}>{langData.text_header[langCode]}</Text>
 
                 <Image
                   style={styles.image}
                   source={require('assets/images/illutration2.png')}
                 />
 
-                <Text style={styles.textInfo}>Enter your email, we will send an OTP to your email to reset your password. Please note that the OTP is only valid for 2 minutes!</Text>
+                <Text style={styles.textInfo}>{ langData.desc[langCode] }</Text>
 
                 <Controller
                   control={control}
                   rules={{
                     required: {
                       value: true,
-                      message: FIELD_REQUIRED_MESSAGE
+                      message: formData.FIELD_REQUIRED_MESSAGE[langCode]
                     },
                     pattern: {
                       value: EMAIL_RULE,
-                      message: EMAIL_RULE_MESSAGE
+                      message: formData.EMAIL_RULE_MESSAGE[langCode]
                     },
                   }}
                   name="email"
                   render={({ field: { onChange, onBlur, value } }) => (
                     <Input
-                      label='Email Address'
-                      hint='Enter your email address...'
+                      label={langData.email_address[langCode]}
+                      hint={langData.enter_email_address[langCode]}
                       isPassword={false}
                       onChange={onChange}
                       onBlur={onBlur}
@@ -87,7 +92,7 @@ const ForgotPasswordScreen = () => {
                 {errors.email && <Text style={styles.textError}>{errors.email?.message}</Text>}
 
                 <ButtonText
-                  label='Send OTP'
+                  label={langData.send_otp[langCode]}
                   onPress={handleSubmit(handleSendOTP)}
                 />
 
@@ -95,7 +100,7 @@ const ForgotPasswordScreen = () => {
                   onPress={() => navigation.pop()}
                   style={styles.containerLabel}
                 >
-                  <Text style={styles.labelSignin}>Go back sign in</Text>
+                  <Text style={styles.labelSignin}>{langData.go_back[langCode]}</Text>
                 </TouchableOpacity>
               </View>
             </View>
