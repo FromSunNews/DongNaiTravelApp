@@ -3,6 +3,7 @@ import React from 'react'
 import { app_c } from 'globals/styles'
 import AnimatedCheckbox from 'react-native-checkbox-reanimated'
 import { styles } from './CheckBoxTextStyles'
+import { Platform } from 'react-native'
 
 const CheckBoxText = ({ label, onPress, isChecked}) => {
   return (
@@ -11,7 +12,7 @@ const CheckBoxText = ({ label, onPress, isChecked}) => {
         <AnimatedCheckbox
           checked={isChecked}
           highlightColor={isChecked ? app_c.HEX.fourth : app_c.HEX.primary}
-          checkmarkColor="#ffffff"
+          checkmarkColor={Platform.OS === 'ios' ? '#ffffff' : 'transparent'}
           boxOutlineColor={isChecked ? app_c.HEX.fourth : '#808080'}
         />
       </View>

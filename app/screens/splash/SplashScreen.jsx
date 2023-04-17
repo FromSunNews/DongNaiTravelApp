@@ -78,7 +78,7 @@ const SplashScreen = () => {
         <LottieView
           ref={lottieViewRef}
           onLayout={() => {lottieViewRef.current?.play()}}
-          loop={false}
+          loop={true}
           speed={1.6}
           style={{
             width: 200,

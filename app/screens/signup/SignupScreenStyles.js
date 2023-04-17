@@ -4,11 +4,14 @@ import { app_c, app_dms, app_sh, app_typo } from 'globals/styles'
 import Constants from 'expo-constants'
 
 export const styles = StyleSheet.create({
+  containerScrollView: {
+    paddingTop: 0,
+    backgroundColor: app_c.HEX.primary
+  },
   container: {
     flex: 1,
-    paddingTop: Constants.statusBarHeight,
     backgroundColor: app_c.HEX.primary,
-    paddingBottom: 20
+    paddingBottom: 60
   },
   content: {
     paddingHorizontal: 18
@@ -71,7 +74,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 20
+    marginTop: 16
   },
   labelNoAccount: {
     color: app_c.HEX.fourth,
