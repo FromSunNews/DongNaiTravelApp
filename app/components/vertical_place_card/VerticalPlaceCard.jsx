@@ -18,6 +18,8 @@ import styles from './VerticalPlaceCardStyles'
 import { app_c, app_sh, app_sp } from 'globals/styles'
 
 import { ViewProps } from 'types/index.d'
+import { useSelector } from 'react-redux'
+import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
 
 /**
  * @typedef PlaceProps
@@ -59,6 +61,10 @@ const VerticalPlaceCard = ({ place, ...props }) => {
   const containerStyle = ComponentUtility.mergeStyle([styles.card, place.isRecommended ? {} : {}], props.style);
   //Đức: create navigation for Image Place onPress=> toScreen DetailPlaceScreen
   const navigation = useNavigation()
+
+  const langCode = useSelector(selectCurrentLanguage).languageCode
+  const langData = useSelector(selectCurrentLanguage).data?.homeScreen
+
   return (
     <View {...props} style={containerStyle}>
       {/* Image */}
@@ -102,7 +108,7 @@ const VerticalPlaceCard = ({ place, ...props }) => {
           {
             (isActive, currentLabelStyle) => (
               <AppText font="body2" style={currentLabelStyle}>
-                <Ionicons name={isActive ? "heart" : "heart-outline"} style={currentLabelStyle} size={14} /> Like
+                <Ionicons name={isActive ? "heart" : "heart-outline"} style={currentLabelStyle} size={14} /> {langData.like[langCode]}
               </AppText>
             )
           }
@@ -116,7 +122,7 @@ const VerticalPlaceCard = ({ place, ...props }) => {
           {
             (isActive, currentLabelStyle) => (
               <AppText font="body2" style={currentLabelStyle}>
-                <Ionicons name={isActive ? "flag" : "flag-outline"} style={currentLabelStyle} size={14} /> Report
+              <Ionicons name={isActive ? "flag" : "flag-outline"} style={currentLabelStyle} size={14} /> {langData.report[langCode]}
               </AppText>
             )
           }

@@ -22,6 +22,7 @@ import { getWeatherCurrentAPI } from "request_api"
 import * as Location from "expo-location"
 import { useSelector } from "react-redux"
 import { selectCurrentMap } from "redux/map/mapSlice"
+import { selectCurrentLanguage } from "redux/language/LanguageSlice"
 
 const HomeScreen = ({navigation}) => {
 
@@ -38,6 +39,9 @@ const HomeScreen = ({navigation}) => {
   const [typeBlog, setTypeBlog] = React.useState("");
   const [currentPlaces, setCurrentPlaces] = React.useState([]);
   const [currentBlogs, setCurrentBlogs] = React.useState([]);
+
+  const langCode = useSelector(selectCurrentLanguage).languageCode
+  const langData = useSelector(selectCurrentLanguage).data?.homeScreen
 
   React.useEffect(() => {
     setTimeout(() => {
@@ -102,7 +106,7 @@ const HomeScreen = ({navigation}) => {
                 {
                   desWeather ? (
                     <AppText numberOfLines={2}  style={[styles.temperature_degrees_info,{fontSize:13,paddingHorizontal:4,textAlign:"center"}]}>{capitalizeFirstLetter(desWeather)}</AppText>
-                  ) : <AppText numberOfLines={2}  style={[styles.temperature_degrees_info,{fontSize:13,paddingHorizontal:4,textAlign:"center"}]}>Đang tải...</AppText>
+                  ) : <AppText numberOfLines={2}  style={[styles.temperature_degrees_info,{fontSize:13,paddingHorizontal:4,textAlign:"center"}]}>{langData.desWeather[langCode]}</AppText>
                 }
               </View>
               <View style={styles.temperature_other_info}>

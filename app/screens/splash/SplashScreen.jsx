@@ -30,6 +30,7 @@ const SplashScreen = () => {
   useEffect(() => {
     const languageCode = Localization.locale.split('-')[0]
     // en or vi
+    console.log('Localization.locale', Localization.locale)
     console.log("🚀 ~ file: SplashScreen.jsx:29 ~ useEffect ~ languageCode:", languageCode)
     dispatch(updateLanguageCode(languageCode))
     dispatch(updateData(languageData))
