@@ -7,7 +7,7 @@ import AppText from '../app_text/AppText'
 import RectangleButton from '../buttons/RectangleButton'
 
 import styles from './TypeScrollViewStyle'
-import { app_sp } from 'globals/styles'
+import { app_sp ,app_shdw } from 'globals/styles'
 
 import { ViewStyles } from 'types/index.d'
 
