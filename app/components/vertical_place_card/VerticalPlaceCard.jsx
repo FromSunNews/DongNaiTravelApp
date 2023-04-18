@@ -79,7 +79,7 @@ const VerticalPlaceCard = ({ place, ...props }) => {
       {/* Button & Recommended tag */}
       <View style={styles.card_mid}>
         {
-          place.isRecommended && <AppText font="sub1" color="third">Recommended</AppText>
+          place.isRecommended && <AppText font="sub1" color="third">{langData.recommended[langCode]}</AppText>
         }
       </View>
 

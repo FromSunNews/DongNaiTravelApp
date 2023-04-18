@@ -7,10 +7,14 @@ import PlaceDetailScreen from 'screens/place_detail/PlaceDetailScreen';
 import { AppHeader } from 'components';
 
 import { app_c } from 'globals/styles';
+import { useSelector } from 'react-redux';
+import { selectCurrentLanguage } from 'redux/language/LanguageSlice';
 
 const ExploreStack = createNativeStackNavigator();
 
 const ExploreNavigator = () => {
+
+  const langCode = useSelector(selectCurrentLanguage).languageCode 
 
   return (
     <ExploreStack.Navigator
@@ -21,7 +25,7 @@ const ExploreNavigator = () => {
       <ExploreStack.Screen
         name='ExploreScreen'
         options={{
-          title: 'Explore',
+          title: `${langCode === 'vi' ? 'Khám Phá' : 'Explore'}`,
           isTopScreen: true
         }}
       >
@@ -30,7 +34,7 @@ const ExploreNavigator = () => {
       <ExploreStack.Screen
         name='PlaceDetailScreen'
         options={{
-          title: 'Place Detail',
+          title: `${langCode === 'vi' ? 'Chi tiết Địa Điểm' : 'Place Detail'}`,
           headerTransparent: true,
         }}
       >

@@ -13,6 +13,8 @@ import CircleButton from '../buttons/CircleButton'
 
 import styles from './HorizontalPlaceCardStyles'
 import { app_c, app_sh, app_sp } from 'globals/styles'
+import { useSelector } from 'react-redux'
+import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
 
 /*
   Các thông tin về một place có thể thay đổi.
@@ -44,7 +46,10 @@ import { app_c, app_sh, app_sp } from 'globals/styles'
  * @param {PlaceProps} props.place - Thông tin về một địa điểm của một nơi nào đó.
  * @returns Thẻ ngang chứa các thông tin cơ bản của một địa điểm.
  */
-const HorizontalPlaceCard = ({place}) => {
+const HorizontalPlaceCard = ({ place }) => {
+  const langCode = useSelector(selectCurrentLanguage).languageCode 
+  const langData = useSelector(selectCurrentLanguage).data?.exploreScreen
+
   const navigation = useNavigation()
 
   const handlePressImageButton = () => {
@@ -68,7 +73,7 @@ const HorizontalPlaceCard = ({place}) => {
           {
             place.isRecommended &&
             <View style={styles.card_recommended_mark_container}>
-              <AppText font="body2" color="ext_second">Recommended</AppText>
+              <AppText font="body2" color="ext_second">{langData.place_card_recommended[langCode]}</AppText>
             </View>
           }
         </ImageBackground>
@@ -123,7 +128,7 @@ const HorizontalPlaceCard = ({place}) => {
             overrideShape="capsule"
           >
             {(isActive, currentLabelStyle) => (
-              <AppText style={currentLabelStyle} font="body2">{isActive ? 'Visited' : 'Visit'}</AppText>
+              <AppText style={currentLabelStyle} font="body2"> { isActive ?  langData.visited[langCode] : langData.visit[langCode]}</AppText>
             )}
           </RectangleButton>
         </View>

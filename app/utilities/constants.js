@@ -4,7 +4,7 @@
 
 
 // const ip_v4 = '192.168.43.83'
-const ip_v4 = '192.168.43.83'
+const ip_v4 = '192.168.2.30'
 
 // const ip_v4 = '192.168.2.149'
 const API_PORT = '7500'
