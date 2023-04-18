@@ -7,7 +7,11 @@ export const languageData = {
     PASSWORD_RULE_MESSAGE: {
       vi: 'Cần tối thiểu 1 từ, 1 chữ số và tối thiểu 8 ký tự.',
       en: 'At least 1 letter, a number, at least 8 characters.'
-    }, 
+    },
+    AT_LEAST2_RULE_MESSAGE: {
+      vi: 'Trường này cần tối thiểu 2 ký tự.',
+      en: 'This field must be at least 2 characters.'
+    },
     BIRTHDAY_RULE_MESSAGE: {
       vi: 'Định dạng không đúng dd/mm/yyyy.',
       en: 'Incorrect format dd/mm/yyyy.'
@@ -109,8 +113,8 @@ export const languageData = {
       en: 'Birthday'
     },
     enter_birthday: {
-      vi: 'Nhập ngày sinh của bạn...',
-      en: 'Enter your birthday...'
+      vi: 'Nhập ngày sinh của bạn (dd/mm/yyyy)...',
+      en: 'Enter your birthday (dd/mm/yyyy)...'
     },
     fill_info: {
       vi: 'Điền thông tin đăng ký',
@@ -133,8 +137,8 @@ export const languageData = {
       en: 'Enter your password...'
     },
     confirm_password: {
-      vi: 'Mật khẩu',
-      en: 'Password'
+      vi: 'Xác nhận mật khẩu',
+      en: 'Confirm password'
     },
     enter_confirm_password: {
       vi: 'Nhập lại mật khẩu của bạn...',
@@ -156,9 +160,137 @@ export const languageData = {
       vi: 'Tôi đồng ý với Điều khoản & Điều kiện',
       en: 'I agree with Terms & Conditions'
     },
+    agree_short: {
+      vi: 'Tôi đồng ý',
+      en: 'I agree'
+    },
     have_account: {
       vi: 'Đã có tài khoản?',
       en: 'Already have an account?'
+    },
+    prompt_check: {
+      vi: 'Bạn phải đồng ý với điều khoản vầ Điều kiện.',
+      en: 'You should agree with Terms and Conditions.'
     }
   },
+  forgotPasswordScreen: {
+    text_header: {
+      vi: 'Quên Mật Khẩu',
+      en: 'Forgot Password'
+    },
+    desc: {
+      vi: 'Nhập email của bạn, chúng tôi sẽ gửi mã OTP đến email của bạn để đặt lại mật khẩu. Xin lưu ý rằng OTP chỉ có hiệu lực trong 2 phút!',
+      en: 'Enter your email, we will send an OTP to your email to reset your password. Please note that the OTP is only valid for 2 minutes!'
+    },
+    email_address: {
+      vi: 'Địa chỉ Email',
+      en: 'Email Address'
+    },
+    enter_email_address: {
+      vi: 'Nhập email của bạn...',
+      en: 'Enter your email address...'
+    },
+    send_otp: {
+      vi: 'Gửi OTP',
+      en: 'Send OTP'
+    },
+    go_back: {
+      vi: 'Quay lại đăng nhập',
+      en: 'Go back sign in'
+    }
+  },
+  homeScreen: {
+    desWeather: {
+      vi: 'Đang tải...',
+      en: 'Loading...'
+    },
+    title_place: {
+      vi: 'Địa điểm',
+      en: 'Place'
+    },
+    title_Blog: {
+      vi: 'Bài viết',
+      en: 'Blog'
+    },
+    like: {
+      vi: 'Thích',
+      en: 'Like'
+    },
+    report: {
+      vi: 'Báo cáo',
+      en: 'Report'
+    },
+    recommended: {
+      vi: 'Đề xuất',
+      en: 'Recommended'
+    }
+  },
+  exploreScreen: {
+    banner_button: {
+      vi: 'Xem vị trí của bạn trên bản đồ',
+      en: ' Let’s see your location in map'
+    },
+    place_card_recommended: {
+      vi: 'Đề xuất',
+      en: 'Recommended'
+    },
+    visited: {
+      vi: 'Đã xem',
+      en: 'Visited'
+    },
+    visit: {
+      vi: 'Xem',
+      en: 'Visit'
+    }
+  },
+  placeDetailScreen: {
+    h1: {
+      vi: 'Lorem Ipsum',
+      en : 'Lorem Ipsum'
+    },
+    sub_h1: {
+      vi: 'chỉ đơn giản là văn bản giả.',
+      en: 'is simply dummy text.'
+    },
+    about: {
+      vi: 'Giới thiệu',
+      en: 'About'
+    },
+    description: {
+      vi: 'Mô tả',
+      en: 'Description'
+    },
+    des: {
+      vi: 'Lorem Ipsum chỉ đơn giản là văn bản giả của ngành công nghiệp in ấn và sắp chữ. Lorem Ipsum đã trở thành văn bản giả tiêu chuẩn của ngành kể từ những năm 1500, khi một nhà in không rõ danh tính lấy một bộ sưu tập kiểu chữ và xáo trộn nó để tạo thành một cuốn sách mẫu. Nó đã tồn tại không chỉ năm thế kỷ, mà còn là bước nhảy vọt sang sắp chữ điện tử, về cơ bản vẫn không thay đổi. Nó đã được phổ biến vào những năm 1960 với việc phát hành các tờ Letraset chứa các đoạn Lorem Ipsum và gần đây hơn với phần mềm xuất bản trên máy tính để bàn như Aldus PageMaker bao gồm các phiên bản của Lorem Ipsum.',
+      en: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.'
+    },
+    image: {
+      vi: 'Hình ảnh',
+      en: 'Images'
+    },
+    relatedPlaces: {
+      vi: 'Địa điểm liên quan',
+      en: 'Related Places'
+    },
+    review: {
+      vi: 'Nhận xét',
+      en: 'Reviews'
+    },
+    review_texth3: {
+      vi: 'Xếp hạng và đánh giá',
+      en: 'Ratings & reviews'
+    }
+  },
+  
+  // Component
+  notificationBottomSheet: {
+    notification: {
+      vi: 'Thông báo',
+      en: 'Notification'
+    },
+    close: {
+      vi: 'Đóng',
+      en: 'Close'
+   },
+ }
 }

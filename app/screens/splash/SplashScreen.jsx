@@ -30,6 +30,7 @@ const SplashScreen = () => {
   useEffect(() => {
     const languageCode = Localization.locale.split('-')[0]
     // en or vi
+    console.log('Localization.locale', Localization.locale)
     console.log("🚀 ~ file: SplashScreen.jsx:29 ~ useEffect ~ languageCode:", languageCode)
     dispatch(updateLanguageCode(languageCode))
     dispatch(updateData(languageData))
@@ -77,7 +78,7 @@ const SplashScreen = () => {
         <LottieView
           ref={lottieViewRef}
           onLayout={() => {lottieViewRef.current?.play()}}
-          loop={false}
+          loop={true}
           speed={1.6}
           style={{
             width: 200,

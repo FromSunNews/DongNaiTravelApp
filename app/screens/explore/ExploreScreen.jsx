@@ -7,6 +7,8 @@ import { TypeScrollView, HorizontalPlaceCard, HorizontalPlaceCardSkeleton, Banne
 
 import styles from './ExploreScreenStyles'
 import { app_sp, app_c } from 'globals/styles'
+import { useSelector } from 'react-redux'
+import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
 
 /**
  * __Creator__: @NguyenAnhTuan1912
@@ -14,6 +16,9 @@ import { app_sp, app_c } from 'globals/styles'
  * @returns 
  */
 const ExploreScreen = () => {
+  const langCode = useSelector(selectCurrentLanguage).languageCode 
+  const langData = useSelector(selectCurrentLanguage).data?.exploreScreen
+  
   const [currentPlaces, setCurrentPlaces] = React.useState([]);
   const [type, setType] = React.useState("");
   React.useEffect(() => {
@@ -25,9 +30,11 @@ const ExploreScreen = () => {
   console.log(type);
 
   return (
+    
     <ScrollView
       style={styles.scroll_view_container}
       stickyHeaderIndices={[1]}
+      showsVerticalScrollIndicator={false}
     >
       <View style={{...app_sp.mh_18}}>
         <BannerButton
@@ -38,14 +45,14 @@ const ExploreScreen = () => {
             <Ionicons name="chevron-forward-outline" style={currentLabelStyle} size={25} />
           }
         >
-          Let’s see your location in map
+         {langData.banner_button[langCode]}
         </BannerButton>
       </View>
       <TypeScrollView
         types='all;recommended;popular;most_visit;most_favorite'
         callBack={setType}
         scrollStyle={[app_sp.ms_18, app_sp.pv_12]}
-        containerStyle={{backgroundColor: app_c.HEX.primary, ...app_sp.mv_10}}
+        containerStyle={{backgroundColor: app_c.HEX.primary}}
       />
       <View style={{...app_sp.mh_18, ...app_sp.mb_12}}>
         {
@@ -54,7 +61,6 @@ const ExploreScreen = () => {
           : currentPlaces.map((place, index) => <HorizontalPlaceCard place={place} key={place.id} />)
         }
       </View>
-
       <View style={{height: 100}}></View>
     </ScrollView>
   )

@@ -119,7 +119,7 @@ const AppHeader = ({
             />
             
             {
-              screenName==='Home' && (
+              screenName==='Home'  && (
                 <View style={{paddingLeft:10}}>
                   <CircleButton
                     defaultColor="type_2"

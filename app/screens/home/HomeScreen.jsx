@@ -24,7 +24,7 @@ import { useSelector } from "react-redux"
 import { selectCurrentMap } from "redux/map/mapSlice"
 import { Platform } from "react-native"
 import HomeBannerSlider from "components/home_banner_slider/HomeBannerSlider"
-
+import { selectCurrentLanguage } from "redux/language/LanguageSlice"
 
 const HomeScreen = ({navigation}) => {
 
@@ -41,6 +41,9 @@ const HomeScreen = ({navigation}) => {
   const [typeBlog, setTypeBlog] = React.useState("");
   const [currentPlaces, setCurrentPlaces] = React.useState([]);
   const [currentBlogs, setCurrentBlogs] = React.useState([]);
+
+  const langCode = useSelector(selectCurrentLanguage).languageCode
+  const langData = useSelector(selectCurrentLanguage).data?.homeScreen
 
   React.useEffect(() => {
     setTimeout(() => {
@@ -102,7 +105,7 @@ const HomeScreen = ({navigation}) => {
                 {
                   desWeather ? (
                     <AppText numberOfLines={2}  style={[styles.temperature_degrees_info,{fontSize:13,paddingHorizontal:4,textAlign:"center"}]}>{capitalizeFirstLetter(desWeather)}</AppText>
-                  ) : <AppText numberOfLines={2}  style={[styles.temperature_degrees_info,{fontSize:13,paddingHorizontal:4,textAlign:"center"}]}>Đang tải...</AppText>
+                  ) : <AppText numberOfLines={2}  style={[styles.temperature_degrees_info,{fontSize:13,paddingHorizontal:4,textAlign:"center"}]}>{langData.desWeather[langCode]}</AppText>
                 }
               </View>
               <View style={styles.temperature_other_info}>
@@ -153,7 +156,7 @@ const HomeScreen = ({navigation}) => {
         {/* Place and Blog*/}
         <View style={styles.home_category}>
           <TouchableOpacity style={styles.category_header} onPress={()=>navigation.navigate("ExploreScreen")}>
-            <AppText style={styles.category_name}>Place</AppText>
+            <AppText style={styles.category_name}>{langData.title_place[langCode]}</AppText>
             <AppText><Entypo name="chevron-small-right" size={40}/></AppText>
           </TouchableOpacity>
           <TypeScrollView
@@ -177,7 +180,7 @@ const HomeScreen = ({navigation}) => {
         </View>
         <View style={styles.home_category}>
           <TouchableOpacity style={styles.category_header} onPress={()=>navigation.navigate("BlogsScreen")}>
-            <AppText style={styles.category_name}>Blog</AppText>
+            <AppText style={styles.category_name}>{langData.title_Blog[langCode]}</AppText>
             <AppText><Entypo name="chevron-small-right" size={40}/></AppText>
           </TouchableOpacity>
           <TypeScrollView

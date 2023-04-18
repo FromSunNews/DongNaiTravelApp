@@ -22,6 +22,7 @@ const BlogsScreen = () => {
     <ScrollView
       style={styles.scroll_view_container}
       stickyHeaderIndices={[1]}
+      showsVerticalScrollIndicator={false}
     >
       <View style={{...app_sp.mh_18}}>
         <BannerButton
