@@ -7,7 +7,11 @@ export const languageData = {
     PASSWORD_RULE_MESSAGE: {
       vi: 'Cần tối thiểu 1 từ, 1 chữ số và tối thiểu 8 ký tự.',
       en: 'At least 1 letter, a number, at least 8 characters.'
-    }, 
+    },
+    AT_LEAST2_RULE_MESSAGE: {
+      vi: 'Trường này cần tối thiểu 2 ký tự.',
+      en: 'This field must be at least 2 characters.'
+    },
     BIRTHDAY_RULE_MESSAGE: {
       vi: 'Định dạng không đúng dd/mm/yyyy.',
       en: 'Incorrect format dd/mm/yyyy.'
@@ -109,8 +113,8 @@ export const languageData = {
       en: 'Birthday'
     },
     enter_birthday: {
-      vi: 'Nhập ngày sinh của bạn...',
-      en: 'Enter your birthday...'
+      vi: 'Nhập ngày sinh của bạn (dd/mm/yyyy)...',
+      en: 'Enter your birthday (dd/mm/yyyy)...'
     },
     fill_info: {
       vi: 'Điền thông tin đăng ký',
@@ -133,8 +137,8 @@ export const languageData = {
       en: 'Enter your password...'
     },
     confirm_password: {
-      vi: 'Mật khẩu',
-      en: 'Password'
+      vi: 'Xác nhận mật khẩu',
+      en: 'Confirm password'
     },
     enter_confirm_password: {
       vi: 'Nhập lại mật khẩu của bạn...',
@@ -156,9 +160,17 @@ export const languageData = {
       vi: 'Tôi đồng ý với Điều khoản & Điều kiện',
       en: 'I agree with Terms & Conditions'
     },
+    agree_short: {
+      vi: 'Tôi đồng ý',
+      en: 'I agree'
+    },
     have_account: {
       vi: 'Đã có tài khoản?',
       en: 'Already have an account?'
+    },
+    prompt_check: {
+      vi: 'Bạn phải đồng ý với điều khoản vầ Điều kiện.',
+      en: 'You should agree with Terms and Conditions.'
     }
   },
   forgotPasswordScreen: {
@@ -186,7 +198,6 @@ export const languageData = {
       vi: 'Quay lại đăng nhập',
       en: 'Go back sign in'
     }
-
   },
   homeScreen: {
     desWeather: {
@@ -269,5 +280,17 @@ export const languageData = {
       vi: 'Xếp hạng và đánh giá',
       en: 'Ratings & reviews'
     }
-  }
+  },
+  
+  // Component
+  notificationBottomSheet: {
+    notification: {
+      vi: 'Thông báo',
+      en: 'Notification'
+    },
+    close: {
+      vi: 'Đóng',
+      en: 'Close'
+   },
+ }
 }

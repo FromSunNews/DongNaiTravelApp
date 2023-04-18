@@ -34,6 +34,7 @@ const ExploreScreen = () => {
     <ScrollView
       style={styles.scroll_view_container}
       stickyHeaderIndices={[1]}
+      showsVerticalScrollIndicator={false}
     >
       <View style={{...app_sp.mh_18}}>
         <BannerButton
@@ -51,7 +52,7 @@ const ExploreScreen = () => {
         types='all;recommended;popular;most_visit;most_favorite'
         callBack={setType}
         scrollStyle={[app_sp.ms_18, app_sp.pv_12]}
-        containerStyle={{backgroundColor: app_c.HEX.primary, ...app_sp.mv_10}}
+        containerStyle={{backgroundColor: app_c.HEX.primary}}
       />
       <View style={{...app_sp.mh_18, ...app_sp.mb_12}}>
         {

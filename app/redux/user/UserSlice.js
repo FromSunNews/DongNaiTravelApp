@@ -10,6 +10,7 @@ const initialState = {
   isAuthenticated: false,
   userRole: 'guest',
   temporaryUserId: null,
+  ipv4: null
 }
 
 // Phương: Các hành động gọi api (bất đồng bộ) và cập nhật dữ liệu vào Redux, dùng createAsyncThunk đi kèm với extraReducers
@@ -63,6 +64,10 @@ export const userSlice = createSlice({
     updateTemporaryUserId: (state, action) => {
       const userId = action.payload
       state.temporaryUserId = userId
+    },
+    updateIpv4: (state, action) => {
+      const ipv4 = action.payload
+      state.ipv4 = ipv4
     }
   },
   extraReducers: (builder) => {
@@ -94,7 +99,8 @@ export const userSlice = createSlice({
 export const { 
   updateCurrentUser,
   updateFiledsUser,
-  updateTemporaryUserId
+  updateTemporaryUserId,
+  updateIpv4
  } = userSlice.actions
 
 // Phương: Selectors: mục đích là dành cho các components bên dưới gọi bằng useSelector() tới nó
