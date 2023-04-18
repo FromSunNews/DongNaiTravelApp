@@ -157,7 +157,7 @@ const HomeScreen = ({navigation}) => {
         {/* Place and Blog*/}
         <View style={styles.home_category}>
           <TouchableOpacity style={styles.category_header} onPress={()=>navigation.navigate("ExploreScreen")}>
-            <AppText style={styles.category_name}>Place</AppText>
+            <AppText style={styles.category_name}>{langData.title_place[langCode]}</AppText>
             <AppText><Entypo name="chevron-small-right" size={40}/></AppText>
           </TouchableOpacity>
           <TypeScrollView
@@ -181,7 +181,7 @@ const HomeScreen = ({navigation}) => {
         </View>
         <View style={styles.home_category}>
           <TouchableOpacity style={styles.category_header} onPress={()=>navigation.navigate("BlogsScreen")}>
-            <AppText style={styles.category_name}>Blog</AppText>
+            <AppText style={styles.category_name}>{langData.title_Blog[langCode]}</AppText>
             <AppText><Entypo name="chevron-small-right" size={40}/></AppText>
           </TouchableOpacity>
           <TypeScrollView

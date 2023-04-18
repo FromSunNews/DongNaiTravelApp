@@ -7,6 +7,8 @@ import { TypeScrollView, HorizontalPlaceCard, HorizontalPlaceCardSkeleton, Banne
 
 import styles from './ExploreScreenStyles'
 import { app_sp, app_c } from 'globals/styles'
+import { useSelector } from 'react-redux'
+import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
 
 /**
  * __Creator__: @NguyenAnhTuan1912
@@ -14,6 +16,9 @@ import { app_sp, app_c } from 'globals/styles'
  * @returns 
  */
 const ExploreScreen = () => {
+  const langCode = useSelector(selectCurrentLanguage).languageCode 
+  const langData = useSelector(selectCurrentLanguage).data?.exploreScreen
+  
   const [currentPlaces, setCurrentPlaces] = React.useState([]);
   const [type, setType] = React.useState("");
   React.useEffect(() => {
@@ -25,6 +30,7 @@ const ExploreScreen = () => {
   console.log(type);
 
   return (
+    
     <ScrollView
       style={styles.scroll_view_container}
       stickyHeaderIndices={[1]}
@@ -39,7 +45,7 @@ const ExploreScreen = () => {
             <Ionicons name="chevron-forward-outline" style={currentLabelStyle} size={25} />
           }
         >
-          Let’s see your location in map
+         {langData.banner_button[langCode]}
         </BannerButton>
       </View>
       <TypeScrollView
@@ -55,7 +61,6 @@ const ExploreScreen = () => {
           : currentPlaces.map((place, index) => <HorizontalPlaceCard place={place} key={place.id} />)
         }
       </View>
-
       <View style={{height: 100}}></View>
     </ScrollView>
   )
