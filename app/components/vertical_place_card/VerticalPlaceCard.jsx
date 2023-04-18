@@ -13,6 +13,7 @@ import AppText from 'components/app_text/AppText'
 import RectangleButton from 'components/buttons/RectangleButton'
 import CircleButton from 'components/buttons/CircleButton'
 import { useNavigation } from '@react-navigation/native'
+import { BoxShadow } from 'react-native-shadow'
 
 import styles from './VerticalPlaceCardStyles'
 import { app_c, app_sh, app_sp } from 'globals/styles'
