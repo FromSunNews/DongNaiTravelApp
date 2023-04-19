@@ -28,8 +28,6 @@ import { AppText, RectangleButton } from 'components'
 import { app_sp } from 'globals/styles'
 import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
 
-
-
 const SigninScreen = () => {
 
   // Phuong: https://github.com/Cnilton/react-native-floating-label-input
