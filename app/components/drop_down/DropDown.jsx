@@ -15,6 +15,7 @@ import styles from "./DropDownStyle"
 import { selectCurrentSetting, updateDarkMode, updateNotification } from "redux/setting/SettingSlice"
 import { useDispatch, useSelector } from "react-redux"
 import { useEffect } from "react"
+import { selectCurrentLanguage } from "../../redux/language/LanguageSlice"
 
 const DropDown = ({
   name,
@@ -30,6 +31,8 @@ const DropDown = ({
   isComment,
   isEvent,
 }) => {
+  const langCode = useSelector(selectCurrentLanguage).languageCode
+
   const currentSetting = useSelector(selectCurrentSetting)
   console.log("🚀 ~ file: DropDown.jsx:34 ~ currentSetting:", currentSetting)
   const dispatch = useDispatch()
@@ -50,7 +53,8 @@ const DropDown = ({
       setSelectedOption(currentSetting.notification.events)
     }
     if (idOption === 'DARK_MODE') {
-      setSelectedOption(currentSetting.darkMode)
+      console.log('vao dark mode')
+      setSelectedOption(currentSetting?.darkMode)
     }
   }, [currentSetting])
 
@@ -149,9 +153,9 @@ const DropDown = ({
               }}
             >
               {selectedOption ? (
-                <AppText style={{...styles.dropdown_label,...styles.dropdown_label_mode,}}>Bật</AppText>
+                <AppText style={{...styles.dropdown_label,...styles.dropdown_label_mode,}}>{langCode === 'vi' ? 'Bật' : 'On'}</AppText>
               ) : (
-                <AppText style={{...styles.dropdown_label,...styles.dropdown_label_mode,}}>Tắt</AppText>
+                <AppText style={{...styles.dropdown_label,...styles.dropdown_label_mode,}}>{langCode === 'vi' ? 'Tắt' : 'Off'}</AppText>
               )}
             </View>
           )}
@@ -176,7 +180,7 @@ const DropDown = ({
                   <View style={styles.circle_outline}>
                     {selectedOption && <View style={styles.circle}></View> }
                   </View>
-                  <Text style={styles.option_name}>Bật</Text>
+                  <Text style={styles.option_name}>{langCode === 'vi' ? 'Bật' : 'On'}</Text>
                 </View>
               </TouchableOpacity>
 
@@ -190,7 +194,7 @@ const DropDown = ({
                   <View style={styles.circle_outline}>
                     {!selectedOption && <View style={styles.circle}></View> }
                   </View>
-                  <Text style={styles.option_name}>Tắt</Text>
+                  <Text style={styles.option_name}>{langCode === 'vi' ? 'Tắt' : 'Off'}</Text>
                 </View>
               </TouchableOpacity>
             </>

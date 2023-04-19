@@ -126,6 +126,10 @@ const HorizontalPlaceCard = ({ place }) => {
             isActive={place.isVisited}
             typeOfButton="highlight"
             overrideShape="capsule"
+            style={{
+              width: 65,
+              paddingHorizontal: 0
+             }}
           >
             {(isActive, currentLabelStyle) => (
               <AppText style={currentLabelStyle} font="body2"> { isActive ?  langData.visited[langCode] : langData.visit[langCode]}</AppText>

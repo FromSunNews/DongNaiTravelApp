@@ -15,20 +15,23 @@ import ReportsScreen from "screens/reports/ReportsScreen";
 import CreatePost from "screens/create_post/CreatePostScreen";
 import BlogDetailScreen from "screens/blog_detail/BlogDetailScreen";
 import ViewStatsScreen from "screens/view_stats/ViewStatsScreen";
+import { useSelector } from "react-redux";
+import { selectCurrentLanguage } from "../../redux/language/LanguageSlice";
 
 const SettingStack = createNativeStackNavigator();
 const ProfileStack =createNativeStackNavigator();
 
 const SettingNavigator = () => {
+  langCode = useSelector(selectCurrentLanguage).languageCode
   return (
     <SettingStack.Navigator
       initialRouteName="SettingScreen"
       screenOptions={{ header: (props) => <AppHeader {...props} /> }}
     >
-      <SettingStack.Screen name="Settings" options={{isTopScreen:true}}>
+      <SettingStack.Screen name={langCode === 'vi' ? "Cài đặt" : "Settings"} options={{isTopScreen:true}}>
         {(props) => <SettingScreen {...props} />}
       </SettingStack.Screen>
-      <SettingStack.Screen name="Profile" >
+      <SettingStack.Screen name="Profile" options={{isTopScreen:true, title: `${langCode === "vi" ? "Trang cá nhân" : "Profile" }`}}>
         {(props) => <ProfileScreen {...props} />}
       </SettingStack.Screen>
       <SettingStack.Screen name="Blogs" >
@@ -64,7 +67,7 @@ const SettingNavigator = () => {
       <ProfileStack.Screen 
         name="BlogDetailScreen"
         options={{
-         title: 'Blog Detail',
+         title: `${langCode  === 'vi' ? 'Chi Tiết Bài Viết' : 'Blog Detail'}`,
        }}
       >
         {(props)=><BlogDetailScreen {...props}/>}
@@ -72,7 +75,7 @@ const SettingNavigator = () => {
       <ProfileStack.Screen 
         name="ViewStatsScreen"
         options={{
-         title: 'View Stats',
+         title:`${langCode  === 'vi' ? 'Thống Kê' : 'View Stats'}`,
        }}
       >
         {(props)=><ViewStatsScreen {...props}/>}
