@@ -12,6 +12,7 @@ import { color } from 'react-native-reanimated';
 import { app_typo } from '../../globals/styles';
 import { useSelector } from 'react-redux';
 import { selectCurrentNotifs } from '../../redux/notifications/NotificationsSlice';
+import { selectCurrentLanguage } from '../../redux/language/LanguageSlice';
 
  /**
  * __Creator__: @NguyenAnhTuan1912
@@ -47,6 +48,8 @@ const AppHeader = ({
   setCenterPart,
   setRightPart
 }) => {
+  const langCode = useSelector(selectCurrentLanguage).languageCode
+  const langData = useSelector(selectCurrentLanguage).data?.appHeader
 
   const currentNotif = useSelector(selectCurrentNotifs)
   const [numberOfVisited, setNumberOfVisited] = useState(0)
@@ -133,7 +136,7 @@ const AppHeader = ({
             />
             
             {
-              title==='Home' && (
+              title === langData.home[langCode] && (
                 <View style={{paddingLeft:10}}>
                   <CircleButton
                     defaultColor="type_2"

@@ -334,29 +334,31 @@ function ProfileScreen({ route, navigation}) {
                   </RectangleButton> : null
                 )
               }
+
               <RectangleButton
                 overrideShape="rounded_8"
                 typeOfButton="opacity"
                 onPress={() => navigation.navigate("EditProfileScreen")}
-                style= {{
+                style={{
                   flex: 0.4
                 }}
               >
                 {(isActive, currentLabelStyle) => (
                   <Text style={currentLabelStyle}>
                     <Feather name="edit-2" /> {langData.edit_profile[langCode]}
+                  </Text>
                 )}
               </RectangleButton>
-
-              <RectangleButton overrideShape="rounded_8" typeOfButton="opacity" style={{flex: 0.1 }}>
+              <RectangleButton overrideShape="rounded_8" typeOfButton="opacity" style={{flex: 0.05}}>
                 {(isActive, currentLabelStyle) => (
                   <Text
-                    style={currentLabelStyle}
+                    style={[currentLabelStyle, {marginLeft: -3}]}
                   >
                     <Entypo name="dots-three-vertical" size={20} />
                   </Text>
                 )}
               </RectangleButton>
+
 
             </View>
             <View style={styles.user_infos}>

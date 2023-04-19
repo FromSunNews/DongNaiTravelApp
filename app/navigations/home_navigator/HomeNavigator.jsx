@@ -16,6 +16,7 @@ const HomeStack=createNativeStackNavigator()
 const HomeNavigator=()=>{
 
   const langCode = useSelector(selectCurrentLanguage).languageCode
+  const langData = useSelector(selectCurrentLanguage).data?.appHeader
 
   return (
     <HomeStack.Navigator
@@ -25,7 +26,7 @@ const HomeNavigator=()=>{
       <HomeStack.Screen name="Home"
         options={{
           isTopScreen: true,
-          title: `${langCode === 'vi' ? 'Trang Chủ' : 'Home'}`,
+          title: langData.home[langCode]
         }}
       >
         {(prop)=><HomeScreen {...prop}/>}

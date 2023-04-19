@@ -10,7 +10,6 @@ const styles = StyleSheet.create({
   },
   home_content: {
     width: '100%',
-    ...app_sp.pt_12,
     paddingBottom:150
   },
   home_banner: {
@@ -90,7 +89,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems:'center',
-    paddingHorizontal:16,
+    // paddingHorizontal:16,
+    paddingLeft: 16,
   },
   category_name: {
     ...app_typo.fonts.normal.bolder.h3
