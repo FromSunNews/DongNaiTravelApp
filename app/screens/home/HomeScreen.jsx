@@ -50,8 +50,8 @@ const HomeScreen = ({navigation}) => {
     }, 2000);
   }, []);
 
-  console.log('ChoseTypeOfPlace: '+ typePlace)
-  console.log('ChoseTypeOfBlog: '+ typeBlog)
+  // console.log('ChoseTypeOfPlace: '+ typePlace)
+  // console.log('ChoseTypeOfBlog: '+ typeBlog)
   // const [location,setLocation] = useState(null)  
   function capitalizeFirstLetter(str) {
     return str.charAt(0).toUpperCase() + str.slice(1)

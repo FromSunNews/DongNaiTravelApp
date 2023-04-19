@@ -325,7 +325,7 @@ const Map = () => {
     })
     setCurrentCoorArr(arrLatLng)
 
-    // Lắng nghe sự kiện từ server
+    // Lắng nghe sự kiện từ server (tracking location)
     socketIoInstance.on('s_tracking_user_location_current', (data) => {
       if (data.isCallNewApi) {
         const coordinates = data.coorArrDirection.features[0].geometry.coordinates

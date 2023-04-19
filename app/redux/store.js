@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 
 import { blogsReducer } from 'redux/blogs/BlogsSlice'
-import { notificationsReducer } from 'redux/notifications/NotificationsSlice'
+import { notifsReducer } from './notifications/NotificationsSlice'
 import { placesReducer } from 'redux/places/PlacesSlice'
 import { mapReducer } from 'redux/map/mapSlice'
 import { profileReducer } from 'redux/profile/ProfileSlice'
@@ -30,7 +30,7 @@ const persistConfig = {
 
 const reducers = combineReducers({
   blogs: blogsReducer,
-  notifications: notificationsReducer,
+  notifs: notifsReducer,
   places: placesReducer,
   map: mapReducer,
   profile: profileReducer,

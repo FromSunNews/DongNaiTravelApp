@@ -7,25 +7,35 @@ import PlaceDetailScreen from "screens/place_detail/PlaceDetailScreen";
 import BlogDetailScreen from "screens/blog_detail/BlogDetailScreen";
 import ExploreScreen from "screens/explore/ExploreScreen";
 import BlogsScreen from "screens/blogs/BlogsScreen";
+import ProfileScreen from "../../screens/profile_screen/ProfileScreen";
 
 const HomeStack=createNativeStackNavigator()
 
 const HomeNavigator=()=>{
   return (
     <HomeStack.Navigator
-    initialRouteName="HomeScreen"
+      initialRouteName="HomeScreen"
       screenOptions={{ header: (props) => <AppHeader screenName="Home" {...props} /> }}
     >
       <HomeStack.Screen name="Home" options={{isTopScreen:true}}>
         {(prop)=><HomeScreen {...prop}/>}
       </HomeStack.Screen>
+      
       <HomeStack.Screen 
-      name="Notification" 
-      options={{headerShown:true,title:"Notification"}}
-      screenOptions={{ header: (props) => <AppHeader screenName="Home" {...props} /> }}
+        name="Notification" 
+        options={{ headerShown:true, title:"Notification"}}
       >
         {(prop)=><NotificationsScreen {...prop}/>}
       </HomeStack.Screen>
+      
+      <HomeStack.Screen 
+        options={{ headerShown:true, title:"Profile"}}
+        name="Profile" 
+      >
+        
+        {(props) => <ProfileScreen {...props} />}
+      </HomeStack.Screen>
+
       <HomeStack.Screen
         name='PlaceDetailScreen'
         options={{
