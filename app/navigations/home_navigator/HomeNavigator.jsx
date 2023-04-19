@@ -7,6 +7,7 @@ import PlaceDetailScreen from "screens/place_detail/PlaceDetailScreen";
 import BlogDetailScreen from "screens/blog_detail/BlogDetailScreen";
 import ExploreScreen from "screens/explore/ExploreScreen";
 import BlogsScreen from "screens/blogs/BlogsScreen";
+import ProfileScreen from "../../screens/profile_screen/ProfileScreen";
 import { useSelector } from "react-redux";
 import { selectCurrentLanguage } from "redux/language/LanguageSlice";
 
@@ -29,6 +30,7 @@ const HomeNavigator=()=>{
       >
         {(prop)=><HomeScreen {...prop}/>}
       </HomeStack.Screen>
+      
       <HomeStack.Screen 
       name= "Notification"
       options={{headerShown:true,title:`${langCode === 'vi' ? 'Thông Báo' : 'Notification'}`}}
@@ -36,6 +38,15 @@ const HomeNavigator=()=>{
       >
         {(prop)=><NotificationsScreen {...prop}/>}
       </HomeStack.Screen>
+      
+      <HomeStack.Screen 
+        options={{ headerShown:true, title:"Profile"}}
+        name="Profile" 
+      >
+        
+        {(props) => <ProfileScreen {...props} />}
+      </HomeStack.Screen>
+
       <HomeStack.Screen
         name='PlaceDetailScreen'
         options={{

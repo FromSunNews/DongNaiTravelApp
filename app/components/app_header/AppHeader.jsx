@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
@@ -8,6 +8,10 @@ import AppText from '../app_text/AppText';
 import CircleButton from '../buttons/CircleButton';
 
 import { app_c, app_shdw } from 'globals/styles';
+import { color } from 'react-native-reanimated';
+import { app_typo } from '../../globals/styles';
+import { useSelector } from 'react-redux';
+import { selectCurrentNotifs } from '../../redux/notifications/NotificationsSlice';
 
  /**
  * __Creator__: @NguyenAnhTuan1912
@@ -43,6 +47,10 @@ const AppHeader = ({
   setCenterPart,
   setRightPart
 }) => {
+
+  const currentNotif = useSelector(selectCurrentNotifs)
+  const [numberOfVisited, setNumberOfVisited] = useState(0)
+
   const canSetLeftPart = typeof setLeftPart === 'function';
   const canSetCenterPart = typeof setCenterPart === 'function';
   const canSetRightPart = typeof setRightPart === 'function';
@@ -68,6 +76,12 @@ const AppHeader = ({
     ...(transparent ?  { backgroundColor: `rgba(${app_c.RGB.primary}, 0)` } : {} )
   }
 
+
+  useEffect(() => {
+    if (currentNotif.length > 0) {
+      setNumberOfVisited(currentNotif.filter(notif => notif._isVisited === false).length)
+    }
+  }, [currentNotif])
 
   return (
     <View style={headerStyle}>
@@ -119,7 +133,7 @@ const AppHeader = ({
             />
             
             {
-              screenName==='Home'  && (
+              title==='Home' && (
                 <View style={{paddingLeft:10}}>
                   <CircleButton
                     defaultColor="type_2"
@@ -127,9 +141,31 @@ const AppHeader = ({
                     typeOfButton="opacity"
                     onPress={() => navigation.navigate('Notification')}
                     setIcon={(isActive, currentLabelStyle) => (
-                    <Ionicons name="notifications-sharp" size={18} style={currentLabelStyle} />
+                      <Ionicons name="notifications-sharp" size={18} style={[currentLabelStyle, {color: numberOfVisited !== 0 ? '#FFC72C' : null}]} />
                     )}
                   />
+
+                  {
+                    numberOfVisited > 0 &&
+                    <View style={{
+                      height: 15,
+                      width: 15,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      backgroundColor: '#CE2029',
+                      borderRadius: 7.5,
+                      position: 'absolute',
+                      right: 0,
+                      top: 0,
+                    }}>
+                      <Text style={{
+                        color: app_c.HEX.primary,
+                        ...app_typo.fonts.normal.bolder.body2,
+                        fontSize: 10
+                      }}>{numberOfVisited}</Text>
+                    </View>
+                  }
+
                 </View>
               )
             }

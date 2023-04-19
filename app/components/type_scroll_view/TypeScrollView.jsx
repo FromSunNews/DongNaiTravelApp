@@ -152,7 +152,7 @@ const TypeScrollView = ({
                   const halfWidthOfButton = (width / 2);
                   const distanceForScrollingToCenterButton = distanceFromXToSnapPosition + halfWidthOfButton;
                   buttonInfoRef.current.scrollToXList[index] = distanceForScrollingToCenterButton;
-                  console.log(`Button ${slideName}: ${distanceFromXToSnapPosition}, x: ${x}, center: ${distanceForScrollingToCenterButton}, slider'width: ${buttonInfoRef.current.buttonScrollContainerWidth}`);
+                  // console.log(`Button ${slideName}: ${distanceFromXToSnapPosition}, x: ${x}, center: ${distanceForScrollingToCenterButton}, slider'width: ${buttonInfoRef.current.buttonScrollContainerWidth}`);
                 }}
               >
                 {

@@ -60,7 +60,9 @@ const SplashScreen = () => {
         navigation.replace('OnboardingScreen')
       else {
         if (isAuthenticated) 
-          navigation.replace('GroupBottomTab')
+          navigation.replace('GroupBottomTab', {
+            isGetFullUserInfo: true
+          })
         else 
           navigation.replace('SigninScreen')
       }
