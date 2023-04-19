@@ -8,22 +8,33 @@ import BlogDetailScreen from "screens/blog_detail/BlogDetailScreen";
 import ExploreScreen from "screens/explore/ExploreScreen";
 import BlogsScreen from "screens/blogs/BlogsScreen";
 import ProfileScreen from "../../screens/profile_screen/ProfileScreen";
+import { useSelector } from "react-redux";
+import { selectCurrentLanguage } from "redux/language/LanguageSlice";
 
 const HomeStack=createNativeStackNavigator()
 
 const HomeNavigator=()=>{
+
+  const langCode = useSelector(selectCurrentLanguage).languageCode
+
   return (
     <HomeStack.Navigator
       initialRouteName="HomeScreen"
-      screenOptions={{ header: (props) => <AppHeader screenName="Home" {...props} /> }}
+      screenOptions={{ header: (props) => <AppHeader  screenName='Home' {...props} /> }}
     >
-      <HomeStack.Screen name="Home" options={{isTopScreen:true}}>
+      <HomeStack.Screen name="Home"
+        options={{
+          isTopScreen: true,
+          title: `${langCode === 'vi' ? 'Trang Chủ' : 'Home'}`,
+        }}
+      >
         {(prop)=><HomeScreen {...prop}/>}
       </HomeStack.Screen>
       
       <HomeStack.Screen 
-        name="Notification" 
-        options={{ headerShown:true, title:"Notification"}}
+      name= "Notification"
+      options={{headerShown:true,title:`${langCode === 'vi' ? 'Thông Báo' : 'Notification'}`}}
+      screenOptions={{ header: (props) => <AppHeader screenName="Home" {...props} /> }}
       >
         {(prop)=><NotificationsScreen {...prop}/>}
       </HomeStack.Screen>
@@ -39,9 +50,9 @@ const HomeNavigator=()=>{
       <HomeStack.Screen
         name='PlaceDetailScreen'
         options={{
-          title: 'Place Detail',
-        
+          title: `${langCode === 'vi' ? 'Chi Tiết Địa Điểm' : 'Place Detail'}`,
         }}
+        screenOptions={{ header: (props) => <AppHeader screenName="Home" {...props} /> }}
       >
         {(prop) => (
           <PlaceDetailScreen {...prop}/>
@@ -50,8 +61,7 @@ const HomeNavigator=()=>{
       <HomeStack.Screen
         name='BlogDetailScreen'
         options={{
-          title: 'Blog Detail',
-         
+          title: `${langCode === 'vi' ? 'Chi Tiết Bài Viết' : 'Blog Detail'}`,
         }}
       >
         {(prop) => (
@@ -62,7 +72,6 @@ const HomeNavigator=()=>{
         name='ExploreScreen'
         options={{
           title: 'Explore',
-         
         }}
       >
         {(prop) => (
@@ -72,8 +81,7 @@ const HomeNavigator=()=>{
       <HomeStack.Screen
         name='BlogsScreen'
         options={{
-          title: 'Blogs',
-         
+          title: "Blogs",
         }}
       >
         {(prop) => (

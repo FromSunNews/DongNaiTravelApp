@@ -42,13 +42,19 @@ import { createNewNotifAPI } from "../../request_api";
 import { socketIoInstance } from "../../../App";
 import { useRoute } from "@react-navigation/native";
 import { cloneDeep } from 'lodash'
+import { selectCurrentLanguage } from "../../redux/language/LanguageSlice";
 
 function ProfileScreen({ route, navigation}) {
   console.log("🚀 ~ file: ProfileScreen.jsx:46 ~ ProfileScreen ~ route:", route)
   const userSelector = useSelector(selectCurrentUser)
+  
+  const langCode = useSelector(selectCurrentLanguage).languageCode
+  const langData = useSelector(selectCurrentLanguage).data?.blogScreenSetting
+  
   const [currentUser, setCurrentUser] = useState(null)
   const [isFollowed, setIsFollowed] = useState(null)
   const [isMyProfile, setIsMyProfile] = useState(null)
+
   const dispatch = useDispatch()
   const [openTermCondition, setOpenTermCondition] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -266,13 +272,13 @@ function ProfileScreen({ route, navigation}) {
             </View>
             <View style={styles.user_info_follow}>
               <Text style={styles.user_follower}>
-                {currentUser?.followerIds.length} Follower
+                {currentUser?.followerIds.length} {langData.user_follower[langCode]}
               </Text>
               <Text>
                 <Entypo name="dot-single" size={20} color={app_c.HEX.fourth} />
               </Text>
               <Text style={styles.user_following}>
-                {currentUser?.followingIds.length} Following
+                {currentUser?.followingIds.length} {langData.user_following[langCode]}
               </Text>
             </View>
             <View style={styles.round_rectang_button_container}>
@@ -289,7 +295,7 @@ function ProfileScreen({ route, navigation}) {
                   onPress={() => navigation.navigate("ViewStatsScreen")}
                 >
                   {(isActive, currentLabelStyle) => (
-                    <Text style={currentLabelStyle}>View Stats</Text>
+                    <Text style={currentLabelStyle}>{langData.view_stats[langCode]}</Text>
                   )}
                 </RectangleButton>
               }
@@ -328,7 +334,6 @@ function ProfileScreen({ route, navigation}) {
                   </RectangleButton> : null
                 )
               }
-
               <RectangleButton
                 overrideShape="rounded_8"
                 typeOfButton="opacity"
@@ -339,8 +344,7 @@ function ProfileScreen({ route, navigation}) {
               >
                 {(isActive, currentLabelStyle) => (
                   <Text style={currentLabelStyle}>
-                    <Feather name="edit-2" /> Edit Profile
-                  </Text>
+                    <Feather name="edit-2" /> {langData.edit_profile[langCode]}
                 )}
               </RectangleButton>
 
@@ -357,20 +361,20 @@ function ProfileScreen({ route, navigation}) {
             </View>
             <View style={styles.user_infos}>
               <View style={styles.user_info_block}>
-                <Text style={styles.user_info_title}>Bio</Text>
+                <Text style={styles.user_info_title}>{langData.bio[langCode]}</Text>
                 <Text style={styles.user_bio_content}>{user.userBio}</Text>
               </View>
             </View>
             <View style={styles.user_infos}>
               <View style={styles.user_info_block}>
-                <Text style={styles.user_info_title}>Information</Text>
+                <Text style={styles.user_info_title}>{langData.information[langCode]}</Text>
                 <View style={styles.user_info_other}>
                   <AntDesign
                     style={styles.user_info_other_icon}
                     name="enviromento"
                   />
                   <Text style={styles.user_info_other_content}>
-                    <Text>Live in </Text>
+                    <Text>{langData.live_in[langCode]} </Text>
                     <Text style={styles.user_info_address}>
                       {user.userInFo.userAddress}
                     </Text>
@@ -415,15 +419,15 @@ function ProfileScreen({ route, navigation}) {
                   name="pencil-outline"
                   size={18}
                 />
-                <Text style={styles.btn_create_blog_name}>Write new blog</Text>
+                <Text style={styles.btn_create_blog_name}>{langData.write_new_blog[langCode]}</Text>
               </TouchableOpacity>
             }
             <TouchableOpacity e={styles.btn_manage_blog}>
-              <Text style={styles.btn_manage_blog_name}>Manage blogs</Text>
+              <Text style={styles.btn_manage_blog_name}>{langData.manage_blogs[langCode]}</Text>
             </TouchableOpacity>
             <View style={styles.blogs_list}>
               <View style={styles.blog_title_container}>
-                <Text style={styles.blog_title}>Blogs</Text>
+                <Text style={styles.blog_title}>{langData.blog_list[langCode]}</Text>
               </View>
               <View style={styles.blog_container}>
                 {
@@ -441,7 +445,7 @@ function ProfileScreen({ route, navigation}) {
       <BottomSheetScroll
         haveBtn={false}
         openTermCondition={openTermCondition}
-        snapPoints={["25%", "50%", "74%"]}
+        snapPoints={["30%", "50%", "74%"]}
         closeTermCondition={() => {
           setOpenTermCondition(false);
         }}
@@ -457,7 +461,7 @@ function ProfileScreen({ route, navigation}) {
                 style={styles.choice_setting_icon}
               />
               <Text style={styles.choice_setting_image_name}>
-                Chọn ảnh từ thư viện
+                {langData.choice_setting[langCode]}
               </Text>
             </TouchableOpacity> 
           </View>

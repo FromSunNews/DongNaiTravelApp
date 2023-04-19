@@ -29,8 +29,6 @@ import { app_sp } from 'globals/styles'
 import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
 import { updateCurrentNotifs } from '../../redux/notifications/NotificationsSlice'
 
-
-
 const SigninScreen = () => {
 
   // Phuong: https://github.com/Cnilton/react-native-floating-label-input

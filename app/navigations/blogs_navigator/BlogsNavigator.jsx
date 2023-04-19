@@ -4,10 +4,13 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import BlogsScreen from 'screens/blogs/BlogsScreen';
 import BlogDetailScreen from 'screens/blog_detail/BlogDetailScreen';
 import { AppHeader } from 'components';
+import { useSelector } from 'react-redux';
+import { selectCurrentLanguage } from '../../redux/language/LanguageSlice';
 
 const BlogsStack = createNativeStackNavigator();
 
 const BlogsNavigator = () => {
+  const langCode = useSelector(selectCurrentLanguage).languageCode
   return (
     <BlogsStack.Navigator
       initialRouteName="BlogScreen"
@@ -17,7 +20,7 @@ const BlogsNavigator = () => {
       <BlogsStack.Screen
         name="BlogScreen"
         options={{
-          title: 'Blogs',
+          title: `${langCode === 'vi' ? 'Bài Viết' : 'Blogs'}`,
           isTopScreen: true
         }}
       >
@@ -26,7 +29,8 @@ const BlogsNavigator = () => {
       <BlogsStack.Screen
         name="BlogDetailStackScreen"
         options={{
-          title: 'Blog Detail'
+          isTopScreen: true,
+          title: `${langCode === 'vi' ? 'Chi Tiết Bài Viết' : 'Blog Detail'}`
         }}
       >
         {() => <BlogDetailScreen />}

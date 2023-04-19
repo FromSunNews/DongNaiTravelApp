@@ -10,6 +10,8 @@ import { HEADER_HEIGHT } from 'utilities/constants'
 
 import styles from './PlaceDetailScreenStyles'
 import { app_c, app_dms, app_sp } from 'globals/styles'
+import { useSelector } from 'react-redux'
+import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
 
 /**
  * __Creator__: @NguyenAnhTuan1912
@@ -18,7 +20,14 @@ import { app_c, app_dms, app_sp } from 'globals/styles'
  * @param {Animated.Value} props.opacityAnimValue - Đây là một Animated.Value().
  * @returns 
  */
+
+
+
 const PlaceDetailScreen = () => {
+  const langCode = useSelector(selectCurrentLanguage).languageCode
+  const langData = useSelector(selectCurrentLanguage).data?.placeDetailScreen
+  const langVisit = useSelector(selectCurrentLanguage).data?.exploreScreen
+
   const bottomSheetRef = React.useRef(null);
   const snapPoints = React.useMemo(
     () => ['60%', `${100- (30 / app_dms.screenHeight) * 100}%`], []
@@ -75,8 +84,8 @@ const PlaceDetailScreen = () => {
 
               {/* Name, location of visits column */}
               <View style={{flex: 1}}>
-                <AppText font="h2" numberOfLines={2}>Lorem Ipsum</AppText>
-                <AppText font="sub0">is simply dummy text.</AppText>
+                <AppText font="h2" numberOfLines={2}>{langData.h1[langCode]}</AppText>
+                <AppText font="sub0">{langData.sub_h1[langCode]}</AppText>
               </View>
 
               {/* Ratings, number of visits column */}
@@ -113,7 +122,7 @@ const PlaceDetailScreen = () => {
                 overrideShape="capsule"
               >
                 {(isActive, currentLabelStyle) => (
-                  <AppText style={currentLabelStyle} font="body2">{isActive ? 'Visited' : 'Visit'}</AppText>
+                  <AppText style={currentLabelStyle} font="body2">{isActive ? langVisit.visited[langCode] : langVisit.visit[langCode]}</AppText>
                 )}
               </RectangleButton>
             </View>
@@ -147,8 +156,8 @@ const PlaceDetailScreen = () => {
           
           {/* Tabs */}
           <AppTabSlider>
-            <AppTabSlider.Child name="about" component={() => <AboutSlide />} />
-            <AppTabSlider.Child name="reviews" component={() => <ReviewsSlide />} />
+            <AppTabSlider.Child name={langData.about[langCode]} component={() => <AboutSlide />} />
+            <AppTabSlider.Child name={langData.review[langCode]} component={() => <ReviewsSlide />} />
           </AppTabSlider>
           
           <View style={{height: 100}}></View>
@@ -158,22 +167,22 @@ const PlaceDetailScreen = () => {
   )
 }
 
-const AboutSlide = ({
-  
-}) => {
+const AboutSlide = ({}) => {
+  const langCode = useSelector(selectCurrentLanguage).languageCode
+  const langData = useSelector(selectCurrentLanguage).data?.placeDetailScreen
   return (
     <View style={styles.pd_content_container}>
       {/* Description */}
       <View style={styles.pd_content_article}>
-        <AppText font="h3" numberOfLines={1} style={app_sp.mb_6}>Description</AppText>
+        <AppText font="h3" numberOfLines={1} style={app_sp.mb_6}>{langData.description[langCode]}</AppText>
         <AppText color="ext_second">
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+         {langData.des[langCode]}
         </AppText>
       </View>
 
       {/* Images */}
       <View style={styles.pd_content_article}>
-        <AppText font="h3" numberOfLines={1} style={app_sp.mb_6}>Images</AppText>
+        <AppText font="h3" numberOfLines={1} style={app_sp.mb_6}>{langData.image[langCode]}</AppText>
         <View style={styles.pd_content_image_row_container}>
           <View style={{...styles.pd_content_image_row, ...app_sp.mb_12}}>
             <RectangleButton
@@ -219,7 +228,7 @@ const AboutSlide = ({
 
       {/* Related Places */}
       <View style={{...styles.pd_content_article, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-        <AppText font="h3" numberOfLines={1} style={app_sp.mb_6}>Related Places</AppText>
+        <AppText font="h3" numberOfLines={1} style={app_sp.mb_6}>{langData.relatedPlaces[langCode]}</AppText>
         <CircleButton
           isTransparent
           typeOfButton="highlight"
@@ -233,6 +242,8 @@ const AboutSlide = ({
 }
 
 const ReviewsSlide = () => {
+  const langCode = useSelector(selectCurrentLanguage).languageCode
+  const langData = useSelector(selectCurrentLanguage).data?.placeDetailScreen
   const dataSet = React.useMemo(() => ([
       {
         index: '5',
@@ -262,7 +273,7 @@ const ReviewsSlide = () => {
 
       {/* Review rating information */}
       <View>
-        <AppText font="h3" style={app_sp.mb_12}>Ratings & reviews</AppText>
+        <AppText font="h3" style={app_sp.mb_12}>{langData.review_texth3[langCode]}</AppText>
         
         {/* Rating statistic */}
         <View style={styles.pd_content_rr_stats_container}>
@@ -278,10 +289,8 @@ const ReviewsSlide = () => {
             </View>
             <AppText font="body3" style={{textAlign: 'right'}}>5.6k ratings & reviews</AppText>
           </View>
-
         </View>
       </View>
-
     </View>
   );
 }

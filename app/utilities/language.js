@@ -25,6 +25,7 @@ export const languageData = {
       en: "This field must be at least 8 characters"
     },
   },
+  //Screen
   signInScreen: {
     text_header: {
       vi: 'Đăng Nhập',
@@ -209,7 +210,7 @@ export const languageData = {
       en: 'Place'
     },
     title_Blog: {
-      vi: 'Blog',
+      vi: 'Bài viết',
       en: 'Blog'
     },
     like: {
@@ -219,6 +220,178 @@ export const languageData = {
     report: {
       vi: 'Báo cáo',
       en: 'Report'
+    },
+    recommended: {
+      vi: 'Đề xuất',
+      en: 'Recommended'
+    }
+  },
+  exploreScreen: {
+    banner_button: {
+      vi: 'Xem vị trí của bạn trên bản đồ',
+      en: ' Let’s see your location in map'
+    },
+    place_card_recommended: {
+      vi: 'Đề xuất',
+      en: 'Recommended'
+    },
+    visited: {
+      vi: 'Đã xem',
+      en: 'Visited'
+    },
+    visit: {
+      vi: 'Xem',
+      en: 'Visit'
+    }
+  },
+  placeDetailScreen: {
+    h1: {
+      vi: 'Lorem Ipsum',
+      en : 'Lorem Ipsum'
+    },
+    sub_h1: {
+      vi: 'chỉ đơn giản là văn bản giả.',
+      en: 'is simply dummy text.'
+    },
+    about: {
+      vi: 'Giới thiệu',
+      en: 'About'
+    },
+    description: {
+      vi: 'Mô tả',
+      en: 'Description'
+    },
+    des: {
+      vi: 'Lorem Ipsum chỉ đơn giản là văn bản giả của ngành công nghiệp in ấn và sắp chữ. Lorem Ipsum đã trở thành văn bản giả tiêu chuẩn của ngành kể từ những năm 1500, khi một nhà in không rõ danh tính lấy một bộ sưu tập kiểu chữ và xáo trộn nó để tạo thành một cuốn sách mẫu. Nó đã tồn tại không chỉ năm thế kỷ, mà còn là bước nhảy vọt sang sắp chữ điện tử, về cơ bản vẫn không thay đổi. Nó đã được phổ biến vào những năm 1960 với việc phát hành các tờ Letraset chứa các đoạn Lorem Ipsum và gần đây hơn với phần mềm xuất bản trên máy tính để bàn như Aldus PageMaker bao gồm các phiên bản của Lorem Ipsum.',
+      en: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.'
+    },
+    image: {
+      vi: 'Hình ảnh',
+      en: 'Images'
+    },
+    relatedPlaces: {
+      vi: 'Địa điểm liên quan',
+      en: 'Related Places'
+    },
+    review: {
+      vi: 'Nhận xét',
+      en: 'Reviews'
+    },
+    review_texth3: {
+      vi: 'Xếp hạng và đánh giá',
+      en: 'Ratings & reviews'
+    }
+  },
+  blogsScreen: {
+    banner_button: {
+      vi: 'Bài viết của tôi',
+      en: 'My Blogs'
+    }
+  },
+  blogScreenSetting: {
+    user_follower: {
+      vi: 'Người theo dõi',
+      en: 'Follower'
+    },
+    user_following: {
+      vi: 'Đang theo dõi',
+      en: 'Following'
+    },
+    view_stats: {
+      vi: 'Thống Kê',
+      en: 'View Stats'
+    },
+    edit_profile: {
+      vi: 'Chỉnh Sửa',
+      en: 'Edit Profile'
+    },
+    bio: {
+      vi: 'Tiểu Sử',
+      en: 'Bio'
+    },
+    information: {
+      vi: 'Thông Tin',
+      en: 'information'
+    },
+    live_in: {
+      vi: 'Sống tại ',
+      en: 'Live in '
+    },
+    write_new_blog: {
+      vi: 'Bài viết mới',
+      en: 'Write new blog'
+    },
+    manage_blogs: {
+      vi: 'Quản lý bài viết',
+      en: 'Manage blogs'
+    },
+    blog_list: {
+      vi: 'Bài viết',
+      en: 'Blogs'
+    },
+    choice_setting: {
+      vi: 'Chọn ảnh từ thư viện',
+      en: 'Select photo from gallery'
+    },
+  },
+  detailBlogScreen: {
+    follow: {
+      vi: 'Theo dõi',
+      en: 'Follow'
+    },
+    lorem: {
+      vi: '',
+      en: ''
+    }
+  },
+  settingScreen: {
+    account: {
+      vi: 'Tài khoản',
+      en: 'Account'
+    },
+    ac_profile: {
+      vi: 'Hồ sơ',
+      en: 'Profile'
+    },
+    archive: {
+      vi: 'Kho lưu trữ của bạn',
+      en: 'Your Archive'
+    },
+    archive_place: {
+      vi: 'Địa điểm',
+      en: 'Place'
+    },
+    archive_blog: {
+      vi: 'Bài viết',
+      en: 'Blog'
+    },
+    setting: {
+      vi: 'Cài đặt',
+      en: 'Settings'
+    },
+    setting_darkmode: {
+      vi: 'Chế độ tối',
+      en: 'Dark Mode'
+    },
+    setting_notification: {
+      vi: 'Thông báo',
+      en: 'Notification'
+    },
+    setting_report: {
+      vi: 'Báo cáo',
+      en: 'Report'
+    },
+    setting_about: {
+      vi: 'Giới thiệu',
+      en: 'About'
+    },
+    setting_help_support: {
+      vi: 'Hỗ trợ và giúp đỡ',
+      en: 'Help and Support'
+    },
+    logout: {
+      vi: 'Đăng xuất',
+      en: 'Log out'
     }
   },
   

@@ -1,4 +1,4 @@
-import { View, Text, Button, TouchableOpacity, FlatList, ScrollView } from "react-native"
+import { View, Text, Button, TouchableOpacity, FlatList, ScrollView,TouchableNativeFeedback } from "react-native"
 import React, { useEffect,useState } from "react"
 import { Ionicons, Entypo,Fontisto,FontAwesome5,MaterialCommunityIcons} from "react-native-vector-icons"
 
@@ -22,6 +22,8 @@ import { getWeatherCurrentAPI } from "request_api"
 import * as Location from "expo-location"
 import { useSelector } from "react-redux"
 import { selectCurrentMap } from "redux/map/mapSlice"
+import { Platform } from "react-native"
+import HomeBannerSlider from "components/home_banner_slider/HomeBannerSlider"
 import { selectCurrentLanguage } from "redux/language/LanguageSlice"
 
 const HomeScreen = ({navigation}) => {
@@ -57,8 +59,7 @@ const HomeScreen = ({navigation}) => {
     return str.charAt(0).toUpperCase() + str.slice(1)
   }
   
-  const getCurrentWeather= async (location)=>{
-
+  const getCurrentWeather = async (location)=>{
     await getWeatherCurrentAPI(location)
     .then(data => {
       setCelsius(data.main.temp.toFixed(1))
@@ -83,14 +84,12 @@ const HomeScreen = ({navigation}) => {
     // getCurrentLocationAsync()
   },[currentMap.userLocation])
 
+
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.home_content}>
         <View style={styles.home_banner}>
-          <Text>
-            Ở đây có thể là lời chào hoặc là banner quảng cáo 1 cái place nào đó
-            hay sự kiện gì đó ở một địa điểm nào đó
-          </Text>
+          <HomeBannerSlider/>
         </View>
 
         {
@@ -99,7 +98,7 @@ const HomeScreen = ({navigation}) => {
             <View style={styles.temperature}>
               <View style={styles.temperature_degrees}>
                 {
-                  celsius  ? (
+                  celsius ? (
                     <AppText style={[styles.temperature_degrees_info,{fontSize:22,marginTop:-4}]}>{`${celsius}°C`}</AppText>
                   ): <AppText style={[styles.temperature_degrees_info,{fontSize:22,marginTop:-4}]}><Entypo name="minus"/><Entypo name="minus"/>{`°C`}</AppText>
                 }
@@ -148,7 +147,7 @@ const HomeScreen = ({navigation}) => {
                 </View>
               </View>
             </View>
-            <TouchableOpacity style={styles.temperature_reload} onPress={handleReloadLocation}>
+            <TouchableOpacity style={styles.temperature_reload} onPress={getCurrentWeather}>
               <Ionicons name="reload-sharp" size={30} color={app_c.HEX.fourth} />
             </TouchableOpacity>
           </View>
@@ -157,7 +156,7 @@ const HomeScreen = ({navigation}) => {
         {/* Place and Blog*/}
         <View style={styles.home_category}>
           <TouchableOpacity style={styles.category_header} onPress={()=>navigation.navigate("ExploreScreen")}>
-            <AppText style={styles.category_name}>Place</AppText>
+            <AppText style={styles.category_name}>{langData.title_place[langCode]}</AppText>
             <AppText><Entypo name="chevron-small-right" size={40}/></AppText>
           </TouchableOpacity>
           <TypeScrollView
@@ -166,14 +165,14 @@ const HomeScreen = ({navigation}) => {
             scrollStyle={[{paddingLeft:16}, app_sp.pv_12]}
             containerStyle={{backgroundColor: app_c.HEX.primary,  }}
           />
-          <View style={{ ...app_sp.mb_12}}>
-            <ScrollView horizontal={true} style={{ paddingBottom:12,paddingLeft:16}} showsHorizontalScrollIndicator={false}>
+          <View>
+            <ScrollView horizontal={true} style={{ paddingBottom:12,paddingLeft:16,backgroundColor:app_c.HEX.primary}} showsHorizontalScrollIndicator={false}>
               {
                 currentPlaces.length === 0
                 ? [1, 2, 3].map((value, index) => <VerticalPlaceCardSkeleton key={value + index} style={{ marginLeft: index !== 0 ? 16 : 0,}}/>)
                 : currentPlaces.map((place, index) => 
-                  <TouchableOpacity key={place.id} onPress={()=>navigation.navigate("PlaceDetailScreen")}>
-                    <VerticalPlaceCard place={place}  style={{ marginLeft: index !== 0 ? 16 : 0, marginRight : currentPlaces.length - 1 === index ? 36 : 0}}/>
+                  <TouchableOpacity delayLongPress={2000} activeOpacity={Platform.OS === 'android' ? 1 : 0.8} key={place.id} onPress={()=>navigation.navigate("PlaceDetailScreen")} style={{paddingVertical:12}}>
+                    <VerticalPlaceCard place={place}  style={{ marginLeft: index !== 0 ? 16 : 2, marginRight : currentPlaces.length - 1 === index ? 36 : 0}}/>
                   </TouchableOpacity>)
               }
             </ScrollView>
@@ -181,7 +180,7 @@ const HomeScreen = ({navigation}) => {
         </View>
         <View style={styles.home_category}>
           <TouchableOpacity style={styles.category_header} onPress={()=>navigation.navigate("BlogsScreen")}>
-            <AppText style={styles.category_name}>Blog</AppText>
+            <AppText style={styles.category_name}>{langData.title_Blog[langCode]}</AppText>
             <AppText><Entypo name="chevron-small-right" size={40}/></AppText>
           </TouchableOpacity>
           <TypeScrollView
@@ -196,8 +195,8 @@ const HomeScreen = ({navigation}) => {
                 currentBlogs.length === 0
                 ? [1, 2, 3].map((value, index) => <VerticalBlogCardSkeleton key={value + index} style={{  marginLeft: index !== 0 ? 16 : 0,}} />)
                 : currentBlogs.map((blog, index) => 
-                  <TouchableOpacity key={blog.id} onPress={()=>navigation.navigate("BlogDetailScreen")}>
-                    <VerticalBlogCard blog={blog}  style={{ marginLeft: index !== 0 ? 16 : 0, marginRight : currentBlogs.length - 1 === index ? 36 : 0}}/>
+                  <TouchableOpacity key={blog.id} onPress={()=>navigation.navigate("BlogDetailScreen")} style={{paddingVertical:12}}>
+                    <VerticalBlogCard blog={blog}  style={{ marginLeft: index !== 0 ? 16 : 2, marginRight : currentBlogs.length - 1 === index ? 36 : 0}}/>
                   </TouchableOpacity>
                 )
               }

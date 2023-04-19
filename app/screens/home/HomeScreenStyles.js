@@ -1,7 +1,6 @@
 import { app_c, app_dms, app_sh, app_sp, app_typo } from 'globals/styles'
 
 import { StyleSheet } from 'react-native'
-import Constants from 'expo-constants'
 
 const styles = StyleSheet.create({
   container: {
@@ -15,9 +14,10 @@ const styles = StyleSheet.create({
     paddingBottom:150
   },
   home_banner: {
-    marginHorizontal:16,
-    height: 105,
-    backgroundColor: app_c.HEX.ext_third
+    height:200,
+    backgroundColor: app_c.HEX.ext_third,
+    overflow:'hidden'
+
   },
   home_temperature: {
     paddingHorizontal:16,
@@ -27,7 +27,8 @@ const styles = StyleSheet.create({
     ...app_sh.rounded_8,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent:'space-between'
+    justifyContent:'space-between',
+    
   },
   temperature: {
     width: app_dms.screenWidth * 0.72,
