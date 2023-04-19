@@ -404,6 +404,12 @@ export const languageData = {
     close: {
       vi: 'Đóng',
       en: 'Close'
-   },
- }
+   }
+ },
+ appHeader: {
+    home: {
+      vi: 'Trang chủ',
+      en: 'Home'
+    }
+  }
 }
