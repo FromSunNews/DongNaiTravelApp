@@ -7,8 +7,13 @@ import { TypeScrollView, HorizontalBlogCard, HorizontalBlogCardSkeleton, BannerB
 
 import styles from './BlogsScreenStyles'
 import { app_sp, app_c } from 'globals/styles'
+import { useSelector } from 'react-redux'
+import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
 
 const BlogsScreen = () => {
+  const langCode = useSelector(selectCurrentLanguage).languageCode
+  const langData = useSelector(selectCurrentLanguage).data?.blogsScreen
+
   const [currentBlogs, setCurrentBlogs] = React.useState([]);
   const [type, setType] = React.useState("");
 
@@ -32,7 +37,7 @@ const BlogsScreen = () => {
             <Ionicons name="chevron-forward-outline" style={currentLabelStyle} size={25} />
           }
         >
-          My Blogs
+          {langData.banner_button[langCode]}
         </BannerButton>
       </View>
       <View style={{backgroundColor: app_c.HEX.primary, ...app_sp.mv_10}}>

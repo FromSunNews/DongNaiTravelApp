@@ -41,6 +41,7 @@ const HomeNavigator=()=>{
         options={{
           title: `${langCode === 'vi' ? 'Chi Tiết Địa Điểm' : 'Place Detail'}`,
         }}
+        screenOptions={{ header: (props) => <AppHeader screenName="Home" {...props} /> }}
       >
         {(prop) => (
           <PlaceDetailScreen {...prop}/>
@@ -49,7 +50,7 @@ const HomeNavigator=()=>{
       <HomeStack.Screen
         name='BlogDetailScreen'
         options={{
-          title: 'Blog Detail',
+          title: `${langCode === 'vi' ? 'Chi Tiết Bài Viết' : 'Blog Detail'}`,
         }}
       >
         {(prop) => (
@@ -60,7 +61,6 @@ const HomeNavigator=()=>{
         name='ExploreScreen'
         options={{
           title: 'Explore',
-         
         }}
       >
         {(prop) => (
@@ -70,8 +70,7 @@ const HomeNavigator=()=>{
       <HomeStack.Screen
         name='BlogsScreen'
         options={{
-          title: 'Blogs',
-         
+          title: "Blogs",
         }}
       >
         {(prop) => (
