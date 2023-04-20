@@ -204,8 +204,8 @@ const styles = StyleSheet.create({
     flexDirection:'row',  
     width:'100%',
     justifyContent:"space-between",
-    ...app_sp.pt_12
+    ...app_sp.pt_12,
+    flex: 1,
   }
-
 })
 export default styles

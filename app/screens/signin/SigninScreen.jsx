@@ -27,8 +27,7 @@ import { signInUserAPI } from 'request_api'
 import { AppText, RectangleButton } from 'components'
 import { app_sp } from 'globals/styles'
 import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
-
-
+import { updateCurrentNotifs } from '../../redux/notifications/NotificationsSlice'
 
 const SigninScreen = () => {
 
@@ -91,8 +90,8 @@ const SigninScreen = () => {
         console.log("🚀 ~ file: Signin.js:73 ~ onSubmit ~ res", res)
         if (res) {
           // Phuong: Update user in persistent store
-          dispatch(updateCurrentUser(res))
-          // Phuong
+          dispatch(updateCurrentUser(res.fullInfoUser))
+          dispatch(updateCurrentNotifs(res.notifs))
           // Phuong: check rememberme
           if (isChecked) {
             // Phuong: save emailname and password to remember

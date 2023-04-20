@@ -2,6 +2,7 @@ import { app_c, app_sp } from "globals/styles";
 import { StyleSheet } from "react-native"
 
 import { HEADER_HEIGHT } from "utilities/constants";
+import { app_shdw } from "../../globals/styles";
 
 const styles = StyleSheet.create({
   container: {
@@ -10,7 +11,9 @@ const styles = StyleSheet.create({
     height: HEADER_HEIGHT,
     border: 'none',
     backgroundColor: app_c.HEX.primary,
-    ...app_sp.ph_18
+    ...app_sp.ph_18,
+    // Phuong ne :> 
+    ...app_shdw.type_1
   },
 
   header_col: {

@@ -34,7 +34,7 @@ const DropDown = ({
   const langCode = useSelector(selectCurrentLanguage).languageCode
 
   const currentSetting = useSelector(selectCurrentSetting)
-  console.log("🚀 ~ file: DropDown.jsx:34 ~ currentSetting:", currentSetting)
+  // console.log("🚀 ~ file: DropDown.jsx:34 ~ currentSetting:", currentSetting)
   const dispatch = useDispatch()
   
   const [isOpen, setIsOpen] = useState(false)

@@ -19,7 +19,8 @@
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
       ],
-      "expo-localization"
+      "expo-localization",
+      "expo-build-properties"
     ],
     "updates": {
       "fallbackToCacheTimeout": 0

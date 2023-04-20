@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Text, StatusBar, SafeAreaView } from 'react-native'
 
 import { store, persistor } from 'redux/store'
@@ -27,10 +27,42 @@ import { API_ROOT } from 'utilities/constants'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import CustomStatusBar from './app/components/custom_status_bar/CustomStatusBar'
 export const socketIoInstance = io(API_ROOT)
+import NetInfo from '@react-native-community/netinfo'
+import { updateNotif } from './app/redux/manifold/ManifoldSlice'
 
 injectStoreRequest(store)
 
 export default function App() {
+
+  const [isConnected, setIsConnected] = useState(true)
+  const [isPrevConnected, setIsPrevConnected] = useState(true)
+
+  const checkInternetConnection = async () => {
+    const response = await NetInfo.fetch()
+    // console.log("🚀 ~ file: App.jsx:41 ~ checkInternetConnection ~ response:", response)
+    setIsPrevConnected(isConnected)
+    setIsConnected(response.isConnected)
+    setTimeout(checkInternetConnection, 3000) // Kiểm tra lại sau 5 giây
+  }
+
+  useEffect(() => {
+    checkInternetConnection()
+  }, [])
+
+  useEffect(() => {
+    if (!isConnected && isPrevConnected) {
+      store.dispatch(updateNotif({
+        appearNotificationBottomSheet: true,
+        contentNotificationBottomSheet: 'Không có kết nối internet'
+      }))
+    } else if (isConnected && !isPrevConnected) {
+      store.dispatch(updateNotif({
+        appearNotificationBottomSheet: true,
+        contentNotificationBottomSheet: 'Đã kết nối internet'
+      }))
+    }
+  }, [isConnected])
+
   // Phuong: https://docs.expo.dev/guides/using-custom-fonts/
   // Phuong: https://fonts.google.com/specimen/Roboto
   const [fontsLoaded] = useFonts({
