@@ -67,7 +67,7 @@ const SettingScreen = ({ route, navigation }) => {
                       color={app_c.HEX.fourth}
                       size={35}
                     />
-                    <Text style={styles.option_setting_name}>Places</Text>
+                    <Text style={styles.option_setting_name}>{langData.archive_place[langCode]}</Text>
                   </View>
                 </AppText>
               </RectangleButton>
@@ -84,7 +84,7 @@ const SettingScreen = ({ route, navigation }) => {
                       color={app_c.HEX.fourth}
                       size={35}
                     />
-                    <Text style={styles.option_setting_name}>Blog</Text>
+                    <Text style={styles.option_setting_name}>{langData.archive_blog[langCode]}</Text>
                   </View>
                 </AppText>
               </RectangleButton>

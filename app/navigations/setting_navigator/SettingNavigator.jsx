@@ -34,26 +34,26 @@ const SettingNavigator = () => {
       <SettingStack.Screen name="Profile" options={{isTopScreen:true, title: `${langCode === "vi" ? "Trang cá nhân" : "Profile" }`}}>
         {(props) => <ProfileScreen {...props} />}
       </SettingStack.Screen>
-      <SettingStack.Screen name="Blogs" >
+      <SettingStack.Screen name="Blogs" options={{isTopScreen:true, title: `${langCode === "vi" ? "Bài viết" : "Blogs" }`}}>
         {(props) => <BlogsScreen {...props} />}
       </SettingStack.Screen>
-      <SettingStack.Screen name="Places" >
+      <SettingStack.Screen name="Places" options={{isTopScreen:true, title: `${langCode === "vi" ? "Địa điểm" : "Places" }`}}>
         {(props) => <PlacesScreen {...props} />}
       </SettingStack.Screen>
-      <SettingStack.Screen name="Notifications" >
+      <SettingStack.Screen name="Notifications" options={{ isTopScreen: true, title: `${langCode === "vi" ? "Thông báo" : "Notifications"}` }} >
         {(props) => <NotificationsScreen {...props} />}
       </SettingStack.Screen>
-      <SettingStack.Screen name="Reports" >
+      <SettingStack.Screen name="Reports" options={{isTopScreen:true, title: `${langCode === "vi" ? "Báo cáo" : "Reports" }`}}>
         {(props) => <ReportsScreen {...props} />}
       </SettingStack.Screen>
-      <SettingStack.Screen name="About" >
+      <SettingStack.Screen name="About" options={{isTopScreen:true, title: `${langCode === "vi" ? "Giới thiệu" : "About" }`}}>
         {(props) => <AboutScreen {...props} />}
       </SettingStack.Screen>
-      <SettingStack.Screen name="Help & Support" >
+      <SettingStack.Screen name="Help & Support" options={{isTopScreen:true, title: `${langCode === "vi" ? "Hỗ trợ" : "Help & support" }`}} >
         {(props) => <HelpAndSupportScreen {...props} />}
       </SettingStack.Screen>
       
-      <ProfileStack.Screen name="EditProfileScreen">
+      <ProfileStack.Screen name="EditProfileScreen" >
         {(props)=><EditProfileScreen {...props}/>}
       </ProfileStack.Screen>
       <ProfileStack.Screen 

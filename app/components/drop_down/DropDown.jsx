@@ -53,7 +53,6 @@ const DropDown = ({
       setSelectedOption(currentSetting.notification.events)
     }
     if (idOption === 'DARK_MODE') {
-      console.log('vao dark mode')
       setSelectedOption(currentSetting?.darkMode)
     }
   }, [currentSetting])

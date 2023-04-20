@@ -4,20 +4,25 @@ import { MaterialIcons, AntDesign,MaterialCommunityIcons } from "react-native-ve
 
 import styles from "./HelpAndSupportScreenStyles";
 import DropDown from "components/drop_down/DropDown";
+import { useSelector } from "react-redux";
+import { selectCurrentLanguage } from "../../redux/language/LanguageSlice";
 
 const HelpAndSupportScreen = () => {
+  const langCode = useSelector(selectCurrentLanguage).languageCode
+  const langData = useSelector(selectCurrentLanguage).data?.settingHelpAndSupport
+
   return (
     <View style={styles.container}>
       <View style={{ ...styles.dropdown_container }}>
         <DropDown
-          name={"Send e-mail"}
+          name={langData.send_email[langCode]}
           icon={<AntDesign name="mail" size={25} />}
           isDrop={false}
         />
       </View>
       <View style={{ ...styles.dropdown_container }}>
         <DropDown
-          name={"How to use this app ?"}
+          name={langData.how_to_use_this_app[langCode]}
           icon={<AntDesign name="questioncircleo" size={25} />}
           isDrop={false}
         />
@@ -25,10 +30,10 @@ const HelpAndSupportScreen = () => {
       <View style={{...styles.dropdown_container}}> 
           <DropDown 
             isParagraph={true}
-            name={"F.A.Q"}
+            name={langData.f_a_q[langCode]}
             icon={<MaterialCommunityIcons name="message-question-outline" size={25}/>}
-            paragraphTitle={"Ứng dụng DongNai Travel của trường đại học Công Nghệ Đồng Nai đạt giải nhất cuộc thi sáng tạo khoa học công nghệ"}
-            children={"Nhóm nghiên cứu sản phẩm ứng dụng công nghệ của trường đại học Công Nghệ Đồng Nai vừa xuất sắc nhận được giải nhất sáng tạo khoa học công nghệ do tỉnh tổ chức"}
+            paragraphTitle={langData.f_a_q_paragraphTitle[langCode]}
+            children={langData.f_a_q_children[langCode]}
           />
         </View>
     </View>
