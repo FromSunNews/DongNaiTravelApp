@@ -16,14 +16,11 @@ export const notifsSlice = createSlice({
     updateCurrentNotifs: (state, action) => {
       const notifs = action.payload
       console.log('state.currentNotifs', state.currentNotifs)
-      state.currentNotifs = notifs
+      state.currentNotifs = notifs.reverse()
     },
     updateNewNotifs: (state, action) => {
       const notifs = action.payload
-      state.currentNotifs = [
-        notifs,
-        ...state.currentNotifs
-      ]
+      state.currentNotifs.unshift(notifs)
     },
   }
 })

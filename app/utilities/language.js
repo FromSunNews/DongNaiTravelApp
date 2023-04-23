@@ -333,6 +333,14 @@ export const languageData = {
       vi: 'Chọn ảnh từ thư viện',
       en: 'Select photo from gallery'
     },
+    follow: {
+      vi: 'Theo dõi',
+      en: 'Follow'
+    },
+    unfollow: {
+      vi: 'Bỏ theo dõi',
+      en: 'Unfollow'
+    },
   },
   detailBlogScreen: {
     follow: {

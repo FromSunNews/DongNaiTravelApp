@@ -173,14 +173,20 @@ function ProfileScreen({ route, navigation}) {
     await createNewNotifAPI(data).then((dataUser) => {
       console.log("🚀 ~ file: ProfileScreen.jsx:109 ~ awaitupdateUserAPI ~ dataUser:", dataUser)
       // Cập nhật state user
-      if (dataUser.userSent)
+      if (dataUser.userSent) {
         dispatch(updateCurrentUser(dataUser.userSent))
-      // Sau đó emit 1 sự kiện để thằng user mình follow nhận được thông báo
-      if (dataUser.notif)
+      }
+      if (dataUser.notif && dataUser.userReceived) {
+        // set lại userCurrent(đây là user mình đang follow)
+        setCurrentUser(dataUser.userReceived)
+        setIsFollowed(true)
+        
+        // Sau đó emit 1 sự kiện để thằng user mình follow nhận được thông báo
         socketIoInstance.emit('c_notification_to_user', {
           notif: dataUser.notif,
           userReceived: dataUser.userReceived
         })
+      }
       
     }).catch((err) => {
       dispatch(updateNotif({
@@ -192,18 +198,35 @@ function ProfileScreen({ route, navigation}) {
 
 
   const handleUnFollowUser = async () => {
+    
+    // Cập nhật UI của user bị mình unfollow
+    const initialCurrentUserClone = cloneDeep(currentUser)
+    const currentUserClone = cloneDeep(currentUser)
+    
+    const followerIds = currentUserClone.followerIds.filter(id => id !== userSelector._id)
+    currentUserClone.followerIds = followerIds
+    setCurrentUser(currentUserClone)
+
+    // Cập nhật cho mình
     const initialUserClone = cloneDeep(userSelector)
     const userSelectorClone = cloneDeep(userSelector)
     const followingIds = userSelectorClone.followingIds.filter(id => id !== currentUser._id)
     userSelectorClone.followingIds = followingIds
-    // Cập nhật state trước
+    // Cập nhật state của mình
     dispatch(updateCurrentUser(userSelectorClone))
+
+    // Cập nhật nút Follow
+    setIsFollowed(false) 
+
     // call api
     await updateUserAPI({
       currentUserId: userSelector._id,
       userUnFollowId: currentUser._id, 
     }).catch((err) => {
+      // Cập nhật lại hết tất cả các giá trị ban đầu nếu mà call api lỗi 
+      setCurrentUser(initialCurrentUserClone)
       dispatch(updateCurrentUser(initialUserClone))
+      setIsFollowed(true) 
     })
     
   }
@@ -313,7 +336,7 @@ function ProfileScreen({ route, navigation}) {
                   }}
                 >
                   {(isActive, currentLabelStyle) => (
-                    <Text style={currentLabelStyle}>Follow</Text>
+                    <Text style={currentLabelStyle}>{langData.follow[langCode]}</Text>
                   )}
                 </RectangleButton> :
                 (
@@ -329,7 +352,7 @@ function ProfileScreen({ route, navigation}) {
                     }}
                   >
                     {(isActive, currentLabelStyle) => (
-                      <Text style={currentLabelStyle}>UnFollow</Text>
+                      <Text style={currentLabelStyle}>{langData.unfollow[langCode]}</Text>
                     )}
                   </RectangleButton> : null
                 )
