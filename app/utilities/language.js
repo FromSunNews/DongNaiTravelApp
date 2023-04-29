@@ -466,6 +466,12 @@ export const languageData = {
     }
 
   },
+  settingAbout: {
+    about_version: {
+      vi: 'Phiên bản',
+      en: 'Version'
+    }
+  },
   
   // Component
   notificationBottomSheet: {
