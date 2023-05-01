@@ -91,6 +91,11 @@ export const getGeocodingReverseAPI = async (data) => {
   return request.data
 }
 
+export const getBriefPlacesByType = async (query) => {
+  const response = await axios.post(`${API_ROOT}/v1/map/places?${query}`)
+  return response.data
+}
+
 export const getMapUserAPI = async (data) => {
   const request = await axios.post(`${API_ROOT}/v1/users/get_map_user`, data)
   return request.data

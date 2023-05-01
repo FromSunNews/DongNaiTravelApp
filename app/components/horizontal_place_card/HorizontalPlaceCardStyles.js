@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
   },
 
   card_tag_container: {
+    width: '100%',
     alignItems: 'center',
     flexDirection: 'row',
     ...app_sp.mb_10

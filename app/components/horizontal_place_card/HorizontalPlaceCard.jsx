@@ -4,6 +4,7 @@ import React from 'react'
 import { useNavigation } from '@react-navigation/native'
 
 import NumberUtility from 'utilities/number'
+import StringUtility from 'utilities/string'
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
@@ -22,12 +23,11 @@ import { app_c, app_sh, app_sp } from 'globals/styles'
  * @typedef PlaceProps
  * @property {string} name Tên địa điểm.
  * @property {string} avatar Ảnh đại diện cho địa điểm.
- * @property {object} location Location giống với place, nhưng nó sẽ rộng hơn, ở cấp thành phố đổ lên.
- * @property {string} location.province Tên của tỉnh.
- * @property {string} location.city Tên của thành phố.
- * @property {Array<object>} tags Các thể loại danh mục.
- * @property {number} ratingPoints Điểm rating.
- * @property {number} numberOfReviews Số lượng người dùng đã đánh giá (viết comment review).
+ * @property {string} adr_address Là địa chỉ của địa điểm.
+ * @property {Array<object>} types Các thể loại danh mục.
+ * @property {Array<{photos: Array<string>}>} place_photos Ảnh của place.
+ * @property {number} rating Điểm rating.
+ * @property {number} user_ratings_total Số lượng người dùng đã đánh giá (viết comment review).
  * @property {number} numberOfVisited Số lượng người dùng đã đến tham quan.
  * @property {boolean} isRecommended Có được đề xuất hay không?.
  * @property {boolean} isVisited Có đến đây thăm hay chưa? (Đây là một trường ghép từ User và Place, được tạo trong quá trình chuẩn bị dữ liệu).
@@ -51,6 +51,12 @@ const HorizontalPlaceCard = ({place}) => {
     navigation.navigate({name: 'PlaceDetailScreen'});
   }
 
+  const getTextContentInHTMLTag = React.useCallback(StringUtility.createTextContentInHTMLTagGetter("<span class=\"(locality|region)\">", "<\/span>"), []);
+
+  let [city, province] = getTextContentInHTMLTag(place.adr_address);
+
+  // console.log(`City, province: ${city}, ${province}`);
+
   return (
     <View style={styles.card}>
       {/* Cột đâu tiên - Image Container */}
@@ -63,7 +69,7 @@ const HorizontalPlaceCard = ({place}) => {
       >
         <ImageBackground
           style={styles.card_image_container}
-          source={{uri: place.avatar}}
+          source={place.place_photos.length > 0 ? {uri: place.place_photos[0].photos[0]} : {}}
         >
           {
             place.isRecommended &&
@@ -78,21 +84,27 @@ const HorizontalPlaceCard = ({place}) => {
       <View style={styles.card_main_container}>
         <View style={styles.card_content_container}>
           <View style={styles.card_tag_container}>
-            {place.tags.map((tag, index) => (
-              <AppText font="body2" style={styles.card_text_color} key={tag.title}>{tag.title}{index < place.tags.length - 1 ? ", " : ""}</AppText>
-            ))}
+            <AppText
+              font="body2"
+              style={styles.card_text_color}
+              numberOfLines={1}
+            >
+              {place.types.map((type, index) => (
+                StringUtility.toTitleCase(type)
+              )).join(", ")}
+            </AppText>
           </View>
           <View>
             <AppText numberOfLines={1} font="h3" style={styles.card_title}>{place.name}</AppText>
-            <AppText style={styles.car_subtitle} font="body2">{place.location.city} - {place.location.province}</AppText>
+            <AppText style={styles.car_subtitle} font="body2">{StringUtility.toTitleCase(city)}{province && " - "}{StringUtility.toTitleCase(province)}</AppText>
           </View>
           <View style={styles.card_information_container}>
             <View style={styles.card_information_col}>
               <AppText font="body2" style={styles.card_text_color}>
-                <Ionicons name='star-outline' /> {place.ratingPoints}
+                <Ionicons name='star-outline' /> {place.rating}
               </AppText>
               <AppText font="body2" style={styles.card_text_color}>
-                <Ionicons name='chatbubble-outline' /> {NumberUtility.toMetricNumber(place.numberOfReviews)}
+                <Ionicons name='chatbubble-outline' /> {NumberUtility.toMetricNumber(place.user_ratings_total)}
               </AppText>
             </View>
             <View style={styles.card_information_col}>

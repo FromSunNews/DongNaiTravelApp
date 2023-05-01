@@ -61,6 +61,7 @@ const PlaceDetailScreen = () => {
         style={styles.pd_bottom_sheet}
         onChange={handleChangeBottomSheet}
         backgroundStyle={{
+          flex: 1,
           backgroundColor: app_c.HEX.primary
         }}
       >
@@ -147,8 +148,8 @@ const PlaceDetailScreen = () => {
           
           {/* Tabs */}
           <AppTabSlider>
-            <AppTabSlider.Child name="about" component={() => <AboutSlide />} />
-            <AppTabSlider.Child name="reviews" component={() => <ReviewsSlide />} />
+            <AppTabSlider.Child name="about" component={AboutSlide} />
+            <AppTabSlider.Child name="reviews" component={ReviewsSlide} />
           </AppTabSlider>
           
           <View style={{height: 100}}></View>
@@ -158,9 +159,7 @@ const PlaceDetailScreen = () => {
   )
 }
 
-const AboutSlide = ({
-  
-}) => {
+const AboutSlide = () => {
   return (
     <View style={styles.pd_content_container}>
       {/* Description */}

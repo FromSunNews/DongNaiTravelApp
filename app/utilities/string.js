@@ -3,6 +3,7 @@
 // Lưu ý: line sẽ thay thế cho string (có thể tương ứng với câu - sentence), tránh nhầm lẫn với keyword
 
 const notAllowCharInTextRegex = /[\~\!\#\$\%\^\&\*\(\)\@\-\\\/\=\+\_\,\.\|]+/g;
+const htmlTagTemplate = '[OPEN_TAG_WITH_REGEX](.*?)[CLOSE_TAG]'
 
 /**
  * __Creator__: @NguyenAnhTuan1912
@@ -90,6 +91,7 @@ const toSnakeCase = function (line) {
  * @returns Chuỗi có dạng là `Title_Case`.
  */
 const toTitleCase = function (line) {
+  if(!Boolean(line)) return "";
   let pureString = getPureString(line);
   let result = splitLineBySeperator(pureString, ' ')
     .filter((text) => text !== '')
@@ -98,6 +100,34 @@ const toTitleCase = function (line) {
   return result;
 };
 
+/**
+ * Function này sẽ tạo ra một regex và sẽ trả về một function để lấy ra text content ở trong thẻ
+ * html.
+ * @param {string} openTagWithReg Tên thẻ (thẻ mở), bao gồm cả phẩn regex ở trong (nếu có)
+ * @param {string} closeTagWithReg Tên thẻ (thẻ đóng), bao gồm cả phẩn regex ở trong (nếu có).
+ * @returns {(fullHtmlTag: string) => Array<string>} 
+ * 
+ * @example
+ * ...
+ * let getTextContentInHTMLTag = createTextContentInHTMLTagGetter("<span class=\"(locality|region)\">", "<\/span>");
+ * let fullHTMLTag = "<span class=\"locality\">Bien Hoa</span>";
+ * let matches = getTextContentInHTMLTag(fullHTMLTag);
+ * console.log(matches) // OUTPUT: ["Bien Hoa"]
+ * ...
+ */
+const createTextContentInHTMLTagGetter = function (openTagWithReg, closeTagWithReg) {
+  let specificHTMLTag = htmlTagTemplate.replace("[OPEN_TAG_WITH_REGEX]", openTagWithReg).replace("[CLOSE_TAG]", closeTagWithReg);
+  let specificHTMLTagReg = new RegExp(specificHTMLTag, "g");
+  /**
+   * @returns {Array<string>}
+   */
+  return function getTextContentInHTMLTag(fullHtmlTag) {
+    if(!fullHtmlTag) return [];
+    let matches = [...fullHtmlTag.matchAll(specificHTMLTagReg)];
+    return matches.map(match => match[2]);
+  }
+}
+
 const StringUtility = {
   splitLineBySeperator,
   removeSeparatorFromLine,
@@ -105,6 +135,7 @@ const StringUtility = {
   getPureString,
   toSnakeCase,
   toTitleCase,
+  createTextContentInHTMLTagGetter,
 };
 
 export default StringUtility;

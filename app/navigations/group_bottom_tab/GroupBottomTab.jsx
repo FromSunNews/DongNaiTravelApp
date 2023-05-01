@@ -165,47 +165,47 @@ const getWidth = () => {
 	return (app_dms.screenWidth) / 5
 }
 
-useEffect(() => {
-	getPrivateKeysAPI().then((res) => {
-		console.log("🚀 ~ file: GroupBottomTab.jsx:154 ~ getPrivateKeysAPI ~ res:", res)
-		dispatch(updatePrivateKeys(res))
-	})
-	// Truyền thằng user hiện tại (đã đăng nhập hoặc chưa server để lưu thông tin)
-	// kiểm tra thông tin id
-	let userId
-	if (user?._id)
-		userId = user._id
-	else {
-		userId = uuidv4()
-		console.log("🚀 ~ file: GroupBottomTab.jsx:175 ~ useEffect ~ userId:", userId)
-		dispatch(updateTemporaryUserId(userId))
-	}
+	useEffect(() => {
+		// getPrivateKeysAPI().then((res) => {
+		// 	console.log("🚀 ~ file: GroupBottomTab.jsx:154 ~ getPrivateKeysAPI ~ res:", res)
+		// 	dispatch(updatePrivateKeys(res))
+		// })
+		// // Truyền thằng user hiện tại (đã đăng nhập hoặc chưa server để lưu thông tin)
+		// // kiểm tra thông tin id
+		// let userId
+		// if (user?._id)
+		// 	userId = user._id
+		// else {
+		// 	userId = uuidv4()
+		// 	console.log("🚀 ~ file: GroupBottomTab.jsx:175 ~ useEffect ~ userId:", userId)
+		// 	dispatch(updateTemporaryUserId(userId))
+		// }
 
-	socketIoInstance.emit('c_user_login', userId)
-}, [])
+		// socketIoInstance.emit('c_user_login', userId)
+	}, [])
 
-useEffect(() => {
-	// Phương: Xin quyền cảu người dùng để lấy location
-	(async () => {
-		const { status } = await Location.requestForegroundPermissionsAsync()
-		if (status !== 'granted') {
-			return
-		}
-		
-		const userLocation = await Location.getCurrentPositionAsync({
-			enableHighAccuracy: true,
-			accuracy: Location.Accuracy.BestForNavigation
-		})
+	useEffect(() => {
+		// Phương: Xin quyền cảu người dùng để lấy location
+		(async () => {
+			const { status } = await Location.requestForegroundPermissionsAsync()
+			if (status !== 'granted') {
+				return
+			}
+			
+			const userLocation = await Location.getCurrentPositionAsync({
+				enableHighAccuracy: true,
+				accuracy: Location.Accuracy.BestForNavigation
+			})
 
-		const location = {
-			latitude: userLocation.coords.latitude || 0,
-			longitude: userLocation.coords.longitude || 0
-		}
-		console.log("🚀 ~ file: GroupBottomTab.jsx:197 ~ location:", location)
-		// Lưu vào state
-		dispatch(updateUserLocation(location))
-	})()
-}, [])
+			const location = {
+				latitude: userLocation.coords.latitude || 0,
+				longitude: userLocation.coords.longitude || 0
+			}
+			console.log("🚀 ~ file: GroupBottomTab.jsx:197 ~ location:", location)
+			// Lưu vào state
+			dispatch(updateUserLocation(location))
+		})()
+	}, [])
 
 	return (
 		<View style={styles.container}>

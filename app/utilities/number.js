@@ -31,9 +31,10 @@ const toThousandsSeparatedNumber = function (number) {
  * @returns Một chuỗi có dạng là `(n | n,n) (N | Tr | T)`.
  */
 const toMetricNumber = function (number) {
+  if(!number || number === 0 || (typeof number !== "number")) return "0";
+  if(number.toString().length < 2) return `${number}`;
   const formatedNumber = toThousandsSeparatedNumber(number);
   let [firstThreeDigit, ...remainParts] = formatedNumber.split('.');
-
   if (firstThreeDigit.length === 1 && remainParts[0][0] != 0) {
     firstThreeDigit += ',' + remainParts[0][0];
   }
