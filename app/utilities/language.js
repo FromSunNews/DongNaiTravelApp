@@ -280,6 +280,10 @@ export const languageData = {
     review_texth3: {
       vi: 'Xếp hạng và đánh giá',
       en: 'Ratings & reviews'
+    },
+    relatedPlacesDataMessage: {
+      vi: 'Không có địa điểm nào giống với địa điểm này.',
+      en: 'There aren\'t any related places with this place.'
     }
   },
   blogsScreen: {

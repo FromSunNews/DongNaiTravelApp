@@ -23,18 +23,17 @@ const BlogsNavigator = () => {
           title: `${langCode === 'vi' ? 'Bài Viết' : 'Blogs'}`,
           isTopScreen: true
         }}
+        component={BlogsScreen}
       >
-        {() => <BlogsScreen />}
       </BlogsStack.Screen>
       <BlogsStack.Screen
-        name="BlogDetailStackScreen"
+        name="BlogDetailScreen"
         options={{
           isTopScreen: true,
           title: `${langCode === 'vi' ? 'Chi Tiết Bài Viết' : 'Blog Detail'}`
         }}
-      >
-        {() => <BlogDetailScreen />}
-      </BlogsStack.Screen>
+        component={BlogDetailScreen}
+      />
     </BlogsStack.Navigator>
   )
 }

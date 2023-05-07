@@ -40,13 +40,13 @@ const BlogsScreen = () => {
           {langData.banner_button[langCode]}
         </BannerButton>
       </View>
-      <View style={{backgroundColor: app_c.HEX.primary, ...app_sp.mv_10}}>
-        <TypeScrollView
-          types='all;newest;popular;most_likes;most_comments'
-          callBack={setType}
-          style={{...app_sp.ms_18, ...app_sp.pv_12}}
-        />
-      </View>
+      <TypeScrollView
+        buttonStyle="rounded_8"
+        types='all;newest;popular;most_likes;most_comments'
+        callBack={setType}
+        scrollStyle={[app_sp.ms_18, app_sp.pv_12]}
+        containerStyle={{backgroundColor: app_c.HEX.primary, ...app_sp.pv_12}}
+      />
 
       <View style={{...app_sp.mh_18, ...app_sp.mb_12}}>
         {

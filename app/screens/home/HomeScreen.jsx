@@ -155,7 +155,7 @@ const HomeScreen = ({navigation}) => {
 
         {/* Place and Blog*/}
         <View style={styles.home_category}>
-          <TouchableOpacity style={styles.category_header} onPress={()=>navigation.navigate("ExploreScreen")}>
+          <TouchableOpacity style={styles.category_header} onPress={()=>navigation.navigate("ExploreNavigator")}>
             <AppText style={styles.category_name}>{langData.title_place[langCode]}</AppText>
             <AppText><Entypo name="chevron-small-right" size={40}/></AppText>
           </TouchableOpacity>
@@ -179,7 +179,7 @@ const HomeScreen = ({navigation}) => {
           </View>
         </View>
         <View style={styles.home_category}>
-          <TouchableOpacity style={styles.category_header} onPress={()=>navigation.navigate("BlogsScreen")}>
+          <TouchableOpacity style={styles.category_header} onPress={()=>navigation.navigate("BlogsNavigator")}>
             <AppText style={styles.category_name}>{langData.title_Blog[langCode]}</AppText>
             <AppText><Entypo name="chevron-small-right" size={40}/></AppText>
           </TouchableOpacity>

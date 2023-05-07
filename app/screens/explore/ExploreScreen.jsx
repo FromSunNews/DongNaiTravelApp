@@ -1,8 +1,20 @@
-import { View, SafeAreaView, ScrollView, Text } from 'react-native'
+import {
+  View,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  FlatList,
+  LayoutAnimation,
+  Animated
+} from 'react-native'
 import React from 'react'
 
-import Ionicons from 'react-native-vector-icons/Ionicons'
+import { useNavigation } from '@react-navigation/native'
+import { useBriefPlaces } from 'customHooks/usePlace'
 
+import { BRIEF_PLACE_DATA_FIELDS } from 'utilities/constants'
+
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import { TypeScrollView, HorizontalPlaceCard, HorizontalPlaceCardSkeleton, BannerButton } from 'components'
 
 import styles from './ExploreScreenStyles'
@@ -18,187 +30,113 @@ import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
 const ExploreScreen = () => {
   const langCode = useSelector(selectCurrentLanguage).languageCode 
   const langData = useSelector(selectCurrentLanguage).data?.exploreScreen
-  
-  const [currentPlaces, setCurrentPlaces] = React.useState([]);
-  const [type, setType] = React.useState("");
-  React.useEffect(() => {
-    setTimeout(() => {
-      setCurrentPlaces([...places]);
-    }, 2000);
-  }, []);
+  const exploreInfo = React.useRef({
+    isFirstFetch: true,
+    briefPlaceDataFields: BRIEF_PLACE_DATA_FIELDS,
+    isEndReach: false
+  });
+  const [type, setType] = React.useState("all");
+  const [isOnTop, setIsOnTop] = React.useState(true);
+  const navigation = useNavigation();
+  const { places, inscreaseSkip, fetchBriefPlaceByType } = useBriefPlaces(type);
 
-  console.log(type);
+  React.useEffect(() => {
+    if(!places) {
+      fetchBriefPlaceByType(exploreInfo.current.briefPlaceDataFields);
+    }
+    // dispatch(updateSkipBriefPlacesAmount({typeOfBriefPlaces: type, skip: 5}));
+  }, [type]);
+
+  const showBannderButton = isVisible => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setIsOnTop(isVisible);
+  }
+
+  const handleExploreMomentumScrollEnd = React.useCallback((() => {
+    let prevOffsetY = 0;
+    return function(e) {
+      if(exploreInfo.current.isEndReach) {
+        if(places) {
+          inscreaseSkip();
+          fetchBriefPlaceByType(exploreInfo.current.briefPlaceDataFields);
+        }
+      }
+      exploreInfo.current.isEndReach = false;
+    }
+  })());
+
+  const handleExploreScroll = e => {
+    const { layoutMeasurement, contentOffset, contentSize } = e.nativeEvent;
+    let val = contentOffset.y;
+    if(val <= 0) {
+      showBannderButton(true)
+    } else {
+      showBannderButton(false)
+    }
+  }
+
+  const handleEndReach = e => {
+    exploreInfo.current.isEndReach = true;
+  }
 
   return (
-    
-    <ScrollView
-      style={styles.scroll_view_container}
-      stickyHeaderIndices={[1]}
-      showsVerticalScrollIndicator={false}
-    >
-      <View style={{...app_sp.mh_18}}>
-        <BannerButton
-          typeOfButton="highlight"
-          style={app_sp.mt_12}
-          toScreen={{screenName: "MapScreen"}}
-          setRightIcon={(isActive, currentLabelStyle) =>
-            <Ionicons name="chevron-forward-outline" style={currentLabelStyle} size={25} />
-          }
-        >
-         {langData.banner_button[langCode]}
-        </BannerButton>
-      </View>
-      <TypeScrollView
-        types='all;recommended;popular;most_visit;most_favorite'
-        callBack={setType}
-        scrollStyle={[app_sp.ms_18, app_sp.pv_12]}
-        containerStyle={{backgroundColor: app_c.HEX.primary}}
-      />
-      <View style={{...app_sp.mh_18, ...app_sp.mb_12}}>
-        {
-          currentPlaces.length === 0
-          ? [1, 2, 3].map((value, index) => <HorizontalPlaceCardSkeleton key={value + index} />)
-          : currentPlaces.map((place, index) => <HorizontalPlaceCard place={place} key={place.id} />)
+    <View>
+      {
+        isOnTop && (
+          <View
+            style={[
+              app_sp.ph_18,
+              {
+                backgroundColor: app_c.HEX.primary,
+                position: 'relative',
+                zIndex: 2,
+              }
+            ]}
+          >
+            <BannerButton
+              typeOfButton="highlight"
+              style={app_sp.mt_12}
+              toScreen={{screenName: "MapScreen"}}
+              setRightIcon={(isActive, currentLabelStyle) =>
+                <Ionicons name="chevron-forward-outline" style={currentLabelStyle} size={25} />
+              }
+            >
+              Let’s see your location in map
+            </BannerButton>
+          </View>
+        )
+      }
+      <FlatList
+        data={places ? places.data : []}
+        style={styles.scroll_view_container}
+        contentContainerStyle={{paddingBottom: 200}}
+        onMomentumScrollEnd={handleExploreMomentumScrollEnd}
+        onEndReached={handleEndReach}
+        onScroll={handleExploreScroll}
+        // scrollEventThrottle={1000}
+        stickyHeaderHiddenOnScroll
+        stickyHeaderIndices={[0]}
+        ListEmptyComponent={
+          !places && (
+            <View style={[app_sp.mh_18, app_sp.mb_12]}>
+              {[1, 2, 3].map((value, index) => <HorizontalPlaceCardSkeleton key={value + index} />)}
+            </View>
+          )
         }
-      </View>
-      <View style={{height: 100}}></View>
-    </ScrollView>
+        ListHeaderComponent={
+          <TypeScrollView
+            buttonStyle="capsule"
+            types='all;recommended;popular;most_visit;high_rating'
+            callBack={setType}
+            scrollStyle={[app_sp.ms_18, app_sp.pv_12]}
+            containerStyle={{backgroundColor: app_c.HEX.primary, ...app_sp.pv_10}}
+          />
+        }
+        renderItem={item => <View style={app_sp.ph_18}><HorizontalPlaceCard place={item.item} /></View>}
+        keyExtractor={item => item._id}
+      />
+    </View>
   )
 }
 
 export default ExploreScreen
-
-const places = [
-  {
-    id: '1a',
-    name: 'Pho di bo',
-    avatar: 'https://lh3.googleusercontent.com/p/AF1QipPoYDJXCAlOR3Oc0RgjhQ5WBZt9s2VkvqpbbuNN=s680-w680-h510',
-    location: {
-      province: 'Dong Nai',
-      city: 'Bien Hoa'
-    },
-    tags: [
-      {
-        title: 'Walking'
-      },
-      {
-        title: 'Exercise'
-      }
-    ],
-    ratingPoints: 4.3,
-    numberOfReviews: 300,
-    numberOfVisited: 3200,
-    isRecommended: false,
-    isVisited: false
-  },
-  {
-    id: '1b',
-    name: 'Quang truong tinh',
-    avatar: 'https://lh3.googleusercontent.com/p/AF1QipPUoQ-BfuMVqLUZog0RrNnF4HVrFLXlXLQ4wak2=s680-w680-h510',
-    location: {
-      province: 'Dong Nai',
-      city: 'Bien Hoa'
-    },
-    tags: [
-      {
-        title: 'Walking'
-      },
-      {
-        title: 'Exercise'
-      }
-    ],
-    ratingPoints: 4.6,
-    numberOfReviews: 5687,
-    numberOfVisited: 32242,
-    isRecommended: true,
-    isVisited: true
-  },
-  {
-    id: '1c',
-    name: 'Cong vien Tam Hiep',
-    avatar: 'https://lh3.googleusercontent.com/p/AF1QipOFHqO2nUTvyj0fYEvwt-9AHoQS8e5yajbKLjQE=s680-w680-h510',
-    location: {
-      province: 'Dong Nai',
-      city: 'Bien Hoa'
-    },
-    tags: [
-      {
-        title: 'Walking'
-      },
-      {
-        title: 'Exercise'
-      }
-    ],
-    ratingPoints: 3.7,
-    numberOfReviews: 1687,
-    numberOfVisited: 2242,
-    isRecommended: false,
-    isVisited: false
-  },
-  {
-    id: '1d',
-    name: 'Pho di bo',
-    avatar: 'https://lh3.googleusercontent.com/p/AF1QipPoYDJXCAlOR3Oc0RgjhQ5WBZt9s2VkvqpbbuNN=s680-w680-h510',
-    location: {
-      province: 'Dong Nai',
-      city: 'Bien Hoa'
-    },
-    tags: [
-      {
-        title: 'Walking'
-      },
-      {
-        title: 'Exercise'
-      }
-    ],
-    ratingPoints: 4.3,
-    numberOfReviews: 300,
-    numberOfVisited: 3200,
-    isRecommended: false,
-    isVisited: false
-  },
-  {
-    id: '1e',
-    name: 'Quang truong tinh',
-    avatar: 'https://lh3.googleusercontent.com/p/AF1QipPUoQ-BfuMVqLUZog0RrNnF4HVrFLXlXLQ4wak2=s680-w680-h510',
-    location: {
-      province: 'Dong Nai',
-      city: 'Bien Hoa'
-    },
-    tags: [
-      {
-        title: 'Walking'
-      },
-      {
-        title: 'Exercise'
-      }
-    ],
-    ratingPoints: 4.6,
-    numberOfReviews: 5687,
-    numberOfVisited: 32242,
-    isRecommended: true,
-    isVisited: true
-  },
-  {
-    id: '1f',
-    name: 'Cong vien Tam Hiep',
-    avatar: 'https://lh3.googleusercontent.com/p/AF1QipOFHqO2nUTvyj0fYEvwt-9AHoQS8e5yajbKLjQE=s680-w680-h510',
-    location: {
-      province: 'Dong Nai',
-      city: 'Bien Hoa'
-    },
-    tags: [
-      {
-        title: 'Walking'
-      },
-      {
-        title: 'Exercise'
-      }
-    ],
-    ratingPoints: 3.7,
-    numberOfReviews: 1687,
-    numberOfVisited: 2242,
-    isRecommended: false,
-    isVisited: false
-  }
-]

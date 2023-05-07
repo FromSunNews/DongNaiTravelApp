@@ -10,7 +10,7 @@ import moment from 'moment/moment'
 import 'moment/locale/vi'  // without this line it didn't work
 moment.locale('vi')
 
-const ReviewSectionPromise = ({ review, isTranformData}) => {
+export const ReviewSectionPromise = ({ review, isTranformData}) => {
   
   // const [urlBase64, setUrlBase64] = useState(null)
   

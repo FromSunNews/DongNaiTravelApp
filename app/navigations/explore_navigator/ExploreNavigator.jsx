@@ -28,20 +28,16 @@ const ExploreNavigator = () => {
           title: `${langCode === 'vi' ? 'Khám Phá' : 'Explore'}`,
           isTopScreen: true
         }}
-      >
-        {() => (<ExploreScreen />)}
-      </ExploreStack.Screen>
+        component={ExploreScreen}
+      />
       <ExploreStack.Screen
         name='PlaceDetailScreen'
         options={{
           title: `${langCode === 'vi' ? 'Chi tiết Địa Điểm' : 'Place Detail'}`,
           headerTransparent: true,
         }}
-      >
-        {() => (
-          <PlaceDetailScreen />
-        )}
-      </ExploreStack.Screen>
+        component={PlaceDetailScreen}
+      />
     </ExploreStack.Navigator>
   )
 }

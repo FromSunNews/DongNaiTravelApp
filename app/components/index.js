@@ -23,6 +23,7 @@ import NotificationBottomSheet from './notification_bottom_sheet/NotificationBot
 import TypeScrollView from "./type_scroll_view/TypeScrollView"
 import { SimpleBarChart } from "./app_chart/app_bar_chart/AppBarChart"
 import MarkFormat from "./mark_format/MarkFormat"
+import ReviewSectionPromise from "./review_section_promise/ReviewSectionPromise"
 
 export {
   AppText,
@@ -49,5 +50,6 @@ export {
   NotificationBottomSheet,
   TypeScrollView,
   SimpleBarChart,
-  MarkFormat
+  MarkFormat,
+  ReviewSectionPromise
 }

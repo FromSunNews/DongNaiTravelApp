@@ -11,8 +11,7 @@ const styles = StyleSheet.create({
 
   pd_bottom_sheet_view: {
     backgroundColor: app_c.HEX.primary,
-    flex: 1,
-    ...app_sp.ph_18
+    flex: 1
   },
 
   pd_header: {
@@ -59,7 +58,8 @@ const styles = StyleSheet.create({
   },
 
   pd_content_image_button: {
-    width: '48%',
+    width: app_dms.screenWidth / 2,
+    aspectRatio: 1,
     overflow: 'hidden'
   },
 
@@ -79,6 +79,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     ...app_sp.ps_22
+  },
+
+  pd_background_image: {
+    position: 'absolute',
+    width: '100%',
+    aspectRatio: 1,
+    top: 0
   }
 })
 

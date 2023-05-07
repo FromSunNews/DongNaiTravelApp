@@ -28,25 +28,21 @@ const HomeNavigator=()=>{
           isTopScreen: true,
           title: langData.home[langCode]
         }}
-      >
-        {(prop)=><HomeScreen {...prop}/>}
-      </HomeStack.Screen>
+        component={HomeScreen}
+      />
       
       <HomeStack.Screen 
-      name= "Notification"
-      options={{headerShown:true,title:`${langCode === 'vi' ? 'Thông Báo' : 'Notification'}`}}
-      screenOptions={{ header: (props) => <AppHeader screenName="Home" {...props} /> }}
-      >
-        {(prop)=><NotificationsScreen {...prop}/>}
-      </HomeStack.Screen>
+        name= "Notification"
+        options={{headerShown:true,title:`${langCode === 'vi' ? 'Thông Báo' : 'Notification'}`}}
+        screenOptions={{ header: (props) => <AppHeader screenName="Home" {...props} /> }}
+        component={NotificationsScreen}
+      />
       
       <HomeStack.Screen 
         options={{ headerShown:true, title:"Profile"}}
         name="Profile" 
-      >
-        
-        {(props) => <ProfileScreen {...props} />}
-      </HomeStack.Screen>
+        component={ProfileScreen}
+      />
 
       <HomeStack.Screen
         name='PlaceDetailScreen'
@@ -54,41 +50,15 @@ const HomeNavigator=()=>{
           title: `${langCode === 'vi' ? 'Chi Tiết Địa Điểm' : 'Place Detail'}`,
         }}
         screenOptions={{ header: (props) => <AppHeader screenName="Home" {...props} /> }}
-      >
-        {(prop) => (
-          <PlaceDetailScreen {...prop}/>
-        )}
-      </HomeStack.Screen>
+        component={PlaceDetailScreen}
+      />
       <HomeStack.Screen
         name='BlogDetailScreen'
         options={{
           title: `${langCode === 'vi' ? 'Chi Tiết Bài Viết' : 'Blog Detail'}`,
         }}
-      >
-        {(prop) => (
-          <BlogDetailScreen {...prop}/>
-        )}
-      </HomeStack.Screen>
-      <HomeStack.Screen
-        name='ExploreScreen'
-        options={{
-          title: 'Explore',
-        }}
-      >
-        {(prop) => (
-          <ExploreScreen {...prop}/>
-        )}
-      </HomeStack.Screen>
-      <HomeStack.Screen
-        name='BlogsScreen'
-        options={{
-          title: "Blogs",
-        }}
-      >
-        {(prop) => (
-          <BlogsScreen {...prop}/>
-        )}
-      </HomeStack.Screen>
+        component={BlogDetailScreen}
+      />
     </HomeStack.Navigator>
   )
 }

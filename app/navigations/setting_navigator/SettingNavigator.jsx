@@ -19,7 +19,7 @@ import { useSelector } from "react-redux";
 import { selectCurrentLanguage } from "../../redux/language/LanguageSlice";
 
 const SettingStack = createNativeStackNavigator();
-const ProfileStack =createNativeStackNavigator();
+const ProfileStack = createNativeStackNavigator();
 
 const SettingNavigator = () => {
   langCode = useSelector(selectCurrentLanguage).languageCode
@@ -28,59 +28,71 @@ const SettingNavigator = () => {
       initialRouteName="SettingScreen"
       screenOptions={{ header: (props) => <AppHeader {...props} /> }}
     >
-      <SettingStack.Screen name={langCode === 'vi' ? "Cài đặt" : "Settings"} options={{isTopScreen:true}}>
-        {(props) => <SettingScreen {...props} />}
-      </SettingStack.Screen>
-      <SettingStack.Screen name="Profile" options={{isTopScreen:true, title: `${langCode === "vi" ? "Trang cá nhân" : "Profile" }`}}>
-        {(props) => <ProfileScreen {...props} />}
-      </SettingStack.Screen>
-      <SettingStack.Screen name="Blogs" options={{isTopScreen:true, title: `${langCode === "vi" ? "Bài viết" : "Blogs" }`}}>
-        {(props) => <BlogsScreen {...props} />}
-      </SettingStack.Screen>
-      <SettingStack.Screen name="Places" options={{isTopScreen:true, title: `${langCode === "vi" ? "Địa điểm" : "Places" }`}}>
-        {(props) => <PlacesScreen {...props} />}
-      </SettingStack.Screen>
-      <SettingStack.Screen name="Notifications" options={{ isTopScreen: true, title: `${langCode === "vi" ? "Thông báo" : "Notifications"}` }} >
-        {(props) => <NotificationsScreen {...props} />}
-      </SettingStack.Screen>
-      <SettingStack.Screen name="Reports" options={{isTopScreen:true, title: `${langCode === "vi" ? "Báo cáo" : "Reports" }`}}>
-        {(props) => <ReportsScreen {...props} />}
-      </SettingStack.Screen>
-      <SettingStack.Screen name="About" options={{isTopScreen:true, title: `${langCode === "vi" ? "Giới thiệu" : "About" }`}}>
-        {(props) => <AboutScreen {...props} />}
-      </SettingStack.Screen>
-      <SettingStack.Screen name="Help & Support" options={{isTopScreen:true, title: `${langCode === "vi" ? "Hỗ trợ" : "Help & support" }`}} >
-        {(props) => <HelpAndSupportScreen {...props} />}
-      </SettingStack.Screen>
+
+      <SettingStack.Screen
+        name={langCode === 'vi' ? "Cài đặt" : "Settings"}
+        options={{isTopScreen:true}}
+        component={SettingScreen}
+      />
+
+      <SettingStack.Screen
+        name="Profile"
+        options={{isTopScreen:true, title: `${langCode === "vi" ? "Trang cá nhân" : "Profile" }`}}
+        component={ProfileScreen}
+      />
+
+      <SettingStack.Screen
+        name="Notifications"
+        options={{ isTopScreen: true, title: `${langCode === "vi" ? "Thông báo" : "Notifications"}` }}
+        component={NotificationsScreen}
+      />
+
+      <SettingStack.Screen
+        name="Reports"
+        options={{isTopScreen:true, title: `${langCode === "vi" ? "Báo cáo" : "Reports" }`}}
+        component={ReportsScreen}
+      />
+
+      <SettingStack.Screen
+        name="About"
+        options={{isTopScreen:true, title: `${langCode === "vi" ? "Giới thiệu" : "About" }`}}
+        component={AboutScreen}
+      />
+
+      <SettingStack.Screen
+        name="Help & Support"
+        options={{isTopScreen:true, title: `${langCode === "vi" ? "Hỗ trợ" : "Help & support" }`}}
+        component={HelpAndSupportScreen}
+      />
       
-      <ProfileStack.Screen name="EditProfileScreen" >
-        {(props)=><EditProfileScreen {...props}/>}
-      </ProfileStack.Screen>
+      <ProfileStack.Screen
+        name="EditProfileScreen"
+        component={EditProfileScreen}
+      />
+
       <ProfileStack.Screen 
         name="CreatePostScreen"
         options={{
-         title: 'Create Post',
-       }}
-      >
-        {(props)=><CreatePost {...props}/>}
-      </ProfileStack.Screen>
+          title: 'Create Post',
+        }}
+        component={CreatePost}
+      />
+
       <ProfileStack.Screen 
         name="BlogDetailScreen"
         options={{
          title: `${langCode  === 'vi' ? 'Chi Tiết Bài Viết' : 'Blog Detail'}`,
        }}
-      >
-        {(props)=><BlogDetailScreen {...props}/>}
-      </ProfileStack.Screen>
+       component={BlogDetailScreen}
+      />
+
       <ProfileStack.Screen 
         name="ViewStatsScreen"
         options={{
-         title:`${langCode  === 'vi' ? 'Thống Kê' : 'View Stats'}`,
-       }}
-      >
-        {(props)=><ViewStatsScreen {...props}/>}
-      </ProfileStack.Screen>
-
+          title:`${langCode  === 'vi' ? 'Thống Kê' : 'View Stats'}`,
+        }}
+        component={ViewStatsScreen}
+      />
     </SettingStack.Navigator>
   );
 };

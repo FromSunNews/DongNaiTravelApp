@@ -16,25 +16,6 @@ import { ViewProps } from 'types/index.d'
 // Để hiểu hơn về component này thì đọc bài này:
 // Link: https://docs.google.com/document/d/1S9RUWqudJ-djqsEA5zzzJU8l2HL5Z3dCQQlUaTJZNvY/edit#
 
-const SlideScroll = ({ children }) => {
-  return (
-    <ScrollView
-      style={styles.slide_container}
-      showsVerticalScrollIndicator={false}
-    >
-      {children}
-    </ScrollView>
-  )
-}
-
-const SlideView = ({ children }) => {
-  return (
-    <View style={styles.slide_container}>
-      {children}
-    </View>
-  )
-}
-
 /**
  * @typedef TabSliderProps
  * @property {JSX.Element[]} props.children Children này là một tổ hợp AppTabSlider.Slide.
@@ -56,29 +37,23 @@ const SlideView = ({ children }) => {
 /**
  * __Creator__: @NguyenAnhTuan1912
  * 
- * Trả về một Slider, có thể scroll hoặc không bằng cách set up thuộc tính `isSliderContainerScrollable`
+ * Trả về một Slider
  * @param {TabSliderProps} props - Props của component.
  * @returns `AppTabSlider`
  */
 const AppTabSlider = ({
   children,
   lineIndexTranslateXStart = 20,
-  slideTranslateXStart = 100,
-  isSliderContainerScrollable = false
+  slideTranslateXStart = 100
 }) => {
   if(!children) return null;
   if(!children.length) return children;
-
-  const SlideContainer = React.useMemo(() => isSliderContainerScrollable ? SlideScroll : SlideView, [isSliderContainerScrollable])
 
   const [hasFirstSlideHeight, setHasFirstSlideHeight] = React.useState(false);
   const [count, setCount] = React.useState(0);
   const [currentSlideIndex, setSlideIndex] = React.useState(0);
   const sliderInfoRef = React.useRef({
-    previousScrollToCenter: 0,
-    scrollToXList: [],
     prevSlideIndex: 0,
-    tabButtonScrollContainerWidth: 0,
     isSliderButtonPress: false
   });
   const renderedSlidesInfo = React.useRef({
@@ -105,11 +80,6 @@ const AppTabSlider = ({
       return index;
     });
   });
-
-  // if(sliderInfoRef.current.isFirstRender) {
-  //   translateAnim.setValue(0);
-  //   opacityAnim.setValue(1);
-  // }
 
   if(sliderInfoRef.current.isSliderButtonPress) {
     Animated.timing(translateAnim, {
@@ -138,57 +108,41 @@ const AppTabSlider = ({
     <View
       style={styles.slider_container}
     >
-      {
-        hasFirstSlideHeight && <TypeScrollView
-          types={listSlideName}
-          callBack={(type, typeIndex) => { handleButtonPress(typeIndex) }}
-          buttonStyle="underline"
-          lineIndexTranslateXStart={lineIndexTranslateXStart}
-          style={{position: "relative", zIndex: 2}}
-        />
-      }
-      <SlideContainer style={styles.slide_container}>
+      <TypeScrollView
+        types={listSlideName}
+        callBack={(type, typeIndex) => { handleButtonPress(typeIndex) }}
+        buttonStyle="underline"
+        lineIndexTranslateXStart={lineIndexTranslateXStart}
+        style={{position: "relative", zIndex: 2}}
+      />
+      <View style={styles.slide_container}>
         <Animated.View
-          style={{
+          style={[{
+            flex: 1,
             position: "relative",
-            height: renderedSlidesInfo.current.renderedSlidesHeight[currentSlideIndex],
             transform: [
               { translateX: translateAnim }
             ],
-            opacity: opacityAnim,
-          }}
+            opacity: opacityAnim
+          }]}
         >
           {
-            hasFirstSlideHeight ?
             renderedSlidesInfo.current.renderedSlides.map((renderedChild, index) => {
+              console.log("INDEX: ", index);
+              console.log("CURRENT INDEX: ", currentSlideIndex);
+              console.log("List slide name: ", listSlideName);
               return (
                 <Slide
                   key={listSlideName[index]}
                   isOnTop={currentSlideIndex === index}
-                  onLayout={e => {
-                    const { height } = e.nativeEvent.layout;
-                    if(index > 0) renderedSlidesInfo.current.renderedSlidesHeight.push(height);
-                  }}
                 >
                   {renderedChild}
                 </Slide>
               )
             })
-            : (
-              <Slide
-                isOnTop={currentSlideIndex}
-                onLayout={e => {
-                  const { height } = e.nativeEvent.layout;
-                  renderedSlidesInfo.current.renderedSlidesHeight.push(height);
-                  setHasFirstSlideHeight(true);
-                }}
-              >
-                {renderedSlidesInfo.current.renderedSlides[0]}
-              </Slide>
-            )
           }
         </Animated.View>
-      </SlideContainer>
+      </View>
     </View>
   )
 }
@@ -225,7 +179,7 @@ const Slide = ({
   children,
   ...props
 }) => {
-  let actualStyle = React.useMemo(() => ComponentUtility.mergeStyle(styles.slide, isOnTop ? styles.slide_show : {}), [isOnTop]);
+  let actualStyle = React.useMemo(() => isOnTop ? styles.slide_show : styles.slide, [isOnTop]);
   return (
     // Bời vì Slider không thể fit được height của nó theo slide được, cho nên là mình phải set height của slider
     // theo slide's heigth. Thì cái slide's height được lưu trong mảng slidesHeight được truyền vào trong component này.
