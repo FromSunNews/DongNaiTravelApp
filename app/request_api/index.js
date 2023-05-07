@@ -27,6 +27,11 @@ export const signInUserAPI = async (data) => {
   return request.data
 }
 
+export const getInfoUserAPI = async (data) => {
+  const request = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/get_info_user`, data)
+  return request.data
+}
+
 export const updateUserAPI = async (data) => {
   const request = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/update`, data)
   return request.data
@@ -103,5 +108,20 @@ export const getMapUserAPI = async (data) => {
 
 export const updateMapUserAPI = async (data) => {
   const request = await axios.post(`${API_ROOT}/v1/users/update_map_user`, data)
+  return request.data
+}
+
+export const createNewNotifAPI = async (data) => {
+  const request = await axios.post(`${API_ROOT}/v1/notif/create_new`, data)
+  return request.data
+}
+
+export const updateNotifAPI = async (data) => {
+  const request = await authorizedAxiosInstance.post(`${API_ROOT}/v1/notif/update`, data)
+  return request.data
+}
+
+export const updateManyNotifsAPI = async (data) => {
+  const request = await axios.post(`${API_ROOT}/v1/notif/update_many`, data)
   return request.data
 }

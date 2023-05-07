@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     // borderColor: 'white',
     // borderWidth: 1,
-    ...app_sp.p_0
+    ...app_sp.p_0,
   },
 
   tab_bottom_dot_animated_container: {
