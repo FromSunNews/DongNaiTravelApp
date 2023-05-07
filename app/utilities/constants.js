@@ -6,7 +6,7 @@ const ip_v4 = '192.168.0.29'
 const API_PORT = '7500'
 
 // Phuong: This is the api web for DongNaiAppTravel
-export const API_ROOT = `http://${ip_v4}:${API_PORT}`
+export const API_ROOT = 'https://dong-nai-travel-api.onrender.com'
 
 export const FilterConstants = {
   categories: {

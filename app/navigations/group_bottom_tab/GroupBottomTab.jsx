@@ -178,6 +178,12 @@ useEffect(() => {
 		console.log("🚀 ~ file: GroupBottomTab.jsx:154 ~ getPrivateKeysAPI ~ res:", res)
 		dispatch(updatePrivateKeys(res))
 	})
+
+	// Kiểm tra xem có nên lấy thông tin user lại không 
+	if (route.params?.isGetFullUserInfo) {
+		console.log("🚀 ~ file: GroupBottomTab.jsx:182 ~ useEffect ~ route:", route)
+		getFullUserInfo()
+	}
 	// Truyền thằng user hiện tại (đã đăng nhập hoặc chưa server để lưu thông tin)
 	// kiểm tra thông tin id
 	let userId
@@ -189,31 +195,31 @@ useEffect(() => {
 		dispatch(updateTemporaryUserId(userId))
 	}
 
-		// socketIoInstance.emit('c_user_login', userId)
-	}, [])
+	socketIoInstance.emit('c_user_login', userId)
+}, [])
 
-	useEffect(() => {
-		// Phương: Xin quyền cảu người dùng để lấy location
-		(async () => {
-			const { status } = await Location.requestForegroundPermissionsAsync()
-			if (status !== 'granted') {
-				return
-			}
-			
-			const userLocation = await Location.getCurrentPositionAsync({
-				enableHighAccuracy: true,
-				accuracy: Location.Accuracy.BestForNavigation
-			})
+useEffect(() => {
+	// Phương: Xin quyền cảu người dùng để lấy location
+	(async () => {
+		const { status } = await Location.requestForegroundPermissionsAsync()
+		if (status !== 'granted') {
+			return
+		}
+		
+		const userLocation = await Location.getCurrentPositionAsync({
+			enableHighAccuracy: true,
+			accuracy: Location.Accuracy.BestForNavigation
+		})
 
-			const location = {
-				latitude: userLocation.coords.latitude || 0,
-				longitude: userLocation.coords.longitude || 0
-			}
-			console.log("🚀 ~ file: GroupBottomTab.jsx:197 ~ location:", location)
-			// Lưu vào state
-			dispatch(updateUserLocation(location))
-		})()
-	}, [])
+		const location = {
+			latitude: userLocation.coords.latitude || 0,
+			longitude: userLocation.coords.longitude || 0
+		}
+		console.log("🚀 ~ file: GroupBottomTab.jsx:197 ~ location:", location)
+		// Lưu vào state
+		dispatch(updateUserLocation(location))
+	})()
+}, [])
 
 // useEffect này dùng để lắng nghe các sự kiện ở toàn bộ app
 useEffect(() => {

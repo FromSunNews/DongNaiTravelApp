@@ -333,7 +333,7 @@ const ReviewsSlide = () => {
   const langData = useSelector(selectCurrentLanguage).data?.placeDetailScreen
   const [reviews, setReviews] = React.useState(null);
   const placeDetails = usePlaceDetailsState();
-
+  
   const dataSet = React.useMemo(() => ([
       {
         index: '5',
