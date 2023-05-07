@@ -1,14 +1,8 @@
 
 // Phuong: Created on 31/1/2023
-// Phuong: Muon test api thi xem ipv4 trong may tinh => cmd => ipconfig => ipv4
-// Phuong: doi lai ipv4 cua minh
-
-const ip_v4 = '172.20.10.3'
-
-const API_PORT = '7500'
 
 // Phuong: This is the api web for DongNaiAppTravel
-export const API_ROOT = `http://${ip_v4}:${API_PORT}`
+export const API_ROOT = 'https://dong-nai-travel-api.onrender.com'
 
 export const FilterConstants = {
   categories: {

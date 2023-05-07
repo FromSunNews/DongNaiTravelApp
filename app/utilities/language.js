@@ -25,6 +25,7 @@ export const languageData = {
       en: "This field must be at least 8 characters"
     },
   },
+  //Screen
   signInScreen: {
     text_header: {
       vi: 'Đăng Nhập',
@@ -281,6 +282,196 @@ export const languageData = {
       en: 'Ratings & reviews'
     }
   },
+  blogsScreen: {
+    banner_button: {
+      vi: 'Bài viết của tôi',
+      en: 'My Blogs'
+    }
+  },
+  blogScreenSetting: {
+    user_follower: {
+      vi: 'Người theo dõi',
+      en: 'Follower'
+    },
+    user_following: {
+      vi: 'Đang theo dõi',
+      en: 'Following'
+    },
+    view_stats: {
+      vi: 'Thống Kê',
+      en: 'View Stats'
+    },
+    edit_profile: {
+      vi: 'Chỉnh Sửa',
+      en: 'Edit Profile'
+    },
+    bio: {
+      vi: 'Tiểu Sử',
+      en: 'Bio'
+    },
+    information: {
+      vi: 'Thông Tin',
+      en: 'information'
+    },
+    live_in: {
+      vi: 'Sống tại ',
+      en: 'Live in '
+    },
+    write_new_blog: {
+      vi: 'Bài viết mới',
+      en: 'Write new blog'
+    },
+    manage_blogs: {
+      vi: 'Quản lý bài viết',
+      en: 'Manage blogs'
+    },
+    blog_list: {
+      vi: 'Bài viết',
+      en: 'Blogs'
+    },
+    choice_setting: {
+      vi: 'Chọn ảnh từ thư viện',
+      en: 'Select photo from gallery'
+    },
+    follow: {
+      vi: 'Theo dõi',
+      en: 'Follow'
+    },
+    unfollow: {
+      vi: 'Bỏ theo dõi',
+      en: 'Unfollow'
+    },
+  },
+  detailBlogScreen: {
+    follow: {
+      vi: 'Theo dõi',
+      en: 'Follow'
+    },
+    lorem: {
+      vi: '',
+      en: ''
+    }
+  },
+  settingScreen: {
+    account: {
+      vi: 'Tài khoản',
+      en: 'Account'
+    },
+    ac_profile: {
+      vi: 'Hồ sơ',
+      en: 'Profile'
+    },
+    archive: {
+      vi: 'Kho lưu trữ của bạn',
+      en: 'Your Archive'
+    },
+    archive_place: {
+      vi: 'Địa điểm',
+      en: 'Place'
+    },
+    archive_blog: {
+      vi: 'Bài viết',
+      en: 'Blog'
+    },
+    setting: {
+      vi: 'Cài đặt',
+      en: 'Settings'
+    },
+    setting_darkmode: {
+      vi: 'Chế độ tối',
+      en: 'Dark Mode'
+    },
+    setting_notification: {
+      vi: 'Thông báo',
+      en: 'Notification'
+    },
+    setting_report: {
+      vi: 'Báo cáo',
+      en: 'Report'
+    },
+    setting_about: {
+      vi: 'Giới thiệu',
+      en: 'About'
+    },
+    setting_help_support: {
+      vi: 'Hỗ trợ và giúp đỡ',
+      en: 'Help and Support'
+    },
+    logout: {
+      vi: 'Đăng xuất',
+      en: 'Log out'
+    }
+  },
+  settingNotification: {
+    update_from_following: {
+      vi: 'Cập nhật người theo dõi',
+      en: 'Update from following'
+    },
+    comment: {
+      vi: 'Bình luận',
+      en: 'Comments'
+    },
+    event: {
+      vi: 'Sự kiện',
+      en: 'Events'
+    },
+
+  },
+  settingReport: {
+    reports_about_others: {
+      vi: 'Báo cáo về người dùng khác',
+      en: 'Reports about others'
+    },
+    report_about_paragraph_title: {
+      vi: 'Ứng dụng DongNai Travel của trường đại học Công Nghệ Đồng Nai đạt giải nhất cuộc thi sáng tạo khoa học công nghệ',
+      en: '"Dong Nai Tourism Application of Dong Nai University of Technology won the first prize in the science and technology innovation contest"'
+    },
+    report_about_children: {
+      vi: 'Nhóm nghiên cứu sản phẩm ứng dụng công nghệ của trường đại học Công Nghệ Đồng Nai vừa xuất sắc nhận được giải nhất sáng tạo khoa học công nghệ do tỉnh tổ chức',
+      en: 'Technology application product research group of Dong Nai University of Technology has just excellently received the first prize for science and technology innovation organized by the province.'
+    },
+    your_alert: { 
+      vi: 'Cảnh báo của bạn',
+      en: 'Your alerts'
+    },
+    your_alert_paragraph_title: {
+      vi: 'Ứng dụng DongNai Travel của trường đại học Công Nghệ Đồng Nai đạt giải nhất cuộc thi sáng tạo khoa học công nghệ',
+      en: 'Dong Nai Travel app of Dong Nai University of Technology won the first prize in the science and technology innovation contest'
+    },
+    your_alert_children: {
+      vi: 'Nhóm nghiên cứu sản phẩm ứng dụng công nghệ của trường đại học Công Nghệ Đồng Nai vừa xuất sắc nhận được giải nhất sáng tạo khoa học công nghệ do tỉnh tổ chức',
+      en: 'Technology application product research group of Dong Nai University of Technology has just excellently received the first prize for science and technology innovation organized by the province.'
+    }
+  },
+  settingHelpAndSupport: {
+    send_email: {
+      vi: 'Gửi email',
+      en: 'Send email'
+    },
+    how_to_use_this_app: {
+      vi: 'Cách sử dụng ứng dụng',
+      en: 'How to use this app'
+    },
+    f_a_q: {
+      vi: 'Hỏi đáp',
+      en: 'F.A.Q'
+    },
+    f_a_q_paragraphTitle: {
+      vi: 'Ứng dụng DongNai Travel của trường đại học Công Nghệ Đồng Nai đạt giải nhất cuộc thi sáng tạo khoa học công nghệ',
+      en: 'Dong Nai Travel app of Dong Nai University of Technology won the first prize in the science and technology innovation contest'
+    },
+    f_a_q_children: {
+      vi: 'Nhóm nghiên cứu sản phẩm ứng dụng công nghệ của trường đại học Công Nghệ Đồng Nai vừa xuất sắc nhận được giải nhất sáng tạo khoa học công nghệ do tỉnh tổ chức',
+      en: 'Technology application product research group of Dong Nai University of Technology has just excellently received the first prize for science and technology innovation organized by the province.'
+    }
+
+  },
+  settingAbout: {
+    about_version: {
+      vi: 'Phiên bản',
+      en: 'Version'
+    }
+  },
   
   // Component
   notificationBottomSheet: {
@@ -291,6 +482,12 @@ export const languageData = {
     close: {
       vi: 'Đóng',
       en: 'Close'
-   },
- }
+   }
+ },
+ appHeader: {
+    home: {
+      vi: 'Trang chủ',
+      en: 'Home'
+    }
+  }
 }

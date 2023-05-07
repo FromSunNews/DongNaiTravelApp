@@ -17,8 +17,12 @@ import { AppText, RectangleButton } from "components";
 import { app_c, app_dms, app_sh, app_typo } from "globals/styles";
 import DropDown from "components/drop_down/DropDown";
 import { values } from "lodash";
+import { selectCurrentLanguage } from "../../redux/language/LanguageSlice";
 
 const SettingScreen = ({ route, navigation }) => {
+  const langCode = useSelector(selectCurrentLanguage).languageCode
+  const langData = useSelector(selectCurrentLanguage).data?.settingScreen
+
   const user = useSelector(selectCurrentUser)
   const dispatch = useDispatch()
 
@@ -28,13 +32,13 @@ const SettingScreen = ({ route, navigation }) => {
         <View style={styles.setting_genre}>
           <View style={styles.genre_title_block}>
             <AppText weight="bolder" font="body1">
-              Account
+              {langData.account[langCode]}
             </AppText>
           </View>
           <View style={styles.genre_main}>
             <View style={styles.genre_content}>
               <DropDown
-              name={"Lost Teach"}
+              name={langData.ac_profile[langCode]}
               icon={<Ionicons name="person-circle-outline" size={25}/>}
               isDrop={false}
               handlePressButton={()=>navigation.navigate("Profile")}
@@ -45,7 +49,7 @@ const SettingScreen = ({ route, navigation }) => {
         <View style={[styles.setting_genre, { ...styles.pt_22 }]}>
           <View style={styles.genre_title_block}>
             <AppText weight="bolder" font="body1">
-              Your Archive
+            {langData.archive[langCode]}
             </AppText>
           </View>
           <View style={styles.genre_main}>
@@ -63,7 +67,7 @@ const SettingScreen = ({ route, navigation }) => {
                       color={app_c.HEX.fourth}
                       size={35}
                     />
-                    <Text style={styles.option_setting_name}>Places</Text>
+                    <Text style={styles.option_setting_name}>{langData.archive_place[langCode]}</Text>
                   </View>
                 </AppText>
               </RectangleButton>
@@ -80,7 +84,7 @@ const SettingScreen = ({ route, navigation }) => {
                       color={app_c.HEX.fourth}
                       size={35}
                     />
-                    <Text style={styles.option_setting_name}>Blog</Text>
+                    <Text style={styles.option_setting_name}>{langData.archive_blog[langCode]}</Text>
                   </View>
                 </AppText>
               </RectangleButton>
@@ -90,7 +94,7 @@ const SettingScreen = ({ route, navigation }) => {
         <View style={[styles.setting_genre, { ...styles.pt_22 }]}>
           <View style={styles.genre_title_block}>
             <AppText weight="bolder" font="body1">
-              Settings
+              {langData.setting[langCode]}
             </AppText>
           </View>
           <View style={styles.genre_main}>
@@ -98,7 +102,7 @@ const SettingScreen = ({ route, navigation }) => {
               <DropDown 
               icon={<Entypo name="light-up" size={25}/>}
               isMode={true}
-              name={"Dark Mode"}
+              name={langData.setting_darkmode[langCode]}
               idOption='DARK_MODE'
               />
             </View>
@@ -108,7 +112,7 @@ const SettingScreen = ({ route, navigation }) => {
             <View style={styles.genre_content}>
               <DropDown 
                 icon={<Ionicons name="notifications-outline" size={25}/>}
-                name={"Notification"}
+                name={langData.setting_notification[langCode]}
                 isDrop={false}
                 handlePressButton={() => navigation.navigate("Notifications")}
                 idOption='UPDATE_FROM_FOLLOWING'
@@ -120,7 +124,7 @@ const SettingScreen = ({ route, navigation }) => {
             <View style={styles.genre_content}>
               <DropDown 
                 icon={<Feather name="alert-octagon" size={25}/>}
-                name={"Report"}
+                name={langData.setting_report[langCode]}
                 isDrop={false}
                 handlePressButton={() => navigation.navigate("Reports")}
               />
@@ -131,7 +135,7 @@ const SettingScreen = ({ route, navigation }) => {
             <View style={styles.genre_content}>
               <DropDown 
                 icon={<AntDesign name="exclamationcircleo" size={25}/>}
-                name={"About"}
+                name={langData.setting_about[langCode]}
                 isDrop={false}
                 handlePressButton={() => navigation.navigate("About")}
               />
@@ -142,7 +146,7 @@ const SettingScreen = ({ route, navigation }) => {
             <View style={styles.genre_content}>
               <DropDown 
                 icon={<Feather name="help-circle" size={25}/>}
-                name={"Help and Support"}
+                name={langData.setting_help_support[langCode]}
                 isDrop={false}
                 handlePressButton={() => navigation.navigate("Help & Support")}
               />
@@ -153,7 +157,7 @@ const SettingScreen = ({ route, navigation }) => {
             <View style={styles.genre_content}>
               <DropDown 
                 icon={<Entypo name="log-out" size={25}/>}
-                name={"Log out"}
+                name={langData.logout[langCode]}
                 isDrop={false}
                 handlePressButton={() => {
                   dispatch(signOutUserAPI()).then(

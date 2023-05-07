@@ -7,7 +7,7 @@ import {
 import React, { useRef } from 'react'
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import ExploreNavigator from 'navigations/explore_navigator/ExploreNavigator'
@@ -37,6 +37,12 @@ import { updateUserLocation } from 'redux/map/mapSlice'
 
 // Related to Expo
 import * as Location from 'expo-location'
+import { updateCurrentUser } from '../../redux/user/UserSlice'
+import { updateCurrentNotifs, updateNewNotifs } from '../../redux/notifications/NotificationsSlice'
+import { signInUserAPI } from '../../request_api'
+import { selectCurrentWareHouse } from '../../redux/warehouse/WareHouseSlice'
+import FunctionsUtility from '../../utilities/functions'
+import { EMAIL_RULE } from '../../utilities/validators'
 
 const tabIcon = {
 	'HomeScreen': {
@@ -156,8 +162,10 @@ const GroupBottomTab = () => {
 
 const navigation = useNavigation()
 const dispatch = useDispatch()
+const route = useRoute()
 const user = useSelector(selectCurrentUser)
-console.log("🚀 ~ file: GroupBottomTab.jsx:148 ~ GroupBottomTab ~ user:", user)
+const warehouse = useSelector(selectCurrentWareHouse)
+// console.log("🚀 ~ file: GroupBottomTab.jsx:148 ~ GroupBottomTab ~ user:", user)
 
 
 const tabOffsetValue = useRef(new Animated.Value(centerDotDistance)).current
@@ -170,6 +178,12 @@ useEffect(() => {
 		console.log("🚀 ~ file: GroupBottomTab.jsx:154 ~ getPrivateKeysAPI ~ res:", res)
 		dispatch(updatePrivateKeys(res))
 	})
+
+	// Kiểm tra xem có nên lấy thông tin user lại không 
+	if (route.params?.isGetFullUserInfo) {
+		console.log("🚀 ~ file: GroupBottomTab.jsx:182 ~ useEffect ~ route:", route)
+		getFullUserInfo()
+	}
 	// Truyền thằng user hiện tại (đã đăng nhập hoặc chưa server để lưu thông tin)
 	// kiểm tra thông tin id
 	let userId
@@ -207,6 +221,45 @@ useEffect(() => {
 	})()
 }, [])
 
+// useEffect này dùng để lắng nghe các sự kiện ở toàn bộ app
+useEffect(() => {
+	// Lắng nghe sự kiện từ server (notìication)
+	socketIoInstance.on('s_notification_to_user', (data) => {
+		// nếu nhận được thì lưu vào state của thằng được follow
+		dispatch(updateCurrentUser(data.userReceived))
+		dispatch(updateNewNotifs(data.notif))
+	})
+}, [])
+
+const getFullUserInfo = async () => {
+	console.log("🚀 ~ file: GroupBottomTab.jsx:236 ~ getFullUserInfo ~ warehouse:", warehouse)
+	// Nếu mà có isGetFullUserInfo tức là nên call api để reset lại user mặc dù đã có trong state
+	// lấy emailname vs password tỏng warehouse
+	if (warehouse?.emailName && warehouse?.password) {
+		let user 
+		if (FunctionsUtility.validateRegex(warehouse?.emailName, EMAIL_RULE)) {
+			user = {
+				email: warehouse?.emailName,
+				password : warehouse?.password
+			}
+		} else {
+			user = {
+				username: warehouse?.emailName,
+				password : warehouse?.password
+			}
+		}
+		console.log("🚀 ~ file: GroupBottomTab.jsx:240 ~ getFullUserInfo ~ user:", user)
+		
+		await signInUserAPI(user).then((res) => {
+			console.log("🚀 ~ file: Signin.js:73 ~ onSubmit ~ res", res)
+			if (res) {
+				// Phuong: Update user in persistent store
+				dispatch(updateCurrentUser(res.fullInfoUser))
+				dispatch(updateCurrentNotifs(res.notifs))
+			}
+		})
+	}
+}
 	return (
 		<View style={styles.container}>
 				<Tab.Navigator
