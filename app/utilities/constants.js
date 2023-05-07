@@ -4,9 +4,6 @@
 // Phuong: This is the api web for DongNaiAppTravel
 export const API_ROOT = 'https://dong-nai-travel-api.onrender.com'
 
-// Phuong: This is the api web for DongNaiAppTravel
-export const API_ROOT = `http://${ip_v4}:${API_PORT}`
-
 export const FilterConstants = {
   categories: {
     ALL_CATEGORIES: 'all_categories',
