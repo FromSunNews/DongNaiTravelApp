@@ -25,7 +25,6 @@ const HomeBannerSlider = ()=>{
       setBanner(bannersEn)
     }
   })
-  console.log(banners)
   
   return (
     <View style={styles.container}>

@@ -1,12 +1,12 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-const PlacesScreen = () => {
+const BlogSavedScreen = () => {
   return (
     <View>
-      <Text>PlacesScreen</Text>
+      <Text>BlogSavedSreen</Text>
     </View>
   )
 }
 
-export default PlacesScreen
+export default BlogSavedScreen

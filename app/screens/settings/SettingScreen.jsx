@@ -57,7 +57,7 @@ const SettingScreen = ({ route, navigation }) => {
               <RectangleButton
                 overrideShape="rounded_8"
                 style={styles.option_setting}
-                handlePressButton={() => navigation.navigate("Places")}
+                onPress={() => navigation.navigate("PlacesSavedScreen")}
               >
                 <AppText>
                   <View style={{ ...styles.rectangle_button_container }}>
@@ -74,7 +74,7 @@ const SettingScreen = ({ route, navigation }) => {
               <RectangleButton
                 overrideShape="rounded_8"
                 style={styles.option_setting}
-                handlePressButton={() => navigation.navigate("Blogs")}
+                onPress={() => navigation.navigate("BlogSavedScreen")}
               >
                 <AppText>
                   <View style={{ ...styles.rectangle_button_container }}>

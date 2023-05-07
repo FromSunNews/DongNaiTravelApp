@@ -338,7 +338,7 @@ function ProfileScreen({ route, navigation}) {
               <RectangleButton
                 overrideShape="rounded_8"
                 typeOfButton="opacity"
-                onPress={() => navigation.navigate("EditProfileScreen")}
+                onPress={() => navigation.navigate("BlogDetailStackScreen")}
                 style={{
                   flex: 0.4
                 }}

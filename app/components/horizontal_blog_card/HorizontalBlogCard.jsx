@@ -41,7 +41,7 @@ const HorizontalBlogCard = ({blog}) => {
   const navigation = useNavigation()
 
   const handlePressImageButton = () => {
-    navigation.navigate({name: 'BlogDetailScreen'});
+    navigation.navigate({name: 'BlogDetailStackScreen'});
   }
   return (
     <View style={styles.card}>

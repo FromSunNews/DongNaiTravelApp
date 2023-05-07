@@ -6,7 +6,7 @@ import SettingScreen from "screens/settings/SettingScreen";
 import EditProfileScreen from "screens/edit_profile/EditProfileScreen";
 import ProfileScreen from "screens/profile_screen/ProfileScreen";
 import BlogsScreen from "screens/blogs/BlogsScreen";
-import PlacesScreen from 'screens/places/PlacesScreen'
+import PlaceSavedScreen from "../../screens/place_saved/PlacesSavedScreen";
 import Notifications from "screens/setting_notifications/SettingNotificationsScreen";
 import NotificationsScreen from "screens/setting_notifications/SettingNotificationsScreen";
 import AboutScreen from "screens/about/AboutScreen";
@@ -15,6 +15,7 @@ import ReportsScreen from "screens/reports/ReportsScreen";
 import CreatePost from "screens/create_post/CreatePostScreen";
 import BlogDetailScreen from "screens/blog_detail/BlogDetailScreen";
 import ViewStatsScreen from "screens/view_stats/ViewStatsScreen";
+import BlogSavedScreen from "../../screens/blog_saved/BlogSavedScreen";
 import { useSelector } from "react-redux";
 import { selectCurrentLanguage } from "../../redux/language/LanguageSlice";
 
@@ -34,11 +35,20 @@ const SettingNavigator = () => {
       <SettingStack.Screen name="Profile" options={{isTopScreen:true, title: `${langCode === "vi" ? "Trang cá nhân" : "Profile" }`}}>
         {(props) => <ProfileScreen {...props} />}
       </SettingStack.Screen>
-      <SettingStack.Screen name="Blogs" >
-        {(props) => <BlogsScreen {...props} />}
+      <SettingStack.Screen 
+      name="BlogSavedScreen" 
+      options={{
+         title: 'Blogs Saved',
+       }} >
+        {(props) => <BlogSavedScreen {...props} />}
       </SettingStack.Screen>
-      <SettingStack.Screen name="Places" >
-        {(props) => <PlacesScreen {...props} />}
+      <SettingStack.Screen 
+      name="PlacesSavedScreen" 
+      options={{
+        title: 'Places Saved',
+      }} 
+      >
+        {(props) => <PlaceSavedScreen {...props} />}
       </SettingStack.Screen>
       <SettingStack.Screen name="Notifications" >
         {(props) => <NotificationsScreen {...props} />}
@@ -65,7 +75,7 @@ const SettingNavigator = () => {
         {(props)=><CreatePost {...props}/>}
       </ProfileStack.Screen>
       <ProfileStack.Screen 
-        name="BlogDetailScreen"
+        name="BlogDetailStackScreen"
         options={{
          title: `${langCode  === 'vi' ? 'Chi Tiết Bài Viết' : 'Blog Detail'}`,
        }}

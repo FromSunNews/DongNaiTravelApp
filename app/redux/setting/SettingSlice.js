@@ -10,7 +10,8 @@ const initialState = {
       comments: false,
       events: false
     },
-    darkMode: false
+    darkMode: false,
+
   }
 }
 

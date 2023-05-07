@@ -7,7 +7,8 @@ const initialState = {
   currentWareHouse: {
     emailName: null,
     password: null,
-    isFirstTimeLauch: true
+    isFirstTimeLauch: true,
+    placesSaved: [],
   }
 }
 
@@ -21,15 +22,26 @@ export const warehouseSlice = createSlice({
     updateCurrentWareHouse: (state, action) => {
       const warehouse = action.payload
       state.currentWareHouse = warehouse
-    }
+    },
+    saveArticle: (state, action) => {
+      const savedArticle = state.push(action.payload);
+      state.currentWareHouse.placesSaved =  savedArticle
+    },
+    removeArticle: (state, action) => {
+      const removeArticle = state.filter(article => article.id !== action.payload.id);
+      state.currentWareHouse = removeArticle
+    },
   }
 })
+
 
 // Phương: Action creators are generated for each case reducer function
 // Phương: Actions: dành cho các components bên dưới gọi bằng dispatch() tới nó để cập nhật lại dữ liệu thông qua reducer (chạy đồng bộ)
 // Phương: Để ý ở trên thì không thấy properties actions đâu cả, bởi vì những cái actions này đơn giản là được thằng redux tạo tự động theo tên của reducer nhé.
 export const { 
   updateCurrentWareHouse,
+  saveArticle,
+  removeArticle
   // Phương
 } = warehouseSlice.actions
 
