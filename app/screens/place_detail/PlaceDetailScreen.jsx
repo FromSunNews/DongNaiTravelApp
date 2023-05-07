@@ -1,24 +1,74 @@
-import { View, Text, Pressable, ScrollView, Animated } from 'react-native'
+import {
+  View,
+  Text,
+  Pressable,
+  ScrollView,
+  Animated,
+  Image,
+  FlatList
+} from 'react-native'
 import React from 'react'
+
+import {
+  getPlaceDetailsWithPipeline,
+  getPlaces
+} from 'request_api'
+
+import { useNavigation } from '@react-navigation/native'
+import {
+  usePlaceDetailsState,
+  usePlaceDetailsActions,
+  usePlaceDetails
+} from 'customHooks/usePlace'
 
 import BottomSheet, { BottomSheetView, BottomSheetScrollView, useBottomSheetSpringConfigs } from '@gorhom/bottom-sheet'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
-import { AppText, MyFadeAnimatedView, MyHeader, RectangleButton, CircleButton, AppTabSlider, SimpleBarChart } from 'components'
+import {
+  AppText,
+  MyFadeAnimatedView,
+  MyHeader,
+  RectangleButton,
+  CircleButton,
+  AppTabSlider,
+  SimpleBarChart,
+  MarkFormat
+} from 'components'
 
-import { HEADER_HEIGHT } from 'utilities/constants'
+import {
+  HEADER_HEIGHT,
+  PLACE_DETAILS_DATA_FIELDS,
+  BRIEF_PLACE_DATA_FIELDS
+} from 'utilities/constants'
+
+import {
+  HorizontalPlaceCard,
+  HorizontalPlaceCardSkeleton,
+  ReviewSectionPromise
+} from 'components'
 
 import styles from './PlaceDetailScreenStyles'
 import { app_c, app_dms, app_sp } from 'globals/styles'
+import { useSelector } from 'react-redux'
+import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
+
+import {
+  PlaceDetailsDataProps
+} from 'types/index.d.ts'
+import StringUtility from 'utilities/string'
 
 /**
  * __Creator__: @NguyenAnhTuan1912
- * 
- * @param {object} props - Props của component.
- * @param {Animated.Value} props.opacityAnimValue - Đây là một Animated.Value().
  * @returns 
  */
-const PlaceDetailScreen = () => {
+const PlaceDetailScreen = ({route, navigation}) => {
+  const langCode = useSelector(selectCurrentLanguage).languageCode
+  const langData = useSelector(selectCurrentLanguage).data?.placeDetailScreen
+  const langVisit = useSelector(selectCurrentLanguage).data?.exploreScreen
+  const { placeDetails, updatePlaceDetails, clearPlaceDetails } = usePlaceDetails();
+
+  const presentationImageUrl = placeDetails.place_photos && placeDetails.place_photos.length > 0 ? placeDetails.place_photos[0].photos[0] : undefined
+
   const bottomSheetRef = React.useRef(null);
   const snapPoints = React.useMemo(
     () => ['60%', `${100- (30 / app_dms.screenHeight) * 100}%`], []
@@ -43,6 +93,17 @@ const PlaceDetailScreen = () => {
       animFade(0);
     }
   }
+  
+  React.useEffect(() => {
+    let query = `placeId=${placeDetails.place_id}&fields=${PLACE_DETAILS_DATA_FIELDS}`
+    navigation.setOptions({'title': placeDetails.name})
+    getPlaceDetailsWithPipeline(query)
+    .then(data => {
+      updatePlaceDetails(data);
+    })
+    .catch(error => console.error(error))
+    return () => { clearPlaceDetails() }
+  }, []);
 
   return (
     <View style={{backgroundColor: app_c.HEX.ext_third, flex: 1}}>
@@ -53,6 +114,10 @@ const PlaceDetailScreen = () => {
           height: HEADER_HEIGHT,
           zIndex: 999
         }}
+      />
+      <Image
+        source={presentationImageUrl ? {uri: presentationImageUrl} : {}}
+        style={styles.pd_background_image}
       />
       <BottomSheet
         snapPoints={snapPoints}
@@ -69,24 +134,24 @@ const PlaceDetailScreen = () => {
           style={styles.pd_bottom_sheet_view}
           showsVerticalScrollIndicator={false}
         >
-          <View style={styles.pd_header}>
+          <View style={[styles.pd_header, app_sp.ph_18]}>
 
             {/* Information row */}
             <View style={{...styles.pd_row, ...app_sp.mb_12}}>
 
               {/* Name, location of visits column */}
-              <View style={{flex: 1}}>
-                <AppText font="h2" numberOfLines={2}>Lorem Ipsum</AppText>
-                <AppText font="sub0">is simply dummy text.</AppText>
+              <View style={[{flex: 1}, app_sp.me_12]}>
+                <AppText font="h2" numberOfLines={2}>{placeDetails.name}</AppText>
+                <AppText font="sub0">{placeDetails.formatted_address}</AppText>
               </View>
 
               {/* Ratings, number of visits column */}
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <AppText font="body2" style={app_sp.me_12}>
-                  <Ionicons name='star-outline' /> {4.6}
+                  <Ionicons name='star-outline' /> {placeDetails.rating}
                 </AppText>
                 <AppText font="body2" style={{}}>
-                  <Ionicons name='eye-outline' /> {300}
+                  <Ionicons name='eye-outline' /> {placeDetails.numberOfVisited}
                 </AppText>
               </View>
             </View>
@@ -114,45 +179,48 @@ const PlaceDetailScreen = () => {
                 overrideShape="capsule"
               >
                 {(isActive, currentLabelStyle) => (
-                  <AppText style={currentLabelStyle} font="body2">{isActive ? 'Visited' : 'Visit'}</AppText>
+                  <AppText style={currentLabelStyle} font="body2">{isActive ? langVisit.visited[langCode] : langVisit.visit[langCode]}</AppText>
                 )}
               </RectangleButton>
             </View>
 
             {/* Tags container row */}
-            <View style={styles.pd_row}>
+            <View style={[styles.pd_row, {flexWrap: 'wrap'}]}>
               <AppText font="body2" style={app_sp.me_12}>
                 <Ionicons name='pricetag-outline' /> Tags:
               </AppText>
-              <RectangleButton
-                defaultColor="type_4"
-                typeOfButton="highlight"
-                overrideShape="rounded_4"
-                style={{...app_sp.ph_8, ...app_sp.pv_0, ...app_sp.me_6}}
-              >
-                {(isActive, currentLabelStyle) => (
-                  <AppText style={currentLabelStyle} font="body3">Recommeded</AppText>
-                )}
-              </RectangleButton>
-              <RectangleButton
-                typeOfButton="highlight"
-                overrideShape="rounded_4"
-                style={{...app_sp.ph_8, ...app_sp.pv_0}}
-              >
-                {(isActive, currentLabelStyle) => (
-                  <AppText style={currentLabelStyle} font="body3">Exercise</AppText>
-                )}
-              </RectangleButton>
+              {
+                placeDetails.types && placeDetails.types.map(
+                  type => (
+                    <RectangleButton
+                      key={type}
+                      typeOfButton="highlight"
+                      overrideShape="rounded_4"
+                      style={[app_sp.ph_8, app_sp.pv_0, app_sp.me_6, app_sp.mb_6]}
+                    >
+                      {(isActive, currentLabelStyle) => (
+                        <AppText style={currentLabelStyle} font="body3">{StringUtility.toTitleCase(type)}</AppText>
+                      )}
+                    </RectangleButton>
+                  )
+                )
+              }
             </View>
           </View>
           
           {/* Tabs */}
           <AppTabSlider>
-            <AppTabSlider.Child name="about" component={AboutSlide} />
-            <AppTabSlider.Child name="reviews" component={ReviewsSlide} />
+            <AppTabSlider.Child
+              name={langData.about[langCode]}
+              component={AboutSlide}
+            />
+            <AppTabSlider.Child
+              name={langData.review[langCode]}
+              component={ReviewsSlide}
+            />
           </AppTabSlider>
           
-          <View style={{height: 100}}></View>
+          <View style={{height: 125}}></View>
         </BottomSheetScrollView>
       </BottomSheet>
     </View>
@@ -160,65 +228,83 @@ const PlaceDetailScreen = () => {
 }
 
 const AboutSlide = () => {
+  const langCode = useSelector(selectCurrentLanguage).languageCode
+  const langData = useSelector(selectCurrentLanguage).data?.placeDetailScreen
+  const [relatedPlaces, setRelatedPlaces] = React.useState([]);
+  const { placeDetails, updatePlaceDetails } = usePlaceDetails();
+  const imageUrls = placeDetails.place_photos && placeDetails.place_photos[0].photos ? placeDetails.place_photos[0].photos : []
+
+  const type = placeDetails.types[0]
+
+  React.useEffect(() => {
+    let query = `limit=${5}&skip=${0}&filter=type:${type}%20except_by_placeid:${placeDetails.place_id}&fields=${BRIEF_PLACE_DATA_FIELDS}`;
+    console.log("Type:", type);
+    getPlaces(query)
+    .then(data => {
+      setRelatedPlaces(data);
+    })
+    .catch(error => console.error(error))
+  }, [])
+
   return (
     <View style={styles.pd_content_container}>
       {/* Description */}
-      <View style={styles.pd_content_article}>
-        <AppText font="h3" numberOfLines={1} style={app_sp.mb_6}>Description</AppText>
+      <View style={[styles.pd_content_article, app_sp.ph_18]}>
+        <AppText font="h3" numberOfLines={1} style={app_sp.mb_6}>{langData.description[langCode]}</AppText>
         <AppText color="ext_second">
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+          {
+            placeDetails.content
+            ? (
+              <MarkFormat text={placeDetails.content.plainTextMarkFormat[langCode]} />
+            )
+            : "Please add description for this place."
+          }
         </AppText>
       </View>
 
       {/* Images */}
       <View style={styles.pd_content_article}>
-        <AppText font="h3" numberOfLines={1} style={app_sp.mb_6}>Images</AppText>
+        <AppText font="h3" numberOfLines={1} style={[app_sp.mb_6, app_sp.ph_18]}>{langData.image[langCode]}</AppText>
         <View style={styles.pd_content_image_row_container}>
-          <View style={{...styles.pd_content_image_row, ...app_sp.mb_12}}>
-            <RectangleButton
-              isOnlyContent
-              typeOfButton="highlight"
-              overrideShape="rounded_8"
-              style={styles.pd_content_image_button}
-            >
-              <View style={{backgroundColor: app_c.HEX.ext_primary, width: '100%', aspectRatio: 1}}></View>
-            </RectangleButton>
-            <RectangleButton
-              isOnlyContent
-              typeOfButton="highlight"
-              overrideShape="rounded_8"
-              style={styles.pd_content_image_button}
-            >
-              <View style={{backgroundColor: app_c.HEX.ext_primary, width: '100%', aspectRatio: 1}}></View>
-            </RectangleButton>
-          </View>
-        </View>
-
-        <View style={styles.pd_content_image_row_container}>
-          <View style={{...styles.pd_content_image_row, ...app_sp.mb_12}}>
-            <RectangleButton
-              isOnlyContent
-              typeOfButton="highlight"
-              overrideShape="rounded_8"
-              style={styles.pd_content_image_button}
-            >
-              <View style={{backgroundColor: app_c.HEX.ext_primary, width: '100%', aspectRatio: 1}}></View>
-            </RectangleButton>
-            <RectangleButton
-              isOnlyContent
-              typeOfButton="highlight"
-              overrideShape="rounded_8"
-              style={styles.pd_content_image_button}
-            >
-              <View style={{backgroundColor: app_c.HEX.ext_primary, width: '100%', aspectRatio: 1}}></View>
-            </RectangleButton>
-          </View>
+          <ScrollView
+            style={app_sp.mb_12}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+          >
+            {
+              imageUrls.map((url, index) => {
+                let actualStyle = [styles.pd_content_image_button, app_sp.me_18];
+                if(index === 0) actualStyle.push(app_sp.ms_18);
+                return (
+                  <RectangleButton
+                    isOnlyContent
+                    typeOfButton="highlight"
+                    overrideShape="rounded_8"
+                    style={actualStyle}
+                    key={url}
+                  >
+                    <Image
+                      source={{uri: url}}
+                      style={{width: '100%', aspectRatio: 1}}
+                    />
+                  </RectangleButton>
+                )
+              })
+            }
+          </ScrollView>
         </View>
       </View>
 
       {/* Related Places */}
-      <View style={{...styles.pd_content_article, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-        <AppText font="h3" numberOfLines={1} style={app_sp.mb_6}>Related Places</AppText>
+      <View style={{
+        ...styles.pd_content_article,
+        flexDirection: 'row',
+        justifyContent:
+        'space-between',
+        alignItems: 'center',
+        ...app_sp.ph_18
+      }}>
+        <AppText font="h3" numberOfLines={1} style={app_sp.mb_6}>{langData.relatedPlaces[langCode]}</AppText>
         <CircleButton
           isTransparent
           typeOfButton="highlight"
@@ -227,11 +313,27 @@ const AboutSlide = () => {
           )}
         />
       </View>
+      <View style={[app_sp.ph_18]}>
+        {
+          relatedPlaces.length === 0
+          ? <AppText>{langData.relatedPlacesDataMessage[langCode]}</AppText>
+          : (
+            relatedPlaces.map(relatedPlace => (
+              <HorizontalPlaceCard key={relatedPlace.placeId} place={relatedPlace} />
+            ))
+          )
+        }
+      </View>
     </View>
   );
 }
 
 const ReviewsSlide = () => {
+  const langCode = useSelector(selectCurrentLanguage).languageCode
+  const langData = useSelector(selectCurrentLanguage).data?.placeDetailScreen
+  const [reviews, setReviews] = React.useState(null);
+  const placeDetails = usePlaceDetailsState();
+
   const dataSet = React.useMemo(() => ([
       {
         index: '5',
@@ -256,12 +358,17 @@ const ReviewsSlide = () => {
     ]
   ), [])
 
-  return (
-    <View style={styles.pd_content_container}>
+  React.useEffect(() => {
+    setTimeout(() => {
+      setReviews(placeDetails.reviews)
+    }, 500);
+  }, []);
 
+  return (
+    <View style={[styles.pd_content_container, app_sp.ph_18]}>
       {/* Review rating information */}
       <View>
-        <AppText font="h3" style={app_sp.mb_12}>Ratings & reviews</AppText>
+        <AppText font="h3" style={app_sp.mb_12}>{langData.review_texth3[langCode]}</AppText>
         
         {/* Rating statistic */}
         <View style={styles.pd_content_rr_stats_container}>
@@ -277,10 +384,24 @@ const ReviewsSlide = () => {
             </View>
             <AppText font="body3" style={{textAlign: 'right'}}>5.6k ratings & reviews</AppText>
           </View>
-
         </View>
       </View>
 
+      {/* Reviews */}
+      <View style={app_sp.mt_12}>
+        {
+          reviews
+          ? (
+            reviews.map(review => (
+              <ReviewSectionPromise key={review.time} review={review} />
+            ))
+          ) :
+          (
+            <AppText>This place haven't reviewed yet.</AppText>
+          )
+        }
+      </View>
+      <View style={{height: 50}}></View>
     </View>
   );
 }

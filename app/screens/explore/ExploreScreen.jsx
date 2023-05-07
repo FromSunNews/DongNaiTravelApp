@@ -4,20 +4,23 @@ import {
   ScrollView,
   Text,
   FlatList,
-  LayoutAnimation
+  LayoutAnimation,
+  Animated
 } from 'react-native'
 import React from 'react'
 
 import { useNavigation } from '@react-navigation/native'
-
 import { useBriefPlaces } from 'customHooks/usePlace'
 
-import Ionicons from 'react-native-vector-icons/Ionicons'
+import { BRIEF_PLACE_DATA_FIELDS } from 'utilities/constants'
 
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import { TypeScrollView, HorizontalPlaceCard, HorizontalPlaceCardSkeleton, BannerButton } from 'components'
 
 import styles from './ExploreScreenStyles'
 import { app_sp, app_c } from 'globals/styles'
+import { useSelector } from 'react-redux'
+import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
 
 /**
  * __Creator__: @NguyenAnhTuan1912
@@ -25,15 +28,16 @@ import { app_sp, app_c } from 'globals/styles'
  * @returns 
  */
 const ExploreScreen = () => {
+  const langCode = useSelector(selectCurrentLanguage).languageCode 
+  const langData = useSelector(selectCurrentLanguage).data?.exploreScreen
   const exploreInfo = React.useRef({
     isFirstFetch: true,
-    briefPlaceDataFields: "place_id;name;adr_address;types;rating;user_ratings_total;isRecommended;numberOfVisited",
+    briefPlaceDataFields: BRIEF_PLACE_DATA_FIELDS,
     isEndReach: false
   });
   const [type, setType] = React.useState("all");
   const [isOnTop, setIsOnTop] = React.useState(true);
   const navigation = useNavigation();
-
   const { places, inscreaseSkip, fetchBriefPlaceByType } = useBriefPlaces(type);
 
   React.useEffect(() => {
@@ -63,7 +67,8 @@ const ExploreScreen = () => {
 
   const handleExploreScroll = e => {
     const { layoutMeasurement, contentOffset, contentSize } = e.nativeEvent;
-    if(contentOffset.y <= 0) {
+    let val = contentOffset.y;
+    if(val <= 0) {
       showBannderButton(true)
     } else {
       showBannderButton(false)
@@ -78,7 +83,16 @@ const ExploreScreen = () => {
     <View>
       {
         isOnTop && (
-          <View style={[app_sp.ph_18, {backgroundColor: app_c.HEX.primary, position: "relative", zIndex: 2}]}>
+          <View
+            style={[
+              app_sp.ph_18,
+              {
+                backgroundColor: app_c.HEX.primary,
+                position: 'relative',
+                zIndex: 2,
+              }
+            ]}
+          >
             <BannerButton
               typeOfButton="highlight"
               style={app_sp.mt_12}
@@ -95,15 +109,13 @@ const ExploreScreen = () => {
       <FlatList
         data={places ? places.data : []}
         style={styles.scroll_view_container}
+        contentContainerStyle={{paddingBottom: 200}}
         onMomentumScrollEnd={handleExploreMomentumScrollEnd}
         onEndReached={handleEndReach}
         onScroll={handleExploreScroll}
         // scrollEventThrottle={1000}
         stickyHeaderHiddenOnScroll
         stickyHeaderIndices={[0]}
-        ListFooterComponent={
-          <View style={{height: 50}}></View>
-        }
         ListEmptyComponent={
           !places && (
             <View style={[app_sp.mh_18, app_sp.mb_12]}>
@@ -113,7 +125,7 @@ const ExploreScreen = () => {
         }
         ListHeaderComponent={
           <TypeScrollView
-            buttonStyle="rounded_8"
+            buttonStyle="capsule"
             types='all;recommended;popular;most_visit;high_rating'
             callBack={setType}
             scrollStyle={[app_sp.ms_18, app_sp.pv_12]}

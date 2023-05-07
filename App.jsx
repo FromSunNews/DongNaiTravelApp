@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Text, StatusBar, SafeAreaView } from 'react-native'
 
 import { store, persistor } from 'redux/store'
@@ -24,11 +24,45 @@ import { ToastProvider } from 'react-native-toast-notifications'
 // Phương: này là dùng cho socket
 import { io } from 'socket.io-client'
 import { API_ROOT } from 'utilities/constants'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import CustomStatusBar from './app/components/custom_status_bar/CustomStatusBar'
 export const socketIoInstance = io(API_ROOT)
+import NetInfo from '@react-native-community/netinfo'
+import { updateNotif } from './app/redux/manifold/ManifoldSlice'
 
 injectStoreRequest(store)
 
 export default function App() {
+
+  const [isConnected, setIsConnected] = useState(true)
+  const [isPrevConnected, setIsPrevConnected] = useState(true)
+
+  const checkInternetConnection = async () => {
+    const response = await NetInfo.fetch()
+    // console.log("🚀 ~ file: App.jsx:41 ~ checkInternetConnection ~ response:", response)
+    setIsPrevConnected(isConnected)
+    setIsConnected(response.isConnected)
+    setTimeout(checkInternetConnection, 3000) // Kiểm tra lại sau 5 giây
+  }
+
+  useEffect(() => {
+    checkInternetConnection()
+  }, [])
+
+  useEffect(() => {
+    if (!isConnected && isPrevConnected) {
+      store.dispatch(updateNotif({
+        appearNotificationBottomSheet: true,
+        contentNotificationBottomSheet: 'Không có kết nối internet'
+      }))
+    } else if (isConnected && !isPrevConnected) {
+      store.dispatch(updateNotif({
+        appearNotificationBottomSheet: true,
+        contentNotificationBottomSheet: 'Đã kết nối internet'
+      }))
+    }
+  }, [isConnected])
+
   // Phuong: https://docs.expo.dev/guides/using-custom-fonts/
   // Phuong: https://fonts.google.com/specimen/Roboto
   const [fontsLoaded] = useFonts({
@@ -53,35 +87,32 @@ export default function App() {
   return (
     // Phương: https://github.com/arnnis/react-native-toast-notifications
     // Phương: mục dích để hiển thị những thông báo nhanh cho người dùng
-    <ToastProvider
-      normalColor={app_c.HEX.third}
-      offsetBottom={120}
-      textStyle={{ ...app_typo.fonts.normal.bolder.h5, color: app_c.HEX.primary }}
-    >
-      <Provider store={store}>
-        <PersistGate loading={<Text>Loading...</Text>} persistor={persistor}>
-          {/* Phuong: anh huong den signin va sign up */}
-          {/* <SafeAreaView style={{backgroundColor: app_c.HEX.primary}}>
-            <StatusBar style="auto" />
-          </SafeAreaView> */}
+    // https://github.com/gorhom/react-native-bottom-sheet/issues/775
+    <GestureHandlerRootView style={{flex: 1}}>
+      <ToastProvider
+        normalColor={app_c.HEX.third}
+        offsetBottom={120}
+        textStyle={{ ...app_typo.fonts.normal.bolder.h5, color: app_c.HEX.primary }}
+      >
+        <Provider store={store}>
+          <PersistGate loading={<Text>Loading...</Text>} persistor={persistor}>
 
-          <StatusBar 
-            barStyle='dark-content'
-            backgroundColor={app_c.HEX.third}
-          />
-          
-          <NavigationContainer>
-            <AuthNavigator/>
-          </NavigationContainer>
-          
-          {/*Phuong: Hien thong bao cho toan he thong => test thu vao redux manifold => appearNotificationBottomSheet: true */}
-          <NotificationBottomSheet />
+            {/* Status bar cho ca android va ios */}
+            <CustomStatusBar backgroundColor={app_c.HEX.primary} barStyle="dark-content" />
+            
+            <NavigationContainer>
+              <AuthNavigator/>
+            </NavigationContainer>
+            
+            {/*Phuong: Hien thong bao cho toan he thong => test thu vao redux manifold => appearNotificationBottomSheet: true */}
+            <NotificationBottomSheet />
 
-          {/*Phuong: loading cho toan he thong => test thu vao redux manifold => isLoading: true */}
-          <Loading />
+            {/*Phuong: loading cho toan he thong => test thu vao redux manifold => isLoading: true */}
+            <Loading />
 
-        </PersistGate>
-      </Provider>
-    </ToastProvider>
+          </PersistGate>
+        </Provider>
+      </ToastProvider>
+    </GestureHandlerRootView>
   )
 }

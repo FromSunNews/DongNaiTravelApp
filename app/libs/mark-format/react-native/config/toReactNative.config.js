@@ -110,16 +110,16 @@ const formatTypeToStyle = {
     format: UNORDERED_LIST_TYPE,
     isList: true,
     style: {
-      paddingLeft: 12,
-      paddingVertical: 8
+      // paddingLeft: 12,
+      // paddingVertical: 8
     }
   },
   [ORDERED_LIST_TYPE] : {
     format: ORDERED_LIST_TYPE,
     isList: true,
     style: {
-      paddingLeft: 12,
-      paddingVertical: 8
+      // paddingLeft: 12,
+      // paddingVertical: 8
     }
   },
   [HEADING_0_TYPE] : {

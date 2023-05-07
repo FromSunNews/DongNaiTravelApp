@@ -7,7 +7,7 @@ import AppText from '../app_text/AppText'
 import RectangleButton from '../buttons/RectangleButton'
 
 import styles from './TypeScrollViewStyle'
-import { app_sp } from 'globals/styles'
+import { app_sp ,app_shdw } from 'globals/styles'
 
 import { ViewStyles } from 'types/index.d'
 
@@ -152,7 +152,7 @@ const TypeScrollView = ({
                   const halfWidthOfButton = (width / 2);
                   const distanceForScrollingToCenterButton = distanceFromXToSnapPosition + halfWidthOfButton;
                   buttonInfoRef.current.scrollToXList[index] = distanceForScrollingToCenterButton;
-                  console.log(`Button ${slideName}: ${distanceFromXToSnapPosition}, x: ${x}, center: ${distanceForScrollingToCenterButton}, slider'width: ${buttonInfoRef.current.buttonScrollContainerWidth}`);
+                  // console.log(`Button ${slideName}: ${distanceFromXToSnapPosition}, x: ${x}, center: ${distanceForScrollingToCenterButton}, slider'width: ${buttonInfoRef.current.buttonScrollContainerWidth}`);
                 }}
               >
                 {

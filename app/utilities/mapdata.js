@@ -2301,3 +2301,10 @@ export const mapTypes = [
     image: require('../assets/images/map_type/traffic.jpg')
   }
 ]
+
+export const notifIcon = {
+  'FOLLOW' : 'user-check',
+  'COMMEMT' : 'comments',
+  'INVITE' : 'route',
+  'POST' : 'book'
+}

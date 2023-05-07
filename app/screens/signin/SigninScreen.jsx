@@ -15,17 +15,19 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 import { useForm, Controller } from 'react-hook-form'
 
 import { styles } from './SigninScreenStyles'
-import { EMAIL_RULE, FIELD_MIN_LENGTH_MESSAGE, FIELD_REQUIRED_MESSAGE, PASSWORD_RULE, PASSWORD_RULE_MESSAGE } from 'utilities/validators'
+import { EMAIL_RULE, PASSWORD_RULE } from 'utilities/validators'
 import { updateCurrentUser } from 'redux/user/UserSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
 import { selectCurrentWareHouse, updateCurrentWareHouse } from 'redux/warehouse/WareHouseSlice'
-import { validateRegex } from 'utilities/functions'
+import FunctionsUtility from 'utilities/functions'
 import ButtonText from 'components/button_text/ButtonText'
 import CheckBoxText from 'components/checkbox_text/CheckBoxText'
 import { signInUserAPI } from 'request_api'
 import { AppText, RectangleButton } from 'components'
 import { app_sp } from 'globals/styles'
+import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
+import { updateCurrentNotifs } from '../../redux/notifications/NotificationsSlice'
 
 const SigninScreen = () => {
 
@@ -34,6 +36,9 @@ const SigninScreen = () => {
 
   const dispatch = useDispatch()
   const navigation = useNavigation()
+  const langCode = useSelector(selectCurrentLanguage).languageCode // vi or en 
+  const langData = useSelector(selectCurrentLanguage).data?.signInScreen
+  const formData = useSelector(selectCurrentLanguage).data?.form
 
   const warehouse = useSelector(selectCurrentWareHouse)
 
@@ -64,10 +69,11 @@ const SigninScreen = () => {
   }, [warehouse.emailName, warehouse.password])
 
   const onSubmit = async (data) => {
+    console.log("🚀 ~ file: SigninScreen.jsx:67 ~ onSubmit ~ data:", data)
     if (data.emailname && data.password) {
       // Phuong: check emailname is email or username
       let user 
-      if (validateRegex(data.emailname, EMAIL_RULE)) {
+      if (FunctionsUtility.validateRegex(data.emailname, EMAIL_RULE)) {
         user = {
           email: data.emailname,
           password : data.password
@@ -78,13 +84,14 @@ const SigninScreen = () => {
           password : data.password
         }
       }
+      console.log("🚀 ~ file: SigninScreen.jsx:78 ~ onSubmit ~ user:", user)
       // Phuong: call Api
       signInUserAPI(user).then((res) => {
         console.log("🚀 ~ file: Signin.js:73 ~ onSubmit ~ res", res)
         if (res) {
           // Phuong: Update user in persistent store
-          dispatch(updateCurrentUser(res))
-          // Phuong
+          dispatch(updateCurrentUser(res.fullInfoUser))
+          dispatch(updateCurrentNotifs(res.notifs))
           // Phuong: check rememberme
           if (isChecked) {
             // Phuong: save emailname and password to remember
@@ -113,11 +120,12 @@ const SigninScreen = () => {
       extraScrollHeight={40}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
+      showsVerticalScrollIndicator={false}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={{flex: 1}}>
           <View style={styles.content}>
-          <Text style={styles.textHeader}>Sign In</Text>
+          <Text style={styles.textHeader}>{langData?.text_header[langCode]}</Text>
             <Image
               style={styles.image}
               source={require('assets/images/illutration1.png')}
@@ -128,14 +136,14 @@ const SigninScreen = () => {
               rules={{
                 required: {
                   value: true,
-                  message: FIELD_REQUIRED_MESSAGE
+                  message: formData?.FIELD_REQUIRED_MESSAGE[langCode]
                 },
               }}
               name="emailname"
               render={({ field: { onChange, onBlur, value } }) => (
                 <Input
-                  label='Email or username'
-                  hint='Enter your email or username...'
+                  label={langData?.email_or_username[langCode]}
+                  hint={langData?.enter_email_or_username[langCode]}
                   isPassword={false}
                   onChange={onChange}
                   onBlur={onBlur}
@@ -151,22 +159,22 @@ const SigninScreen = () => {
               rules={{
                 required: {
                   value: true,
-                  message: FIELD_REQUIRED_MESSAGE
+                  message: formData?.FIELD_REQUIRED_MESSAGE[langCode]
                 },
                 pattern: {
                   value: PASSWORD_RULE,
-                  message: PASSWORD_RULE_MESSAGE
+                  message: formData?.PASSWORD_RULE_MESSAGE[langCode]
                 },
                 minLength: {
                   value: 8,
-                  message: FIELD_MIN_LENGTH_MESSAGE
+                  message: formData?.FIELD_MIN_LENGTH_MESSAGE[langCode]
                 },
               }}
               name="password"
               render={({ field: { onChange, onBlur, value } }) => (
                 <Input
-                  label='Password'
-                  hint='Enter your password...'
+                  label={langData?.password[langCode]}
+                  hint={langData?.enter_password[langCode]}
                   isPassword={true}
                   onChange={onChange}
                   onBlur={onBlur}
@@ -179,7 +187,7 @@ const SigninScreen = () => {
 
             <View style={styles.containerReFor}>
               <CheckBoxText
-                label='Remember me'
+                label={langData?.remember_me[langCode]}
                 onPress={() => setIsChecked(!isChecked)}
                 isChecked={isChecked}
               />
@@ -187,26 +195,26 @@ const SigninScreen = () => {
               // Phuong: vi user goback() dc
                 onPress={() => navigation.push('ForgotPasswordScreen')}
               >
-                <Text style={styles.textFor}>Forgot password?</Text>
+                <Text style={styles.textFor}>{langData?.forgot_password[langCode]}</Text>
               </TouchableOpacity>
             </View>
 
-            {/* <ButtonText
-              label='Sign In'
+            <ButtonText
+              label={langData?.text_header[langCode]}
               onPress={handleSubmit(onSubmit)}
-            /> */}
+            />
 
-             <RectangleButton
+             {/* <RectangleButton
               overrideShape="rounded_8"
               typeOfButton="opacity"
               defaultColor="type_4"
               style={{...app_sp.mt_12, ...app_sp.pv_16}}
-              handlePressButton={handleSubmit(onSubmit)}
+              onPress={() => handleSubmit(onSubmit)}
             >
               {(isActive, currentLabelStyle) => (
                 <AppText font="h4" style={currentLabelStyle}>Sign In</AppText>
               )}
-            </RectangleButton>
+            </RectangleButton> */}
           </View>
           
           <View style={{ flex: 1}}></View>
@@ -217,9 +225,9 @@ const SigninScreen = () => {
           style={{alignSelf: 'center'}}
           onPress={() => navigation.replace('GroupBottomTab')}
         >
-          <Text style={styles.signInAsGuest}>Sign in as Guest</Text>
+          <Text style={styles.signInAsGuest}>{langData?.sign_in_as_gest[langCode]}</Text>
         </TouchableOpacity>
-          <Text style={styles.labelSocial}>Or Signin with</Text>
+          <Text style={styles.labelSocial}>{langData?.or_signin_with[langCode]}</Text>
           <View style={styles.containerSocialBtn}>
             <TouchableOpacity>
               <Image
@@ -243,11 +251,11 @@ const SigninScreen = () => {
             </TouchableOpacity>
           </View>
         <View style={styles.containerSignup}>
-          <Text style={styles.labelNoAccount}>You don't have an account?</Text>
+          <Text style={styles.labelNoAccount}>{langData?.no_account[langCode]}</Text>
           <TouchableOpacity
             onPress={() => navigation.push('SignupScreen')}
           >
-            <Text style={styles.labelSignup}>Sign up</Text>
+            <Text style={styles.labelSignup}>{langData?.sign_up[langCode]}</Text>
           </TouchableOpacity>
         </View>
       </View>

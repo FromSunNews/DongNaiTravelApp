@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
     marginVertical: 10
   },
   contentContainer: {
-    paddingHorizontal: 18
+    // paddingHorizontal: 18
   },
   authenContainer: {
     display: 'flex',

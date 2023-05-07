@@ -130,6 +130,7 @@ const AppTabSlider = ({
             renderedSlidesInfo.current.renderedSlides.map((renderedChild, index) => {
               console.log("INDEX: ", index);
               console.log("CURRENT INDEX: ", currentSlideIndex);
+              console.log("List slide name: ", listSlideName);
               return (
                 <Slide
                   key={listSlideName[index]}

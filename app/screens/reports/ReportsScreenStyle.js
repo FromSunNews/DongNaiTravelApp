@@ -10,7 +10,6 @@ const styles=StyleSheet.create({
     alignItems:'center',
     marginTop:12
   }
-
 })
 
 export default styles

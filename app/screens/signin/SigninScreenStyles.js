@@ -5,8 +5,8 @@ import Constants from 'expo-constants'
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: Constants.statusBarHeight,
-    backgroundColor: app_c.HEX.primary
+    backgroundColor: app_c.HEX.primary,
+    paddingTop: 0
   },
   content: {
     paddingHorizontal: 18
@@ -18,14 +18,14 @@ export const styles = StyleSheet.create({
   },
   image: {
     width: app_dms.screenWidth - 18 * 2,
-    height: 260,
+    height: app_dms.screenHeight * 30 / 100,
     resizeMode: 'contain',
     marginBottom: 10,
   },
   textError: {
     color: '#F32424',
     marginTop: 5,
-    ...app_typo.fonts.normal.normal.h5
+    ...app_typo.fonts.normal.normal.body1
   },
   containerReFor:{
     display: 'flex',
@@ -85,6 +85,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingBottom:40,
     marginTop: 10
   },
   labelNoAccount: {

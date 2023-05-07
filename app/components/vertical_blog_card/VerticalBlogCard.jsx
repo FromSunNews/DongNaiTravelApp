@@ -7,6 +7,7 @@ import React from 'react'
 
 import ComponentUtility from 'utilities/component'
 import DateTimeUtility from 'utilities/datetime'
+import { useNavigation } from '@react-navigation/native'
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
@@ -18,6 +19,8 @@ import styles from './VerticalBlogCardStyles'
 import { app_c, app_sh, app_sp } from 'globals/styles'
 
 import { ViewProps } from 'types/index.d'
+import { useSelector } from 'react-redux'
+import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
 
 /**
  * @typedef BlogProps
@@ -55,6 +58,11 @@ import { ViewProps } from 'types/index.d'
  */
 const VerticalBlogCard = ({ blog, ...props }) => {
   const containerStyle = ComponentUtility.mergeStyle([styles.card, blog.isRecommended ? {} : {}], props.style);
+  //Đức useNavagation to make when onPress Image of Blog => toScreen BlogDetailScreen
+  const navigation = useNavigation() 
+
+  const langCode = useSelector(selectCurrentLanguage).languageCode
+  const langData = useSelector(selectCurrentLanguage).data?.homeScreen
 
   return (
     <View {...props} style={containerStyle}>
@@ -63,6 +71,7 @@ const VerticalBlogCard = ({ blog, ...props }) => {
         isOnlyContent
         typeOfButton="none"
         overrideShape="rounded_4"
+        onPress={()=>navigation.navigate("BlogDetailScreen")}
       >
         <Image source={{ uri: blog.avatar ? blog.avatar : undefined }} style={styles.card_image} />
       </RectangleButton>
@@ -100,7 +109,7 @@ const VerticalBlogCard = ({ blog, ...props }) => {
           {
             (isActive, currentLabelStyle) => (
               <AppText font="body2" style={currentLabelStyle}>
-                <Ionicons name={isActive ? "heart" : "heart-outline"} style={currentLabelStyle} size={14} /> Like
+                <Ionicons name={isActive ? "heart" : "heart-outline"} style={currentLabelStyle} size={14} /> {langData.like[langCode]}
               </AppText>
             )
           }
@@ -114,7 +123,7 @@ const VerticalBlogCard = ({ blog, ...props }) => {
           {
             (isActive, currentLabelStyle) => (
               <AppText font="body2" style={currentLabelStyle}>
-                <Ionicons name={isActive ? "flag" : "flag-outline"} style={currentLabelStyle} size={14} /> Report
+                <Ionicons name={isActive ? "flag" : "flag-outline"} style={currentLabelStyle} size={14} /> {langData.report[langCode]}
               </AppText>
             )
           }

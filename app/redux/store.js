@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 
 import { blogsReducer } from 'redux/blogs/BlogsSlice'
-import { notificationsReducer } from 'redux/notifications/NotificationsSlice'
+import { notifsReducer } from './notifications/NotificationsSlice'
 import { placesReducer } from 'redux/places/PlacesSlice'
 import { mapReducer } from 'redux/map/mapSlice'
 import { profileReducer } from 'redux/profile/ProfileSlice'
@@ -10,6 +10,7 @@ import { userReducer } from 'redux/user/UserSlice'
 import { manifoldReducer } from 'redux/manifold/ManifoldSlice'
 import { warehouseReducer } from 'redux/warehouse/WareHouseSlice'
 import { filterReducer } from 'redux/filter/FilterSlice'
+import { languageReducer } from 'redux/language/LanguageSlice'
 
 // https://www.npmjs.com/package/redux-persist
 // https://blog.logrocket.com/use-redux-persist-react-native/
@@ -23,13 +24,13 @@ const persistConfig = {
   // Phuong: luu tru o localstorage
   storage: AsyncStorage,
   // Phuong: định nghĩa các slice được phép duy trì qua mỗi lần reload, hoặc đóng ứng dụng tạm thời
-  whitelist: ['user', 'warehouse', 'filter', 'setting']
+  whitelist: ['user', 'warehouse', 'filter', ]
   // Phuong: blacklist: ['user'] // Phuong: định nghĩa các slice không được phép duy trì qua mỗi lần reload, hoặc đóng ứng dụng tạm thời
 }
 
 const reducers = combineReducers({
   blogs: blogsReducer,
-  notifications: notificationsReducer,
+  notifs: notifsReducer,
   places: placesReducer,
   map: mapReducer,
   profile: profileReducer,
@@ -37,7 +38,8 @@ const reducers = combineReducers({
   user: userReducer,
   manifold: manifoldReducer,
   warehouse: warehouseReducer,
-  filter: filterReducer
+  filter: filterReducer,
+  language: languageReducer,
 })
 
 const persistedReducers = persistReducer(persistConfig, reducers)

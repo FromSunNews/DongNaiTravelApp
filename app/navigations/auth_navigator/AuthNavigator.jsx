@@ -4,8 +4,6 @@ import React, { useState } from 'react'
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import SplashScreen from 'screens/splash/SplashScreen'
 import OnboardingScreen from 'screens/onboarding/OnboardingScreen'
 import GroupBottomTab from 'navigations/group_bottom_tab/GroupBottomTab'

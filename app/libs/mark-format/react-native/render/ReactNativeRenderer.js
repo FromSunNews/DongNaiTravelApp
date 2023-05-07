@@ -424,7 +424,8 @@ ReactNativeRenderer.prototype.createUnorderedList = function(mfNodes, level = 0)
 
     return (
       <Text key={keyForItem} style={{width: "100%"}}>
-        {index === 0 ? "\n" : ""}{duplicate("\t", level + 1)}{bullet + "\u0020"}{item}{"\n"}{index === itemsLength - 1 ? "\n" : ""}
+        {/* {index === 0 ? "\n" : ""}{duplicate("\t", level)}{bullet + "\u0020"}{item}{"\n"}{index === itemsLength - 1 ? "\n" : ""} */}
+        {duplicate("\t", level)}{bullet + "\u0020"}{item}{index === itemsLength - 1 ? "\n" : ""}
       </Text>
     )
   });
@@ -468,7 +469,8 @@ ReactNativeRenderer.prototype.createOrderedList = function(mfNodes, level = 0) {
 
     return (
       <Text key={keyForItem} style={{width: "100%"}}>
-        {index === 0 ? "\n" : ""}{duplicate("\t", level + 1)}{bullet + ".\u0020"}{item}{"\n"}{index === itemsLength - 1 ? "\n" : ""}
+        {/* {index === 0 ? "\n" : ""}{duplicate("\t", level)}{bullet + ".\u0020"}{item}{"\n"}{index === itemsLength - 1 ? "\n" : ""} */}
+        {duplicate("\t", level)}{bullet + ".\u0020"}{item}{index === itemsLength - 1 ? "\n" : ""}
       </Text>
     )
   });

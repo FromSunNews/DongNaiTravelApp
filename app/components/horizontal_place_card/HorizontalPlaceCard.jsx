@@ -2,6 +2,11 @@ import { View, Text, ImageBackground } from 'react-native'
 import React from 'react'
 
 import { useNavigation } from '@react-navigation/native'
+import {
+  usePlaceDetailsState,
+  usePlaceDetailsActions,
+  usePlaceDetails
+} from 'customHooks/usePlace'
 
 import NumberUtility from 'utilities/number'
 import StringUtility from 'utilities/string'
@@ -14,25 +19,12 @@ import CircleButton from '../buttons/CircleButton'
 
 import styles from './HorizontalPlaceCardStyles'
 import { app_c, app_sh, app_sp } from 'globals/styles'
+import { useSelector } from 'react-redux'
+import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
 
-/*
-  Các thông tin về một place có thể thay đổi.
-*/
-
-/**
- * @typedef PlaceProps
- * @property {string} name Tên địa điểm.
- * @property {string} avatar Ảnh đại diện cho địa điểm.
- * @property {string} adr_address Là địa chỉ của địa điểm.
- * @property {Array<object>} types Các thể loại danh mục.
- * @property {Array<{photos: Array<string>}>} place_photos Ảnh của place.
- * @property {number} rating Điểm rating.
- * @property {number} user_ratings_total Số lượng người dùng đã đánh giá (viết comment review).
- * @property {number} numberOfVisited Số lượng người dùng đã đến tham quan.
- * @property {boolean} isRecommended Có được đề xuất hay không?.
- * @property {boolean} isVisited Có đến đây thăm hay chưa? (Đây là một trường ghép từ User và Place, được tạo trong quá trình chuẩn bị dữ liệu).
- * 
- */
+import {
+  PlaceDataProps
+} from 'types/index.d.ts'
 
 /**
  * __Creator__: @NguyenAnhTuan1912
@@ -41,17 +33,27 @@ import { app_c, app_sh, app_sp } from 'globals/styles'
  * một địa điểm nào đó. Một card sẽ chứa 3 cột. Cột đâu tiên là dành cho ảnh, cột thứ 2 là giành cho nội dung chính
  * và cột cuói cùng là giành cho nút share.
  * @param {object} props - Props của component.
- * @param {PlaceProps} props.place - Thông tin về một địa điểm của một nơi nào đó.
+ * @param {PlaceDataProps} props.place - Thông tin về một địa điểm của một nơi nào đó.
  * @returns Thẻ ngang chứa các thông tin cơ bản của một địa điểm.
  */
-const HorizontalPlaceCard = ({place}) => {
+const HorizontalPlaceCard = ({ place }) => {
+  const langCode = useSelector(selectCurrentLanguage).languageCode 
+  const langData = useSelector(selectCurrentLanguage).data?.exploreScreen
+  const { updatePlaceDetails } = usePlaceDetailsActions();
   const navigation = useNavigation()
 
   const handlePressImageButton = () => {
-    navigation.navigate({name: 'PlaceDetailScreen'});
+    updatePlaceDetails(place);
+    navigation.push('PlaceDetailScreen', {
+      placeId: place.place_id
+    });
   }
 
-  const getTextContentInHTMLTag = React.useCallback(StringUtility.createTextContentInHTMLTagGetter("<span class=\"(locality|region)\">", "<\/span>"), []);
+  console.log("Horizontal place card render!");
+
+  const getTextContentInHTMLTag = React.useCallback(
+    StringUtility.createTextContentInHTMLTagGetter("<span class=\"(locality|region)\">", "<\/span>")
+  , []);
 
   let [city, province] = getTextContentInHTMLTag(place.adr_address);
 
@@ -74,7 +76,7 @@ const HorizontalPlaceCard = ({place}) => {
           {
             place.isRecommended &&
             <View style={styles.card_recommended_mark_container}>
-              <AppText font="body2" color="ext_second">Recommended</AppText>
+              <AppText font="body2" color="ext_second">{langData.place_card_recommended[langCode]}</AppText>
             </View>
           }
         </ImageBackground>
@@ -133,9 +135,13 @@ const HorizontalPlaceCard = ({place}) => {
             isActive={place.isVisited}
             typeOfButton="highlight"
             overrideShape="capsule"
+            style={{
+              width: 65,
+              paddingHorizontal: 0
+             }}
           >
             {(isActive, currentLabelStyle) => (
-              <AppText style={currentLabelStyle} font="body2">{isActive ? 'Visited' : 'Visit'}</AppText>
+              <AppText style={currentLabelStyle} font="body2"> { isActive ?  langData.visited[langCode] : langData.visit[langCode]}</AppText>
             )}
           </RectangleButton>
         </View>

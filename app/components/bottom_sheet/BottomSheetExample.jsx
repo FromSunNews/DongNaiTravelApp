@@ -13,7 +13,9 @@ const BottomSheetExample = ({
   childView,
   snapPoints,
   haveOverlay = true,
-  bottomSheetExampleRef
+  bottomSheetExampleRef,
+  flastlist,
+  enableContentPanningGesture= true
 }) => {
 
   const handleClosePress = () => {
@@ -34,6 +36,7 @@ const BottomSheetExample = ({
         <BottomSheet
           ref={bottomSheetExampleRef}
           index={1}
+          enableContentPanningGesture={enableContentPanningGesture}
           snapPoints={snapPoints}
           enablePanDownToClose
           onClose={() => closeTermCondition()}

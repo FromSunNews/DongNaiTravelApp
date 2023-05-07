@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native"
+import { Platform, StyleSheet } from "react-native"
 
 import { app_c, app_dms, app_sh, app_shdw, app_sp } from 'globals/styles'
 
@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     width: app_dms.screenWidth - 36,
     // bottom: 18,
     // Phuong: with IpX
-    bottom: 30,
+    bottom: Platform.OS === 'ios' ? 30 : 16,
     left: 18,
     zIndex: 999,
     ...app_shdw.type_5,
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     // borderColor: 'white',
     // borderWidth: 1,
-    ...app_sp.p_0
+    ...app_sp.p_0,
   },
 
   tab_bottom_dot_animated_container: {

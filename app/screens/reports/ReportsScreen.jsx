@@ -4,34 +4,31 @@ import styles from "./ReportsScreenStyle";
 import { MaterialIcons,Feather } from "react-native-vector-icons";
 
 import DropDown from "components/drop_down/DropDown";
+import { useSelector } from "react-redux";
+import { selectCurrentLanguage } from "../../redux/language/LanguageSlice";
 
 const ReportsScreen = () => {
+  const langCode = useSelector(selectCurrentLanguage).languageCode
+  const langData = useSelector(selectCurrentLanguage).data?.settingReport
+
   return (
     <View style={styles.container}>
       <View style={{ ...styles.dropdown_container }}>
         <DropDown
           isParagraph={true}
-          name={"Reports about others"}
+          name={langData.reports_about_others[langCode]}
           icon={<Feather name="alert-octagon" size={25} />}
-          paragraphTitle={
-            "Ứng dụng DongNai Travel của trường đại học Công Nghệ Đồng Nai đạt giải nhất cuộc thi sáng tạo khoa học công nghệ"
-          }
-          children={
-            "Nhóm nghiên cứu sản phẩm ứng dụng công nghệ của trường đại học Công Nghệ Đồng Nai vừa xuất sắc nhận được giải nhất sáng tạo khoa học công nghệ do tỉnh tổ chức"
-          }
+          paragraphTitle={langData.report_about_paragraph_title[langCode]}
+          children={langData.report_about_children[langCode]}
         />
       </View>
       <View style={{ ...styles.dropdown_container }}>
         <DropDown
           isParagraph={true}
-          name={"Your Alerts"}
+          name={langData.your_alert[langCode]}
           icon={<MaterialIcons name="report-problem" size={25} />}
-          paragraphTitle={
-            "Ứng dụng DongNai Travel của trường đại học Công Nghệ Đồng Nai đạt giải nhất cuộc thi sáng tạo khoa học công nghệ"
-          }
-          children={
-            "Nhóm nghiên cứu sản phẩm ứng dụng công nghệ của trường đại học Công Nghệ Đồng Nai vừa xuất sắc nhận được giải nhất sáng tạo khoa học công nghệ do tỉnh tổ chức"
-          }
+          paragraphTitle={langData.your_alert_paragraph_title[langCode]}
+          children={langData.your_alert_children[langCode]}
         />
       </View>
     </View>

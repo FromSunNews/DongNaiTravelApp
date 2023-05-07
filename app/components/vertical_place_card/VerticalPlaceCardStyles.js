@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native"
+import { StyleSheet ,Platform} from "react-native"
 
 import { app_c, app_sh, app_shdw, app_sp, app_dms } from "globals/styles"
 
@@ -11,7 +11,20 @@ const styles = StyleSheet.create({
     backgroundColor: app_c.HEX.primary,
     ...app_sp.p_10,
     ...app_sh.rounded_8,
-    ...app_shdw.type_1
+    ...Platform.select({
+      ios: {
+        shadowColor: app_c.HEX.fourth,
+        shadowOffset: { width: 2, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 3.4,
+      },
+      android: {
+        elevation: 4,
+        // borderWidth: 0.2, // Thêm borderWidth để hỗ trợ đổ bóng trên Android
+        // borderColor:  app_c.HEX.ext_second, // Màu sắc của đường viền
+        // shadowOpacity: 0.15,
+      },
+    }),
   },
 
   card_recommended: {

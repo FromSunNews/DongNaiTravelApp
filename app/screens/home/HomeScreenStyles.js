@@ -1,59 +1,66 @@
 import { app_c, app_dms, app_sh, app_sp, app_typo } from 'globals/styles'
 
 import { StyleSheet } from 'react-native'
-import Constants from 'expo-constants'
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: app_c.HEX.primary,
     
-    ...app_sp.ph_16,
   },
   home_content: {
     width: '100%',
-    ...app_sp.pt_12,
     paddingBottom:150
   },
   home_banner: {
-    height: 105,
-    backgroundColor: app_c.HEX.ext_third
+    height:200,
+    backgroundColor: app_c.HEX.ext_third,
+    overflow:'hidden'
+
   },
   home_temperature: {
+    paddingHorizontal:16,
     ...app_sp.mt_16,
     width: '100%',
     height: 64,
     ...app_sh.rounded_8,
-    justifyContent: 'space-between',
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent:'space-between',
+    
   },
   temperature: {
-    width: 267,
-    height: 64,
+    width: app_dms.screenWidth * 0.72,
+    height: app_dms.screenWidth * 0.17,
     flexDirection: 'row',
     backgroundColor: app_c.HEX.ext_primary,
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     alignItems: 'center',
     ...app_sh.rounded_8
   },
   temperature_degrees: {
-    width: 100,
+    width: 120,
     height: '100%',
     justifyContent:'center',
     alignItems:'center',
+    
   },
   temperature_degrees_info:{
     ...app_typo.fonts.normal.normal.h1,
-    color:app_c.HEX.ext_second
+    color:app_c.HEX.ext_second,
+  },
+  temperature_other_info:{
+  
   },
   temperature_other_info_half: {
-    width: 140,
+    width:130,
     height: 20,
     flexDirection:'row',
     alignItems:"center",
+    justifyContent:'space-around',
     // marginTop:3,
-    paddingRight:12
+    
+    
   },
   temperature_other_info_quarter:{
     flexDirection:'row',
@@ -61,12 +68,12 @@ const styles = StyleSheet.create({
 
   },
   temperature_other_info:{
-    width:140,
+    width:145,
   },
 
   temperature_reload: {
-    width: 64,
-    height: 64,
+    width: app_dms.screenWidth * 0.17,
+    height: app_dms.screenWidth * 0.17,
     backgroundColor: app_c.HEX.ext_primary,
     justifyContent: 'center',
     alignItems: 'center',
@@ -82,6 +89,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems:'center',
+    // paddingHorizontal:16,
+    paddingLeft: 16,
   },
   category_name: {
     ...app_typo.fonts.normal.bolder.h3
@@ -93,6 +102,7 @@ const styles = StyleSheet.create({
     ...app_sp.mt_12,
     
   }
+ 
 
 })
 export default styles
