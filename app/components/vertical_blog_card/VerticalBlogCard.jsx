@@ -19,8 +19,11 @@ import styles from './VerticalBlogCardStyles'
 import { app_c, app_sh, app_sp } from 'globals/styles'
 
 import { ViewProps } from 'types/index.d'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
+
+import { saveBlog, removeBlog } from '../../redux/warehouse/WareHouseSlice'
+import { selectCurrentWareHouse } from '../../redux/warehouse/WareHouseSlice'
 
 /**
  * @typedef BlogProps
@@ -64,6 +67,20 @@ const VerticalBlogCard = ({ blog, ...props }) => {
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.homeScreen
 
+  //saved Blog
+  const blogsSaved = useSelector(selectCurrentWareHouse).blogsSaved
+  const dispatch = useDispatch()
+
+  const handleLikedBlog = ()=>{
+    if(blogsSaved.find(i => i === blog.id) ? true : false)
+    {
+      dispatch(removeBlog(blog))
+    }
+    else{
+      dispatch(saveBlog(blog))
+    }
+  }
+
   return (
     <View {...props} style={containerStyle}>
       {/* Image */}
@@ -105,6 +122,8 @@ const VerticalBlogCard = ({ blog, ...props }) => {
           isTransparent
           typeOfButton="opacity"
           style={styles.card_button}
+          onPress={handleLikedBlog}
+          isActive={blogsSaved.find(i => i === blog.id) ? true : false}
         >
           {
             (isActive, currentLabelStyle) => (

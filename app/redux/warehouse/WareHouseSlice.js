@@ -9,6 +9,7 @@ const initialState = {
     password: null,
     isFirstTimeLauch: true,
     placesSaved: [],
+    blogsSaved:[],
   }
 }
 
@@ -24,13 +25,21 @@ export const warehouseSlice = createSlice({
       state.currentWareHouse = warehouse
     },
     saveArticle: (state, action) => {
-      const savedArticle = state.push(action.payload);
-      state.currentWareHouse.placesSaved =  savedArticle
+      const placeSavedId = action.payload.id
+      state.currentWareHouse.placesSaved.push(placeSavedId)
     },
     removeArticle: (state, action) => {
-      const removeArticle = state.filter(article => article.id !== action.payload.id);
-      state.currentWareHouse = removeArticle
+      const placeSavedId = action.payload.id
+      state.currentWareHouse.placesSaved = state.currentWareHouse.placesSaved.filter(i => i !== placeSavedId);
     },
+    saveBlog:(state, action) => {
+      const blogSavedId = action.payload.id
+      state.currentWareHouse.blogsSaved.push(blogSavedId)
+    },
+    removeBlog:(state, action) =>{
+      const blogSavedId = action.payload.id
+      state.currentWareHouse.blogsSaved = state.currentWareHouse.blogsSaved.filter(i => i !== blogSavedId)
+    }
   }
 })
 
@@ -41,7 +50,9 @@ export const warehouseSlice = createSlice({
 export const { 
   updateCurrentWareHouse,
   saveArticle,
-  removeArticle
+  removeArticle,
+  saveBlog,
+  removeBlog,
   // Phương
 } = warehouseSlice.actions
 

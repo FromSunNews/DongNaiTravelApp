@@ -17,8 +17,6 @@ import { useDispatch, useSelector } from "react-redux"
 import { useEffect } from "react"
 import { selectCurrentLanguage } from "../../redux/language/LanguageSlice"
 
-
-
 const DropDown = ({
   name,
   isMode = false,
@@ -55,7 +53,6 @@ const DropDown = ({
       setSelectedOption(currentSetting.notification.events)
     }
     if (idOption === 'DARK_MODE') {
-      console.log('vao dark mode')
       setSelectedOption(currentSetting?.darkMode)
     }
   }, [currentSetting])

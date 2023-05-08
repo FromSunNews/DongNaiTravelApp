@@ -3,7 +3,7 @@ import {
   Text,
   Image
 } from 'react-native'
-import React from 'react'
+import React, {useState} from 'react'
 
 import ComponentUtility from 'utilities/component'
 
@@ -19,8 +19,11 @@ import styles from './VerticalPlaceCardStyles'
 import { app_c, app_sh, app_sp } from 'globals/styles'
 
 import { ViewProps } from 'types/index.d'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
+
+import { saveArticle, removeArticle } from '../../redux/warehouse/WareHouseSlice'
+import { selectCurrentWareHouse } from '../../redux/warehouse/WareHouseSlice'
 
 /**
  * @typedef PlaceProps
@@ -66,6 +69,25 @@ const VerticalPlaceCard = ({ place, ...props }) => {
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.homeScreen
 
+  //saved Place 
+  const placesSaved = useSelector(selectCurrentWareHouse).placesSaved
+  const dispatch = useDispatch()
+
+  const handleLikedPlace = () =>{
+    if(placesSaved.find(i => i === place.id) ? true : false)
+      {
+        dispatch(removeArticle(place))
+        console.log('đã xoá place')
+      }
+      else
+      {
+        dispatch(saveArticle(place))
+        console.log('đã lưu place')
+      }
+  }
+  console.log('placesSaved:',placesSaved)
+  
+
   return (
     <View {...props} style={containerStyle}>
       {/* Image */}
@@ -105,6 +127,8 @@ const VerticalPlaceCard = ({ place, ...props }) => {
           isTransparent
           typeOfButton="opacity"
           style={styles.card_button}
+          isActive={placesSaved.find(i => i === place.id) ? true : false}
+          onPress={handleLikedPlace}
         >
           {
             (isActive, currentLabelStyle) => (

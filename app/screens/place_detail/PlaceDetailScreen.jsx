@@ -10,8 +10,9 @@ import { HEADER_HEIGHT } from 'utilities/constants'
 
 import styles from './PlaceDetailScreenStyles'
 import { app_c, app_dms, app_sp } from 'globals/styles'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
+import { selectCurrentWareHouse , saveArticle, removeArticle } from '../../redux/warehouse/WareHouseSlice'
 
 /**
  * __Creator__: @NguyenAnhTuan1912
@@ -52,6 +53,20 @@ const PlaceDetailScreen = () => {
       animFade(0);
     }
   }
+
+  //Duc: save place
+
+  const placesSaved = useSelector(selectCurrentWareHouse).placesSaved
+  const dispatch = useDispatch()
+  // const handleSavedPlace = ()=>{
+  //   if(placesSaved.find(i => i === place.id) ? true : false)
+  //   {
+  //     dispatch(removeArticle(place))
+  //   }
+  //   else{
+  //     dispatch(saveArticle(place))
+  //   }
+  // }
 
   return (
     <View style={{backgroundColor: app_c.HEX.ext_third, flex: 1}}>
@@ -103,6 +118,8 @@ const PlaceDetailScreen = () => {
             <View style={{...styles.pd_row, ...app_sp.mb_12}}>
               <CircleButton
                 style={app_sp.me_8}
+                //Duc: check place if it had in list => active
+                // isActive={placesSaved.find(i => i === place.id) ? true : false}
                 isActive
                 typeOfButton="highlight"
                 setIcon={(isActive, currentLabelStyle) => (

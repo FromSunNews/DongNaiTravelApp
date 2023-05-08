@@ -6,9 +6,12 @@ import { useDispatch, useSelector } from "react-redux";
 
 import styles from './SettingNotificationsScreenStyles'
 import DropDown from 'components/drop_down/DropDown'
+import { selectCurrentLanguage } from '../../redux/language/LanguageSlice';
 
 
 const SettingNotificationsScreen = () => {
+  const langCode = useSelector(selectCurrentLanguage).languageCode
+  const langData = useSelector(selectCurrentLanguage).data?.settingNotification
 
   const currentSetting = useSelector(selectCurrentSetting)
   const dispatch = useDispatch()
@@ -19,7 +22,7 @@ const SettingNotificationsScreen = () => {
         <View style={{...styles.dropdown_container}}>
           <DropDown 
             isMode= {true}
-            name={"Update from following"}
+            name={langData.update_from_following[langCode]}
             icon={<Ionicons name="people-outline" size={25}/>}
             idOption={'UPDATE_FROM_FOLLOWING'}
           />
@@ -28,7 +31,7 @@ const SettingNotificationsScreen = () => {
        <View style={{...styles.dropdown_container}}>
           <DropDown 
             isMode= {true}
-            name={"Comments"}
+            name={langData.comment[langCode]}
             icon={<FontAwesome name="commenting-o" size={25}/>}
             idOption={'COMMENTS'}
           />
@@ -37,7 +40,7 @@ const SettingNotificationsScreen = () => {
         <View style={{...styles.dropdown_container}}> 
           <DropDown 
             isMode= {true}
-            name={"Events"}
+            name={langData.event[langCode]}
             icon={<MaterialIcons name="event-note" size={25}/>}
             idOption={'EVENTS'}
 

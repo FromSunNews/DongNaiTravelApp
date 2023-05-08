@@ -8,21 +8,20 @@ import { selectCurrentWareHouse } from '../../redux/warehouse/WareHouseSlice'
 
 const PlaceSavedScreen = () => {
 
-  const [places,setPlaces] = useState([])
-
+  const placesSaved = useSelector(selectCurrentWareHouse).placesSaved
   const [currentPlaces, setCurrentPlaces] = React.useState([]);
+  const [currentPlacesSaved, setCurrentPlacesSaved] = React.useState([]);
+
   React.useEffect(() => {
     setTimeout(() => {
-      setCurrentPlaces([...placesSaved]);
-    }, 2000);
-  }, []);
-  const user = useSelector(selectCurrentWareHouse)
-  const dispatch = useDispatch()
-  
-  // nút bấm hủ 
-  const handleUnSavePlace = () =>{
-    // bấm vào nút xoá thì sẽ truy cập đến store và loại bỏ phần tử mãng theo id của place đã lưu ( sử dụng filter)
-  } 
+      setCurrentPlaces([...places]);
+      setCurrentPlacesSaved([...placesSaved])
+    }, 1000);
+  }, [placesSaved]);
+
+  //tìm ra cái đã saved ở api
+  const commonElements = currentPlaces.filter(e => currentPlacesSaved.includes(e.id) )
+  console.log('tìm được rổi :        ',commonElements)
 
   return (
     <ScrollView style={styles.container}
@@ -36,7 +35,7 @@ const PlaceSavedScreen = () => {
         {
           currentPlaces.length === 0
           ? [1, 2, 3].map((value, index) => <HorizontalPlaceCardSkeleton key={value + index} />)
-          : currentPlaces.map((place, index) => <HorizontalPlaceCard place={place} key={place.id} />)
+          : commonElements.map((place, index) => (<HorizontalPlaceCard place={place} key={place.id} />))
         }
       </View>
       <View style={{height:100}}></View>
@@ -47,7 +46,7 @@ const PlaceSavedScreen = () => {
 export default PlaceSavedScreen
 
 
-const placesSaved = [
+const places = [
   {
     id: '1a',
     name: 'Pho di bo',

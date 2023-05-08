@@ -13,8 +13,11 @@ import CircleButton from '../buttons/CircleButton'
 
 import styles from './HorizontalPlaceCardStyles'
 import { app_c, app_sh, app_sp } from 'globals/styles'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
+import { selectCurrentWareHouse } from '../../redux/warehouse/WareHouseSlice'
+import { saveArticle, removeArticle } from '../../redux/warehouse/WareHouseSlice'
+import { FlatList } from 'react-native-gesture-handler'
 
 /*
   Các thông tin về một place có thể thay đổi.
@@ -55,7 +58,21 @@ const HorizontalPlaceCard = ({ place }) => {
   const handlePressImageButton = () => {
     navigation.navigate({name: 'PlaceDetailScreen'});
   }
+  const placesSaved = useSelector(selectCurrentWareHouse).placesSaved
+  const dispatch = useDispatch()
 
+  const handleLikedPlace  = () =>{
+    if(placesSaved.find(i => i === place.id) ? true : false)
+    {
+      dispatch(removeArticle(place))
+    }
+    else{
+      dispatch(saveArticle(place))
+    }
+  }
+
+  
+  console.log('tao ne:    ' ,placesSaved)
   return (
     <View style={styles.card}>
       {/* Cột đâu tiên - Image Container */}
@@ -111,6 +128,8 @@ const HorizontalPlaceCard = ({ place }) => {
           <CircleButton
             style={app_sp.me_8}
             typeOfButton="highlight"
+            isActive={placesSaved.find(i => i===place.id ? true : false)}
+            onPress={handleLikedPlace}
             setIcon={(isActive, currentLabelStyle) => (
               <Ionicons name={isActive ? 'heart' : 'heart-outline'} size={14} style={currentLabelStyle} />
             )}

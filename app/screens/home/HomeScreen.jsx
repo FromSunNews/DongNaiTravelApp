@@ -20,11 +20,13 @@ import TabSlideCategoryBlog from "components/tab_slide_category_blog/TabSlideCat
 
 import { getWeatherCurrentAPI } from "request_api"
 import * as Location from "expo-location"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { selectCurrentMap } from "redux/map/mapSlice"
 import { Platform } from "react-native"
 import HomeBannerSlider from "components/home_banner_slider/HomeBannerSlider"
 import { selectCurrentLanguage } from "redux/language/LanguageSlice"
+import { selectCurrentWareHouse } from "../../redux/warehouse/WareHouseSlice"
+import { saveArticle , removeArticle } from "../../redux/warehouse/WareHouseSlice"
 
 const HomeScreen = ({navigation}) => {
 
@@ -44,6 +46,13 @@ const HomeScreen = ({navigation}) => {
 
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.homeScreen
+
+  // PlacedSaved
+  
+  const savedPlace = useSelector(state => state.savedPlace)
+  const dispatch = useDispatch()
+
+
 
   React.useEffect(() => {
     setTimeout(() => {
@@ -71,11 +80,9 @@ const HomeScreen = ({navigation}) => {
       setDesWeather(data.weather[0].description)
     })
   }
-
   const handleReloadLocation = ()=>{
     getCurrentWeather()
   }
-
   useEffect(()=>{
     if (currentMap.userLocation) {
       getCurrentWeather(currentMap.userLocation)
@@ -92,7 +99,6 @@ const HomeScreen = ({navigation}) => {
         <View style={styles.home_banner}>
           <HomeBannerSlider/>
         </View>
-
         {
           showPanelWeather &&
           <View style={styles.home_temperature}>
@@ -232,7 +238,7 @@ const places = [
     numberOfReviews: 300,
     numberOfVisited: 3200,
     isRecommended: false,
-    isVisited: false
+    isVisited: false,
   },
   {
     id: '1b',
@@ -254,7 +260,7 @@ const places = [
     numberOfReviews: 5687,
     numberOfVisited: 32242,
     isRecommended: true,
-    isVisited: true
+    isVisited: true,
   },
   {
     id: '1c',
@@ -276,7 +282,7 @@ const places = [
     numberOfReviews: 1687,
     numberOfVisited: 2242,
     isRecommended: false,
-    isVisited: false
+    isVisited: false,
   },
   {
     id: '1d',
@@ -298,7 +304,7 @@ const places = [
     numberOfReviews: 300,
     numberOfVisited: 3200,
     isRecommended: false,
-    isVisited: false
+    isVisited: false,
   },
   {
     id: '1e',
@@ -320,7 +326,7 @@ const places = [
     numberOfReviews: 5687,
     numberOfVisited: 32242,
     isRecommended: true,
-    isVisited: true
+    isVisited: true,
   },
   {
     id: '1f',
@@ -342,10 +348,9 @@ const places = [
     numberOfReviews: 1687,
     numberOfVisited: 2242,
     isRecommended: false,
-    isVisited: false
+    isVisited: false,
   }
 ]
-
 const blogs = [
   {
     id: 'b1',

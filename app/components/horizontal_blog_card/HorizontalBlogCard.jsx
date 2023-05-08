@@ -4,6 +4,8 @@ import React from 'react'
 import { useNavigation } from '@react-navigation/native'
 
 import DateTimeUtility from 'utilities/datetime'
+import { useSelector, useDispatch } from 'react-redux'
+import { selectCurrentWareHouse, saveBlog, removeBlog } from '../../redux/warehouse/WareHouseSlice'
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
@@ -43,6 +45,19 @@ const HorizontalBlogCard = ({blog}) => {
   const handlePressImageButton = () => {
     navigation.navigate({name: 'BlogDetailStackScreen'});
   }
+
+  const blogsSaved = useSelector(selectCurrentWareHouse).blogsSaved
+  const dispatch = useDispatch()
+  const handleLikedBlog = ()=>{
+    if(blogsSaved.find(i => i === blog.id) ? true : false)
+    {
+      dispatch(removeBlog(blog))
+    }
+    else{
+      dispatch(saveBlog(blog))
+    }
+  }
+
   return (
     <View style={styles.card}>
       {/* Cột đâu tiên - Image Container */}
@@ -91,7 +106,8 @@ const HorizontalBlogCard = ({blog}) => {
         </View>
         <View style={styles.card_buttons_container}>
           <CircleButton
-            isActive={blog.isLiked}
+            onPress={handleLikedBlog}
+            isActive={blogsSaved.find(i => i === blog.id) ? true : false}
             style={app_sp.me_8}
             typeOfButton="highlight"
             setIcon={(isActive, currentLabelStyle) => (
