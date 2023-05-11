@@ -10,9 +10,12 @@ import {
 import React from 'react'
 
 import {
-  getPlaceDetailsWithPipeline,
-  getPlaces
+  getPlaceDetailsWithPipelineAPI,
+  getPlacesAPI
 } from 'request_api'
+
+import { useSelector } from 'react-redux'
+import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
 
 import { useNavigation } from '@react-navigation/native'
 import {
@@ -20,6 +23,16 @@ import {
   usePlaceDetailsActions,
   usePlaceDetails
 } from 'customHooks/usePlace'
+import {
+  useAudio
+} from 'customHooks/useAudio'
+
+import StringUtility from 'utilities/string'
+import {
+  HEADER_HEIGHT,
+  PLACE_DETAILS_DATA_FIELDS,
+  BRIEF_PLACE_DATA_FIELDS
+} from 'utilities/constants'
 
 import BottomSheet, { BottomSheetView, BottomSheetScrollView, useBottomSheetSpringConfigs } from '@gorhom/bottom-sheet'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -32,16 +45,7 @@ import {
   CircleButton,
   AppTabSlider,
   SimpleBarChart,
-  MarkFormat
-} from 'components'
-
-import {
-  HEADER_HEIGHT,
-  PLACE_DETAILS_DATA_FIELDS,
-  BRIEF_PLACE_DATA_FIELDS
-} from 'utilities/constants'
-
-import {
+  MarkFormat,
   HorizontalPlaceCard,
   HorizontalPlaceCardSkeleton,
   ReviewSectionPromise
@@ -49,31 +53,32 @@ import {
 
 import styles from './PlaceDetailScreenStyles'
 import { app_c, app_dms, app_sp } from 'globals/styles'
-import { useSelector } from 'react-redux'
-import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
 
 import {
   PlaceDetailsDataProps
 } from 'types/index.d.ts'
-import StringUtility from 'utilities/string'
 
 /**
  * __Creator__: @NguyenAnhTuan1912
  * @returns 
  */
 const PlaceDetailScreen = ({route, navigation}) => {
+  const { placeId } = route.params;
+
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.placeDetailScreen
   const langVisit = useSelector(selectCurrentLanguage).data?.exploreScreen
-  const { placeDetails, updatePlaceDetails, clearPlaceDetails } = usePlaceDetails();
 
-  const presentationImageUrl = placeDetails.place_photos && placeDetails.place_photos.length > 0 ? placeDetails.place_photos[0].photos[0] : undefined
+  const { placeDetails, fetchPlaceDetails, clearPlaceDetails } = usePlaceDetails(placeId);
 
-  const bottomSheetRef = React.useRef(null);
   const snapPoints = React.useMemo(
     () => ['60%', `${100- (30 / app_dms.screenHeight) * 100}%`], []
   );
+    
+  const bottomSheetRef = React.useRef(null);
   const opacityValue = React.useRef(new Animated.Value(0)).current;
+
+  const presentationImageUrl = placeDetails.place_photos && placeDetails.place_photos.length > 0 ? placeDetails.place_photos[0].photos[0] : undefined
 
   const animFade = React.useCallback((toValue) => {
     Animated.timing(
@@ -95,15 +100,10 @@ const PlaceDetailScreen = ({route, navigation}) => {
   }
   
   React.useEffect(() => {
-    let query = `placeId=${placeDetails.place_id}&fields=${PLACE_DETAILS_DATA_FIELDS}`
     navigation.setOptions({'title': placeDetails.name})
-    getPlaceDetailsWithPipeline(query)
-    .then(data => {
-      updatePlaceDetails(data);
-    })
-    .catch(error => console.error(error))
-    return () => { clearPlaceDetails() }
-  }, []);
+    fetchPlaceDetails(placeId, langCode);
+    return () => { clearPlaceDetails(placeId) }
+  }, [langCode]);
 
   return (
     <View style={{backgroundColor: app_c.HEX.ext_third, flex: 1}}>
@@ -185,7 +185,7 @@ const PlaceDetailScreen = ({route, navigation}) => {
             </View>
 
             {/* Tags container row */}
-            <View style={[styles.pd_row, {flexWrap: 'wrap'}]}>
+            <View style={[styles.pd_row, app_sp.mb_12, {flexWrap: 'wrap'}]}>
               <AppText font="body2" style={app_sp.me_12}>
                 <Ionicons name='pricetag-outline' /> Tags:
               </AppText>
@@ -212,11 +212,11 @@ const PlaceDetailScreen = ({route, navigation}) => {
           <AppTabSlider>
             <AppTabSlider.Child
               name={langData.about[langCode]}
-              component={AboutSlide}
+              component={() => <AboutSlide placeId={placeId} />}
             />
             <AppTabSlider.Child
               name={langData.review[langCode]}
-              component={ReviewsSlide}
+              component={() => <ReviewsSlide placeId={placeId} />}
             />
           </AppTabSlider>
           
@@ -227,27 +227,107 @@ const PlaceDetailScreen = ({route, navigation}) => {
   )
 }
 
-const AboutSlide = () => {
+const AboutSlide = ({placeId}) => {
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.placeDetailScreen
-  const [relatedPlaces, setRelatedPlaces] = React.useState([]);
-  const { placeDetails, updatePlaceDetails } = usePlaceDetails();
-  const imageUrls = placeDetails.place_photos && placeDetails.place_photos[0].photos ? placeDetails.place_photos[0].photos : []
 
+  const placeDetails = usePlaceDetailsState(placeId);
+  const { playAudioAsync, stopAudioAsync, prepareMP3Async, canPlay } = useAudio();
+
+  const [voice, setVoice] = React.useState(false);
+  const [relatedPlaces, setRelatedPlaces] = React.useState([]);
+  
+  const imageUrls = placeDetails.place_photos && placeDetails.place_photos[0].photos ? placeDetails.place_photos[0].photos : []
   const type = placeDetails.types[0]
+  const speechMP3Url = placeDetails.content ? placeDetails.content.speech[langCode] : "";
 
   React.useEffect(() => {
-    let query = `limit=${5}&skip=${0}&filter=type:${type}%20except_by_placeid:${placeDetails.place_id}&fields=${BRIEF_PLACE_DATA_FIELDS}`;
-    console.log("Type:", type);
-    getPlaces(query)
-    .then(data => {
-      setRelatedPlaces(data);
-    })
-    .catch(error => console.error(error))
-  }, [])
+    if(relatedPlaces.length === 0) {
+      let query = `limit=${5}&skip=${0}&filter=type:${type}%20except_by_placeid:${placeDetails.place_id}&fields=${BRIEF_PLACE_DATA_FIELDS}`;
+      getPlacesAPI(query)
+      .then(data => {
+        setRelatedPlaces(data);
+      })
+      .catch(error => console.error(error))
+    }
+
+    if(Boolean(speechMP3Url)) {
+      let audioVoicePrefix = langCode === "vi" ? "VN" : langCode.toUpperCase();
+      let url = voice ? speechMP3Url[`${audioVoicePrefix}_MALE_1`] : speechMP3Url[`${audioVoicePrefix}_FEMALE_1`]
+      prepareMP3Async(url);
+    }
+  }, [speechMP3Url, voice])
 
   return (
     <View style={styles.pd_content_container}>
+      {/* Read */}
+      <View style={[{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}, app_sp.ph_18, app_sp.mb_12]}>
+        <View>
+          <AppText font="h3" style={app_sp.mb_6}>Read</AppText>
+          <View style={{flex: 1, flexDirection: 'row'}}>
+            <RectangleButton
+              disabled={!canPlay}
+              typeOfButton='opacity'
+              onPress={playAudioAsync}
+              defaultColor='type_4'
+              style={[app_sp.me_6]}
+              overrideShape='capsule'
+            >
+              {
+                (isActive, currentLabelStyle) => (
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Ionicons style={currentLabelStyle} name="play-outline" />
+                    <AppText style={currentLabelStyle}> / </AppText>
+                    <Ionicons style={currentLabelStyle} name="pause-outline" />
+                  </View>
+                )
+              }
+            </RectangleButton>
+            <RectangleButton
+              disabled={!canPlay}
+              typeOfButton='opacity'
+              onPress={stopAudioAsync}
+              overrideShape='capsule'
+            >
+              {
+                (isActive, currentLabelStyle) => (
+                  <Ionicons style={currentLabelStyle} name="stop-outline" />
+                )
+              }
+            </RectangleButton>
+          </View>
+        </View>
+
+        <View>
+          <AppText font="h3" style={app_sp.mb_6}>Voice</AppText>
+          <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+            <RectangleButton
+              isActive={!voice}
+              disabled={!canPlay}
+              typeOfButton='opacity'
+              onPress={() => setVoice(false)}
+              style={[app_sp.me_6]}
+              overrideShape='capsule'
+            >
+              {
+                (isActive, currentLabelStyle) => <AppText style={currentLabelStyle}>Female</AppText>
+              }
+            </RectangleButton>
+            <RectangleButton
+              isActive={voice}
+              disabled={!canPlay}
+              typeOfButton='opacity'
+              onPress={() => setVoice(true)}
+              overrideShape='capsule'
+            >
+              {
+                (isActive, currentLabelStyle) => <AppText style={currentLabelStyle}>Male</AppText>
+              }
+            </RectangleButton>
+          </View>
+        </View>
+      </View>
+
       {/* Description */}
       <View style={[styles.pd_content_article, app_sp.ph_18]}>
         <AppText font="h3" numberOfLines={1} style={app_sp.mb_6}>{langData.description[langCode]}</AppText>
@@ -328,11 +408,13 @@ const AboutSlide = () => {
   );
 }
 
-const ReviewsSlide = () => {
+const ReviewsSlide = ({placeId}) => {
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.placeDetailScreen
+  
+  const placeDetails = usePlaceDetailsState(placeId);
+
   const [reviews, setReviews] = React.useState(null);
-  const placeDetails = usePlaceDetailsState();
   
   const dataSet = React.useMemo(() => ([
       {

@@ -1,5 +1,15 @@
-import { View, SafeAreaView, ScrollView } from 'react-native'
+import {
+  View,
+  SafeAreaView,
+  ScrollView,
+  FlatList,
+  LayoutAnimation
+} from 'react-native'
 import React from 'react'
+
+import { useNavigation } from '@react-navigation/native'
+
+import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
@@ -8,64 +18,126 @@ import { TypeScrollView, HorizontalBlogCard, HorizontalBlogCardSkeleton, BannerB
 import styles from './BlogsScreenStyles'
 import { app_sp, app_c } from 'globals/styles'
 import { useSelector } from 'react-redux'
-import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
 
 const BlogsScreen = () => {
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.blogsScreen
 
-  const [currentBlogs, setCurrentBlogs] = React.useState([]);
-  const [type, setType] = React.useState("");
+  const blogsInfo = React.useRef({
+    isFirstFetch: true,
+    briefBlogDataFields: "",
+    isEndReach: false
+  });
+  const [type, setType] = React.useState("all");
+  const [isOnTop, setIsOnTop] = React.useState(true);
+  const navigation = useNavigation();
+
+  const [blogs, setBlogs] = React.useState(undefined);
 
   React.useEffect(() => {
     setTimeout(() => {
-      setCurrentBlogs([...blogs]);
-    }, 2000);
-  }, []);
+      setBlogs(blogsFek);
+    }, 3000)
+  }, [type]);
+
+  const showBannderButton = isVisible => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setIsOnTop(isVisible);
+  }
+
+  const handleExploreMomentumScrollEnd = React.useCallback((() => {
+    let prevOffsetY = 0;
+    return function(e) {
+      if(blogsInfo.current.isEndReach) {
+        if(blogs) {
+          
+        }
+      }
+      blogsInfo.current.isEndReach = false;
+    }
+  })());
+
+  console.log("Blogs: ", blogs);
+
+  const handleExploreScroll = e => {
+    const { layoutMeasurement, contentOffset, contentSize } = e.nativeEvent;
+    let val = contentOffset.y;
+    if(val <= 0) {
+      showBannderButton(true)
+    } else {
+      showBannderButton(false)
+    }
+  }
+
+  const handleEndReach = e => {
+    blogsInfo.current.isEndReach = true;
+  }
 
   return (
-    <ScrollView
-      style={styles.scroll_view_container}
-      stickyHeaderIndices={[1]}
-      showsVerticalScrollIndicator={false}
-    >
-      <View style={{...app_sp.mh_18}}>
-        <BannerButton
-          typeOfButton="highlight"
-          style={app_sp.mt_12}
-          setRightIcon={(isActive, currentLabelStyle) =>
-            <Ionicons name="chevron-forward-outline" style={currentLabelStyle} size={25} />
-          }
-        >
-          {langData.banner_button[langCode]}
-        </BannerButton>
-      </View>
-      <TypeScrollView
-        buttonStyle="rounded_8"
-        types='all;newest;popular;most_likes;most_comments'
-        callBack={setType}
-        scrollStyle={[app_sp.ms_18, app_sp.pv_12]}
-        containerStyle={{backgroundColor: app_c.HEX.primary, ...app_sp.pv_12}}
-      />
-
-      <View style={{...app_sp.mh_18, ...app_sp.mb_12}}>
-        {
-          currentBlogs.length === 0
-          ? [1, 2, 3].map((value, index) => <HorizontalBlogCardSkeleton key={value + index} />)
-          : currentBlogs.map((blog, index) => <HorizontalBlogCard blog={blog} key={blog.id} />)
+    <View>
+      {
+        isOnTop && (
+          <View
+            style={[
+              app_sp.ph_18,
+              {
+                backgroundColor: app_c.HEX.primary,
+                position: 'relative',
+                zIndex: 2,
+              }
+            ]}
+          >
+            <BannerButton
+              typeOfButton="highlight"
+              style={app_sp.mt_12}
+              toScreen={{screenName: "MapScreen"}}
+              setRightIcon={(isActive, currentLabelStyle) =>
+                <Ionicons name="chevron-forward-outline" style={currentLabelStyle} size={25} />
+              }
+            >
+              Your blogs
+            </BannerButton>
+          </View>
+        )
+      }
+      <FlatList
+        data={blogs ? blogs : []}
+        style={styles.scroll_view_container}
+        contentContainerStyle={{paddingBottom: 200}}
+        onMomentumScrollEnd={handleExploreMomentumScrollEnd}
+        onEndReached={handleEndReach}
+        onScroll={handleExploreScroll}
+        // scrollEventThrottle={1000}
+        stickyHeaderHiddenOnScroll
+        stickyHeaderIndices={[0]}
+        ListEmptyComponent={
+          !blogs && (
+            <View style={[app_sp.mh_18, app_sp.mb_12]}>
+              {[1, 2, 3].map((value, index) => <HorizontalBlogCardSkeleton key={value + index} />)}
+            </View>
+          )
         }
-      </View>
-
-      <View style={{height: 100}}></View>
-    </ScrollView>
+        ListHeaderComponent={
+          <TypeScrollView
+            buttonStyle="capsule"
+            types='all;newest;favorite;most_likes;most_comments'
+            callBack={setType}
+            scrollStyle={[app_sp.ms_18, app_sp.pv_12]}
+            containerStyle={{backgroundColor: app_c.HEX.primary, ...app_sp.pv_10}}
+          />
+        }
+        renderItem={item => {console.log(item); return <View style={app_sp.ph_18}><HorizontalBlogCard blog={item.item} /></View>}}
+        keyExtractor={item => item._id}
+      />
+    </View>
   )
 }
 
 export default BlogsScreen
 
-const blogs = [
+const blogsFek = [
   {
-    id: 'b1',
+    _id: 'b1',
     user: {
       id: 'user1',
       name: 'Lost Teach',
@@ -78,7 +150,7 @@ const blogs = [
     isLiked: true
   },
   {
-    id: 'b2',
+    _id: 'b2',
     user: {
       id: 'user2',
       name: 'Du Lich Bui',
@@ -91,7 +163,7 @@ const blogs = [
     isLiked: false
   },
   {
-    id: 'b3',
+    _id: 'b3',
     user: {
       id: 'user3',
       name: 'Bac Thay Du Lich',

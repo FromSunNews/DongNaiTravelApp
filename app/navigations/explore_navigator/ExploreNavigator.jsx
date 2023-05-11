@@ -20,13 +20,12 @@ const ExploreNavigator = () => {
     <ExploreStack.Navigator
       initialRouteName='ExploreScreen'
       screenOptions={{
-        header: props => (<AppHeader {...props} />),
+        header: AppHeader,
     }}>
       <ExploreStack.Screen
         name='ExploreScreen'
         options={{
-          title: `${langCode === 'vi' ? 'Khám Phá' : 'Explore'}`,
-          isTopScreen: true
+          title: `${langCode === 'vi' ? 'Khám Phá' : 'Explore'}`
         }}
         component={ExploreScreen}
       />

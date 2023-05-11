@@ -2,11 +2,15 @@
 // Phuong: Created on 31/1/2023
 // Phuong: Muon test api thi xem ipv4 trong may tinh => cmd => ipconfig => ipv4
 // Phuong: doi lai ipv4 cua minh
-const ip_v4 = '192.168.0.29'
+const ip_v4 = {
+  tuan: '192.168.0.29'
+}
 const API_PORT = '7500'
 
 // Phuong: This is the api web for DongNaiAppTravel
-export const API_ROOT = 'https://dong-nai-travel-api.onrender.com'
+// export const API_ROOT = 'https://dong-nai-travel-api.onrender.com'
+let useLocalServer = true;
+export const API_ROOT = useLocalServer ? `http://${ip_v4.tuan}:${API_PORT}` : 'https://dong-nai-travel-api.onrender.com';
 
 export const FilterConstants = {
   categories: {
@@ -55,3 +59,11 @@ export const ALPHABET = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 
 
 export const BRIEF_PLACE_DATA_FIELDS = "place_id;name;adr_address;types;rating;user_ratings_total;isRecommended;numberOfVisited;formatted_address"
 export const PLACE_DETAILS_DATA_FIELDS = "rating;user_ratings_total;numberOfVisited;content;reviews"
+
+export const UPDATE_USER_CASES = {
+  'default': 'default',
+  'addEle:savedPlaces': 'addEle:savedPlaces',
+  'removeEle:savedPlaces': 'removeEle:savedPlaces',
+  'addEle:follower': 'addEle:follower',
+  'removeEle:follower': 'removeEle:follower'
+}

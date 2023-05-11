@@ -14,6 +14,11 @@ export interface RequestBriefPlacesInfoProps {
   fields: string
 }
 
+export interface RequestPlaceDetailsInfoProps {
+  placeId: string,
+  lang: string,
+}
+
 export interface BriefPlacesDataProps {
   limit: number,
   skip: number,
@@ -41,9 +46,7 @@ export interface PlaceDataProps {
   address_components?: PlaceOpeningHoursDataProps,
   adr_address?: string,
   business_status?: string,
-  current_opening_hours?: {
-    
-  },
+  current_opening_hours?: PlaceOpeningHoursDataProps,
   editorial_summary?: {
     language: string,
     overview: string
@@ -98,7 +101,15 @@ export interface PlaceDataProps {
   serves_wine?: boolean,
   takeout?: any,
   createdAt?: number,
-  updateeAt?: number
+  updateeAt?: number,
+
+  /*
+    Hai trường dữ liệu này được thêm trong quá trình lấy data trên mongo.
+    Không có sẵn và mặc định là không có tồn tại ở trong place data thật.
+    Cho nên khi check thì sẽ luôn là `undefined`
+  */
+  isLiked: boolean,
+  isVisited: boolean
 }
 
 export interface PlaceReviewsDataProps {
@@ -126,7 +137,7 @@ export interface PlaceContentDataProps {
   content_id?: string,
   plainText?: PlaceContentTextDataProps<string>,
   plainTextMarkFormat?: PlaceContentTextDataProps<string>
-  plainTextBase64?: PlaceContentTextDataProps<{
+  speech?: PlaceContentTextDataProps<{
     VN_FEMALE_1?: string,
     VN_MALE_1?: string,
     EN_FEMALE_1?: string,
@@ -144,3 +155,9 @@ export interface PlaceDetailsDataProps extends PlaceDataProps {
     content?: PlaceContentDataProps
   }
 }
+
+// Use for hooks
+export type PlayAudioAsyncFn = () => void
+export type StopAudioAsyncFn = () => void
+export type PrepareTTSAsyncFn = (audioAsBase64: string) => boolean
+export type PrepareMP3AsyncFn = (url: string) => boolean

@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     position: 'absolute',
     backgroundColor: app_c.HEX.primary,
-    bottom: 112,
+    bottom: 125,
     ...app_sp.ph_12,
     ...app_sp.pv_10,
     ...app_shdw.type_1,

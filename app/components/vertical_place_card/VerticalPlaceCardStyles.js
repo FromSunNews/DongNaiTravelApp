@@ -9,6 +9,8 @@ const styles = StyleSheet.create({
     aspectRatio: 180 / 235,
     alignSelf: 'flex-start',
     backgroundColor: app_c.HEX.primary,
+    // borderWidth: 1.5,
+    // borderColor: app_c.HEX.ext_primary,
     ...app_sp.p_10,
     ...app_sh.rounded_8,
     ...Platform.select({

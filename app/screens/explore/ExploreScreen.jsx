@@ -79,6 +79,8 @@ const ExploreScreen = () => {
     exploreInfo.current.isEndReach = true;
   }
 
+  console.log("Render Explore!!!");
+
   return (
     <View>
       {
@@ -132,7 +134,7 @@ const ExploreScreen = () => {
             containerStyle={{backgroundColor: app_c.HEX.primary, ...app_sp.pv_10}}
           />
         }
-        renderItem={item => <View style={app_sp.ph_18}><HorizontalPlaceCard place={item.item} /></View>}
+        renderItem={item => <View style={app_sp.ph_18}><HorizontalPlaceCard typeOfBriefPlace={type} place={item.item} placeIndex={item.index} /></View>}
         keyExtractor={item => item._id}
       />
     </View>

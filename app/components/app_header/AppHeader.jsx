@@ -57,7 +57,7 @@ const AppHeader = ({
   const canSetLeftPart = typeof setLeftPart === 'function';
   const canSetCenterPart = typeof setCenterPart === 'function';
   const canSetRightPart = typeof setRightPart === 'function';
-  const canSetBackButton = navigation.canGoBack() && !options.isTopScreen;
+  const canSetBackButton = back;
   const title = (
     options.title !== "" && options.title
     ? options.title

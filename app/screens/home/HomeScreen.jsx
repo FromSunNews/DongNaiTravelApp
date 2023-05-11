@@ -2,6 +2,10 @@ import { View, Text, Button, TouchableOpacity, FlatList, ScrollView,TouchableNat
 import React, { useEffect,useState } from "react"
 import { Ionicons, Entypo,Fontisto,FontAwesome5,MaterialCommunityIcons} from "react-native-vector-icons"
 
+import {
+  getPlacesAPI
+} from 'request_api'
+
 import styles from "./HomeScreenStyles"
 import { app_c, app_sp, app_typo } from "globals/styles"
 import { 
@@ -25,9 +29,10 @@ import { selectCurrentMap } from "redux/map/mapSlice"
 import { Platform } from "react-native"
 import HomeBannerSlider from "components/home_banner_slider/HomeBannerSlider"
 import { selectCurrentLanguage } from "redux/language/LanguageSlice"
+import { useBriefPlaces } from "customHooks/usePlace"
+import { BRIEF_PLACE_DATA_FIELDS } from "utilities/constants"
 
 const HomeScreen = ({navigation}) => {
-
   const currentMap = useSelector(selectCurrentMap)
   const [showPanelWeather, setShowPanelWeather] = useState(false)
   //template
@@ -37,20 +42,14 @@ const HomeScreen = ({navigation}) => {
   const [cloud, setCloud] = useState(null)
   const [vision, setVision] = useState(null)
   const [wind, setWind] = useState(null)
-  const [typePlace, setTypePlace] = React.useState("");
+  const [typePlace, setTypePlace] = React.useState("all");
   const [typeBlog, setTypeBlog] = React.useState("");
-  const [currentPlaces, setCurrentPlaces] = React.useState([]);
-  const [currentBlogs, setCurrentBlogs] = React.useState([]);
+  const [currentBlogs, setCurrentBlogs] = React.useState(null);
 
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.homeScreen
 
-  React.useEffect(() => {
-    setTimeout(() => {
-      setCurrentBlogs([...blogs]);
-      setCurrentPlaces([...places]);
-    }, 2000);
-  }, []);
+  const [places, setPlaces] = React.useState(null);
 
   // console.log('ChoseTypeOfPlace: '+ typePlace)
   // console.log('ChoseTypeOfBlog: '+ typeBlog)
@@ -84,6 +83,20 @@ const HomeScreen = ({navigation}) => {
     // getCurrentLocationAsync()
   },[currentMap.userLocation])
 
+  useEffect(() => {
+    let query = `limit=5&skip=0&filter=quality:${typePlace}&fields=${BRIEF_PLACE_DATA_FIELDS}`;
+    getPlacesAPI(query)
+    .then(data => {
+      setPlaces(data)
+    })
+
+    if(!currentBlogs) {
+      setTimeout(() => {
+        setCurrentBlogs([...blogs]);
+        // setCurrentPlaces([...places]);
+      }, 2000);
+    }
+  }, [typePlace])
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -162,21 +175,25 @@ const HomeScreen = ({navigation}) => {
           <TypeScrollView
             types='all;recommended;popular;most_visit;most_favorite'
             callBack={setTypePlace}
-            scrollStyle={[{paddingLeft:16}, app_sp.pv_12]}
-            containerStyle={{backgroundColor: app_c.HEX.primary,  }}
+            scrollStyle={[app_sp.ms_18, app_sp.mb_12]}
+            containerStyle={{backgroundColor: app_c.HEX.primary, ...app_sp.pv_10}}
           />
-          <View>
-            <ScrollView horizontal={true} style={{ paddingBottom:12,paddingLeft:16,backgroundColor:app_c.HEX.primary}} showsHorizontalScrollIndicator={false}>
-              {
-                currentPlaces.length === 0
-                ? [1, 2, 3].map((value, index) => <VerticalPlaceCardSkeleton key={value + index} style={{ marginLeft: index !== 0 ? 16 : 0,}}/>)
-                : currentPlaces.map((place, index) => 
-                  <TouchableOpacity delayLongPress={2000} activeOpacity={Platform.OS === 'android' ? 1 : 0.8} key={place.id} onPress={()=>navigation.navigate("PlaceDetailScreen")} style={{paddingVertical:12}}>
-                    <VerticalPlaceCard place={place}  style={{ marginLeft: index !== 0 ? 16 : 2, marginRight : currentPlaces.length - 1 === index ? 36 : 0}}/>
-                  </TouchableOpacity>)
-              }
-            </ScrollView>
-          </View>
+          <ScrollView 
+            horizontal={true}
+            style={[{backgroundColor:app_c.HEX.primary}, app_sp.pb_10]}
+            contentContainerStyle={{flexGrow: 1}}
+            showsHorizontalScrollIndicator={false}
+          >
+            {
+              !places
+              ? [1, 2, 3].map((value, index) => <VerticalPlaceCardSkeleton key={value + index} style={app_sp.me_18} />)
+              : places.map((place, index) => {
+                let actualStyle = [app_sp.me_18];
+                if(index === 0) actualStyle.push(app_sp.ms_18);
+                return <VerticalPlaceCard place={place} placeIndex={index} typeOfBriefPlace={typePlace} style={actualStyle} key={place.place_id} />
+              })
+            }
+          </ScrollView>
         </View>
         <View style={styles.home_category}>
           <TouchableOpacity style={styles.category_header} onPress={()=>navigation.navigate("BlogsNavigator")}>
@@ -184,7 +201,7 @@ const HomeScreen = ({navigation}) => {
             <AppText><Entypo name="chevron-small-right" size={40}/></AppText>
           </TouchableOpacity>
           <TypeScrollView
-            types='all;newest;popular;most_like;most_comments'
+            types='all;recommended;popular;most_visit;high_rating'
             callBack={setTypeBlog}
             scrollStyle={[{paddingLeft:16}, app_sp.pv_12]}
             containerStyle={{backgroundColor: app_c.HEX.primary}}
@@ -192,7 +209,7 @@ const HomeScreen = ({navigation}) => {
           <View style={{ ...app_sp.mb_12}}>
             <ScrollView horizontal={true} style={{paddingBottom:10,paddingLeft:16}} showsHorizontalScrollIndicator={false}>
               {
-                currentBlogs.length === 0
+                !currentBlogs
                 ? [1, 2, 3].map((value, index) => <VerticalBlogCardSkeleton key={value + index} style={{  marginLeft: index !== 0 ? 16 : 0,}} />)
                 : currentBlogs.map((blog, index) => 
                   <TouchableOpacity key={blog.id} onPress={()=>navigation.navigate("BlogDetailScreen")} style={{paddingVertical:12}}>

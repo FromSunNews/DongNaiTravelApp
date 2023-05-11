@@ -76,7 +76,7 @@ const getPureString = function (line) {
  */
 const toSnakeCase = function (line) {
   let pureString = getPureString(line);
-  let result = splitTextBySeperator(pureString, ' ')
+  let result = splitLineBySeperator(pureString, ' ')
     .filter((text) => text !== '')
     .join('_');
   return result;

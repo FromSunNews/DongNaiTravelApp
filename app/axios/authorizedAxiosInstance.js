@@ -31,7 +31,6 @@ authorizedAxiosInstance.interceptors.request.use(function (config) {
 
   // Phuong: Do something before request is sent
   isLoading(true)
-
   return config
 
 }, function (error) {

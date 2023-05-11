@@ -21,11 +21,10 @@ const HomeNavigator=()=>{
   return (
     <HomeStack.Navigator
       initialRouteName="HomeScreen"
-      screenOptions={{ header: (props) => <AppHeader  screenName='Home' {...props} /> }}
+      screenOptions={{ header: AppHeader }}
     >
       <HomeStack.Screen name="Home"
         options={{
-          isTopScreen: true,
           title: langData.home[langCode]
         }}
         component={HomeScreen}
@@ -34,7 +33,6 @@ const HomeNavigator=()=>{
       <HomeStack.Screen 
         name= "Notification"
         options={{headerShown:true,title:`${langCode === 'vi' ? 'Thông Báo' : 'Notification'}`}}
-        screenOptions={{ header: (props) => <AppHeader screenName="Home" {...props} /> }}
         component={NotificationsScreen}
       />
       
@@ -48,14 +46,14 @@ const HomeNavigator=()=>{
         name='PlaceDetailScreen'
         options={{
           title: `${langCode === 'vi' ? 'Chi Tiết Địa Điểm' : 'Place Detail'}`,
+          headerTransparent: true
         }}
-        screenOptions={{ header: (props) => <AppHeader screenName="Home" {...props} /> }}
         component={PlaceDetailScreen}
       />
       <HomeStack.Screen
         name='BlogDetailScreen'
         options={{
-          title: `${langCode === 'vi' ? 'Chi Tiết Bài Viết' : 'Blog Detail'}`,
+          title: `${langCode === 'vi' ? 'Chi Tiết Bài Viết' : 'Blog Detail'}`
         }}
         component={BlogDetailScreen}
       />

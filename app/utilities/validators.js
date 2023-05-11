@@ -13,6 +13,7 @@ export const BIRTHDAY_RULE_MESSAGE = 'Incorrect format dd/mm/yyyy'
 export const FIELD_REQUIRED_MESSAGE = 'This field is required.'
 export const FIELD_MIN_LENGTH_MESSAGE = "This field must be at least 8 characters"
 
+export const FILE_URL_RULE = /((http|https):\/\/[\w\d_\-\.]+\.[\w\d]{2,}([:\d]+)?(\/[\w\d\-\._\?\,\'\/\\\+&%\$#\=~]*)?)/
 
 export const fieldErrorMessage = (errors, fieldName) => {
   if (!errors || !errors[fieldName]) return null
