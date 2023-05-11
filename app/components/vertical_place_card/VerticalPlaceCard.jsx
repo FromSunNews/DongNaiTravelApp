@@ -1,45 +1,47 @@
 import {
   View,
   Text,
-  Image
+  Image,
+  ViewProps
 } from 'react-native'
 import React from 'react'
 
+import {
+  updateUserByCaseAPI
+} from 'request_api'
+
+import { useSelector } from 'react-redux'
+import { useNavigation } from '@react-navigation/native'
+
+import {
+  usePlaceDetailsActions,
+  useBriefPlacesActions
+} from 'customHooks/usePlace'
+
+import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
+
 import ComponentUtility from 'utilities/component'
+import StringUtility from 'utilities/string'
+import {
+  UPDATE_USER_CASES
+} from 'utilities/constants'
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import AppText from 'components/app_text/AppText'
 import RectangleButton from 'components/buttons/RectangleButton'
 import CircleButton from 'components/buttons/CircleButton'
-import { useNavigation } from '@react-navigation/native'
-import { BoxShadow } from 'react-native-shadow'
 
 import styles from './VerticalPlaceCardStyles'
 import { app_c, app_sh, app_sp } from 'globals/styles'
 
-import { ViewProps } from 'types/index.d'
-import { useSelector } from 'react-redux'
-import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
-
-/**
- * @typedef PlaceProps
- * @property {string} name Tên địa điểm.
- * @property {string} avatar Ảnh đại diện cho địa điểm.
- * @property {object} location Location giống với place, nhưng nó sẽ rộng hơn, ở cấp thành phố đổ lên.
- * @property {string} location.province Tên của tỉnh.
- * @property {string} location.city Tên của thành phố.
- * @property {Array<object>} tags Các thể loại danh mục.
- * @property {number} ratingPoints Điểm rating.
- * @property {number} numberOfReviews Số lượng người dùng đã đánh giá (viết comment review).
- * @property {number} numberOfVisited Số lượng người dùng đã đến tham quan.
- * @property {boolean} isRecommended Có được đề xuất hay không?.
- * @property {boolean} isVisited Có đến đây thăm hay chưa? (Đây là một trường ghép từ User và Place, được tạo trong quá trình chuẩn bị dữ liệu).
- */
+import { PlaceDataProps } from 'types/index.d.ts'
 
 /**
  * @typedef VerticalPlaceCardProps
- * @property {PlaceProps} place Thông tin ngắn của một địa điểm.
+ * @property {PlaceDataProps} place Thông tin về một địa điểm của một nơi nào đó.
+ * @property {string} typeOfBriefPlace Type của brief places.
+ * @property {number} placeIndex Index của place trong data của briefPlace. Cái này dùng để tìm place cho nhanh, khỏi dùng vòng lặp.
  */
 
 /**
@@ -58,24 +60,76 @@ import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
  * @param {ViewProps & VerticalPlaceCardProps} props Props của component.
  * @returns Thẻ dọc chứa các thông tin cơ bản của một địa điểm.
  */
-const VerticalPlaceCard = ({ place, ...props }) => {
+const VerticalPlaceCard = ({ place, placeIndex, typeOfBriefPlace, ...props }) => {
   const containerStyle = ComponentUtility.mergeStyle([styles.card, place.isRecommended ? {} : {}], props.style);
-  //Đức: create navigation for Image Place onPress=> toScreen DetailPlaceScreen
-  const navigation = useNavigation()
+  const { addPlaceDetails } = usePlaceDetailsActions();
+  const { updateBriefPlace } = useBriefPlacesActions(typeOfBriefPlace);
+  const navigation = useNavigation();
 
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.homeScreen
 
-  return (
+  const [extendedPlaceInfo, setExtendedPlaceInfo] = React.useState({
+    isLiked: place.isLiked ? true : false,
+    isVisited: place.isVisited ? true : false
+  });
+
+  const getTextContentInHTMLTag = React.useCallback(
+    StringUtility.createTextContentInHTMLTagGetter("<span class=\"(locality|region)\">", "<\/span>")
+  , []);
+
+  let [city, province] = getTextContentInHTMLTag(place.adr_address);
+
+  const handlePressImageButton = () => {
+    addPlaceDetails(place);
+    navigation.push('PlaceDetailScreen', {
+      placeId: place.place_id
+    });
+  }
+
+  const handleLikeButton = () => {
+    setExtendedPlaceInfo(prevState => {
+      let isLiked = true;
+      let updateCase = UPDATE_USER_CASES['addEle:savedPlaces'];
+      if(prevState.isLiked) {
+        isLiked = false;
+        updateCase = UPDATE_USER_CASES['removeEle:savedPlaces'];
+      }
+      let data = {
+        updateCase: updateCase,
+        updateData: place.place_id
+      }
+      updateUserByCaseAPI(data)
+      .then(user => {
+        // Update lên store.
+        updateBriefPlace(place.place_id, placeIndex, { isLiked: isLiked })
+      })
+      .catch(error => {
+        setExtendedPlaceInfo(prevState => ({...prevState, isLiked: !isLiked}))
+        console.error(error.message)
+      })
+      return {...prevState, isLiked: isLiked}
+    })
+  }
+
+  React.useEffect(() => {
+    // console.log("Isliked from place: ", Boolean(place.isLiked));
+    
+    if(Boolean(place.isLiked) !== extendedPlaceInfo.isLiked) {
+      setExtendedPlaceInfo(prevState => ({...prevState, isLiked: Boolean(place.isLiked)}))
+    }
+  }, [place.isLiked, place.isVisited]);
+
+  return React.useMemo(() => (
     <View {...props} style={containerStyle}>
       {/* Image */}
       <RectangleButton
         isOnlyContent
         typeOfButton="none"
         overrideShape="rounded_4"
-        onPress={()=>navigation.navigate("PlaceDetailScreen")}
+        onPress={handlePressImageButton}
       >
-        <Image source={{ uri: place.avatar }} style={styles.card_image} />
+        <Image source={place.place_photos.length > 0 ? {uri: place.place_photos[0].photos[0]} : {}} style={styles.card_image} />
       </RectangleButton>
       {/* Button & Recommended tag */}
       <View style={styles.card_mid}>
@@ -91,10 +145,10 @@ const VerticalPlaceCard = ({ place, ...props }) => {
         {/* Sub-information */}
         <View style={styles.card_content_sub_information_container}>
           <AppText font="body2">
-            <Ionicons name="star-outline" /> {place.ratingPoints}
+            <Ionicons name="star-outline" /> {place.rating}
           </AppText>
           <AppText numberOfLines={1} font="body2">
-            <Ionicons name="location-outline" /> {place.location.city} - {place.location.province}
+            <Ionicons name="location-outline" /> {StringUtility.toTitleCase(city)}{province && " - "}{StringUtility.toTitleCase(province)}
           </AppText>
         </View>
       </View>
@@ -102,9 +156,11 @@ const VerticalPlaceCard = ({ place, ...props }) => {
       {/* Like button */}
       <View style={styles.card_buttons_container}>
         <RectangleButton
+          isActive={extendedPlaceInfo.isLiked}
           isTransparent
           typeOfButton="opacity"
           style={styles.card_button}
+          onPress={handleLikeButton}
         >
           {
             (isActive, currentLabelStyle) => (
@@ -130,7 +186,7 @@ const VerticalPlaceCard = ({ place, ...props }) => {
         </RectangleButton>
       </View>
     </View>
-  )
+  ), [extendedPlaceInfo.isLiked, extendedPlaceInfo.isVisited, place.rating, place.numberOfVisited, place.user_ratings_total])
 }
 
 export default VerticalPlaceCard

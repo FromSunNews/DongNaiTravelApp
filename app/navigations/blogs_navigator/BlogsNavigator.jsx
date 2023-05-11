@@ -15,13 +15,12 @@ const BlogsNavigator = () => {
     <BlogsStack.Navigator
       initialRouteName="BlogScreen"
       screenOptions={{
-        header: props => (<AppHeader {...props} />)
+        header: AppHeader
     }}>
       <BlogsStack.Screen
         name="BlogScreen"
         options={{
-          title: `${langCode === 'vi' ? 'Bài Viết' : 'Blogs'}`,
-          isTopScreen: true
+          title: `${langCode === 'vi' ? 'Bài Viết' : 'Blogs'}`
         }}
         component={BlogsScreen}
       >
@@ -29,7 +28,6 @@ const BlogsNavigator = () => {
       <BlogsStack.Screen
         name="BlogDetailScreen"
         options={{
-          isTopScreen: true,
           title: `${langCode === 'vi' ? 'Chi Tiết Bài Viết' : 'Blog Detail'}`
         }}
         component={BlogDetailScreen}

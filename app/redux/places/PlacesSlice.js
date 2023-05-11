@@ -3,13 +3,20 @@ import axios from 'axios'
 import { API_ROOT } from 'utilities/constants'
 
 import {
-  getPlaces
+  getPlacesAPI,
+  getPlaceDetailsWithPipelineAPI
 } from 'request_api'
 
 import {
+  PLACE_DETAILS_DATA_FIELDS
+} from 'utilities/constants'
+
+import {
   RequestBriefPlacesInfoProps,
+  RequestPlaceDetailsInfoProps,
   BriefPlacesDataProps,
-  PlaceDataProps
+  PlaceDataProps,
+  PlaceDetailsDataProps
 } from 'types/index.d.ts'
 
 /**
@@ -42,29 +49,52 @@ function createDefaultBriefPlace(limit = 5, skip = 0) {
 
 // Phương: Khởi tạo giá trị của một Slice trong redux
 const initialState = {
-  currentPlaceDetails: {},
+  placeDetailsList: {},
   briefPlaces: {}
 }
 
 // Phương: Các hành động gọi api (bất đồng bộ) và cập nhật dữ liệu vào Redux, dùng createAsyncThunk đi kèm với extraReducers
 // Phương: https://redux-toolkit.js.org/api/createAsyncThunk
 export const fetchBriefPlacesByTypeAsyncThunk = createAsyncThunk(
-  'places/fetchPlacesByTypeAPI',
+  'places/fetchPlacesByType',
   /**
    * @param {RequestBriefPlacesInfoProps} requestBriefPlacesInfo
    * @returns 
    */
   async (requestBriefPlacesInfo, thunkAPI) => {
-    const state = thunkAPI.getState();
-    const { type, fields } = requestBriefPlacesInfo;
-    const briefPlacesByType = briefPlacesSeletor(state, type);
-    const limit = briefPlacesByType ? briefPlacesByType.limit : 5;
-    const skip = briefPlacesByType ? briefPlacesByType.skip : 0;
-    const query = `limit=${limit}&skip=${skip}&filter=quality:${type}&fields=${fields}`;
-    const data = await getPlaces(query);
+    try {
+      const state = thunkAPI.getState();
+      const { type, fields } = requestBriefPlacesInfo;
+      const briefPlacesByType = briefPlacesSeletor(state, type);
+      const limit = briefPlacesByType ? briefPlacesByType.limit : 5;
+      const skip = briefPlacesByType ? briefPlacesByType.skip : 0;
+      const query = `limit=${limit}&skip=${skip}&filter=quality:${type}&fields=${fields}`;
+      const data = await getPlacesAPI(query);
     return [type, data];
+    } catch (error) {
+      console.error(error.message);
+    }
   }
 )
+
+export const fetchPlaceDetailsByIdAsyncThunk = createAsyncThunk(
+  'places/fetchPlaceDetailsById',
+  /**
+   * @param {RequestPlaceDetailsInfoProps} requestPlaceDetailsInfo 
+   * @param thunkAPI 
+   */
+  async (requestPlaceDetailsInfo, thunkAPI) => {
+    try {
+      const { placeId, lang } = requestPlaceDetailsInfo;
+      const query = `placeId=${placeId}&fields=${PLACE_DETAILS_DATA_FIELDS}&lang=${lang}`;
+      const data = await getPlaceDetailsWithPipelineAPI(query);
+      return [placeId, data];
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+)
+
 // Phương: Khởi tạo một slice trong redux store
 export const placesSlice = createSlice({
   name: 'places',
@@ -73,13 +103,26 @@ export const placesSlice = createSlice({
     // Phương: Lưu ý luôn là ở đây cần cặp ngoặc nhọn cho function trong reducer cho dù code bên trong chỉ có 1 dòng, đây là rule của Redux
     // Phương: https:// Phương:redux-toolkit.js.org/usage/immer-reducers#mutating-and-returning-state
     /**
-     * Action này dùng để lưu một place details nào đó (Hiện tại sẽ không cần)
+     * Action này dùng để thêm một thông tin của place vào place details list, thường thì được thêm từ một briefplace.
      * @param state 
-     * @param action 
+     * @param {{type: string, payload: PlaceDetailsDataProps}} action 
      */
-    updateCurrentPlaceDetailsState: (state, action) => {
-      const details = action.payload
-      state.currentPlaceDetails = Object.assign(state.currentPlaceDetails, details)
+    addPlaceDetailsState: (state, action) => {
+      const placeDetails = action.payload;
+      if(!state.placeDetailsList[placeDetails.place_id]) state.placeDetailsList[placeDetails.place_id] = placeDetails;
+    },
+    /**
+     * Action này dùng để update một brief place theo `place_id`.
+     * @param state 
+     * @param {{type: string, payload: { placeId: string, typeOfBriefPlaces: string, updateData: PlaceDataProps }}} action 
+     */
+    updateBriefPlaceState: (state, action) => {
+      let {placeId, placeIndex, typeOfBriefPlaces, updateData} = action.payload;
+      if(state.briefPlaces[typeOfBriefPlaces]) {
+        let sliceOfBriefPlaces = state.briefPlaces[typeOfBriefPlaces].data.slice(placeIndex);
+        let place = sliceOfBriefPlaces.find(briefPlace => briefPlace.place_id === placeId);
+        if(place) state.briefPlaces[typeOfBriefPlaces].data[placeIndex] = Object.assign({}, place, updateData);
+      }
     },
     /**
      * Action này dùng để tăng skip của một loại brief places
@@ -116,7 +159,11 @@ export const placesSlice = createSlice({
      * @param action 
      */
     clearPlaceDetailsState: (state, action) => {
-      state.currentPlaceDetails = {}
+      let placeId = action.payload;
+      if(state.placeDetailsList[placeId]) {
+        state.placeDetailsList[placeId] = {}
+        delete state.placeDetailsList[placeId]
+      }
     }
   },
   extraReducers: (builder) => {
@@ -134,6 +181,12 @@ export const placesSlice = createSlice({
         )
       }
       state.briefPlaces[typeOfBriefPlaces].data.push(...briefPlaces);
+    }),
+
+    builder.addCase(fetchPlaceDetailsByIdAsyncThunk.fulfilled, (state, action) => {
+      let [placeId, placeDetails] = action.payload;
+
+      state.placeDetailsList[placeId] = Object.assign({}, state.placeDetailsList[placeId], placeDetails)
     })
   }
 })
@@ -141,10 +194,11 @@ export const placesSlice = createSlice({
 // Phương: Action creators are generated for each case reducer function
 // Phương: Actions: dành cho các components bên dưới gọi bằng dispatch() tới nó để cập nhật lại dữ liệu thông qua reducer (chạy đồng bộ)
 // Phương: Để ý ở trên thì không thấy properties actions đâu cả, bởi vì những cái actions này đơn giản là được thằng redux tạo tự động theo tên của reducer nhé.
-export const { 
-  updateCurrentPlaceDetailsState,
+export const {
+  addPlaceDetailsState,
   inscreaseSkipBriefPlacesAmountState,
   descreaseSkipBriefPlacesAmountState,
+  updateBriefPlaceState,
   clearAllBriefPlacesState,
   clearPlaceDetailsState
   // Phương
@@ -167,8 +221,8 @@ export const briefPlacesSeletor = (state, typeOfBriefPlaces) => {
  * @param state 
  * @returns {PlaceDataProps}
  */
-export const placeDetailsSelector = (state) => {
-  return state.places.currentPlaceDetails;
+export const placeDetailsSelector = (state, placeId) => {
+  return state.places.placeDetailsList[placeId];
 }
 
 // Phương: Export default cái placesReducer của chúng ta để combineReducers trong store

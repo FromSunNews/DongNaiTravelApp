@@ -101,12 +101,14 @@ export const getGeocodingReverseAPI = async (data) => {
   return request.data
 }
 
-export const getPlaces = async (query) => {
+export const getPlacesAPI = async (query) => {
+  let user = store.getState().user.currentUser;
+  if(user) query += `&userId=${user._id}`;
   const response = await axios.get(`${API_ROOT}/v1/map/places?${query}`)
   return response.data
 }
 
-export const getPlaceDetailsWithPipeline = async (query) => {
+export const getPlaceDetailsWithPipelineAPI = async (query) => {
   const response = await axios.get(`${API_ROOT}/v1/map/place_details?${query}`)
   return response.data
 }
@@ -133,5 +135,12 @@ export const updateNotifAPI = async (data) => {
 
 export const updateManyNotifsAPI = async (data) => {
   const request = await axios.post(`${API_ROOT}/v1/notif/update_many`, data)
+  return request.data
+}
+
+export const updateUserByCaseAPI = async (data) => {
+  let accessToken = store.getState().user.currentUser.accessToken;
+  data.accessToken = accessToken;
+  const request = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/update_by_case`, data)
   return request.data
 }

@@ -26,42 +26,41 @@ const SettingNavigator = () => {
   return (
     <SettingStack.Navigator
       initialRouteName="SettingScreen"
-      screenOptions={{ header: (props) => <AppHeader {...props} /> }}
+      screenOptions={{ header: AppHeader }}
     >
-
       <SettingStack.Screen
-        name={langCode === 'vi' ? "Cài đặt" : "Settings"}
-        options={{isTopScreen:true}}
+        name="Settings"
+        options={{title: langCode === 'vi' ? "Cài đặt" : "Settings"}}
         component={SettingScreen}
       />
 
       <SettingStack.Screen
         name="Profile"
-        options={{isTopScreen:true, title: `${langCode === "vi" ? "Trang cá nhân" : "Profile" }`}}
+        options={{title: `${langCode === "vi" ? "Trang cá nhân" : "Profile" }`}}
         component={ProfileScreen}
       />
 
       <SettingStack.Screen
         name="Notifications"
-        options={{ isTopScreen: true, title: `${langCode === "vi" ? "Thông báo" : "Notifications"}` }}
+        options={{ title: `${langCode === "vi" ? "Thông báo" : "Notifications"}` }}
         component={NotificationsScreen}
       />
 
       <SettingStack.Screen
         name="Reports"
-        options={{isTopScreen:true, title: `${langCode === "vi" ? "Báo cáo" : "Reports" }`}}
+        options={{title: `${langCode === "vi" ? "Báo cáo" : "Reports" }`}}
         component={ReportsScreen}
       />
 
       <SettingStack.Screen
         name="About"
-        options={{isTopScreen:true, title: `${langCode === "vi" ? "Giới thiệu" : "About" }`}}
+        options={{title: `${langCode === "vi" ? "Giới thiệu" : "About" }`}}
         component={AboutScreen}
       />
 
       <SettingStack.Screen
         name="Help & Support"
-        options={{isTopScreen:true, title: `${langCode === "vi" ? "Hỗ trợ" : "Help & support" }`}}
+        options={{title: `${langCode === "vi" ? "Hỗ trợ" : "Help & support" }`}}
         component={HelpAndSupportScreen}
       />
       
@@ -81,9 +80,9 @@ const SettingNavigator = () => {
       <ProfileStack.Screen 
         name="BlogDetailScreen"
         options={{
-         title: `${langCode  === 'vi' ? 'Chi Tiết Bài Viết' : 'Blog Detail'}`,
-       }}
-       component={BlogDetailScreen}
+          title: `${langCode  === 'vi' ? 'Chi Tiết Bài Viết' : 'Blog Detail'}`,
+        }}
+        component={BlogDetailScreen}
       />
 
       <ProfileStack.Screen 

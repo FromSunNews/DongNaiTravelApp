@@ -5,11 +5,19 @@ import { useNavigation } from '@react-navigation/native'
 import {
   usePlaceDetailsState,
   usePlaceDetailsActions,
-  usePlaceDetails
+  usePlaceDetails,
+  useBriefPlacesActions
 } from 'customHooks/usePlace'
+
+import { 
+  updateUserByCaseAPI
+} from 'request_api'
 
 import NumberUtility from 'utilities/number'
 import StringUtility from 'utilities/string'
+import {
+  UPDATE_USER_CASES
+} from 'utilities/constants'
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
@@ -27,29 +35,65 @@ import {
 } from 'types/index.d.ts'
 
 /**
+ * @typedef HorizontalPlaceCardProps
+ * @property {PlaceDataProps} place Thông tin về một địa điểm của một nơi nào đó.
+ * @property {string} typeOfBriefPlace Type của brief places.
+ * @property {number} placeIndex Index của place trong data của briefPlace. Cái này dùng để tìm place cho nhanh, khỏi dùng vòng lặp.
+ */
+
+/**
  * __Creator__: @NguyenAnhTuan1912
  * 
  * Đây là card nằm ngang, hiển thị một số thông tin cơ bản của một địa điểm nào đó. Có thể ấn vào để xem chi tiết
  * một địa điểm nào đó. Một card sẽ chứa 3 cột. Cột đâu tiên là dành cho ảnh, cột thứ 2 là giành cho nội dung chính
  * và cột cuói cùng là giành cho nút share.
- * @param {object} props - Props của component.
- * @param {PlaceDataProps} props.place - Thông tin về một địa điểm của một nơi nào đó.
+ * @param {HorizontalPlaceCardProps} props Props của component.
  * @returns Thẻ ngang chứa các thông tin cơ bản của một địa điểm.
  */
-const HorizontalPlaceCard = ({ place }) => {
+const HorizontalPlaceCard = ({ place, typeOfBriefPlace = 'all', placeIndex }) => {
   const langCode = useSelector(selectCurrentLanguage).languageCode 
   const langData = useSelector(selectCurrentLanguage).data?.exploreScreen
-  const { updatePlaceDetails } = usePlaceDetailsActions();
+  const { addPlaceDetails } = usePlaceDetailsActions();
+  const { updateBriefPlace } = useBriefPlacesActions(typeOfBriefPlace);
   const navigation = useNavigation()
 
+  const [extendedPlaceInfo, setExtendedPlaceInfo] = React.useState({
+    isLiked: place.isLiked ? true : false,
+    isVisited: place.isVisited ? true : false
+  });
+
   const handlePressImageButton = () => {
-    updatePlaceDetails(place);
+    addPlaceDetails(place);
     navigation.push('PlaceDetailScreen', {
       placeId: place.place_id
     });
   }
 
-  console.log("Horizontal place card render!");
+  const handleLikeButton = () => {
+    setExtendedPlaceInfo(prevState => {
+      let isLiked = true;
+      let updateCase = UPDATE_USER_CASES['addEle:savedPlaces'];
+      if(prevState.isLiked) {
+        isLiked = false;
+        updateCase = UPDATE_USER_CASES['removeEle:savedPlaces'];
+      }
+      let data = {
+        updateCase: updateCase,
+        updateData: place.place_id
+      }
+      updateUserByCaseAPI(data)
+      .then(user => {
+        // Update lên store.
+        updateBriefPlace(place.place_id, placeIndex, { isLiked: isLiked })
+      })
+      .catch(error => {
+        setExtendedPlaceInfo(prevState => ({...prevState, isLiked: !isLiked}))
+        console.error(error.message)
+      })
+      console.log(`Set state isLiked for ${place.name}: `, isLiked);
+      return {...prevState, isLiked: isLiked}
+    })
+  }
 
   const getTextContentInHTMLTag = React.useCallback(
     StringUtility.createTextContentInHTMLTagGetter("<span class=\"(locality|region)\">", "<\/span>")
@@ -58,8 +102,15 @@ const HorizontalPlaceCard = ({ place }) => {
   let [city, province] = getTextContentInHTMLTag(place.adr_address);
 
   // console.log(`City, province: ${city}, ${province}`);
+  React.useEffect(() => {
+    if(Boolean(place.isLiked) !== extendedPlaceInfo.isLiked) {
+      setExtendedPlaceInfo(prevState => ({...prevState, isLiked: Boolean(place.isLiked)}))
+    }
+  }, [place.isLiked, place.isVisited]);
 
-  return (
+  console.log(`Isliked from state (HorizontalPlaceCard), ${place.name}: `, extendedPlaceInfo.isLiked);
+
+  return React.useMemo(() => (
     <View style={styles.card}>
       {/* Cột đâu tiên - Image Container */}
       <RectangleButton
@@ -118,8 +169,10 @@ const HorizontalPlaceCard = ({ place }) => {
         </View>
         <View style={styles.card_buttons_container}>
           <CircleButton
+            isActive={extendedPlaceInfo.isLiked}
             style={app_sp.me_8}
             typeOfButton="highlight"
+            onPress={handleLikeButton}
             setIcon={(isActive, currentLabelStyle) => (
               <Ionicons name={isActive ? 'heart' : 'heart-outline'} size={14} style={currentLabelStyle} />
             )}
@@ -132,7 +185,7 @@ const HorizontalPlaceCard = ({ place }) => {
             )}
           />
           <RectangleButton
-            isActive={place.isVisited}
+            isActive={extendedPlaceInfo.isVisited}
             typeOfButton="highlight"
             overrideShape="capsule"
             style={{
@@ -157,7 +210,7 @@ const HorizontalPlaceCard = ({ place }) => {
         />
       </View>
     </View>
-  )
+  ), [extendedPlaceInfo.isLiked, extendedPlaceInfo.isVisited, place.rating, place.numberOfVisited, place.user_ratings_total]);
 }
 
 export default HorizontalPlaceCard
