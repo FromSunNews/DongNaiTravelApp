@@ -6,36 +6,26 @@ import {
 } from 'react-native'
 import React from 'react'
 
-import {
-  updateUserByCaseAPI
-} from 'request_api'
-
 import { useSelector } from 'react-redux'
-import { useNavigation } from '@react-navigation/native'
-
-import {
-  usePlaceDetailsActions,
-  useBriefPlacesActions
-} from 'customHooks/usePlace'
 
 import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
 
 import ComponentUtility from 'utilities/component'
 import StringUtility from 'utilities/string'
-import {
-  UPDATE_USER_CASES
-} from 'utilities/constants'
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
+import { withPlaceCard } from 'hocs/withPlaceCard'
 import AppText from 'components/app_text/AppText'
 import RectangleButton from 'components/buttons/RectangleButton'
-import CircleButton from 'components/buttons/CircleButton'
 
 import styles from './VerticalPlaceCardStyles'
-import { app_c, app_sh, app_sp } from 'globals/styles'
+import { app_sp } from 'globals/styles'
 
-import { PlaceDataProps } from 'types/index.d.ts'
+import {
+  PlaceDataProps,
+  WithPlaceCardWrappedComponentProps
+} from 'types/index.d.ts'
 
 /**
  * @typedef VerticalPlaceCardProps
@@ -57,68 +47,28 @@ import { PlaceDataProps } from 'types/index.d.ts'
  * // Margin end cho card 
  * <VerticalPlaceCard place={place[0]} style={app_sp.me_18} />
  * ```
- * @param {ViewProps & VerticalPlaceCardProps} props Props của component.
+ * @param {WithPlaceCardWrappedComponentProps} props Props của component.
  * @returns Thẻ dọc chứa các thông tin cơ bản của một địa điểm.
  */
-const VerticalPlaceCard = ({ place, placeIndex, typeOfBriefPlace, ...props }) => {
+const VerticalPlaceCard = ({
+  place,
+  placeIndex,
+  typeOfBriefPlace,
+  extendedPlaceInfo,
+  addPlaceDetails,
+  updateBriefPlace,
+  getTextContentInHTMLTag,
+  handlePressImageButton,
+  handleLikeButton,
+  handleVisitButton,
+  ...props
+}) => {
   const containerStyle = ComponentUtility.mergeStyle([styles.card, place.isRecommended ? {} : {}], props.style);
-  const { addPlaceDetails } = usePlaceDetailsActions();
-  const { updateBriefPlace } = useBriefPlacesActions(typeOfBriefPlace);
-  const navigation = useNavigation();
 
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.homeScreen
 
-  const [extendedPlaceInfo, setExtendedPlaceInfo] = React.useState({
-    isLiked: place.isLiked ? true : false,
-    isVisited: place.isVisited ? true : false
-  });
-
-  const getTextContentInHTMLTag = React.useCallback(
-    StringUtility.createTextContentInHTMLTagGetter("<span class=\"(locality|region)\">", "<\/span>")
-  , []);
-
   let [city, province] = getTextContentInHTMLTag(place.adr_address);
-
-  const handlePressImageButton = () => {
-    addPlaceDetails(place);
-    navigation.push('PlaceDetailScreen', {
-      placeId: place.place_id
-    });
-  }
-
-  const handleLikeButton = () => {
-    setExtendedPlaceInfo(prevState => {
-      let isLiked = true;
-      let updateCase = UPDATE_USER_CASES['addEle:savedPlaces'];
-      if(prevState.isLiked) {
-        isLiked = false;
-        updateCase = UPDATE_USER_CASES['removeEle:savedPlaces'];
-      }
-      let data = {
-        updateCase: updateCase,
-        updateData: place.place_id
-      }
-      updateUserByCaseAPI(data)
-      .then(user => {
-        // Update lên store.
-        updateBriefPlace(place.place_id, placeIndex, { isLiked: isLiked })
-      })
-      .catch(error => {
-        setExtendedPlaceInfo(prevState => ({...prevState, isLiked: !isLiked}))
-        console.error(error.message)
-      })
-      return {...prevState, isLiked: isLiked}
-    })
-  }
-
-  React.useEffect(() => {
-    // console.log("Isliked from place: ", Boolean(place.isLiked));
-    
-    if(Boolean(place.isLiked) !== extendedPlaceInfo.isLiked) {
-      setExtendedPlaceInfo(prevState => ({...prevState, isLiked: Boolean(place.isLiked)}))
-    }
-  }, [place.isLiked, place.isVisited]);
 
   return React.useMemo(() => (
     <View {...props} style={containerStyle}>
@@ -129,7 +79,7 @@ const VerticalPlaceCard = ({ place, placeIndex, typeOfBriefPlace, ...props }) =>
         overrideShape="rounded_4"
         onPress={handlePressImageButton}
       >
-        <Image source={place.place_photos.length > 0 ? {uri: place.place_photos[0].photos[0]} : {}} style={styles.card_image} />
+        <Image source={place.place_photos.length > 0 ? {uri: place.place_photos[0]} : {}} style={styles.card_image} />
       </RectangleButton>
       {/* Button & Recommended tag */}
       <View style={styles.card_mid}>
@@ -189,4 +139,4 @@ const VerticalPlaceCard = ({ place, placeIndex, typeOfBriefPlace, ...props }) =>
   ), [extendedPlaceInfo.isLiked, extendedPlaceInfo.isVisited, place.rating, place.numberOfVisited, place.user_ratings_total])
 }
 
-export default VerticalPlaceCard
+export default withPlaceCard(VerticalPlaceCard)

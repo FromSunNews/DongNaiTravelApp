@@ -284,6 +284,10 @@ export const languageData = {
     relatedPlacesDataMessage: {
       vi: 'Không có địa điểm nào giống với địa điểm này.',
       en: 'There aren\'t any related places with this place.'
+    },
+    descriptionMessage: {
+      vi: 'Mô tả của địa điểm này hiện tại vẫn chưa có. Mô tả sẽ được thêm vào sau.',
+      en: 'Description of this place isn\'t available now. It\'ll be add soon.'
     }
   },
   blogsScreen: {

@@ -65,5 +65,7 @@ export const UPDATE_USER_CASES = {
   'addEle:savedPlaces': 'addEle:savedPlaces',
   'removeEle:savedPlaces': 'removeEle:savedPlaces',
   'addEle:follower': 'addEle:follower',
-  'removeEle:follower': 'removeEle:follower'
+  'removeEle:follower': 'removeEle:follower',
+  'addEle:visitedPlaces': 'addEle:visitedPlaces',
+  'removeEle:visitedPlaces': 'removeEle:visitedPlaces'
 }

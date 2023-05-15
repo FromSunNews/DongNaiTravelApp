@@ -161,3 +161,21 @@ export type PlayAudioAsyncFn = () => void
 export type StopAudioAsyncFn = () => void
 export type PrepareTTSAsyncFn = (audioAsBase64: string) => boolean
 export type PrepareMP3AsyncFn = (url: string) => boolean
+
+// Use for component use HOC
+type ExtendedPlacecInfoInPlaceCard = {
+  isLiked: boolean,
+  isVisited: boolean
+}
+export interface WithPlaceCardWrappedComponentProps extends ViewProps {
+  place: PlaceDataProps,
+  placeIndex: number,
+  typeOfBriefPlace: string,
+  extendedPlaceInfo: ExtendedPlacecInfoInPlaceCard,
+  addPlaceDetails: (placeDetails: PlaceContentDataProps) => {payload: PlaceContentDataProps, type: string}
+  updateBriefPlace: (placeId: any, placeIndex: any, updateData: any) => {payload: {placeId: any, placeIndex: any, updateData: any}, type: string },
+  getTextContentInHTMLTag: (fullHtmlTag: string) => string[],
+  handlePressImageButton: () => void,
+  handleLikeButton: () => void,
+  handleVisitButton: () => void
+}

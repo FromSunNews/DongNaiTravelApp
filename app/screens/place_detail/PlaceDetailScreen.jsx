@@ -21,7 +21,9 @@ import { useNavigation } from '@react-navigation/native'
 import {
   usePlaceDetailsState,
   usePlaceDetailsActions,
-  usePlaceDetails
+  usePlaceDetails,
+  usePlaceInteractionActions,
+  useBriefPlacesActions
 } from 'customHooks/usePlace'
 import {
   useAudio
@@ -63,13 +65,15 @@ import {
  * @returns 
  */
 const PlaceDetailScreen = ({route, navigation}) => {
-  const { placeId } = route.params;
+  const { placeId, typeOfBriefPlace } = route.params;
 
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.placeDetailScreen
   const langVisit = useSelector(selectCurrentLanguage).data?.exploreScreen
 
   const { placeDetails, fetchPlaceDetails, clearPlaceDetails } = usePlaceDetails(placeId);
+  const { updateBriefPlace } = useBriefPlacesActions(typeOfBriefPlace);
+  const { extendedPlaceInfo, likePlace, visitPlace } = usePlaceInteractionActions(placeDetails);
 
   const snapPoints = React.useMemo(
     () => ['60%', `${100- (30 / app_dms.screenHeight) * 100}%`], []
@@ -78,7 +82,7 @@ const PlaceDetailScreen = ({route, navigation}) => {
   const bottomSheetRef = React.useRef(null);
   const opacityValue = React.useRef(new Animated.Value(0)).current;
 
-  const presentationImageUrl = placeDetails.place_photos && placeDetails.place_photos.length > 0 ? placeDetails.place_photos[0].photos[0] : undefined
+  const presentationImageUrl = placeDetails.place_photos && placeDetails.place_photos.length > 0 ? placeDetails.place_photos[0] : undefined
 
   const animFade = React.useCallback((toValue) => {
     Animated.timing(
@@ -98,6 +102,22 @@ const PlaceDetailScreen = ({route, navigation}) => {
       animFade(0);
     }
   }
+
+  /**
+     * Hàm này dùng để yêu thích / bỏ yêu thích một place, nó sẽ gửi id của place về server và tự server nó sẽ xử lý.
+     */
+  const handleLikeButton = () => likePlace(
+    (data, state) => updateBriefPlace(placeDetails.place_id, 0, { isLiked: state }),
+    (state) => updateBriefPlace(placeDetails.place_id, 0, { isLiked: state })
+  )
+
+  /**
+   * Hàm này dùng để yêu thích / bỏ yêu thích một place, nó sẽ gửi id của place về server và tự server nó sẽ xử lý.
+   */
+  const handleVisitButton = () => visitPlace(
+    (data, state) => updateBriefPlace(placeDetails.place_id, 0, { isVisited: state }),
+    (state) => updateBriefPlace(placeDetails.place_id, 0, { isVisited: state })
+  )
   
   React.useEffect(() => {
     navigation.setOptions({'title': placeDetails.name})
@@ -159,12 +179,13 @@ const PlaceDetailScreen = ({route, navigation}) => {
             {/* Buttons container row */}
             <View style={{...styles.pd_row, ...app_sp.mb_12}}>
               <CircleButton
+                isActive={extendedPlaceInfo.isLiked}
                 style={app_sp.me_8}
-                isActive
                 typeOfButton="highlight"
                 setIcon={(isActive, currentLabelStyle) => (
                   <Ionicons name={isActive ? 'heart' : 'heart-outline'} size={14} style={currentLabelStyle} />
                 )}
+                onPress={handleLikeButton}
               />
               <CircleButton
                 style={app_sp.me_8}
@@ -174,9 +195,10 @@ const PlaceDetailScreen = ({route, navigation}) => {
                 )}
               />
               <RectangleButton
-                isActive={false}
+                isActive={extendedPlaceInfo.isVisited}
                 typeOfButton="highlight"
                 overrideShape="capsule"
+                onPress={handleVisitButton}
               >
                 {(isActive, currentLabelStyle) => (
                   <AppText style={currentLabelStyle} font="body2">{isActive ? langVisit.visited[langCode] : langVisit.visit[langCode]}</AppText>
@@ -237,7 +259,7 @@ const AboutSlide = ({placeId}) => {
   const [voice, setVoice] = React.useState(false);
   const [relatedPlaces, setRelatedPlaces] = React.useState([]);
   
-  const imageUrls = placeDetails.place_photos && placeDetails.place_photos[0].photos ? placeDetails.place_photos[0].photos : []
+  const imageUrls = placeDetails.place_photos ? placeDetails.place_photos : []
   const type = placeDetails.types[0]
   const speechMP3Url = placeDetails.content ? placeDetails.content.speech[langCode] : "";
 
@@ -337,7 +359,7 @@ const AboutSlide = ({placeId}) => {
             ? (
               <MarkFormat text={placeDetails.content.plainTextMarkFormat[langCode]} />
             )
-            : "Please add description for this place."
+            : langData.descriptionMessage[langCode]
           }
         </AppText>
       </View>
