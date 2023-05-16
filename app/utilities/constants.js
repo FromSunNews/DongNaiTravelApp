@@ -67,3 +67,8 @@ export const UPDATE_USER_CASES = {
   'addEle:follower': 'addEle:follower',
   'removeEle:follower': 'removeEle:follower'
 }
+
+export const USER_ROLES = {
+  GUEST: 'GUEST',
+  MEMBER: 'MEMBER'
+}

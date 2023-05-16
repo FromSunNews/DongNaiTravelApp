@@ -6,6 +6,10 @@ import {
 } from 'react-native'
 import React, { useRef } from 'react'
 
+import {
+	useAuth
+} from 'customHooks/useAuth'
+
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -158,108 +162,82 @@ const BottomTabBar = ({
 const Tab = createBottomTabNavigator()
 
 const GroupBottomTab = () => {
-// Phuong: https://reactnavigation.org/docs/bottom-tab-navigator/
+	// Phuong: https://reactnavigation.org/docs/bottom-tab-navigator/
 
-const navigation = useNavigation()
-const dispatch = useDispatch()
-const route = useRoute()
-const user = useSelector(selectCurrentUser)
-const warehouse = useSelector(selectCurrentWareHouse)
-// console.log("🚀 ~ file: GroupBottomTab.jsx:148 ~ GroupBottomTab ~ user:", user)
+	const navigation = useNavigation()
+	const dispatch = useDispatch()
+	const route = useRoute()
+	const user = useSelector(selectCurrentUser)
 
+	// console.log("🚀 ~ file: GroupBottomTab.jsx:148 ~ GroupBottomTab ~ user:", user)
+	const {
+		rememberedAccount,
+		getFullUserInfo
+	} = useAuth();
 
-const tabOffsetValue = useRef(new Animated.Value(centerDotDistance)).current
-const getWidth = () => {
-	return (app_dms.screenWidth) / 5
-}
-
-useEffect(() => {
-	getPrivateKeysAPI().then((res) => {
-		console.log("🚀 ~ file: GroupBottomTab.jsx:154 ~ getPrivateKeysAPI ~ res:", res)
-		dispatch(updatePrivateKeys(res))
-	})
-
-	// Kiểm tra xem có nên lấy thông tin user lại không 
-	if (route.params?.isGetFullUserInfo) {
-		console.log("🚀 ~ file: GroupBottomTab.jsx:182 ~ useEffect ~ route:", route)
-		getFullUserInfo()
-	}
-	// Truyền thằng user hiện tại (đã đăng nhập hoặc chưa server để lưu thông tin)
-	// kiểm tra thông tin id
-	let userId
-	if (user?._id)
-		userId = user._id
-	else {
-		userId = uuidv4()
-		console.log("🚀 ~ file: GroupBottomTab.jsx:175 ~ useEffect ~ userId:", userId)
-		dispatch(updateTemporaryUserId(userId))
+	const tabOffsetValue = useRef(new Animated.Value(centerDotDistance)).current
+	const getWidth = () => {
+		return (app_dms.screenWidth) / 5
 	}
 
-	socketIoInstance.emit('c_user_login', userId)
-}, [])
-
-useEffect(() => {
-	// Phương: Xin quyền cảu người dùng để lấy location
-	(async () => {
-		const { status } = await Location.requestForegroundPermissionsAsync()
-		if (status !== 'granted') {
-			return
-		}
-		
-		const userLocation = await Location.getCurrentPositionAsync({
-			enableHighAccuracy: true,
-			accuracy: Location.Accuracy.BestForNavigation
+	useEffect(() => {
+		getPrivateKeysAPI().then((res) => {
+			console.log("🚀 ~ file: GroupBottomTab.jsx:154 ~ getPrivateKeysAPI ~ res:", res)
+			dispatch(updatePrivateKeys(res))
 		})
 
-		const location = {
-			latitude: userLocation.coords.latitude || 0,
-			longitude: userLocation.coords.longitude || 0
+		// Kiểm tra xem có nên lấy thông tin user lại không 
+		if (route.params?.isGetFullUserInfo) {
+			console.log("🚀 ~ file: GroupBottomTab.jsx:182 ~ useEffect ~ route:", route)
+			getFullUserInfo(rememberedAccount)
 		}
-		console.log("🚀 ~ file: GroupBottomTab.jsx:197 ~ location:", location)
-		// Lưu vào state
-		dispatch(updateUserLocation(location))
-	})()
-}, [])
-
-// useEffect này dùng để lắng nghe các sự kiện ở toàn bộ app
-useEffect(() => {
-	// Lắng nghe sự kiện từ server (notìication)
-	socketIoInstance.on('s_notification_to_user', (data) => {
-		// nếu nhận được thì lưu vào state của thằng được follow
-		dispatch(updateCurrentUser(data.userReceived))
-		dispatch(updateNewNotifs(data.notif))
-	})
-}, [])
-
-const getFullUserInfo = async () => {
-	console.log("🚀 ~ file: GroupBottomTab.jsx:236 ~ getFullUserInfo ~ warehouse:", warehouse)
-	// Nếu mà có isGetFullUserInfo tức là nên call api để reset lại user mặc dù đã có trong state
-	// lấy emailname vs password tỏng warehouse
-	if (warehouse?.emailName && warehouse?.password) {
-		let user 
-		if (FunctionsUtility.validateRegex(warehouse?.emailName, EMAIL_RULE)) {
-			user = {
-				email: warehouse?.emailName,
-				password : warehouse?.password
-			}
-		} else {
-			user = {
-				username: warehouse?.emailName,
-				password : warehouse?.password
-			}
+		// Truyền thằng user hiện tại (đã đăng nhập hoặc chưa server để lưu thông tin)
+		// kiểm tra thông tin id
+		let userId
+		if (user?._id)
+			userId = user._id
+		else {
+			userId = uuidv4()
+			console.log("🚀 ~ file: GroupBottomTab.jsx:175 ~ useEffect ~ userId:", userId)
+			dispatch(updateTemporaryUserId(userId))
 		}
-		console.log("🚀 ~ file: GroupBottomTab.jsx:240 ~ getFullUserInfo ~ user:", user)
-		
-		await signInUserAPI(user).then((res) => {
-			console.log("🚀 ~ file: Signin.js:73 ~ onSubmit ~ res", res)
-			if (res) {
-				// Phuong: Update user in persistent store
-				dispatch(updateCurrentUser(res.fullInfoUser))
-				dispatch(updateCurrentNotifs(res.notifs))
+
+		socketIoInstance.emit('c_user_login', userId)
+	}, [])
+
+	useEffect(() => {
+		// Phương: Xin quyền cảu người dùng để lấy location
+		(async () => {
+			const { status } = await Location.requestForegroundPermissionsAsync()
+			if (status !== 'granted') {
+				return
 			}
+			
+			const userLocation = await Location.getCurrentPositionAsync({
+				enableHighAccuracy: true,
+				accuracy: Location.Accuracy.BestForNavigation
+			})
+
+			const location = {
+				latitude: userLocation.coords.latitude || 0,
+				longitude: userLocation.coords.longitude || 0
+			}
+			console.log("🚀 ~ file: GroupBottomTab.jsx:197 ~ location:", location)
+			// Lưu vào state
+			dispatch(updateUserLocation(location))
+		})()
+	}, [])
+
+	// useEffect này dùng để lắng nghe các sự kiện ở toàn bộ app
+	useEffect(() => {
+		// Lắng nghe sự kiện từ server (notìication)
+		socketIoInstance.on('s_notification_to_user', (data) => {
+			// nếu nhận được thì lưu vào state của thằng được follow
+			dispatch(updateCurrentUser(data.userReceived))
+			dispatch(updateNewNotifs(data.notif))
 		})
-	}
-}
+	}, [])
+
 	return (
 		<View style={styles.container}>
 				<Tab.Navigator

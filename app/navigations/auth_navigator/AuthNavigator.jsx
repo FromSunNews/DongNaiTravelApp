@@ -4,14 +4,19 @@ import React, { useState } from 'react'
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
+import {
+  useAuthState
+} from 'customHooks/useAuth'
+
+import { useSelector } from 'react-redux'
+import { selectCurrentWareHouse } from 'redux/warehouse/WareHouseSlice'
+import { selectIsAuthenticated, selectUserRole } from 'redux/user/UserSlice'
+
 import SplashScreen from 'screens/splash/SplashScreen'
 import OnboardingScreen from 'screens/onboarding/OnboardingScreen'
 import GroupBottomTab from 'navigations/group_bottom_tab/GroupBottomTab'
 import SigninScreen from 'screens/signin/SigninScreen'
 import SignupScreen from 'screens/signup/SignupScreen'
-import { useSelector } from 'react-redux'
-import { selectCurrentWareHouse } from 'redux/warehouse/WareHouseSlice'
-import { selectIsAuthenticated, selectUserRole } from 'redux/user/UserSlice'
 import CreatePost from 'screens/create_post/CreatePostScreen'
 import ForgotPasswordScreen from 'screens/fogot_password/ForgotPasswordScreen'
 import OtpScreen from 'screens/otp/OtpScreen'
@@ -21,10 +26,12 @@ import ProfileScreen from 'screens/profile_screen/ProfileScreen'
 const AuthNavigator = () => {
   // Phuong: https://reactnavigation.org/docs/getting-started
   const AppStack = createNativeStackNavigator()
-  
-  const isFirstTimeLauch = useSelector(selectCurrentWareHouse).isFirstTimeLauch
-  const isAuthenticated = useSelector(selectIsAuthenticated)
-  const userRole = useSelector(selectUserRole)
+
+  const {
+    isFirstTimeLaunch,
+    isAuthenticated,
+    userRole
+  } = useAuthState()
 
   const initialRouteName = 'SplashScreen'
 
@@ -38,9 +45,9 @@ const AuthNavigator = () => {
       />
 
       {/* Phuong: Kiểm tra xem đây có phải là lần đầu tiên người dùng chạy ứng dụng không? */}
-      {/* Phuong: Sẽ thay đổi state của thằng isFirstTimeLauch = false khi người dùng bắt đầu vào trang SignIn */}
+      {/* Phuong: Sẽ thay đổi state của thằng isFirstTimeLaunch = false khi người dùng bắt đầu vào trang SignIn */}
       {
-        isFirstTimeLauch &&
+        isFirstTimeLaunch &&
         <AppStack.Screen 
           name="OnboardingScreen" 
           component={OnboardingScreen} 
