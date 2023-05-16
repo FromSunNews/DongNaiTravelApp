@@ -54,9 +54,9 @@ const AppHeader = ({
   const currentNotif = useSelector(selectCurrentNotifs)
   const [numberOfVisited, setNumberOfVisited] = useState(0)
 
-  const canSetLeftPart = typeof setLeftPart === 'function';
-  const canSetCenterPart = typeof setCenterPart === 'function';
-  const canSetRightPart = typeof setRightPart === 'function';
+  const canSetLeftPart = typeof setLeftPart === 'function' && Boolean(setLeftPart);
+  const canSetCenterPart = typeof setCenterPart === 'function' && Boolean(setCenterPart);
+  const canSetRightPart = typeof setRightPart === 'function' && Boolean(setRightPart);
   const canSetBackButton = back;
   const title = (
     options.title !== "" && options.title
@@ -79,6 +79,8 @@ const AppHeader = ({
     ...(transparent ?  { backgroundColor: `rgba(${app_c.RGB.primary}, 0)` } : {} )
   }
 
+  console.log("Can set right part: ", canSetRightPart)
+  console.log("Right part: ", setRightPart);
 
   useEffect(() => {
     if (currentNotif.length > 0) {
@@ -88,93 +90,94 @@ const AppHeader = ({
 
   return (
     <View style={headerStyle}>
+      <View style={{...styles.header_col, justifyContent: 'flex-start', alignItems: 'center'}}>
       {/* Phần bên trái */}
-      {canSetLeftPart
+      {
+        canSetLeftPart
         ? setLeftPart()
         : (
-          <View style={{...styles.header_col, justifyContent: 'flex-start', alignItems: 'center'}}>
-            {
-              canSetBackButton
-              && (
-                <CircleButton
-                  defaultColor="type_2"
-                  boxShadowType="type_1"
-                  typeOfButton="opacity"
-                  onPress={() => navigation.goBack()}
-                  setIcon={(isActive, currentLabelStyle) => (
-                    <Ionicons name="chevron-back-outline" size={18} style={currentLabelStyle} />
-                  )}
-                />
-              )
-            }
-          </View>
-        )
-      }
+            canSetBackButton
+            && (
+              <CircleButton
+                defaultColor="type_2"
+                boxShadowType="type_1"
+                typeOfButton="opacity"
+                onPress={() => navigation.goBack()}
+                setIcon={(isActive, currentLabelStyle) => (
+                  <Ionicons name="chevron-back-outline" size={18} style={currentLabelStyle} />
+                )}
+              />
+            )
+          )
+        }
+      </View>
 
       {/* Phần ở giữa */}
-      {canSetCenterPart
-        ? setCenterPart()
-        : (
-          <View style={{...styles.header_col, justifyContent: 'center', alignItems: 'center'}}>
-            <AppText weight="lighter" font="h5" style={{textAlign: 'center'}}>{title}</AppText>
-          </View>
-        )
-      }
+      <View style={{...styles.header_col, justifyContent: 'center', alignItems: 'center'}}>
+        {
+          canSetCenterPart
+          ? setCenterPart()
+          : (
+              <AppText weight="lighter" font="h5" style={{textAlign: 'center'}}>{title}</AppText>
+            )
+        }
+      </View>
 
       {/* Phần bên phải */}
-      {canSetRightPart
-        ? setRightPart()
-        : (
-          <View style={{...styles.header_col, justifyContent: 'flex-end', alignItems: 'center'}}>
-            <CircleButton
-              defaultColor="type_2"
-              boxShadowType="type_1"
-              typeOfButton="opacity"
-              setIcon={(isActive, currentLabelStyle) => (
-                <Ionicons name="search-outline" size={18} style={currentLabelStyle} />
-              )}
-            />
-            
-            {
-              title === langData.home[langCode] && (
-                <View style={{paddingLeft:10}}>
-                  <CircleButton
-                    defaultColor="type_2"
-                    boxShadowType="type_1"
-                    typeOfButton="opacity"
-                    onPress={() => navigation.navigate('Notification')}
-                    setIcon={(isActive, currentLabelStyle) => (
-                      <Ionicons name="notifications-sharp" size={18} style={[currentLabelStyle, {color: numberOfVisited !== 0 ? '#FFC72C' : null}]} />
-                    )}
-                  />
-
-                  {
-                    numberOfVisited > 0 &&
-                    <View style={{
-                      height: 15,
-                      width: 15,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      backgroundColor: '#CE2029',
-                      borderRadius: 7.5,
-                      position: 'absolute',
-                      right: 0,
-                      top: 0,
-                    }}>
-                      <Text style={{
-                        color: app_c.HEX.primary,
-                        ...app_typo.fonts.normal.bolder.body2,
-                        fontSize: 10
-                      }}>{numberOfVisited}</Text>
-                    </View>
-                  }
-
+      <View style={{...styles.header_col, justifyContent: 'flex-end', alignItems: 'center'}}>
+        {
+          canSetRightPart
+          ? setRightPart()
+          : 
+          (
+            <>
+              <CircleButton
+                defaultColor="type_2"
+                boxShadowType="type_1"
+                typeOfButton="opacity"
+                setIcon={(isActive, currentLabelStyle) => (
+                  <Ionicons name="search-outline" size={18} style={currentLabelStyle} />
+                )}
+              />
+            </>
+          )
+        }
+        {
+          title === langData.home[langCode] && (
+            <View style={{paddingLeft:10}}>
+              <CircleButton
+                defaultColor="type_2"
+                boxShadowType="type_1"
+                typeOfButton="opacity"
+                onPress={() => navigation.navigate('Notification')}
+                setIcon={(isActive, currentLabelStyle) => (
+                  <Ionicons name="notifications-sharp" size={18} style={[currentLabelStyle, {color: numberOfVisited !== 0 ? '#FFC72C' : null}]} />
+                )}
+              />
+              {
+                numberOfVisited > 0 &&
+                <View style={{
+                  height: 15,
+                  width: 15,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: '#CE2029',
+                  borderRadius: 7.5,
+                  position: 'absolute',
+                  right: 0,
+                  top: 0,
+                }}>
+                  <Text style={{
+                    color: app_c.HEX.primary,
+                    ...app_typo.fonts.normal.bolder.body2,
+                    fontSize: 10
+                  }}>{numberOfVisited}</Text>
                 </View>
-              )
-            }
-          </View>
-        )
-      }
+              }
+            </View>
+          )
+        }
+      </View>
     </View>
   )
 }

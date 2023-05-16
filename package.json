@@ -72,6 +72,7 @@
     "react-native-toast-notifications": "^3.3.1",
     "react-native-vector-icons": "^9.2.0",
     "react-native-web": "~0.18.9",
+    "react-native-webview": "11.26.0",
     "react-redux": "^8.0.5",
     "redux-persist": "^6.0.0",
     "socket.io-client": "^4.6.1",

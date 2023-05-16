@@ -4,21 +4,27 @@ import React, { useState } from 'react'
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
+import { useSelector } from 'react-redux'
+import { selectCurrentWareHouse } from 'redux/warehouse/WareHouseSlice'
+import { selectIsAuthenticated, selectUserRole } from 'redux/user/UserSlice'
+
 import SplashScreen from 'screens/splash/SplashScreen'
 import OnboardingScreen from 'screens/onboarding/OnboardingScreen'
 import GroupBottomTab from 'navigations/group_bottom_tab/GroupBottomTab'
 import SigninScreen from 'screens/signin/SigninScreen'
 import SignupScreen from 'screens/signup/SignupScreen'
-import { useSelector } from 'react-redux'
-import { selectCurrentWareHouse } from 'redux/warehouse/WareHouseSlice'
-import { selectIsAuthenticated, selectUserRole } from 'redux/user/UserSlice'
 import CreatePost from 'screens/create_post/CreatePostScreen'
 import ForgotPasswordScreen from 'screens/fogot_password/ForgotPasswordScreen'
 import OtpScreen from 'screens/otp/OtpScreen'
 import ResetPasswordScreen from 'screens/reset_password/ResetPasswordScreen'
 import ProfileScreen from 'screens/profile_screen/ProfileScreen'
+import BlogEditorScreen from 'screens/blog_editor/BlogEditorScreen'
+import {
+  AppHeader,
+  AppText
+} from 'components'
 
-const AuthNavigator = () => {
+const AuthNavigator = ({navigation}) => {
   // Phuong: https://reactnavigation.org/docs/getting-started
   const AppStack = createNativeStackNavigator()
   
@@ -89,6 +95,24 @@ const AuthNavigator = () => {
           name="CreatePost" 
           component={CreatePost} 
           options={{ header: () => null }} 
+        />
+      }
+      {
+        <AppStack.Screen
+          name="BlogEditorScreen"
+          options={{
+            title: 'Create a blog',
+            presentation: 'containedModal',
+            header: props => (
+              <AppHeader
+                {...props}
+                setRightPart={() => (
+                  <AppText onPress={() => {console.log("Prepare to publish a blog!")}}>Next</AppText>
+                )}
+              />
+            )
+          }}
+          component={BlogEditorScreen}
         />
       }
     </AppStack.Navigator>
