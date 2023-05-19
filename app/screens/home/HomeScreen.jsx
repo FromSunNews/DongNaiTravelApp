@@ -7,7 +7,7 @@ import {
 } from 'request_api'
 
 import styles from "./HomeScreenStyles"
-import { app_c, app_sp, app_typo } from "globals/styles"
+import { app_sp, app_typo } from "globals/styles"
 import { 
   AppText, 
   HorizontalPlaceCard, 
@@ -31,6 +31,7 @@ import HomeBannerSlider from "components/home_banner_slider/HomeBannerSlider"
 import { selectCurrentLanguage } from "redux/language/LanguageSlice"
 import { useBriefPlaces } from "customHooks/usePlace"
 import { BRIEF_PLACE_DATA_FIELDS } from "utilities/constants"
+import useTheme from "customHooks/useTheme"
 
 const HomeScreen = ({navigation}) => {
   const currentMap = useSelector(selectCurrentMap)
@@ -46,8 +47,11 @@ const HomeScreen = ({navigation}) => {
   const [typeBlog, setTypeBlog] = React.useState("");
   const [currentBlogs, setCurrentBlogs] = React.useState(null);
 
+  //language
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.homeScreen
+  //theme
+  const themeColor = useTheme();
 
   const [places, setPlaces] = React.useState(null);
 
@@ -99,32 +103,32 @@ const HomeScreen = ({navigation}) => {
   }, [typePlace])
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+    <ScrollView style={[styles.container,{backgroundColor: themeColor.primary,}]} showsVerticalScrollIndicator={false}>
       <View style={styles.home_content}>
-        <View style={styles.home_banner}>
+        <View style={[styles.home_banner, {backgroundColor: themeColor.ext_third,}]}>
           <HomeBannerSlider/>
         </View>
 
         {
           showPanelWeather &&
           <View style={styles.home_temperature}>
-            <View style={styles.temperature}>
+            <View style={[styles.temperature,{backgroundColor: themeColor.ext_primary,}]}>
               <View style={styles.temperature_degrees}>
                 {
                   celsius ? (
-                    <AppText style={[styles.temperature_degrees_info,{fontSize:22,marginTop:-4}]}>{`${celsius}°C`}</AppText>
-                  ): <AppText style={[styles.temperature_degrees_info,{fontSize:22,marginTop:-4}]}><Entypo name="minus"/><Entypo name="minus"/>{`°C`}</AppText>
+                    <AppText style={[styles.temperature_degrees_info,{fontSize:22,marginTop:-4,color:themeColor.ext_second,}]}>{`${celsius}°C`}</AppText>
+                  ): <AppText style={[styles.temperature_degrees_info,{fontSize:22,marginTop:-4,color:themeColor.ext_second,}]}><Entypo name="minus"/><Entypo name="minus"/>{`°C`}</AppText>
                 }
                 {
                   desWeather ? (
-                    <AppText numberOfLines={2}  style={[styles.temperature_degrees_info,{fontSize:13,paddingHorizontal:4,textAlign:"center"}]}>{capitalizeFirstLetter(desWeather)}</AppText>
-                  ) : <AppText numberOfLines={2}  style={[styles.temperature_degrees_info,{fontSize:13,paddingHorizontal:4,textAlign:"center"}]}>{langData.desWeather[langCode]}</AppText>
+                    <AppText numberOfLines={2}  style={[styles.temperature_degrees_info,{fontSize:13,paddingHorizontal:4,textAlign:"center",color:themeColor.ext_second,}]}>{capitalizeFirstLetter(desWeather)}</AppText>
+                  ) : <AppText numberOfLines={2}  style={[styles.temperature_degrees_info,{fontSize:13,paddingHorizontal:4,textAlign:"center",color:themeColor.ext_second,}]}>{langData.desWeather[langCode]}</AppText>
                 }
               </View>
               <View style={styles.temperature_other_info}>
                 <View style={[styles.temperature_other_info_half]}>
                   <View style={styles.temperature_other_info_quarter}>
-                    <Fontisto name='wind' size={14} color={app_c.HEX.ext_second}/>
+                    <Fontisto name='wind' size={14} color={themeColor.ext_second}/>
                     {
                       wind ?(
                       <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.sub0,paddingHorizontal:8}}>{`${wind}`}<Text style={{fontSize:12}}>km/h</Text></AppText>
@@ -132,7 +136,7 @@ const HomeScreen = ({navigation}) => {
                     }
                   </View>
                   <View style={[styles.temperature_other_info_quarter,{ paddingLeft:12}]}>
-                        <Entypo name='water' size={15} color={app_c.HEX.ext_second}/>
+                        <Entypo name='water' size={15} color={themeColor.ext_second}/>
                         {
                           humidity ? (
                             <AppText style={{...app_typo.fonts.normal.normal.sub0,paddingHorizontal:8}}>{`${humidity}`}<Text style={{fontSize:12}}>%</Text></AppText>
@@ -142,7 +146,7 @@ const HomeScreen = ({navigation}) => {
                 </View>
                 <View style={styles.temperature_other_info_half}>
                   <View style={styles.temperature_other_info_quarter}>
-                    <Entypo name='cloud' size={15} color={app_c.HEX.ext_second}/>
+                    <Entypo name='cloud' size={15} color={themeColor.ext_second}/>
                     {
                       cloud ? (
                         <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.sub0,paddingHorizontal:8}}>{`${cloud}`+`%`}</AppText>
@@ -150,18 +154,20 @@ const HomeScreen = ({navigation}) => {
                     }
                   </View>
                   <View style={[styles.temperature_other_info_quarter,{paddingLeft:12}]}>
-                      <MaterialCommunityIcons name='weather-fog' size={15} color={app_c.HEX.ext_second}/>
+                      <MaterialCommunityIcons name='weather-fog' size={15} color={themeColor.ext_second}/>
                       {
                         vision ? (
                           <AppText style={{...app_typo.fonts.normal.normal.sub0,paddingHorizontal:8}}>{`${vision.toFixed(1)}`}<Text style={{fontSize:12}}>km</Text></AppText>
-                        ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.sub0,marginTop:4}}><Entypo name="minus"/><Entypo name="minus"/><Text style={{fontSize:12}}>km</Text></AppText>
+                        ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.sub0,marginTop:4}}><Entypo name="minus"/><Entypo name="minus" color='red
+                        
+                        '  /><Text style={{ fontSize: 12 }}>km</Text></AppText>
                       }
                   </View>
                 </View>
               </View>
             </View>
-            <TouchableOpacity style={styles.temperature_reload} onPress={getCurrentWeather}>
-              <Ionicons name="reload-sharp" size={30} color={app_c.HEX.fourth} />
+            <TouchableOpacity style={[styles.temperature_reload,{backgroundColor: themeColor.ext_primary,}]} onPress={getCurrentWeather}>
+              <Ionicons name="reload-sharp" size={30} color={themeColor.fourth} />
             </TouchableOpacity>
           </View>
         }
@@ -176,11 +182,11 @@ const HomeScreen = ({navigation}) => {
             types='all;recommended;popular;most_visit;most_favorite'
             callBack={setTypePlace}
             scrollStyle={[app_sp.ms_18, app_sp.mb_12]}
-            containerStyle={{backgroundColor: app_c.HEX.primary, ...app_sp.pv_10}}
+            containerStyle={{backgroundColor: themeColor.primary, ...app_sp.pv_10}}
           />
           <ScrollView 
             horizontal={true}
-            style={[{backgroundColor:app_c.HEX.primary}, app_sp.pb_10]}
+            style={[{backgroundColor:themeColor.primary}, app_sp.pb_10]}
             contentContainerStyle={{flexGrow: 1}}
             showsHorizontalScrollIndicator={false}
           >
@@ -195,7 +201,7 @@ const HomeScreen = ({navigation}) => {
             }
           </ScrollView>
         </View>
-        <View style={styles.home_category}>
+        <View style={[styles.home_category,{backgroundColor: themeColor.primary}]}>
           <TouchableOpacity style={styles.category_header} onPress={()=>navigation.navigate("BlogsNavigator")}>
             <AppText style={styles.category_name}>{langData.title_Blog[langCode]}</AppText>
             <AppText><Entypo name="chevron-small-right" size={40}/></AppText>
@@ -204,7 +210,7 @@ const HomeScreen = ({navigation}) => {
             types='all;recommended;popular;most_visit;high_rating'
             callBack={setTypeBlog}
             scrollStyle={[{paddingLeft:16}, app_sp.pv_12]}
-            containerStyle={{backgroundColor: app_c.HEX.primary}}
+            containerStyle={{backgroundColor: themeColor.primary}}
           />
           <View style={{ ...app_sp.mb_12}}>
             <ScrollView horizontal={true} style={{paddingBottom:10,paddingLeft:16}} showsHorizontalScrollIndicator={false}>

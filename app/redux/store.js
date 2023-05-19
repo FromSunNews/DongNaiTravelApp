@@ -18,6 +18,8 @@ import { combineReducers } from 'redux'
 import { persistReducer } from 'redux-persist'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { persistStore } from 'redux-persist'
+import { themeReducer } from './theme/ThemeSlice'
+
 
 const persistConfig = {
   key: 'root',
@@ -39,6 +41,7 @@ const reducers = combineReducers({
   manifold: manifoldReducer,
   warehouse: warehouseReducer,
   filter: filterReducer,
+  theme: themeReducer,
   language: languageReducer,
 })
 

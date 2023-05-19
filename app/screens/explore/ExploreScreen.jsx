@@ -18,9 +18,10 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { TypeScrollView, HorizontalPlaceCard, HorizontalPlaceCardSkeleton, BannerButton } from 'components'
 
 import styles from './ExploreScreenStyles'
-import { app_sp, app_c } from 'globals/styles'
+import { app_sp } from 'globals/styles'
 import { useSelector } from 'react-redux'
 import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
+import useTheme from 'customHooks/useTheme'
 
 /**
  * __Creator__: @NguyenAnhTuan1912
@@ -28,8 +29,12 @@ import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
  * @returns 
  */
 const ExploreScreen = () => {
+  //language
   const langCode = useSelector(selectCurrentLanguage).languageCode 
   const langData = useSelector(selectCurrentLanguage).data?.exploreScreen
+  //theme
+  const themeColor = useTheme();
+  
   const exploreInfo = React.useRef({
     isFirstFetch: true,
     briefPlaceDataFields: BRIEF_PLACE_DATA_FIELDS,
@@ -89,7 +94,7 @@ const ExploreScreen = () => {
             style={[
               app_sp.ph_18,
               {
-                backgroundColor: app_c.HEX.primary,
+                backgroundColor: themeColor.primary,
                 position: 'relative',
                 zIndex: 2,
               }
@@ -100,17 +105,17 @@ const ExploreScreen = () => {
               style={app_sp.mt_12}
               toScreen={{screenName: "MapScreen"}}
               setRightIcon={(isActive, currentLabelStyle) =>
-                <Ionicons name="chevron-forward-outline" style={currentLabelStyle} size={25} />
+                <Ionicons name="chevron-forward-outline" style={currentLabelStyle} size={25} color={themeColor.ext_third}/>
               }
             >
-              Let’s see your location in map
+              {langData.banner_button[langCode]}
             </BannerButton>
           </View>
         )
       }
       <FlatList
         data={places ? places.data : []}
-        style={styles.scroll_view_container}
+        style={[styles.scroll_view_container,{backgroundColor: themeColor.primary}]}
         contentContainerStyle={{paddingBottom: 200}}
         onMomentumScrollEnd={handleExploreMomentumScrollEnd}
         onEndReached={handleEndReach}
@@ -131,7 +136,7 @@ const ExploreScreen = () => {
             types='all;recommended;popular;most_visit;high_rating'
             callBack={setType}
             scrollStyle={[app_sp.ms_18, app_sp.pv_12]}
-            containerStyle={{backgroundColor: app_c.HEX.primary, ...app_sp.pv_10}}
+            containerStyle={{backgroundColor: themeColor.primary, ...app_sp.pv_10}}
           />
         }
         renderItem={item => <View style={app_sp.ph_18}><HorizontalPlaceCard typeOfBriefPlace={type} place={item.item} placeIndex={item.index} /></View>}

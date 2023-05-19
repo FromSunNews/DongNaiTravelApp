@@ -13,6 +13,7 @@ import { app_typo } from '../../globals/styles';
 import { useSelector } from 'react-redux';
 import { selectCurrentNotifs } from '../../redux/notifications/NotificationsSlice';
 import { selectCurrentLanguage } from '../../redux/language/LanguageSlice';
+import useTheme from 'customHooks/useTheme';
 
  /**
  * __Creator__: @NguyenAnhTuan1912
@@ -48,8 +49,11 @@ const AppHeader = ({
   setCenterPart,
   setRightPart
 }) => {
+  //language
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.appHeader
+  //theme
+  const themeColor = useTheme()
 
   const currentNotif = useSelector(selectCurrentNotifs)
   const [numberOfVisited, setNumberOfVisited] = useState(0)
@@ -74,7 +78,7 @@ const AppHeader = ({
     : ""
   )
   const headerStyle = {
-    ...styles.container,
+    ...styles.container,backgroundColor: themeColor.primary,
     ...app_shdw[boxShadow],
     ...(transparent ?  { backgroundColor: `rgba(${app_c.RGB.primary}, 0)` } : {} )
   }
@@ -84,10 +88,10 @@ const AppHeader = ({
     if (currentNotif.length > 0) {
       setNumberOfVisited(currentNotif.filter(notif => notif._isVisited === false).length)
     }
-  }, [currentNotif])
+  }, [currentNotif,themeColor])
 
   return (
-    <View style={headerStyle}>
+    <View style={[headerStyle,{backgroundColor: themeColor.primary}]}>
       {/* Phần bên trái */}
       {canSetLeftPart
         ? setLeftPart()
@@ -102,7 +106,7 @@ const AppHeader = ({
                   typeOfButton="opacity"
                   onPress={() => navigation.goBack()}
                   setIcon={(isActive, currentLabelStyle) => (
-                    <Ionicons name="chevron-back-outline" size={18} style={currentLabelStyle} />
+                    <Ionicons name="chevron-back-outline" size={18} style={currentLabelStyle}  />
                   )}
                 />
               )
@@ -162,7 +166,7 @@ const AppHeader = ({
                       top: 0,
                     }}>
                       <Text style={{
-                        color: app_c.HEX.primary,
+                        color: themeColor.primary,
                         ...app_typo.fonts.normal.bolder.body2,
                         fontSize: 10
                       }}>{numberOfVisited}</Text>

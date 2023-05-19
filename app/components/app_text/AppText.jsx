@@ -1,11 +1,14 @@
 import { Text, Linking, StyleProp, TextStyle, TextProps } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import ComponentUtility from 'utilities/component';
 
 import { Link } from '@react-navigation/native';
 
 import { app_c, app_typo } from 'globals/styles'
+import useTheme from 'customHooks/useTheme';
+import { useSelector } from 'react-redux';
+import { selectCurrentMode } from 'redux/theme/ThemeSlice';
 
 /**
  * @typedef ToScreenProps
@@ -43,14 +46,17 @@ const AppText = ({
   ...props
   
 }) => {
+  //theme
+  var themeColor = useTheme();
+
   let stylePropIsArray = props.style instanceof Array;
 
   let textStyle = React.useMemo(() => (
     {
       ...app_typo.fonts[fontStyle][weight][font],
-      color: app_c.HEX[color]
+      color: themeColor[color]
     }
-  ), [fontStyle, weight, font, color]);
+  ), [fontStyle, weight, font, color, themeColor]);
 
   let textCompleteStyle = ComponentUtility.mergeStyle(textStyle, props.style);
 
@@ -59,7 +65,7 @@ const AppText = ({
     return (
       <Text
         {...props}
-        style={[textCompleteStyle, { color: app_c.HEX.third }]}
+        style={[textCompleteStyle, { color: themeColor.third }]}
         onPress={() => Linking.openURL(hyperLink)}
       >{children}
       </Text>
