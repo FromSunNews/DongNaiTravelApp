@@ -36,6 +36,7 @@ import styles from './VerticalPlaceCardStyles'
 import { app_c, app_sh, app_sp } from 'globals/styles'
 
 import { PlaceDataProps } from 'types/index.d.ts'
+import useTheme from 'customHooks/useTheme'
 
 /**
  * @typedef VerticalPlaceCardProps
@@ -66,8 +67,11 @@ const VerticalPlaceCard = ({ place, placeIndex, typeOfBriefPlace, ...props }) =>
   const { updateBriefPlace } = useBriefPlacesActions(typeOfBriefPlace);
   const navigation = useNavigation();
 
+  //language
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.homeScreen
+  //theme
+  const themeColor = useTheme();
 
   const [extendedPlaceInfo, setExtendedPlaceInfo] = React.useState({
     isLiked: place.isLiked ? true : false,
@@ -121,7 +125,7 @@ const VerticalPlaceCard = ({ place, placeIndex, typeOfBriefPlace, ...props }) =>
   }, [place.isLiked, place.isVisited]);
 
   return React.useMemo(() => (
-    <View {...props} style={containerStyle}>
+    <View {...props} style={[containerStyle,{backgroundColor: themeColor.ext_primary,}]}>
       {/* Image */}
       <RectangleButton
         isOnlyContent
@@ -129,7 +133,7 @@ const VerticalPlaceCard = ({ place, placeIndex, typeOfBriefPlace, ...props }) =>
         overrideShape="rounded_4"
         onPress={handlePressImageButton}
       >
-        <Image source={place.place_photos.length > 0 ? {uri: place.place_photos[0].photos[0]} : {}} style={styles.card_image} />
+        <Image source={place.place_photos.length > 0 ? {uri: place.place_photos[0].photos[0]} : {}} style={[styles.card_image,{backgroundColor: themeColor.ext_primary,}]} />
       </RectangleButton>
       {/* Button & Recommended tag */}
       <View style={styles.card_mid}>
@@ -186,7 +190,7 @@ const VerticalPlaceCard = ({ place, placeIndex, typeOfBriefPlace, ...props }) =>
         </RectangleButton>
       </View>
     </View>
-  ), [extendedPlaceInfo.isLiked, extendedPlaceInfo.isVisited, place.rating, place.numberOfVisited, place.user_ratings_total])
+  ), [extendedPlaceInfo.isLiked, extendedPlaceInfo.isVisited, place.rating, place.numberOfVisited, place.user_ratings_total,themeColor])
 }
 
 export default VerticalPlaceCard

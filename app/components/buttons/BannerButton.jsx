@@ -15,6 +15,7 @@ import AppText from '../app_text/AppText'
 
 import styles from './ButtonsStyles'
 import { app_sp, app_sh, app_c } from 'globals/styles'
+import useTheme from 'customHooks/useTheme'
 
 const default_style = {
   width: '100%',
@@ -89,6 +90,11 @@ const BannerButton = ({
   let canLoadLeftIcon = typeof setLeftIcon === 'function' && React.isValidElement(setLeftIcon());
   let canLoadRightIcon = typeof setRightIcon === 'function' && React.isValidElement(setRightIcon());
 
+  //theme
+  const themeColor = useTheme();
+  console.log("🚀 ~ file: BannerButton.jsx:95 ~ themeColor:", themeColor)
+
+
   if(isDisable) {
     return (
       <TouchableOpacity
@@ -97,14 +103,14 @@ const BannerButton = ({
       >
         <ImageBackground source={{url: `${imageUrl}`}} resizeMode="cover" style={banner_button_styles.image}>
           <View style={banner_button_styles.lbl_container}>
-            {canLoadLeftIcon && setLeftIcon(isActive = false, styles.lbl_disable)}
+            {canLoadLeftIcon && setLeftIcon(isActive = false, [styles.lbl_disable,{color: themeColor.ext_third}])}
             {
               canLoadLeftIcon
-              ? <AppText font={fontOfText} style={{...styles.lbl_disable, ...app_sp.ms_8}} numberOfLines={2}>{children}</AppText>
-              : <AppText font={fontOfText} style={styles.lbl_disable} numberOfLines={2}>{children}</AppText>
+              ? <AppText font={fontOfText} style={{...styles.lbl_disable,color: themeColor.ext_third, ...app_sp.ms_8}} numberOfLines={2}>{children}</AppText>
+              : <AppText font={fontOfText} style={[styles.lbl_disable,{color: themeColor.ext_third,}]} numberOfLines={2}>{children}</AppText>
             }
           </View>
-          {canLoadRightIcon && setRightIcon(isActive = false, styles.lbl_disable)}
+          {canLoadRightIcon && setRightIcon(isActive = false, [styles.lbl_disable,{color: themeColor.ext_third}])}
         </ImageBackground>
       </TouchableOpacity>
     );
@@ -113,6 +119,7 @@ const BannerButton = ({
   let handlePressBannerButton = handlePressButton;
   let currentButtonStyle = currentButtonStyle = {...style, ...default_style, ...styles[`btn_default_${defaultColor}`]};
   let currentLabelStyle = currentLabelStyle = styles[`lbl_default_${defaultColor}`];
+  console.log("🚀 ~ file: BannerButton.jsx:122 ~ currentButtonStyle:", currentButtonStyle)
 
   if(isChangeColorWhenActive) {
     currentButtonStyle = {
@@ -160,7 +167,7 @@ const BannerButton = ({
   if(typeOfButton === "highlight") {
     ButtonComponent = TouchableHighlight;
     ButtonComponentProps = {
-      underlayColor: app_c.HEX.ext_third,
+      underlayColor: themeColor.ext_third,
       style: currentButtonStyle
     }
   }

@@ -21,6 +21,7 @@ import { app_c, app_sh, app_sp } from 'globals/styles'
 import { ViewProps } from 'types/index.d'
 import { useSelector } from 'react-redux'
 import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
+import useTheme from 'customHooks/useTheme'
 
 /**
  * @typedef BlogProps
@@ -60,12 +61,14 @@ const VerticalBlogCard = ({ blog, ...props }) => {
   const containerStyle = ComponentUtility.mergeStyle([styles.card, blog.isRecommended ? {} : {}], props.style);
   //Đức useNavagation to make when onPress Image of Blog => toScreen BlogDetailScreen
   const navigation = useNavigation() 
-
+  //language
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.homeScreen
+  //theme
+  const themeColor = useTheme();
 
   return (
-    <View {...props} style={containerStyle}>
+    <View {...props} style={[containerStyle,{backgroundColor: themeColor.ext_primary}]}>
       {/* Image */}
       <RectangleButton
         isOnlyContent
@@ -73,13 +76,13 @@ const VerticalBlogCard = ({ blog, ...props }) => {
         overrideShape="rounded_4"
         onPress={()=>navigation.navigate("BlogDetailScreen")}
       >
-        <Image source={{ uri: blog.avatar ? blog.avatar : undefined }} style={styles.card_image} />
+        <Image source={{ uri: blog.avatar ? blog.avatar : undefined }} style={[styles.card_image,{backgroundColor: themeColor.ext_primary,}]} />
       </RectangleButton>
       {/* Button & Recommended tag */}
       <View style={styles.card_mid}>
         {
           blog.user.avatar === ""
-          ? (<Ionicons name="person-circle" color={app_c.HEX.ext_second} />)
+          ? (<Ionicons name="person-circle" color={themeColor.ext_second} />)
           : (<Image source={{uri: blog.user.avatar}} />)
         }<AppText font="body2">{" " + blog.user.name}</AppText>
       </View>

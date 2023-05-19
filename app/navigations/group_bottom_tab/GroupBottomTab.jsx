@@ -43,6 +43,7 @@ import { signInUserAPI } from '../../request_api'
 import { selectCurrentWareHouse } from '../../redux/warehouse/WareHouseSlice'
 import FunctionsUtility from '../../utilities/functions'
 import { EMAIL_RULE } from '../../utilities/validators'
+import useTheme from 'customHooks/useTheme'
 
 const tabIcon = {
 	'HomeScreen': {
@@ -100,9 +101,11 @@ const BottomTabBar = ({
 		toValue: dotMoveDistance * state.index + centerDotDistance,
 		useNativeDriver: true
 	}).start()
+	//theme
+	const themeColor = useTheme();
 
 	return (
-		<View style={styles.tab_bottom_container}>
+		<View style={[styles.tab_bottom_container,{backgroundColor: themeColor.ext_bg_tab}]}>
 			<View style={styles.tab_bottom_buttons_container}>
 				{state.routes.map((route, index) => {
 					const { options } = descriptors[route.key];
@@ -131,18 +134,19 @@ const BottomTabBar = ({
 							key={route.name}
 							style={styles.tab_bottom_button}
 						>
-							<View style={tabIcon[route.name].isHighlight ? styles.tab_bottom_hl_icon_conatiner : styles.tab_bottom_icon_conatiner}>
+							<View style={tabIcon[route.name].isHighlight ? [styles.tab_bottom_hl_icon_conatiner,{backgroundColor: themeColor.ext_bg_tab,
+    borderColor: themeColor.ext_border_map_tab}] : styles.tab_bottom_icon_conatiner}>
 								{
 									tabIcon[route.name].isHighlight ?
-									(<Ionicons
-										size={tabIcon[route.name].size}
-										name={isFocused ? tabIcon[route.name].active : tabIcon[route.name].inactive}
-										style={isFocused ? styles.tab_bottom_hl_icon_active : styles.tab_bottom_hl_icon_inactive}
-									/>) :
-									(<Ionicons
-										size={tabIcon[route.name].size}
-										name={isFocused ? tabIcon[route.name].active : tabIcon[route.name].inactive}
-										style={{...(isFocused ? styles.tab_bottom_icon_active : styles.tab_bottom_icon_inactive)}}
+										(<Ionicons
+											size={tabIcon[route.name].size}
+											name={isFocused ? tabIcon[route.name].active : tabIcon[route.name].inactive}
+											style={isFocused ? [styles.tab_bottom_hl_icon_active, { color: themeColor.ext_mid_map_tab }] : [styles.tab_bottom_hl_icon_inactive, { color: themeColor.ext_unactive_tab }]}
+										/>) :
+										(<Ionicons
+											size={tabIcon[route.name].size}
+											name={isFocused ? tabIcon[route.name].active : tabIcon[route.name].inactive}
+											style={isFocused ? [styles.tab_bottom_icon_active, {color: themeColor.ext_active_tab}] : [styles.tab_bottom_icon_inactive,{color: themeColor.ext_unactive_tab}]}
 									/>)
 								}
 							</View>
@@ -150,7 +154,7 @@ const BottomTabBar = ({
 					);
 				})}
 			</View>
-			<Animated.View style={{...styles.tab_bottom_dot_animated_container, transform: [{ translateX: tabOffsetValue }]}}></Animated.View>
+			<Animated.View style={{...styles.tab_bottom_dot_animated_container,backgroundColor:themeColor.ext_dot_tab, transform: [{ translateX: tabOffsetValue }]}}></Animated.View>
 		</View>
 	);
 }
