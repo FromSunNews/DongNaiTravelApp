@@ -32,6 +32,8 @@ import { selectCurrentLanguage } from "redux/language/LanguageSlice"
 import { useBriefPlaces } from "customHooks/usePlace"
 import { BRIEF_PLACE_DATA_FIELDS } from "utilities/constants"
 import useTheme from "customHooks/useTheme"
+import CustomStatusBar from "components/custom_status_bar/CustomStatusBar"
+import { selectCurrentMode } from "redux/theme/ThemeSlice"
 
 const HomeScreen = ({navigation}) => {
   const currentMap = useSelector(selectCurrentMap)
@@ -52,6 +54,7 @@ const HomeScreen = ({navigation}) => {
   const langData = useSelector(selectCurrentLanguage).data?.homeScreen
   //theme
   const themeColor = useTheme();
+  const themeMode = useSelector(selectCurrentMode).mode
 
   const [places, setPlaces] = React.useState(null);
 
@@ -103,6 +106,7 @@ const HomeScreen = ({navigation}) => {
   }, [typePlace])
 
   return (
+    
     <ScrollView style={[styles.container,{backgroundColor: themeColor.primary,}]} showsVerticalScrollIndicator={false}>
       <View style={styles.home_content}>
         <View style={[styles.home_banner, {backgroundColor: themeColor.ext_third,}]}>
@@ -226,6 +230,8 @@ const HomeScreen = ({navigation}) => {
             </ScrollView>
           </View>
         </View>
+        {/* Status bar cho ca android va ios */}
+        <CustomStatusBar backgroundColor={themeColor.primary} barStyle={themeMode === 'light' ? "dark-content" : "light-content"} />
       </View>
     </ScrollView>
   )
