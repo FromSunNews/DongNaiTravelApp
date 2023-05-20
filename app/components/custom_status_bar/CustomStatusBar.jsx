@@ -2,13 +2,19 @@ import * as React from 'react';
 import { StatusBar, View } from 'react-native';
 import { SafeAreaView} from 'react-native-safe-area-context';
 import { styles } from './CustomStatusBarStyles';
+import useTheme from 'customHooks/useTheme';
+import { useSelector } from 'react-redux';
+import { selectCurrentMode } from 'redux/theme/ThemeSlice';
 
-const CustomStatusBar = ({backgroundColor, ...props}) => (
-  <View style={[styles.statusBar, { backgroundColor }]}>
+const CustomStatusBar = ({...props }) => {
+  const themeColor = useTheme();
+  const themeMode = useSelector(selectCurrentMode).mode
+  return(
+  <View style={[styles.statusBar, { backgroundColor:themeColor.primary }]}>
     <SafeAreaView>
-      <StatusBar translucent backgroundColor={backgroundColor} {...props} />
+      <StatusBar translucent backgroundColor={themeColor.primary} barStyle = {themeMode === 'light' ? "dark-content" : "light-content"} {...props} />
     </SafeAreaView>
-  </View>
-)
+  </View>)
+}
 
 export default CustomStatusBar

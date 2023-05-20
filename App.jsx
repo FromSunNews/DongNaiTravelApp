@@ -96,7 +96,7 @@ export default function App() {
       >
         <Provider store={store}>
           <PersistGate loading={<Text>Loading...</Text>} persistor={persistor}>
-            
+          <CustomStatusBar  />
             <NavigationContainer>
               <AuthNavigator/>
             </NavigationContainer>
@@ -108,6 +108,7 @@ export default function App() {
             <Loading />
 
           </PersistGate>
+
         </Provider>
       </ToastProvider>
     </GestureHandlerRootView>

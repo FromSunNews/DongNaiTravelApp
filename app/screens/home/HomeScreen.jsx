@@ -230,8 +230,6 @@ const HomeScreen = ({navigation}) => {
             </ScrollView>
           </View>
         </View>
-        {/* Status bar cho ca android va ios */}
-        <CustomStatusBar backgroundColor={themeColor.primary} barStyle={themeMode === 'light' ? "dark-content" : "light-content"} />
       </View>
     </ScrollView>
   )
