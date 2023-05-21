@@ -18,16 +18,22 @@ import { app_c, app_dms, app_sh, app_typo } from "globals/styles";
 import DropDown from "components/drop_down/DropDown";
 import { values } from "lodash";
 import { selectCurrentLanguage } from "../../redux/language/LanguageSlice";
+import useTheme from "customHooks/useTheme";
+import { selectCurrentMode } from "redux/theme/ThemeSlice";
+
 
 const SettingScreen = ({ route, navigation }) => {
+  //language
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.settingScreen
+  //theme
+  const themeColor = useTheme()
 
   const user = useSelector(selectCurrentUser)
   const dispatch = useDispatch()
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={[styles.container,{backgroundColor: themeColor.primary}]}>
       <View style={{paddingBottom:130}}>
         <View style={styles.setting_genre}>
           <View style={styles.genre_title_block}>
@@ -56,7 +62,7 @@ const SettingScreen = ({ route, navigation }) => {
             <View style={[styles.genre_content, { ...styles.flexDirection }]}>
               <RectangleButton
                 overrideShape="rounded_8"
-                style={styles.option_setting}
+                style={[styles.option_setting,{backgroundColor:themeColor.second}]}
                 handlePressButton={() => navigation.navigate("Places")}
               >
                 <AppText>
@@ -64,16 +70,16 @@ const SettingScreen = ({ route, navigation }) => {
                     <Foundation
                       name="mountains"
                       style={styles.avatar}
-                      color={app_c.HEX.fourth}
+                      color={themeColor.fourth}
                       size={35}
                     />
-                    <Text style={styles.option_setting_name}>{langData.archive_place[langCode]}</Text>
+                    <Text style={[styles.option_setting_name,{color:themeColor.fourth}]}>{langData.archive_place[langCode]}</Text>
                   </View>
                 </AppText>
               </RectangleButton>
               <RectangleButton
                 overrideShape="rounded_8"
-                style={styles.option_setting}
+                style={[styles.option_setting,{backgroundColor:themeColor.second}]}
                 handlePressButton={() => navigation.navigate("Blogs")}
               >
                 <AppText>
@@ -81,10 +87,10 @@ const SettingScreen = ({ route, navigation }) => {
                     <Entypo
                       name="text-document"
                       style={styles.avatar}
-                      color={app_c.HEX.fourth}
+                      color={themeColor.fourth}
                       size={35}
                     />
-                    <Text style={styles.option_setting_name}>{langData.archive_blog[langCode]}</Text>
+                    <Text style={[styles.option_setting_name,{color:themeColor.fourth}]}>{langData.archive_blog[langCode]}</Text>
                   </View>
                 </AppText>
               </RectangleButton>

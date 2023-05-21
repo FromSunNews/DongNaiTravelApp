@@ -4,8 +4,6 @@ import { app_sp, app_dms, app_c, app_sh, app_typo, app_shdw } from "globals/styl
 const styles=  StyleSheet.create({
   container:{
     flex:1,
-    justifyContent:'center',
-    alignItems:'center',
   },
   notification_container:{
     paddingHorizontal:16,

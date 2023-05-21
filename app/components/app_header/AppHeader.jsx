@@ -6,6 +6,8 @@ import {
   NativeStackNavigationOptions
 } from '@react-navigation/native-stack'
 
+import useTheme from 'customHooks/useTheme';
+
 import { selectCurrentNotifs } from '../../redux/notifications/NotificationsSlice';
 import { selectCurrentLanguage } from '../../redux/language/LanguageSlice';
 
@@ -15,6 +17,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import AppText from '../app_text/AppText';
 import CircleButton from '../buttons/CircleButton';
+
 
 import styles from './AppHeaderStyles'
 import { app_c, app_shdw } from 'globals/styles';
@@ -60,8 +63,11 @@ const AppHeader = ({
   setCenterPart,
   setRightPart
 }) => {
+  //language
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.appHeader
+  //theme
+  const themeColor = useTheme()
 
   const currentNotif = useSelector(selectCurrentNotifs)
   const [numberOfVisited, setNumberOfVisited] = useState(0)
@@ -88,23 +94,25 @@ const AppHeader = ({
   const headerStyle = {
     ...styles.container,
     ...app_shdw[boxShadow],
-    ...(transparent ?  { backgroundColor: `rgba(${app_c.RGB.primary}, 0)` } : {} )
+    backgroundColor: themeColor.primary,
+    ...(transparent ?  { backgroundColor: `rgba(${255, 255, 255}, 0)` } : {} )
   }
 
   useEffect(() => {
     if (currentNotif.length > 0) {
       setNumberOfVisited(currentNotif.filter(notif => notif._isVisited === false).length)
     }
-  }, [currentNotif])
+  }, [currentNotif,themeColor])
 
   return (
-    <View style={headerStyle}>
+    <View style={[headerStyle]}>
       <View style={{...styles.header_col, justifyContent: 'flex-start', alignItems: 'center'}}>
-      {/* Phần bên trái */}
-      {
-        canSetLeftPart
-        ? setLeftPart()
-        : (
+        {/* Phần bên trái */}
+        {
+          canSetLeftPart
+          ? setLeftPart()
+          : 
+          (
             canSetBackButton
             && (
               <CircleButton
@@ -120,7 +128,6 @@ const AppHeader = ({
           )
         }
       </View>
-
       {/* Phần ở giữa */}
       <View style={{...styles.header_col, justifyContent: 'center', alignItems: 'center'}}>
         {
@@ -176,11 +183,11 @@ const AppHeader = ({
                   right: 0,
                   top: 0,
                 }}>
-                  <Text style={{
-                    color: app_c.HEX.primary,
+                  <AppText style={{
+                    color: themeColor.primary,
                     ...app_typo.fonts.normal.bolder.body2,
                     fontSize: 10
-                  }}>{numberOfVisited}</Text>
+                  }}>{numberOfVisited}</AppText>
                 </View>
               }
             </View>

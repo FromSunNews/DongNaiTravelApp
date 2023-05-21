@@ -171,7 +171,6 @@ const styles = StyleSheet.create({
     color:app_c.HEX.fourth
   },
   blog_container:{
-  
     backgroundColor:app_c.HEX.sub_primary,
     ...app_sh.rounded_8,
     justifyContent:'center',

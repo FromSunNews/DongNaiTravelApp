@@ -18,10 +18,14 @@ import { TypeScrollView, HorizontalBlogCard, HorizontalBlogCardSkeleton, BannerB
 import styles from './BlogsScreenStyles'
 import { app_sp, app_c } from 'globals/styles'
 import { useSelector } from 'react-redux'
+import useTheme from 'customHooks/useTheme'
 
 const BlogsScreen = () => {
+  //language
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.blogsScreen
+  //theme
+  const themeColor = useTheme();
 
   const blogsInfo = React.useRef({
     isFirstFetch: true,
@@ -79,7 +83,7 @@ const BlogsScreen = () => {
             style={[
               app_sp.ph_18,
               {
-                backgroundColor: app_c.HEX.primary,
+                backgroundColor: themeColor.primary,
                 position: 'relative',
                 zIndex: 2,
               }
@@ -87,20 +91,20 @@ const BlogsScreen = () => {
           >
             <BannerButton
               typeOfButton="highlight"
-              style={app_sp.mt_12}
+              style={[app_sp.mt_12, {backgroundColor: themeColor.primary}]}
               toScreen={{screenName: "MapScreen"}}
               setRightIcon={(isActive, currentLabelStyle) =>
                 <Ionicons name="chevron-forward-outline" style={currentLabelStyle} size={25} />
               }
             >
-              Your blogs
+              {langData.banner_button[langCode]}
             </BannerButton>
           </View>
         )
       }
       <FlatList
         data={blogs ? blogs : []}
-        style={styles.scroll_view_container}
+        style={[styles.scroll_view_container,{backgroundColor: themeColor.primary,}]}
         contentContainerStyle={{paddingBottom: 200}}
         onMomentumScrollEnd={handleExploreMomentumScrollEnd}
         onEndReached={handleEndReach}
@@ -121,7 +125,7 @@ const BlogsScreen = () => {
             types='all;newest;favorite;most_likes;most_comments'
             callBack={setType}
             scrollStyle={[app_sp.ms_18, app_sp.pv_12]}
-            containerStyle={{backgroundColor: app_c.HEX.primary, ...app_sp.pv_10}}
+            containerStyle={{backgroundColor: themeColor.primary, ...app_sp.pv_10}}
           />
         }
         renderItem={item => {console.log(item); return <View style={app_sp.ph_18}><HorizontalBlogCard blog={item.item} /></View>}}

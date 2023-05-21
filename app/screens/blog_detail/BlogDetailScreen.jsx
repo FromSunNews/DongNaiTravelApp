@@ -9,6 +9,9 @@ import { AppText, CircleButton, RectangleButton, MarkFormat } from 'components'
 
 import styles from './BlogDetailScreenStyle'
 import { app_sp } from 'globals/styles'
+import useTheme from 'customHooks/useTheme'
+import { useSelector } from 'react-redux'
+import { selectCurrentMode } from 'redux/theme/ThemeSlice'
 
 const text = `### What is Lorem Ipsum?
 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
@@ -18,17 +21,20 @@ It is a long established fact that a reader will be distracted by the readable c
 `;
 
 const BlogDetailScreen = () => {
+  //theme
+  const themeColor = useTheme();
+  const themeMode = useSelector(selectCurrentMode).mode
   return (
     <View style={{flex: 1}}>
-      <ScrollView style={styles.bd_container}>
+      <ScrollView style={[styles.bd_container,{backgroundColor: themeColor.primary}]}>
           {/* Author, Blog information section */}
-        <View style={[styles.bd_header, app_sp.mt_12]}>
+        <View style={[styles.bd_header, app_sp.mt_12,{borderBottomColor: themeColor.fourth,}]}>
           <View style={[styles.bd_row, app_sp.mb_12, { justifyContent: 'space-between' }]}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <CircleButton
                 isOnlyContent
                 setIcon={() => (
-                  <Ionicons name="person-circle-outline" size={42} />
+                  <Ionicons name="person-circle-outline" size={42} color={themeColor.ext_second} />
                 )}
               />
 
@@ -122,7 +128,7 @@ const BlogDetailScreen = () => {
             isTransparent
             typeOfButton="highlight"
             setIcon={(isActive, currentLabelStyle) => (
-              <Ionicons style={currentLabelStyle} name="chevron-forward-outline" size={18} />
+              <Ionicons style={currentLabelStyle} name="chevron-forward-outline" size={18} color={themeColor.fourth} />
             )}
           />
         </View>
@@ -130,11 +136,11 @@ const BlogDetailScreen = () => {
       </ScrollView>
 
       {/* Float container */}
-      <View style={styles.float_button_container}>
+      <View style={[styles.float_button_container,{backgroundColor: themeColor.second}]}>
         <View style={[app_sp.me_12, { flexDirection: 'row', alignItems: 'center' }]}>
           <CircleButton
             style={app_sp.me_6}
-            defaultColor="type_3"
+            defaultColor={themeMode === 'light' ? 'type_2' : 'type_3'}
             typeOfButton="highlight"
             setIcon={(isActive, currentLabelStyle) => (
               <Ionicons name={isActive ? 'heart' : 'heart-outline'} size={14} style={currentLabelStyle} />
@@ -146,7 +152,7 @@ const BlogDetailScreen = () => {
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <CircleButton
             style={app_sp.me_6}
-            defaultColor="type_3"
+            defaultColor={themeMode === 'light' ? 'type_2' : 'type_3'}
             typeOfButton="highlight"
             setIcon={(isActive, currentLabelStyle) => (
               <Ionicons name={isActive ? 'map' : 'map-outline'} size={14} style={currentLabelStyle} />

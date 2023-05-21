@@ -96,10 +96,7 @@ export default function App() {
       >
         <Provider store={store}>
           <PersistGate loading={<Text>Loading...</Text>} persistor={persistor}>
-
-            {/* Status bar cho ca android va ios */}
-            <CustomStatusBar backgroundColor={app_c.HEX.primary} barStyle="dark-content" />
-            
+          <CustomStatusBar  />
             <NavigationContainer>
               <AuthNavigator/>
             </NavigationContainer>
@@ -111,6 +108,7 @@ export default function App() {
             <Loading />
 
           </PersistGate>
+
         </Provider>
       </ToastProvider>
     </GestureHandlerRootView>

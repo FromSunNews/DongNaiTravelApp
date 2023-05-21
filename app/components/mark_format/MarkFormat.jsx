@@ -5,34 +5,37 @@ import { ReactNativeTextGeneratorProto } from 'libs/mark-format/react-native'
 import { configStyleOfFTTS } from 'libs/mark-format/react-native/config/toReactNative.config'
 
 import { app_c, app_typo } from 'globals/styles'
+import useTheme from 'customHooks/useTheme'
+
+
 
 const customStyles = {
   "BOLD": {
     fontFamily: "Roboto-Bold",
     fontWeight: "bold",
-    color: app_c.HEX.fourth
+    color: useTheme.fourth
   },
   "ITALIC": {
     fontFamily: "Roboto-Italic",
     fontStyle: "italic",
-    color: app_c.HEX.fourth
+    color: useTheme.fourth
   },
   "BOLD&ITALIC": {
     fontFamily: "Roboto-BoldItalic",
-    color: app_c.HEX.fourth
+    color: useTheme.fourth
   },
   "LIGHT&ITALIC": {
     fontFamily: "Roboto-LightItalic",
-    color: app_c.HEX.fourth
+    color: useTheme.fourth
   },
-  "HEADING_0": { ...app_typo.fonts.normal.normal.h0, color: app_c.HEX.fourth },
-  "HEADING_1": { ...app_typo.fonts.normal.normal.h1, color: app_c.HEX.fourth },
-  "HEADING_2": { ...app_typo.fonts.normal.normal.h2, color: app_c.HEX.fourth },
-  "HEADING_3": { ...app_typo.fonts.normal.normal.h3, color: app_c.HEX.fourth },
-  "HEADING_4": { ...app_typo.fonts.normal.normal.h4, color: app_c.HEX.fourth },
-  "HEADING_5": { ...app_typo.fonts.normal.normal.h5, color: app_c.HEX.fourth },
-  "SUB_0": { ...app_typo.fonts.normal.normal.sub0, color: app_c.HEX.fourth },
-  "SUB_1": { ...app_typo.fonts.normal.normal.sub1, color: app_c.HEX.fourth },
+  "HEADING_0": { ...app_typo.fonts.normal.normal.h0, color: useTheme.fourth },
+  "HEADING_1": { ...app_typo.fonts.normal.normal.h1, color: useTheme.fourth },
+  "HEADING_2": { ...app_typo.fonts.normal.normal.h2, color: useTheme.fourth },
+  "HEADING_3": { ...app_typo.fonts.normal.normal.h3, color: useTheme.fourth },
+  "HEADING_4": { ...app_typo.fonts.normal.normal.h4, color: useTheme.fourth },
+  "HEADING_5": { ...app_typo.fonts.normal.normal.h5, color: useTheme.fourth },
+  "SUB_0": { ...app_typo.fonts.normal.normal.sub0, color: useTheme.fourth },
+  "SUB_1": { ...app_typo.fonts.normal.normal.sub1, color: useTheme.fourth },
 }
 
 configStyleOfFTTS(customStyles);

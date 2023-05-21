@@ -3,14 +3,15 @@
 // Phuong: Muon test api thi xem ipv4 trong may tinh => cmd => ipconfig => ipv4
 // Phuong: doi lai ipv4 cua minh
 const ip_v4 = {
-  tuan: '192.168.0.29'
+  tuan: '192.168.2.10',
+  phuong: '192.168.2.62'
 }
 const API_PORT = '7500'
 
 // Phuong: This is the api web for DongNaiAppTravel
 // export const API_ROOT = 'https://dong-nai-travel-api.onrender.com'
 let useLocalServer = true;
-export const API_ROOT = useLocalServer ? `http://${ip_v4.tuan}:${API_PORT}` : 'https://dong-nai-travel-api.onrender.com';
+export const API_ROOT = useLocalServer ? `http://${ip_v4.phuong}:${API_PORT}` : 'https://dong-nai-travel-api.onrender.com';
 
 export const FilterConstants = {
   categories: {

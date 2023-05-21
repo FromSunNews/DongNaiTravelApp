@@ -7,17 +7,21 @@ import { useDispatch, useSelector } from "react-redux";
 import styles from './SettingNotificationsScreenStyles'
 import DropDown from 'components/drop_down/DropDown'
 import { selectCurrentLanguage } from '../../redux/language/LanguageSlice';
+import useTheme from 'customHooks/useTheme';
 
 
 const SettingNotificationsScreen = () => {
+  //language
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.settingNotification
+  //theme
+  const themeColor = useTheme();
 
   const currentSetting = useSelector(selectCurrentSetting)
   const dispatch = useDispatch()
 
   return (
-    <ScrollView style="container">
+    <ScrollView style={[styles.container,{backgroundColor: themeColor.primary}]}>
       <View style={styles.notification_container}>
         <View style={{...styles.dropdown_container}}>
           <DropDown 

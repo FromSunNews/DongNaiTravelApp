@@ -8,6 +8,8 @@ import React from 'react'
 
 import { useSelector } from 'react-redux'
 
+import useTheme from 'customHooks/useTheme'
+
 import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
 
 import ComponentUtility from 'utilities/component'
@@ -68,6 +70,9 @@ const VerticalPlaceCard = ({
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.homeScreen
 
+  //theme
+  const themeColor = useTheme();
+
   let [city, province] = getTextContentInHTMLTag(place.adr_address);
 
   return React.useMemo(() => (
@@ -79,7 +84,7 @@ const VerticalPlaceCard = ({
         overrideShape="rounded_4"
         onPress={handlePressImageButton}
       >
-        <Image source={place.place_photos.length > 0 ? {uri: place.place_photos[0]} : {}} style={styles.card_image} />
+        <Image source={place.place_photos.length > 0 ? {uri: place.place_photos[0]} : {}} style={[styles.card_image, { backgroundColor: themeColor.ext_primary }]} />
       </RectangleButton>
       {/* Button & Recommended tag */}
       <View style={styles.card_mid}>

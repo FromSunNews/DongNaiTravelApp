@@ -10,12 +10,14 @@ import {
 } from "react-native"
 import { Entypo, AntDesign } from "react-native-vector-icons"
 
-import { app_c, app_typo } from "globals/styles"
+import { app_typo } from "globals/styles"
 import styles from "./DropDownStyle"
 import { selectCurrentSetting, updateDarkMode, updateNotification } from "redux/setting/SettingSlice"
 import { useDispatch, useSelector } from "react-redux"
 import { useEffect } from "react"
 import { selectCurrentLanguage } from "../../redux/language/LanguageSlice"
+import { toggleTheme } from "redux/theme/ThemeSlice"
+import useTheme from "customHooks/useTheme"
 
 const DropDown = ({
   name,
@@ -32,14 +34,15 @@ const DropDown = ({
   isEvent,
 }) => {
   const langCode = useSelector(selectCurrentLanguage).languageCode
-
+  //theme
+  var themeColor = useTheme();
+  //current setting
   const currentSetting = useSelector(selectCurrentSetting)
-  // console.log("🚀 ~ file: DropDown.jsx:34 ~ currentSetting:", currentSetting)
   const dispatch = useDispatch()
   
   const [isOpen, setIsOpen] = useState(false)
   const [selectedOption, setSelectedOption] = useState(null)
-  const [btnBgColor, setBtnBgColor] = useState(app_c.HEX.ext_primary)
+  const [btnBgColor, setBtnBgColor] = useState(themeColor.ext_primary)
  
 
   useEffect(() => {
@@ -55,7 +58,7 @@ const DropDown = ({
     if (idOption === 'DARK_MODE') {
       setSelectedOption(currentSetting?.darkMode)
     }
-  }, [currentSetting])
+  }, [currentSetting,themeColor]) //theme Color rang` buoc khi mau theme bi thay doi se re-render lai giao dien
 
   const handleOptionChange = () => {
     let data 
@@ -64,6 +67,7 @@ const DropDown = ({
       console.log( `DARK_MODE`)
       data = !selectedOption
       dispatch(updateDarkMode(data))
+      dispatch(toggleTheme()) //button thay doi theme
     } else {
       if (idOption ==='UPDATE_FROM_FOLLOWING')
       {
@@ -104,13 +108,13 @@ const DropDown = ({
     setIsOpen(!isOpen)
     // set background color for dropdown when onPress
     if (!isOpen) {
-      setBtnBgColor(app_c.HEX.sub_third)
+      // setBtnBgColor(themeColor.sub_third)
     } else {
-      setBtnBgColor(app_c.HEX.ext_primary)
+      // setBtnBgColor(themeColor.ext_primary)
     }
     if (!isDrop) {
-      handlePressButton(),
-      setBtnBgColor(app_c.HEX.ext_primary)
+      handlePressButton()
+      // setBtnBgColor(themeColor.ext_primary)
     }
     // Sử dụng hàm `LayoutAnimation.configureNext` để thiết lập kiểu animation cho dropdown
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -120,7 +124,7 @@ const DropDown = ({
     <View style={styles.dropdown}>
       <TouchableOpacity
         onPress={toggleDropdown}
-        style={{ ...styles.dropdown_btn, backgroundColor: btnBgColor }}
+        style={{ ...styles.dropdown_btn, backgroundColor: themeColor.second }}
       >
         <View
           style={{
@@ -129,13 +133,13 @@ const DropDown = ({
             width: "90%",
           }}
         >
-          <Text style={{ ...styles.dropdown_label }}>
+          <Text style={{ ...styles.dropdown_label,color:themeColor.fourth}}>
             {icon}
             <View style={{ alignItems: "center", paddingLeft: 12 }}>
               <Text
                 style={{
                   fontSize: 16,
-                  color: app_c.HEX.fourth,
+                  color: themeColor.fourth,
                   fontWeight: "500",
                 }}
               >
@@ -152,17 +156,17 @@ const DropDown = ({
               }}
             >
               {selectedOption ? (
-                <AppText style={{...styles.dropdown_label,...styles.dropdown_label_mode,}}>{langCode === 'vi' ? 'Bật' : 'On'}</AppText>
+                <AppText style={{...styles.dropdown_label,...styles.dropdown_label_mode,color:themeColor.fourth}}>{langCode === 'vi' ? 'Bật' : 'On'}</AppText>
               ) : (
-                <AppText style={{...styles.dropdown_label,...styles.dropdown_label_mode,}}>{langCode === 'vi' ? 'Tắt' : 'Off'}</AppText>
+                <AppText style={{...styles.dropdown_label,...styles.dropdown_label_mode,color:themeColor.fourth}}>{langCode === 'vi' ? 'Tắt' : 'Off'}</AppText>
               )}
             </View>
           )}
         </View>
         {isOpen && isDrop ? (
-          <AntDesign name="down" size={22} color={app_c.HEX.fourth} />
+          <AntDesign name="down" size={22} color={themeColor.fourth} />
         ) : (
-          <AntDesign name="right" size={22} color={app_c.HEX.fourth} />
+          <AntDesign name="right" size={22} color={themeColor.fourth} />
         )}
       </TouchableOpacity>
       {isOpen && isDrop && (
@@ -176,10 +180,10 @@ const DropDown = ({
                 }}
               >
                 <View style={styles.dropdown_content}>
-                  <View style={styles.circle_outline}>
-                    {selectedOption && <View style={styles.circle}></View> }
+                <View style={[styles.circle_outline, { borderColor: themeColor.fourth }]}>
+                  {selectedOption && <View style={[styles.circle, { backgroundColor: themeColor.fourth }]}></View> }
                   </View>
-                  <Text style={styles.option_name}>{langCode === 'vi' ? 'Bật' : 'On'}</Text>
+                  <Text style={[styles.option_name,{color:themeColor.fourth}]}>{langCode === 'vi' ? 'Bật' : 'On'}</Text>
                 </View>
               </TouchableOpacity>
 
@@ -190,10 +194,10 @@ const DropDown = ({
                 }}
               >
                 <View style={styles.dropdown_content}>
-                  <View style={styles.circle_outline}>
-                    {!selectedOption && <View style={styles.circle}></View> }
+                  <View style={[styles.circle_outline,{borderColor: themeColor.fourth}]}>
+                    {!selectedOption && <View style={[styles.circle, {backgroundColor: themeColor.fourth}]}></View> }
                   </View>
-                  <Text style={styles.option_name}>{langCode === 'vi' ? 'Tắt' : 'Off'}</Text>
+                  <Text style={[styles.option_name,{color:themeColor.fourth}]}>{langCode === 'vi' ? 'Tắt' : 'Off'}</Text>
                 </View>
               </TouchableOpacity>
             </>
@@ -204,7 +208,7 @@ const DropDown = ({
                 numberOfLines={2}
                 style={{
                   ...app_typo.fonts.normal.bolder.h5,
-                  color: app_c.HEX.fourth,
+                  color: themeColor.fourth,
                   paddingBottom: 4,
                 }}
               >
@@ -213,7 +217,7 @@ const DropDown = ({
               <Text
                 style={{
                   ...app_typo.fonts.normal.normal.sub0,
-                  color: app_c.HEX.fourth,
+                  color: themeColor.fourth
                 }}
               >
                 {children}
@@ -223,7 +227,7 @@ const DropDown = ({
           <View
             style={{
               borderBottomWidth: 1.5,
-              borderBottomColor: app_c.HEX.ext_third,
+              borderBottomColor: themeColor.ext_third,
               marginTop: 12,
             }}
           ></View>

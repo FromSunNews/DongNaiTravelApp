@@ -15,9 +15,10 @@ import {
 } from 'request_api'
 
 import { useSelector } from 'react-redux'
+import { useNavigation } from '@react-navigation/native'
 import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
 
-import { useNavigation } from '@react-navigation/native'
+import useTheme from 'customHooks/useTheme'
 import {
   usePlaceDetailsState,
   usePlaceDetailsActions,
@@ -70,6 +71,8 @@ const PlaceDetailScreen = ({route, navigation}) => {
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.placeDetailScreen
   const langVisit = useSelector(selectCurrentLanguage).data?.exploreScreen
+  //theme
+  const themeColor = useTheme();
 
   const { placeDetails, fetchPlaceDetails, clearPlaceDetails } = usePlaceDetails(placeId);
   const { updateBriefPlace } = useBriefPlacesActions(typeOfBriefPlace);
@@ -126,11 +129,11 @@ const PlaceDetailScreen = ({route, navigation}) => {
   }, [langCode]);
 
   return (
-    <View style={{backgroundColor: app_c.HEX.ext_third, flex: 1}}>
+    <View style={{backgroundColor: themeColor.ext_third, flex: 1}}>
       <Animated.View
         style={{
           opacity: opacityValue,
-          backgroundColor: app_c.HEX.primary,
+          backgroundColor: themeColor.primary,
           height: HEADER_HEIGHT,
           zIndex: 999
         }}
@@ -147,14 +150,14 @@ const PlaceDetailScreen = ({route, navigation}) => {
         onChange={handleChangeBottomSheet}
         backgroundStyle={{
           flex: 1,
-          backgroundColor: app_c.HEX.primary
+          backgroundColor: themeColor.primary
         }}
       >
         <BottomSheetScrollView
-          style={styles.pd_bottom_sheet_view}
+          style={[styles.pd_bottom_sheet_view, { backgroundColor: themeColor.primary }]}
           showsVerticalScrollIndicator={false}
         >
-          <View style={[styles.pd_header, app_sp.ph_18]}>
+          <View style={[styles.pd_header, app_sp.ph_18, { borderBottomColor: themeColor.fourth }]}>
 
             {/* Information row */}
             <View style={{...styles.pd_row, ...app_sp.mb_12}}>
@@ -168,10 +171,10 @@ const PlaceDetailScreen = ({route, navigation}) => {
               {/* Ratings, number of visits column */}
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <AppText font="body2" style={app_sp.me_12}>
-                  <Ionicons name='star-outline' /> {placeDetails.rating}
+                  <Ionicons name='star-outline' color={themeColor.fourth} /> {placeDetails.rating}
                 </AppText>
                 <AppText font="body2" style={{}}>
-                  <Ionicons name='eye-outline' /> {placeDetails.numberOfVisited}
+                  <Ionicons name='eye-outline' color={themeColor.fourth} /> {placeDetails.numberOfVisited}
                 </AppText>
               </View>
             </View>
