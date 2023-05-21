@@ -1,19 +1,35 @@
 import { View, Text } from 'react-native'
 import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux';
+
+import {
+  NativeStackNavigationOptions
+} from '@react-navigation/native-stack'
+
+import useTheme from 'customHooks/useTheme';
+
+import { selectCurrentNotifs } from '../../redux/notifications/NotificationsSlice';
+import { selectCurrentLanguage } from '../../redux/language/LanguageSlice';
+
+import { color } from 'react-native-reanimated';
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
-import styles from './AppHeaderStyles'
 import AppText from '../app_text/AppText';
 import CircleButton from '../buttons/CircleButton';
 
+
+import styles from './AppHeaderStyles'
 import { app_c, app_shdw } from 'globals/styles';
-import { color } from 'react-native-reanimated';
 import { app_typo } from '../../globals/styles';
-import { useSelector } from 'react-redux';
-import { selectCurrentNotifs } from '../../redux/notifications/NotificationsSlice';
-import { selectCurrentLanguage } from '../../redux/language/LanguageSlice';
-import useTheme from 'customHooks/useTheme';
+
+/**
+ * @typedef ExtendedOptions
+ * @property {boolean} headerTransparent [Extend Property] Thông số chỉnh transparent cho header's background.
+ * @property {string} title [Extend Property] Thông số chỉnh title cho header's background.
+ * @property {boolean} canBack [Extend Property] Thông số cho biết screen có thể go back hay không?
+ * @property {'type_1' | 'type_2' | 'type_3' | 'type_4' | 'type_5'} boxShadowType [Extend Property] Thông số chỉnh boxShadow cho header's background.
+ */
 
  /**
  * __Creator__: @NguyenAnhTuan1912
@@ -28,10 +44,8 @@ import useTheme from 'customHooks/useTheme';
  * @param {string} props.back.title - Header có background hay không?
  * @param {object} props.navigation - Object navigation.
  * @param {object} props.route - Thông tin về Route.
- * @param {object} props.options - [Override NativeStackNavigationOptions] Options của screen.
- * @param {boolean} props.options.headerTransparent - [Override Property] Thông số chỉnh transparent cho header's background.
- * @param {string} props.options.title - [Override Property] Thông số chỉnh title cho header's background.
- * @param {'type_1' | 'type_2' | 'type_3' | 'type_4' | 'type_5'} props.options.boxShadowType - [Override Property] Thông số chỉnh boxShadow cho header's background.
+ * @param {ExtendedOptions & NativeStackNavigationOptions} props.options - [Extend NativeStackNavigationOptions] Options của screen.
+ * @param {'type_1' | 'type_2' | 'type_3' | 'type_4' | 'type_5'} props.options.boxShadowType - [Extend Property] Thông số chỉnh boxShadow cho header's background.
  * @param {() => JSX.Element} props.setLeftPart - Function cho phép custom phần bên trái của Header.
  * @param {() => JSX.Element} props.setCenterPart - Function cho phép custom phần giữa của Header.
  * @param {() => JSX.Element} props.setRightPart - Function cho phép custom phần phải trái của Header.
@@ -58,10 +72,10 @@ const AppHeader = ({
   const currentNotif = useSelector(selectCurrentNotifs)
   const [numberOfVisited, setNumberOfVisited] = useState(0)
 
-  const canSetLeftPart = typeof setLeftPart === 'function';
-  const canSetCenterPart = typeof setCenterPart === 'function';
-  const canSetRightPart = typeof setRightPart === 'function';
-  const canSetBackButton = back;
+  const canSetLeftPart = typeof setLeftPart === 'function' && Boolean(setLeftPart);
+  const canSetCenterPart = typeof setCenterPart === 'function' && Boolean(setCenterPart);
+  const canSetRightPart = typeof setRightPart === 'function' && Boolean(setRightPart);
+  const canSetBackButton = back || options.canBack;
   const title = (
     options.title !== "" && options.title
     ? options.title
@@ -78,11 +92,11 @@ const AppHeader = ({
     : ""
   )
   const headerStyle = {
-    ...styles.container,backgroundColor: themeColor.primary,
+    ...styles.container,
     ...app_shdw[boxShadow],
-    ...(transparent ?  { backgroundColor: `rgba(${app_c.RGB.primary}, 0)` } : {} )
+    backgroundColor: themeColor.primary,
+    ...(transparent ?  { backgroundColor: `rgba(${255, 255, 255}, 0)` } : {} )
   }
-
 
   useEffect(() => {
     if (currentNotif.length > 0) {
@@ -91,94 +105,95 @@ const AppHeader = ({
   }, [currentNotif,themeColor])
 
   return (
-    <View style={[headerStyle,{backgroundColor: themeColor.primary}]}>
-      {/* Phần bên trái */}
-      {canSetLeftPart
-        ? setLeftPart()
-        : (
-          <View style={{...styles.header_col, justifyContent: 'flex-start', alignItems: 'center'}}>
-            {
-              canSetBackButton
-              && (
-                <CircleButton
-                  defaultColor="type_2"
-                  boxShadowType="type_1"
-                  typeOfButton="opacity"
-                  onPress={() => navigation.goBack()}
-                  setIcon={(isActive, currentLabelStyle) => (
-                    <Ionicons name="chevron-back-outline" size={18} style={currentLabelStyle}  />
-                  )}
-                />
-              )
-            }
-          </View>
-        )
-      }
-
+    <View style={[headerStyle]}>
+      <View style={{...styles.header_col, justifyContent: 'flex-start', alignItems: 'center'}}>
+        {/* Phần bên trái */}
+        {
+          canSetLeftPart
+          ? setLeftPart()
+          : 
+          (
+            canSetBackButton
+            && (
+              <CircleButton
+                defaultColor="type_2"
+                boxShadowType="type_1"
+                typeOfButton="opacity"
+                onPress={() => navigation.goBack()}
+                setIcon={(isActive, currentLabelStyle) => (
+                  <Ionicons name="chevron-back-outline" size={18} style={currentLabelStyle} />
+                )}
+              />
+            )
+          )
+        }
+      </View>
       {/* Phần ở giữa */}
-      {canSetCenterPart
-        ? setCenterPart()
-        : (
-          <View style={{...styles.header_col, justifyContent: 'center', alignItems: 'center'}}>
-            <AppText weight="lighter" font="h5" style={{textAlign: 'center'}}>{title}</AppText>
-          </View>
-        )
-      }
+      <View style={{...styles.header_col, justifyContent: 'center', alignItems: 'center'}}>
+        {
+          canSetCenterPart
+          ? setCenterPart()
+          : (
+              <AppText weight="lighter" font="h5" style={{textAlign: 'center'}}>{title}</AppText>
+            )
+        }
+      </View>
 
       {/* Phần bên phải */}
-      {canSetRightPart
-        ? setRightPart()
-        : (
-          <View style={{...styles.header_col, justifyContent: 'flex-end', alignItems: 'center'}}>
-            <CircleButton
-              defaultColor="type_2"
-              boxShadowType="type_1"
-              typeOfButton="opacity"
-              setIcon={(isActive, currentLabelStyle) => (
-                <Ionicons name="search-outline" size={18} style={currentLabelStyle} />
-              )}
-            />
-            
-            {
-              title === langData.home[langCode] && (
-                <View style={{paddingLeft:10}}>
-                  <CircleButton
-                    defaultColor="type_2"
-                    boxShadowType="type_1"
-                    typeOfButton="opacity"
-                    onPress={() => navigation.navigate('Notification')}
-                    setIcon={(isActive, currentLabelStyle) => (
-                      <Ionicons name="notifications-sharp" size={18} style={[currentLabelStyle, {color: numberOfVisited !== 0 ? '#FFC72C' : null}]} />
-                    )}
-                  />
-
-                  {
-                    numberOfVisited > 0 &&
-                    <View style={{
-                      height: 15,
-                      width: 15,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      backgroundColor: '#CE2029',
-                      borderRadius: 7.5,
-                      position: 'absolute',
-                      right: 0,
-                      top: 0,
-                    }}>
-                      <Text style={{
-                        color: themeColor.primary,
-                        ...app_typo.fonts.normal.bolder.body2,
-                        fontSize: 10
-                      }}>{numberOfVisited}</Text>
-                    </View>
-                  }
-
+      <View style={{...styles.header_col, justifyContent: 'flex-end', alignItems: 'center'}}>
+        {
+          canSetRightPart
+          ? setRightPart()
+          : 
+          (
+            <>
+              <CircleButton
+                defaultColor="type_2"
+                boxShadowType="type_1"
+                typeOfButton="opacity"
+                setIcon={(isActive, currentLabelStyle) => (
+                  <Ionicons name="search-outline" size={18} style={currentLabelStyle} />
+                )}
+              />
+            </>
+          )
+        }
+        {
+          title === langData.home[langCode] && (
+            <View style={{paddingLeft:10}}>
+              <CircleButton
+                defaultColor="type_2"
+                boxShadowType="type_1"
+                typeOfButton="opacity"
+                onPress={() => navigation.navigate('Notification')}
+                setIcon={(isActive, currentLabelStyle) => (
+                  <Ionicons name="notifications-sharp" size={18} style={[currentLabelStyle, {color: numberOfVisited !== 0 ? '#FFC72C' : null}]} />
+                )}
+              />
+              {
+                numberOfVisited > 0 &&
+                <View style={{
+                  height: 15,
+                  width: 15,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: '#CE2029',
+                  borderRadius: 7.5,
+                  position: 'absolute',
+                  right: 0,
+                  top: 0,
+                }}>
+                  <AppText style={{
+                    color: themeColor.primary,
+                    ...app_typo.fonts.normal.bolder.body2,
+                    fontSize: 10
+                  }}>{numberOfVisited}</AppText>
                 </View>
-              )
-            }
-          </View>
-        )
-      }
+              }
+            </View>
+          )
+        }
+      </View>
     </View>
   )
 }

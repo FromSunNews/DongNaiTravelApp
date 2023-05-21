@@ -120,8 +120,9 @@ export const placesSlice = createSlice({
       let {placeId, placeIndex, typeOfBriefPlaces, updateData} = action.payload;
       if(state.briefPlaces[typeOfBriefPlaces]) {
         let sliceOfBriefPlaces = state.briefPlaces[typeOfBriefPlaces].data.slice(placeIndex);
-        let place = sliceOfBriefPlaces.find(briefPlace => briefPlace.place_id === placeId);
-        if(place) state.briefPlaces[typeOfBriefPlaces].data[placeIndex] = Object.assign({}, place, updateData);
+        let newPlaceIndex = sliceOfBriefPlaces.findIndex(briefPlace => briefPlace.place_id === placeId);
+        let place = state.briefPlaces[typeOfBriefPlaces].data[newPlaceIndex];
+        if(place) state.briefPlaces[typeOfBriefPlaces].data[newPlaceIndex] = Object.assign({}, place, updateData);
       }
     },
     /**

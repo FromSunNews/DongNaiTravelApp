@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { Button } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
 import { useForm, Controller } from 'react-hook-form'
@@ -13,31 +14,48 @@ import {
   ScrollView
 } from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
-import Modal from "react-native-modal"
 
-import Icon from 'react-native-vector-icons/FontAwesome'
-import Octicons from 'react-native-vector-icons/Octicons'
+import {
+  signInUserAPI,
+  signUpUserAPI
+} from 'request_api'
 
-import DateTimePicker from '@react-native-community/datetimepicker'
-import ButtonText from 'components/button_text/ButtonText'
-import CheckBoxText from 'components/checkbox_text/CheckBoxText'
-import Input from 'components/input/Input'
+import {
+  useAuthActions
+} from 'customHooks/useAuth'
 
-import { BIRTHDAY_RULE, BIRTHDAY_RULE_MESSAGE, EMAIL_RULE, FIELD_MIN_LENGTH_MESSAGE, FIELD_REQUIRED_MESSAGE, PASSWORD_RULE, PASSWORD_RULE_MESSAGE } from 'utilities/validators'
 import { updateCurrentUser } from 'redux/user/UserSlice'
-
-import { signInUserAPI, signUpUserAPI } from 'request_api'
-import { styles } from './SignupScreenStyles'
-import { app_c, app_sh, app_shdw } from 'globals/styles'
-import RNDateTimePicker from '@react-native-community/datetimepicker'
-import BottomSheetDefault from 'components/bottom_sheet/BottomSheetScroll'
-import { Button } from 'react-native'
-import moment from 'moment'
 import { updateNotif } from 'redux/manifold/ManifoldSlice'
-import BottomSheetScroll from 'components/bottom_sheet/BottomSheetScroll'
-import { termsConditions } from 'utilities/termsConditions'
 import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
 
+import moment from 'moment'
+
+import {
+  BIRTHDAY_RULE,
+  BIRTHDAY_RULE_MESSAGE,
+  EMAIL_RULE,
+  FIELD_MIN_LENGTH_MESSAGE,
+  FIELD_REQUIRED_MESSAGE,
+  PASSWORD_RULE,
+  PASSWORD_RULE_MESSAGE
+} from 'utilities/validators'
+import { termsConditions } from 'utilities/termsConditions'
+
+import Icon from 'react-native-vector-icons/FontAwesome'
+import Modal from "react-native-modal"
+import Octicons from 'react-native-vector-icons/Octicons'
+import DateTimePicker from '@react-native-community/datetimepicker'
+import RNDateTimePicker from '@react-native-community/datetimepicker'
+
+import {
+  ButtonText,
+  CheckBoxText,
+  Input,
+  BottomSheetScroll
+} from 'components'
+
+import { styles } from './SignupScreenStyles'
+import { app_c, app_sh, app_shdw } from 'globals/styles'
 
 const SignupScreen = () => {
 
@@ -56,6 +74,7 @@ const SignupScreen = () => {
   const [timestamp, setTimestamp] = useState(null)
   const [dateTime, setDateTime] = useState(new Date())
 
+  const { signup } = useAuthActions();
 
   const [openTermCondition, setOpenTermCondition] = useState(false) 
 
@@ -72,32 +91,19 @@ const SignupScreen = () => {
     })
 
   const onSubmit = async (data) => {
-    if (!isChecked)
-      dispatch(updateNotif({
-        appearNotificationBottomSheet: true,
-        contentNotificationBottomSheet: langData.prompt_check[langCode]
-      }))
-    else {
-      const birthday =( (moment(data.birthday, 'DD/MM/YYYY')).toDate()).getTime() / 1000
-      console.log('birthday', birthday)
-      const userSignUp = {
-        email: data.email,
-        firstName: data.firstName,
-        lastName: data.lastName,
-        birthday: birthday,
-        username: data.username,
-        password: data.password,
-        confirmPassword: data.confirmPassword
+    await signup(data, {
+      checkConditionFirst: () => {
+        if (!isChecked)
+        dispatch(updateNotif({
+          appearNotificationBottomSheet: true,
+          contentNotificationBottomSheet: langData.prompt_check[langCode]
+        }))
+        return isChecked
+      },
+      callWhenResolve: () => {
+        navigation.replace("SigninScreen");
       }
-      // Phuong: call Api
-      signUpUserAPI(userSignUp).then((res) => {
-        if (res) {
-          console.log("🚀 ~ file: SignupScreen.js:80 ~ signUpUserAPI ~ res", res)
-          // Phuong: move to SigninScreen screen
-          navigation.replace('SigninScreen')
-        }
-      })
-    }
+    })
   }
 
   const handleDateChange = (e, date) => {

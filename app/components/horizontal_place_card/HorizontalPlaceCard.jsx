@@ -1,37 +1,24 @@
 import { View, Text, ImageBackground } from 'react-native'
 import React from 'react'
 
-import { useNavigation } from '@react-navigation/native'
-import {
-  usePlaceDetailsState,
-  usePlaceDetailsActions,
-  usePlaceDetails,
-  useBriefPlacesActions
-} from 'customHooks/usePlace'
-
-import { 
-  updateUserByCaseAPI
-} from 'request_api'
-
 import NumberUtility from 'utilities/number'
 import StringUtility from 'utilities/string'
-import {
-  UPDATE_USER_CASES
-} from 'utilities/constants'
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
+import { withPlaceCard } from 'hocs/withPlaceCard'
 import AppText from '../app_text/AppText'
 import RectangleButton from '../buttons/RectangleButton'
 import CircleButton from '../buttons/CircleButton'
 
 import styles from './HorizontalPlaceCardStyles'
-import { app_c, app_sh, app_sp } from 'globals/styles'
+import { app_sp } from 'globals/styles'
 import { useSelector } from 'react-redux'
 import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
 
 import {
-  PlaceDataProps
+  PlaceDataProps,
+  WithPlaceCardWrappedComponentProps
 } from 'types/index.d.ts'
 
 /**
@@ -47,68 +34,26 @@ import {
  * Đây là card nằm ngang, hiển thị một số thông tin cơ bản của một địa điểm nào đó. Có thể ấn vào để xem chi tiết
  * một địa điểm nào đó. Một card sẽ chứa 3 cột. Cột đâu tiên là dành cho ảnh, cột thứ 2 là giành cho nội dung chính
  * và cột cuói cùng là giành cho nút share.
- * @param {HorizontalPlaceCardProps} props Props của component.
+ * @param {WithPlaceCardWrappedComponentProps} props Props của component.
  * @returns Thẻ ngang chứa các thông tin cơ bản của một địa điểm.
  */
-const HorizontalPlaceCard = ({ place, typeOfBriefPlace = 'all', placeIndex }) => {
+const HorizontalPlaceCard = ({
+  place,
+  placeIndex,
+  typeOfBriefPlace,
+  extendedPlaceInfo,
+  addPlaceDetails,
+  updateBriefPlace,
+  getTextContentInHTMLTag,
+  handlePressImageButton,
+  handleLikeButton,
+  handleVisitButton,
+  ...props
+}) => {
   const langCode = useSelector(selectCurrentLanguage).languageCode 
   const langData = useSelector(selectCurrentLanguage).data?.exploreScreen
-  const { addPlaceDetails } = usePlaceDetailsActions();
-  const { updateBriefPlace } = useBriefPlacesActions(typeOfBriefPlace);
-  const navigation = useNavigation()
-
-  const [extendedPlaceInfo, setExtendedPlaceInfo] = React.useState({
-    isLiked: place.isLiked ? true : false,
-    isVisited: place.isVisited ? true : false
-  });
-
-  const handlePressImageButton = () => {
-    addPlaceDetails(place);
-    navigation.push('PlaceDetailScreen', {
-      placeId: place.place_id
-    });
-  }
-
-  const handleLikeButton = () => {
-    setExtendedPlaceInfo(prevState => {
-      let isLiked = true;
-      let updateCase = UPDATE_USER_CASES['addEle:savedPlaces'];
-      if(prevState.isLiked) {
-        isLiked = false;
-        updateCase = UPDATE_USER_CASES['removeEle:savedPlaces'];
-      }
-      let data = {
-        updateCase: updateCase,
-        updateData: place.place_id
-      }
-      updateUserByCaseAPI(data)
-      .then(user => {
-        // Update lên store.
-        updateBriefPlace(place.place_id, placeIndex, { isLiked: isLiked })
-      })
-      .catch(error => {
-        setExtendedPlaceInfo(prevState => ({...prevState, isLiked: !isLiked}))
-        console.error(error.message)
-      })
-      console.log(`Set state isLiked for ${place.name}: `, isLiked);
-      return {...prevState, isLiked: isLiked}
-    })
-  }
-
-  const getTextContentInHTMLTag = React.useCallback(
-    StringUtility.createTextContentInHTMLTagGetter("<span class=\"(locality|region)\">", "<\/span>")
-  , []);
 
   let [city, province] = getTextContentInHTMLTag(place.adr_address);
-
-  // console.log(`City, province: ${city}, ${province}`);
-  React.useEffect(() => {
-    if(Boolean(place.isLiked) !== extendedPlaceInfo.isLiked) {
-      setExtendedPlaceInfo(prevState => ({...prevState, isLiked: Boolean(place.isLiked)}))
-    }
-  }, [place.isLiked, place.isVisited]);
-
-  console.log(`Isliked from state (HorizontalPlaceCard), ${place.name}: `, extendedPlaceInfo.isLiked);
 
   return React.useMemo(() => (
     <View style={styles.card}>
@@ -122,7 +67,7 @@ const HorizontalPlaceCard = ({ place, typeOfBriefPlace = 'all', placeIndex }) =>
       >
         <ImageBackground
           style={styles.card_image_container}
-          source={place.place_photos.length > 0 ? {uri: place.place_photos[0].photos[0]} : {}}
+          source={place.place_photos.length > 0 ? {uri: place.place_photos[0]} : {}}
         >
           {
             place.isRecommended &&
@@ -187,14 +132,11 @@ const HorizontalPlaceCard = ({ place, typeOfBriefPlace = 'all', placeIndex }) =>
           <RectangleButton
             isActive={extendedPlaceInfo.isVisited}
             typeOfButton="highlight"
+            onPress={handleVisitButton}
             overrideShape="capsule"
-            style={{
-              width: 65,
-              paddingHorizontal: 0
-             }}
           >
             {(isActive, currentLabelStyle) => (
-              <AppText style={currentLabelStyle} font="body2"> { isActive ?  langData.visited[langCode] : langData.visit[langCode]}</AppText>
+              <AppText style={currentLabelStyle} font="body2">{ isActive ?  langData.visited[langCode] : langData.visit[langCode]}</AppText>
             )}
           </RectangleButton>
         </View>
@@ -213,4 +155,4 @@ const HorizontalPlaceCard = ({ place, typeOfBriefPlace = 'all', placeIndex }) =>
   ), [extendedPlaceInfo.isLiked, extendedPlaceInfo.isVisited, place.rating, place.numberOfVisited, place.user_ratings_total]);
 }
 
-export default HorizontalPlaceCard
+export default withPlaceCard(HorizontalPlaceCard)

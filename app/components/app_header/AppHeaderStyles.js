@@ -10,7 +10,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: HEADER_HEIGHT,
     border: 'none',
-    backgroundColor: app_c.HEX_DARK.primary,
     ...app_sp.ph_18,
     // Phuong ne :> 
     ...app_shdw.type_1

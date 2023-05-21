@@ -1,14 +1,18 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import authorizedAxiosInstance from 'axios/authorizedAxiosInstance'
 
-import { API_ROOT } from 'utilities/constants'
+import { API_ROOT, USER_ROLES } from 'utilities/constants'
 
+import {
+  UserRoles,
+  ActionProps
+} from 'types/index.d.ts'
 
 // Phương: Khởi tạo giá trị một giá trị của Slice trong Redux
 const initialState = {
   currentUser: null,
   isAuthenticated: false,
-  userRole: 'guest',
+  userRole: USER_ROLES.GUEST,
   temporaryUserId: null,
   ipv4: null
 }
@@ -50,9 +54,9 @@ export const userSlice = createSlice({
       const user = action.payload
       state.currentUser = user
       state.isAuthenticated = true
-      state.userRole = 'user'
+      state.userRole = USER_ROLES.MEMBER
     },
-    updateFiledsUser: (state, action) => {
+    updateCurrentUserStateByFields: (state, action) => {
       const user = action.payload
       const keys = ['email', 'username', 'displayName', 'avatar', 'createdAt', 'updatedAt']
       keys.map(key => {
@@ -60,6 +64,7 @@ export const userSlice = createSlice({
           state.currentUser = user[key]
         }
       })
+      if(state.userRole !== USER_ROLES.MEMBER) state.userRole = USER_ROLES.MEMBER;
     },
     updateTemporaryUserId: (state, action) => {
       const userId = action.payload
@@ -68,6 +73,15 @@ export const userSlice = createSlice({
     updateIpv4: (state, action) => {
       const ipv4 = action.payload
       state.ipv4 = ipv4
+    },
+    /**
+     * 
+     * @param state 
+     * @param {ActionProps<UserRoles>} action 
+     */
+    updateUserRoleState: (state, action) => {
+      const role = action.payload
+      state.userRole = role
     }
   },
   extraReducers: (builder) => {
@@ -81,7 +95,7 @@ export const userSlice = createSlice({
     builder.addCase(signOutUserAPI.fulfilled, (state) => {
       state.currentUser = null
       state.isAuthenticated = false,
-      state.userRole = 'guest'
+      state.userRole = USER_ROLES.GUEST
     })
 
     builder.addCase(updateUserAPI.fulfilled, (state, action) => {
@@ -98,9 +112,10 @@ export const userSlice = createSlice({
 // Phương: 
 export const { 
   updateCurrentUser,
-  updateFiledsUser,
+  updateCurrentUserStateByFields,
   updateTemporaryUserId,
-  updateIpv4
+  updateIpv4,
+  updateUserRoleState
  } = userSlice.actions
 
 // Phương: Selectors: mục đích là dành cho các components bên dưới gọi bằng useSelector() tới nó

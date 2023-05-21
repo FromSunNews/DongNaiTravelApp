@@ -196,7 +196,11 @@ const HomeScreen = ({navigation}) => {
           >
             {
               !places
-              ? [1, 2, 3].map((value, index) => <VerticalPlaceCardSkeleton key={value + index} style={app_sp.me_18} />)
+              ? [1, 2, 3].map((value, index) => {
+                let actualStyle = [app_sp.me_18];
+                if(index === 0) actualStyle.push(app_sp.ms_18);
+                return <VerticalPlaceCardSkeleton key={value + index} style={actualStyle} />
+              })
               : places.map((place, index) => {
                 let actualStyle = [app_sp.me_18];
                 if(index === 0) actualStyle.push(app_sp.ms_18);
@@ -221,10 +225,11 @@ const HomeScreen = ({navigation}) => {
               {
                 !currentBlogs
                 ? [1, 2, 3].map((value, index) => <VerticalBlogCardSkeleton key={value + index} style={{  marginLeft: index !== 0 ? 16 : 0,}} />)
-                : currentBlogs.map((blog, index) => 
-                  <TouchableOpacity key={blog.id} onPress={()=>navigation.navigate("BlogDetailScreen")} style={{paddingVertical:12}}>
-                    <VerticalBlogCard blog={blog}  style={{ marginLeft: index !== 0 ? 16 : 2, marginRight : currentBlogs.length - 1 === index ? 36 : 0}}/>
-                  </TouchableOpacity>
+                : currentBlogs.map((blog, index) => {
+                  let actualStyle = [app_sp.me_18];
+                  if(index === 0) actualStyle.push(app_sp.ms_18);
+                  return <VerticalBlogCard blog={blog}  style={{ marginLeft: index !== 0 ? 16 : 2, marginRight : currentBlogs.length - 1 === index ? 36 : 0}}/>
+                }
                 )
               }
             </ScrollView>

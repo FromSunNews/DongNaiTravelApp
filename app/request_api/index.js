@@ -109,6 +109,8 @@ export const getPlacesAPI = async (query) => {
 }
 
 export const getPlaceDetailsWithPipelineAPI = async (query) => {
+  let user = store.getState().user.currentUser;
+  if(user) query += `&userId=${user._id}`;
   const response = await axios.get(`${API_ROOT}/v1/map/place_details?${query}`)
   return response.data
 }
@@ -139,8 +141,14 @@ export const updateManyNotifsAPI = async (data) => {
 }
 
 export const updateUserByCaseAPI = async (data) => {
-  let accessToken = store.getState().user.currentUser.accessToken;
-  data.accessToken = accessToken;
-  const request = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/update_by_case`, data)
+  try {
+    let user = store.getState().user;
+    if(!user) throw new Error("You must be authorized.");
+    let accessToken = user.currentUser.accessToken;
+    data.accessToken = accessToken;
+    const request = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/update_by_case`, data)
   return request.data
+  } catch (error) {
+    console.error(error.message);
+  }
 }

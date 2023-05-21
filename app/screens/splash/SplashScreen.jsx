@@ -1,17 +1,25 @@
 import { View, Text, Animated } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
+import * as Localization from 'expo-localization';
+
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigation } from '@react-navigation/native'
+
+import {
+  useAuthState
+} from 'customHooks/useAuth'
+
+import { updateLanguageCode, updateData } from 'redux/language/LanguageSlice'
+import { selectIsAuthenticated } from 'redux/user/UserSlice'
+import { selectCurrentWareHouse } from 'redux/warehouse/WareHouseSlice'
+
+import { languageData } from 'utilities/language'
+
 import LottieView from 'lottie-react-native'
+import { Easing } from 'react-native-reanimated'
 
 import { styles } from './SplashScreenStyles'
 import { app_c } from 'globals/styles'
-import { useNavigation } from '@react-navigation/native'
-import { Easing } from 'react-native-reanimated'
-import { useDispatch, useSelector } from 'react-redux'
-import { selectIsAuthenticated } from 'redux/user/UserSlice'
-import { selectCurrentWareHouse } from 'redux/warehouse/WareHouseSlice'
-import * as Localization from 'expo-localization';
-import { updateLanguageCode, updateData } from 'redux/language/LanguageSlice'
-import { languageData } from 'utilities/language'
 
 const SplashScreen = () => {
   // Phuong: https://github.com/lottie-react-native/lottie-react-native#usage
@@ -19,19 +27,18 @@ const SplashScreen = () => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
 
-  const isAuthenticated = useSelector(selectIsAuthenticated)
-  console.log("🚀 ~ file: SplashScreen.jsx:23 ~ SplashScreen ~ isAuthenticated:", isAuthenticated)
-  const isFirstTimeLauch = useSelector(selectCurrentWareHouse).isFirstTimeLauch
-  console.log("🚀 ~ file: SplashScreen.jsx:25 ~ SplashScreen ~ isFirstTimeLauch:", isFirstTimeLauch)
+  const { isAuthenticated, isFirstTimeLaunch } = useAuthState();
 
+  console.log("🚀 ~ file: SplashScreen.jsx:32 ~ SplashScreen ~ isAuthenticated:", isAuthenticated)
+  console.log("🚀 ~ file: SplashScreen.jsx:33 ~ SplashScreen ~ isFirstTimeLaunch:", isFirstTimeLaunch)
 
   const [loaded, setLoaded] = useState(false)
   const opacity = useRef(new Animated.Value(0)).current
   useEffect(() => {
     const languageCode = Localization.locale.split('-')[0]
     // en or vi
-    console.log('Localization.locale', Localization.locale)
-    console.log("🚀 ~ file: SplashScreen.jsx:29 ~ useEffect ~ languageCode:", languageCode)
+    // console.log('Localization.locale', Localization.locale)
+    // console.log("🚀 ~ file: SplashScreen.jsx:29 ~ useEffect ~ languageCode:", languageCode)
     dispatch(updateLanguageCode(languageCode))
     dispatch(updateData(languageData))
 
@@ -56,13 +63,14 @@ const SplashScreen = () => {
 
   useEffect(() => {
     if (loaded) {
-      if (isFirstTimeLauch)
+      if (isFirstTimeLaunch)
         navigation.replace('OnboardingScreen')
       else {
-        if (isAuthenticated) 
+        if (isAuthenticated) {
           navigation.replace('GroupBottomTab', {
             isGetFullUserInfo: true
           })
+        }
         else 
           navigation.replace('SigninScreen')
       }
