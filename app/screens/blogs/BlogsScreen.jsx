@@ -57,8 +57,6 @@ const BlogsScreen = () => {
     }
   })());
 
-  console.log("Blogs: ", blogs);
-
   const handleExploreScroll = e => {
     const { layoutMeasurement, contentOffset, contentSize } = e.nativeEvent;
     let val = contentOffset.y;

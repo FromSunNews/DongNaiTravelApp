@@ -69,3 +69,8 @@ export const UPDATE_USER_CASES = {
   'addEle:visitedPlaces': 'addEle:visitedPlaces',
   'removeEle:visitedPlaces': 'removeEle:visitedPlaces'
 }
+
+export const USER_ROLES = {
+  GUEST: 'GUEST',
+  MEMBER: 'MEMBER'
+}

@@ -1,18 +1,32 @@
 import { View, Text } from 'react-native'
 import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux';
+
+import {
+  NativeStackNavigationOptions
+} from '@react-navigation/native-stack'
+
+import { selectCurrentNotifs } from '../../redux/notifications/NotificationsSlice';
+import { selectCurrentLanguage } from '../../redux/language/LanguageSlice';
+
+import { color } from 'react-native-reanimated';
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
-import styles from './AppHeaderStyles'
 import AppText from '../app_text/AppText';
 import CircleButton from '../buttons/CircleButton';
 
+import styles from './AppHeaderStyles'
 import { app_c, app_shdw } from 'globals/styles';
-import { color } from 'react-native-reanimated';
 import { app_typo } from '../../globals/styles';
-import { useSelector } from 'react-redux';
-import { selectCurrentNotifs } from '../../redux/notifications/NotificationsSlice';
-import { selectCurrentLanguage } from '../../redux/language/LanguageSlice';
+
+/**
+ * @typedef ExtendedOptions
+ * @property {boolean} headerTransparent [Extend Property] Thông số chỉnh transparent cho header's background.
+ * @property {string} title [Extend Property] Thông số chỉnh title cho header's background.
+ * @property {boolean} canBack [Extend Property] Thông số cho biết screen có thể go back hay không?
+ * @property {'type_1' | 'type_2' | 'type_3' | 'type_4' | 'type_5'} boxShadowType [Extend Property] Thông số chỉnh boxShadow cho header's background.
+ */
 
  /**
  * __Creator__: @NguyenAnhTuan1912
@@ -27,10 +41,8 @@ import { selectCurrentLanguage } from '../../redux/language/LanguageSlice';
  * @param {string} props.back.title - Header có background hay không?
  * @param {object} props.navigation - Object navigation.
  * @param {object} props.route - Thông tin về Route.
- * @param {object} props.options - [Override NativeStackNavigationOptions] Options của screen.
- * @param {boolean} props.options.headerTransparent - [Override Property] Thông số chỉnh transparent cho header's background.
- * @param {string} props.options.title - [Override Property] Thông số chỉnh title cho header's background.
- * @param {'type_1' | 'type_2' | 'type_3' | 'type_4' | 'type_5'} props.options.boxShadowType - [Override Property] Thông số chỉnh boxShadow cho header's background.
+ * @param {ExtendedOptions & NativeStackNavigationOptions} props.options - [Extend NativeStackNavigationOptions] Options của screen.
+ * @param {'type_1' | 'type_2' | 'type_3' | 'type_4' | 'type_5'} props.options.boxShadowType - [Extend Property] Thông số chỉnh boxShadow cho header's background.
  * @param {() => JSX.Element} props.setLeftPart - Function cho phép custom phần bên trái của Header.
  * @param {() => JSX.Element} props.setCenterPart - Function cho phép custom phần giữa của Header.
  * @param {() => JSX.Element} props.setRightPart - Function cho phép custom phần phải trái của Header.
@@ -57,7 +69,7 @@ const AppHeader = ({
   const canSetLeftPart = typeof setLeftPart === 'function' && Boolean(setLeftPart);
   const canSetCenterPart = typeof setCenterPart === 'function' && Boolean(setCenterPart);
   const canSetRightPart = typeof setRightPart === 'function' && Boolean(setRightPart);
-  const canSetBackButton = back;
+  const canSetBackButton = back || options.canBack;
   const title = (
     options.title !== "" && options.title
     ? options.title
@@ -78,9 +90,6 @@ const AppHeader = ({
     ...app_shdw[boxShadow],
     ...(transparent ?  { backgroundColor: `rgba(${app_c.RGB.primary}, 0)` } : {} )
   }
-
-  console.log("Can set right part: ", canSetRightPart)
-  console.log("Right part: ", setRightPart);
 
   useEffect(() => {
     if (currentNotif.length > 0) {

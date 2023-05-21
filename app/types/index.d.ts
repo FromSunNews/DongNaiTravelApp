@@ -156,6 +156,24 @@ export interface PlaceDetailsDataProps extends PlaceDataProps {
   }
 }
 
+// Use for redux
+export type UserRoles = 'GUEST' | 'MEMBER'
+export interface ActionProps<T> {
+  type: string,
+  payload: T
+}
+
+// Use for useAuth
+export interface UserForAuthProps {
+  emailName: string,
+  password: string
+}
+export interface AuthenticateOptionsProps {
+  checkConditionFirst: () => boolean
+  callWhenReject: (data?: any) => void 
+  callWhenResolve: (data?: any) => void
+}
+
 // Use for hooks
 export type PlayAudioAsyncFn = () => void
 export type StopAudioAsyncFn = () => void
@@ -167,6 +185,7 @@ type ExtendedPlacecInfoInPlaceCard = {
   isLiked: boolean,
   isVisited: boolean
 }
+
 export interface WithPlaceCardWrappedComponentProps extends ViewProps {
   place: PlaceDataProps,
   placeIndex: number,

@@ -1,5 +1,5 @@
 import React from "react";
-import { AnyAction } from "@reduxjs/toolkit";
+import { AnyAction, Dispatch } from "@reduxjs/toolkit";
 import { useSelector, useDispatch } from "react-redux";
 
 import {
@@ -28,84 +28,131 @@ import {
   PlaceDetailsDataProps
 } from 'types/index.d.ts'
 
-export function useBriefPlaces(typeOfBriefPlaces) {
-  let places = useSelector(state => briefPlacesSeletor(state, typeOfBriefPlaces));
-  let dispatch = useDispatch();
+export const {
+  useBriefPlaces,
+  useBriefPlacesActions
+} = (function() {
   /**
-   * Dispatch action này để tăng skip cho một briefPlaces nào đó.
+   * @param {Dispatch<AnyAction>} dispatch 
    * @returns 
    */
-  let inscreaseSkip = () => dispatch(inscreaseSkipBriefPlacesAmountState(typeOfBriefPlaces));
+  let createInscreaseSkipFn = (dispatch, typeOfBriefPlaces) =>
   /**
-   * Dispatch action này để giảm skip cho một briefPlaces nào đó.
+   * Hàm này dùng để tăng số brief places cần bỏ qua khi request về server.
    * @returns 
    */
-  let descreaseSkip = () => dispatch(descreaseSkipBriefPlacesAmountState(typeOfBriefPlaces));
-  /**
-   * Dispatch action này để clear data của một briefPlaces
-   * @returns 
-   */
-  let clearAll = () => dispatch(clearAllBriefPlaces());
-  /**
-   * Dispatch action này để update một briefPlace trong briefPlaces nào đó.
-   * @returns 
-   */
-  let updateBriefPlace = (placeId, placeIndex, updateData) => dispatch(updateBriefPlaceState({placeId, placeIndex, typeOfBriefPlaces, updateData}))
+  () => dispatch(inscreaseSkipBriefPlacesAmountState(typeOfBriefPlaces));
 
   /**
-   * Dispatch action này để lấy dữ liệu của briefPlaces từ server.
+   * @param {Dispatch<AnyAction>} dispatch 
    * @returns 
    */
-  let fetchBriefPlaceByType = fields => dispatch(fetchBriefPlacesByTypeAsyncThunk({type: typeOfBriefPlaces, fields}))
-
-  return {
-    places,
-    inscreaseSkip,
-    descreaseSkip,
-    clearAll,
-    updateBriefPlace,
-    fetchBriefPlaceByType
-  }
-}
-
-export function useBriefPlacesActions(typeOfBriefPlaces) {
-  let dispatch = useDispatch();
+  let createDescreaseSkipFn = (dispatch, typeOfBriefPlaces) =>
+  /**
+   * Hàm này dùng để giảm số brief places cần bỏ qua khi request về server.
+   * @returns 
+   */
+  () => dispatch(descreaseSkipBriefPlacesAmountState(typeOfBriefPlaces));
 
   /**
-   * Dispatch action này để tăng skip cho một briefPlaces nào đó.
+   * @param {Dispatch<AnyAction>} dispatch 
    * @returns 
    */
-  let inscreaseSkip = () => dispatch(inscreaseSkipBriefPlacesAmountState(typeOfBriefPlaces));
+  let createClearAllFn = dispatch =>
   /**
-   * Dispatch action này để giảm skip cho một briefPlaces nào đó.
+   * Hàm này dùng để dọn hết brief places.
    * @returns 
    */
-  let descreaseSkip = () => dispatch(descreaseSkipBriefPlacesAmountState(typeOfBriefPlaces));
-  /**
-   * Dispatch action này để clear data của một briefPlaces
-   * @returns 
-   */
-  let clearAll = () => dispatch(clearAllBriefPlaces());
-  /**
-   * Dispatch action này để update một briefPlace trong briefPlaces nào đó.
-   * @returns 
-   */
-  let updateBriefPlace = (placeId, placeIndex, updateData) => dispatch(updateBriefPlaceState({placeId, placeIndex, typeOfBriefPlaces, updateData}))
+  () => dispatch(clearAllBriefPlaces());
 
   /**
-   * Dispatch action này để lấy dữ liệu của briefPlaces từ server.
+   * @param {Dispatch<AnyAction>} dispatch 
    * @returns 
    */
-  let fetchBriefPlaceByType = fields => dispatch(fetchBriefPlacesByTypeAsyncThunk({type: typeOfBriefPlaces, fields}))
+  let createUpdateBriefPlaceFn = (dispatch, typeOfBriefPlaces) =>
+  /**
+   * Hàm này dùng để update dữ liệu của một brief place trong brief places theo type.
+   * @returns 
+   */
+  (placeId, placeIndex, updateData) => dispatch(updateBriefPlaceState({placeId, placeIndex, typeOfBriefPlaces, updateData}))
+
+  /**
+   * @param {Dispatch<AnyAction>} dispatch 
+   * @returns 
+   */
+  let createFetchBriefPlaceByTypeFn = (dispatch, typeOfBriefPlaces) =>
+  /**
+   * Hàm này dùng để yêu cầu dữ liệu của brief places từ server theo type.
+   * @returns 
+   */
+  fields => dispatch(fetchBriefPlacesByTypeAsyncThunk({type: typeOfBriefPlaces, fields}))
 
   return {
-    inscreaseSkip,
-    descreaseSkip,
-    clearAll,
-    updateBriefPlace,
-    fetchBriefPlaceByType
+    /**
+     * Hook này dùng để sử dụng state và actions của `briefPlaces` trong `PlaceSlice`
+     * @param {string} typeOfBriefPlaces 
+     * @returns 
+     */
+    useBriefPlaces: function(typeOfBriefPlaces) {
+      let places = useSelector(state => briefPlacesSeletor(state, typeOfBriefPlaces));
+      let dispatch = useDispatch();
+
+      let {
+        inscreaseSkip,
+        descreaseSkip,
+        clearAll,
+        updateBriefPlace,
+        fetchBriefPlaceByType
+      } = React.useMemo(() => ({
+        inscreaseSkip: createInscreaseSkipFn(dispatch, typeOfBriefPlaces),
+        descreaseSkip: createDescreaseSkipFn(dispatch, typeOfBriefPlaces),
+        clearAll: createClearAllFn(dispatch),
+        updateBriefPlace: createUpdateBriefPlaceFn(dispatch, typeOfBriefPlaces),
+        fetchBriefPlaceByType: createFetchBriefPlaceByTypeFn(dispatch, typeOfBriefPlaces)
+      }), [typeOfBriefPlaces]);
+
+      return {
+        places,
+        inscreaseSkip,
+        descreaseSkip,
+        clearAll,
+        updateBriefPlace,
+        fetchBriefPlaceByType
+      }
+    },
+
+    /**
+     * Hook này dùng để sử dụng actions của `briefPlaces` trong `PlaceSlice`
+     * @param {string} typeOfBriefPlaces 
+     * @returns 
+     */
+    useBriefPlacesActions: function(typeOfBriefPlaces) {
+      let dispatch = useDispatch();
+
+      let {
+        inscreaseSkip,
+        descreaseSkip,
+        clearAll,
+        updateBriefPlace,
+        fetchBriefPlaceByType
+      } = React.useMemo(() => ({
+        inscreaseSkip: createInscreaseSkipFn(dispatch, typeOfBriefPlaces),
+        descreaseSkip: createDescreaseSkipFn(dispatch, typeOfBriefPlaces),
+        clearAll: createClearAllFn(dispatch),
+        updateBriefPlace: createUpdateBriefPlaceFn(dispatch, typeOfBriefPlaces),
+        fetchBriefPlaceByType: createFetchBriefPlaceByTypeFn(dispatch, typeOfBriefPlaces)
+      }), [typeOfBriefPlaces]);
+
+      return {
+        inscreaseSkip,
+        descreaseSkip,
+        clearAll,
+        updateBriefPlace,
+        fetchBriefPlaceByType
+      }
+    }
   }
-}
+})();
 
 /*
   usePlaceDetails được chia ra làm 2 hook nhỏ hơn là: usePlaceDetailsActions và usePlaceDetailsState.
@@ -116,83 +163,109 @@ export function useBriefPlacesActions(typeOfBriefPlaces) {
   - Nếu như chia hook ra làm hai, thì khi A update state thì B sẽ được render lại, nhưng A sẽ không.
 */
 
-/**
- * Hook này dùng để sử dụng các actions của PlaceSlice, cụ thể là `currentPlaceDetails`.
- * @returns 
- */
-export function usePlaceDetailsActions() {
-  let dispatch = useDispatch();
-
+export const {
+  usePlaceDetails,
+  usePlaceDetailsState,
+  usePlaceDetailsActions,
+} = (function() {
+  /**
+   * @param {Dispatch<AnyAction>} dispatch 
+   * @returns 
+   */
+  let createAddPlaceDetailsFn = dispatch =>
   /**
    * Hàm này dùng để thêm một place details vào trong store.
    * @param {PlaceDetailsDataProps} placeDetails Dữ liệu của một place, không nhất thiết phải có `content` hay `reviews`.
    * @returns 
    */
-  let addPlaceDetails = placeDetails => dispatch(addPlaceDetailsState(placeDetails));
+  placeDetails => dispatch(addPlaceDetailsState(placeDetails));
+  
+  /**
+   * @param {Dispatch<AnyAction>} dispatch 
+   * @returns 
+   */
+  let createFetchPlaceDetailsFn = dispatch =>
   /**
    * Hàm này dùng để lấy dữ liệu chi tiết của một place trên server theo `place_id` và `lang`.
    * @param {string} placeId là `place_id` của một place.
    * @param {string} lang ngôn ngữ mong muốn của dữ liệu trả về (với các trường có hỗ trợ nhiều ngôn ngữ).
    * @returns 
    */
-  let fetchPlaceDetails = (placeId, lang) => dispatch(fetchPlaceDetailsByIdAsyncThunk({placeId, lang}));
+  (placeId, lang) => dispatch(fetchPlaceDetailsByIdAsyncThunk({placeId, lang}));
+  
+  /**
+   * @param {Dispatch<AnyAction>} dispatch 
+   * @returns 
+   */
+  let createClearPlaceDetailsFn = dispatch =>
   /**
    * Hàm này dùng để clear details của một place nào đo theo `place_id`. 
    * @param {string} placeId là `place_id` của một place.
    * @returns 
    */
-  let clearPlaceDetails = placeId => dispatch(clearPlaceDetailsState(placeId));
+  placeId => dispatch(clearPlaceDetailsState(placeId));
 
   return {
-    addPlaceDetails,
-    fetchPlaceDetails,
-    clearPlaceDetails
+    /**
+     * Hook này dùng để subscribe vào PlaceSlice và dùng các action của nó.
+     * @param {string} placeId là `place_id` của một place.
+     * @returns 
+     */
+    usePlaceDetails: function(placeId) {
+      let placeDetails = useSelector(state => placeDetailsSelector(state, placeId));
+      let dispatch = useDispatch();
+      
+      let {
+        addPlaceDetails,
+        
+        fetchPlaceDetails,
+        clearPlaceDetails,
+      } = React.useMemo(() => ({
+        addPlaceDetails: createAddPlaceDetailsFn(dispatch),
+        fetchPlaceDetails: createFetchPlaceDetailsFn(dispatch),
+        clearPlaceDetails: createClearPlaceDetailsFn(dispatch)
+      }));
+
+      return {
+        placeDetails,
+        addPlaceDetails,
+        fetchPlaceDetails,
+        clearPlaceDetails,
+      }
+    },
+    /**
+     * Hook này dùng để sử dụng các actions của PlaceSlice, cụ thể là `currentPlaceDetails`.
+     * @returns 
+     */
+    usePlaceDetailsActions: function() {
+      let dispatch = useDispatch();
+      
+      let {
+        addPlaceDetails,
+        fetchPlaceDetails,
+        clearPlaceDetails,
+      } = React.useMemo(() => ({
+        addPlaceDetails: createAddPlaceDetailsFn(dispatch),
+        fetchPlaceDetails: createFetchPlaceDetailsFn(dispatch),
+        clearPlaceDetails: createClearPlaceDetailsFn(dispatch)
+      }));
+
+      return {
+        addPlaceDetails,
+        fetchPlaceDetails,
+        clearPlaceDetails,
+      }
+    },
+    /**
+     * Hook này dùng để subscribe vào PlaceSlice.
+     * @param {string} placeId là `place_id` của một place.
+     * @returns {PlaceDataProps}
+     */
+    usePlaceDetailsState: function(placeId) {
+      return useSelector(state => placeDetailsSelector(state, placeId));
+    }
   }
-}
-
-/**
- * Hook này dùng để subscribe vào PlaceSlice.
- * @param {string} placeId là `place_id` của một place.
- * @returns {PlaceDataProps}
- */
-export function usePlaceDetailsState(placeId) {
-  return useSelector(state => placeDetailsSelector(state, placeId));
-}
-
-/**
- * Hook này dùng để subscribe vào PlaceSlice và dùng các action của nó.
- * @param {string} placeId là `place_id` của một place.
- * @returns 
- */
-export function usePlaceDetails(placeId) {
-  let placeDetails = useSelector(state => placeDetailsSelector(state, placeId));
-  let dispatch = useDispatch();
-
-  /**
-   * Hàm này dùng để thêm một place details vào trong store.
-   * @param {PlaceDetailsDataProps} placeDetails Dữ liệu của một place, không nhất thiết phải có `content` hay `reviews`.
-   * @returns 
-   */
-  let addPlaceDetails = placeDetails => dispatch(addPlaceDetailsState(placeDetails));
-  /**
-   * Hàm này dùng để lấy dữ liệu chi tiết của một place trên server theo `place_id` và `lang`.
-   * @param {string} lang ngôn ngữ mong muốn của dữ liệu trả về (với các trường có hỗ trợ nhiều ngôn ngữ).
-   * @returns 
-   */
-  let fetchPlaceDetails = (placeId, lang) => dispatch(fetchPlaceDetailsByIdAsyncThunk({placeId, lang}));
-  /**
-   * Hàm này dùng để clear details của một place nào đo theo `place_id`. 
-   * @returns 
-   */
-  let clearPlaceDetails = placeId => dispatch(clearPlaceDetailsState(placeId));
-
-  return {
-    placeDetails,
-    addPlaceDetails,
-    fetchPlaceDetails,
-    clearPlaceDetails
-  }
-}
+})();
 
 /**
  * Hook này dùng để sử dụng API `updateByCaseAPI` để tương tác với Place, API này được dùng trong các actions.

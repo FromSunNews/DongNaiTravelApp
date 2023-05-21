@@ -34,7 +34,7 @@ const BlogsNavigator = ({ navigation }) => {
                 <RectangleButton
                   overrideShape='capsule'
                   typeOfButton='highlight'
-                  onPress={() => {navigation.navigate("BlogEditorScreen")}}
+                  onPress={() => {navigation.navigate("BlogEditorNavigator", {screen: 'BlogEditorScreen'})}}
                 >
                   <AppText>{langCode === 'vi' ? 'Tạo bài viết' : 'Create blog'}</AppText>
                 </RectangleButton>
@@ -54,14 +54,6 @@ const BlogsNavigator = ({ navigation }) => {
         }}
         component={BlogDetailScreen}
       />
-
-      {/* <BlogsStack.Screen
-        name="BlogEditorScreen"
-        options={{
-          title: `${langCode === 'vi' ? 'Tạo blog' : 'Create blog'}`
-        }}
-        component={BlogEditorScreen}
-      /> */}
     </BlogsStack.Navigator>
   )
 }

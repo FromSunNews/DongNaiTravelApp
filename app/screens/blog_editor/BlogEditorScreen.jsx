@@ -1,33 +1,102 @@
-import { View, Text, StyleSheet } from 'react-native'
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Platform,
+  Keyboard,
+  KeyboardAvoidingView
+} from 'react-native'
 import React from 'react'
 import { WebView } from 'react-native-webview';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
+import { deltaToMarkdown } from 'quill-delta-to-markdown';
 
 import {
-  AppText
+  AppText,
+  RectangleButton
 } from 'components'
 
-import { editor_html_source } from './html/text_editor.js'
+import {
+  editorHtmlSource,
+  injectedJS
+} from './html/text_editor.js'
 
 import {
 app_c
 } from 'globals/styles'
 
 const BlogEditorScreen = () => {
+  const webViewRef = React.useRef(null);
+
+  const handleWebViewMessage = e => {
+    let message = e.nativeEvent.data;
+    if(message === "IMG_ADDED") {
+      console.log("MESSAGE: ", message);
+      return;
+    }
+    let delta = JSON.parse(message);
+    let markdown = deltaToMarkdown(delta['ops']);
+    console.log('Markdown: ', markdown);
+    console.log('Quill content:', delta['ops']);
+  }
+
+  const receiveContent = () => {
+    if(webViewRef.current) {
+      webViewRef.current.injectJavaScript(`
+        window.ReactNativeWebView.postMessage(JSON.stringify(editor.getContents()));
+      `);
+    }
+  }
+
+  let extendInjectedJS = injectedJS + `
+    document.getElementById('editor').addEventListener('DOMNodeInserted', function(e) {
+      if(e.target.tagName === 'IMG') {
+        window.ReactNativeWebView.postMessage("IMG_ADDED");
+        document.activeElement && document.activeElement.blur()
+      }
+    });
+  `;
+
   return (
-    <View style={styles.container}>
-      <WebView
-        style={{ resizeMode: 'cover', flex: 1, backgroundColor: 'transparent' }}
-        injectedJavaScript={`const meta = document.createElement('meta'); meta.setAttribute('content', 'width=width, initial-scale=1.2, maximum-scale=1.5, user-scalable=no'); meta.setAttribute('name', 'viewport'); document.getElementsByTagName('head')[0].appendChild(meta); `}
-        source={{html: editor_html_source}}
-      />
+    <View style={[styles.container, {backgroundColor: app_c.HEX.primary}]}>
+      <KeyboardAwareScrollView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        contentContainerStyle={{flex: 1}}
+        style={{flexGrow: 1}}
+      >
+        <WebView
+          ref={webViewRef}
+          style={{ resizeMode: 'cover', flex: 1, backgroundColor: 'transparent' }}
+          injectedJavaScript={extendInjectedJS}
+          source={{html: editorHtmlSource}}
+          onMessage={handleWebViewMessage}
+          scrollEnabled={false}
+          keyboardDisplayRequiresUserAction={false}
+        />
+      </KeyboardAwareScrollView>
+      <RectangleButton
+        typeOfButton='highlight'
+        overrideShape='capsule'
+        onPress={receiveContent}
+        style={styles.save_btn}
+      >
+        <AppText>Save</AppText>
+      </RectangleButton>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: app_c.HEX.primary
+    flex: 1
+  },
+
+  save_btn: {
+    position: 'absolute',
+    bottom: 18,
+    right: 18
   }
 });
 

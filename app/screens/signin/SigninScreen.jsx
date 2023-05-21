@@ -9,111 +9,91 @@ import {
 } from 'react-native'
 import React, { useEffect, useState } from 'react'
 
-import Input from 'components/input/Input'
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
+import { signInUserAPI } from 'request_api'
 
+import {
+  useAuth,
+  useAuthActions
+} from 'customHooks/useAuth'
+
+import FunctionsUtility from 'utilities/functions'
+import { EMAIL_RULE, PASSWORD_RULE } from 'utilities/validators'
+
+import { selectCurrentWareHouse, updateCurrentWareHouseState } from 'redux/warehouse/WareHouseSlice'
+import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
+import { updateCurrentNotifs } from 'redux/notifications/NotificationsSlice'
+import { updateCurrentUser } from 'redux/user/UserSlice'
+
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 import { useForm, Controller } from 'react-hook-form'
 
-import { styles } from './SigninScreenStyles'
-import { EMAIL_RULE, PASSWORD_RULE } from 'utilities/validators'
-import { updateCurrentUser } from 'redux/user/UserSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
-import { selectCurrentWareHouse, updateCurrentWareHouse } from 'redux/warehouse/WareHouseSlice'
-import FunctionsUtility from 'utilities/functions'
-import ButtonText from 'components/button_text/ButtonText'
-import CheckBoxText from 'components/checkbox_text/CheckBoxText'
-import { signInUserAPI } from 'request_api'
-import { AppText, RectangleButton } from 'components'
+import {
+  AppText,
+  RectangleButton,
+  Input,
+  CheckBoxText,
+  ButtonText
+} from 'components'
+
+import { styles } from './SigninScreenStyles'
 import { app_sp } from 'globals/styles'
-import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
-import { updateCurrentNotifs } from '../../redux/notifications/NotificationsSlice'
 
 const SigninScreen = () => {
-
   // Phuong: https://github.com/Cnilton/react-native-floating-label-input
   // Phuong: https://react-hook-form.com/get-started#ReactNative
-
-  const dispatch = useDispatch()
   const navigation = useNavigation()
   const langCode = useSelector(selectCurrentLanguage).languageCode // vi or en 
   const langData = useSelector(selectCurrentLanguage).data?.signInScreen
   const formData = useSelector(selectCurrentLanguage).data?.form
 
-  const warehouse = useSelector(selectCurrentWareHouse)
+  const {
+    rememberedAccount,
+    signin,
+    updateIsFirstTimeLaunch,
+    rememberAccount
+  } = useAuth();
 
+  const dispatch = useDispatch();
   const [isEmailNameFocused, setIsEmailNameFocused] = useState(false)
   const [isPassFocused, setIsPassFocused] = useState(false)
 
   const [isChecked, setIsChecked] = useState(null)
   
   const { control, handleSubmit, formState: { errors } } = useForm ({
-      defaultValues: {
-        password: warehouse.password ? warehouse.password : '',
-        emailname: warehouse.emailName ? warehouse.emailName : ''
+    defaultValues: {
+      password: rememberedAccount.password ? rememberedAccount.password : '',
+      emailName: rememberedAccount.emailName ? rememberedAccount.emailName : ''
+    }
+  })
+
+  const onSubmit = async data => {
+    // console.log("Sign in data: ", data);
+    await signin(data, {
+      callWhenResolve: (data) => {
+        // console.log("Res data: ", data)
+        if (isChecked) {
+          console.log("REMEMBER THIS USER");
+          // Phuong: save emailName and password to remember
+          rememberAccount(data.emailName, data.password)
+        } else {
+          // Phuong: If don't check remember. We clear sesitive infomation
+          rememberAccount(null, null)
+        }
+        navigation.replace("GroupBottomTab")
       }
     })
+  }
 
   useEffect(() => {
-    dispatch(updateCurrentWareHouse(
-      {
-        ...warehouse,
-        isFirstTimeLauch: false
-      }
-    ))
+    updateIsFirstTimeLaunch(false)
   }, []) 
 
   useEffect(() => {
-    if (warehouse.emailName && warehouse.password)
+    if (rememberedAccount.emailName && rememberedAccount.password)
       setIsChecked(true)
-  }, [warehouse.emailName, warehouse.password])
-
-  const onSubmit = async (data) => {
-    console.log("🚀 ~ file: SigninScreen.jsx:67 ~ onSubmit ~ data:", data)
-    if (data.emailname && data.password) {
-      // Phuong: check emailname is email or username
-      let user 
-      if (FunctionsUtility.validateRegex(data.emailname, EMAIL_RULE)) {
-        user = {
-          email: data.emailname,
-          password : data.password
-        }
-      } else {
-        user = {
-          username: data.emailname,
-          password : data.password
-        }
-      }
-      console.log("🚀 ~ file: SigninScreen.jsx:78 ~ onSubmit ~ user:", user)
-      // Phuong: call Api
-      signInUserAPI(user).then((res) => {
-        console.log("🚀 ~ file: Signin.js:73 ~ onSubmit ~ res", res)
-        if (res) {
-          // Phuong: Update user in persistent store
-          dispatch(updateCurrentUser(res.fullInfoUser))
-          dispatch(updateCurrentNotifs(res.notifs))
-          // Phuong: check rememberme
-          if (isChecked) {
-            // Phuong: save emailname and password to remember
-            dispatch(updateCurrentWareHouse({
-              ...warehouse,
-              emailName: data.emailname,
-              password: data.password
-            }))
-          } else {
-            // Phuong: If don't check remember. We clear sesitive infomation
-            dispatch(updateCurrentWareHouse({
-              ...warehouse,
-              emailName: null,
-              password: null
-            }))
-          }
-          // Phuong: move to GroupBottomTab screen
-          navigation.replace('GroupBottomTab')
-        }
-      })
-    }
-  }
+  }, [rememberedAccount.emailName, rememberedAccount.password])
   
   return (
     <KeyboardAwareScrollView
@@ -139,7 +119,7 @@ const SigninScreen = () => {
                   message: formData?.FIELD_REQUIRED_MESSAGE[langCode]
                 },
               }}
-              name="emailname"
+              name="emailName"
               render={({ field: { onChange, onBlur, value } }) => (
                 <Input
                   label={langData?.email_or_username[langCode]}
@@ -148,11 +128,11 @@ const SigninScreen = () => {
                   onChange={onChange}
                   onBlur={onBlur}
                   value={value}
-                  error={errors.emailname}
+                  error={errors.emailName}
                 />
               )}
             />
-            {errors.emailname && <Text style={styles.textError}>{errors.emailname?.message}</Text>}
+            {errors.emailName && <Text style={styles.textError}>{errors.emailName?.message}</Text>}
 
             <Controller
               control={control}

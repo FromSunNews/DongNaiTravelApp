@@ -1,4 +1,11 @@
-export const editor_html_source = `
+export const injectedJS = `
+  const meta = document.createElement('meta');
+  meta.setAttribute('content', 'width=width, initial-scale=1.2, maximum-scale=1.5, user-scalable=no');
+  meta.setAttribute('name', 'viewport');
+  document.getElementsByTagName('head')[0].appendChild(meta);
+`;
+
+export const editorHtmlSource = `
 <!DOCTYPE html>
 <head>
   <link href="https://cdn.quilljs.com/1.0.0/quill.snow.css" rel="stylesheet">
@@ -16,7 +23,7 @@ export const editor_html_source = `
     .editor {
       width: 100%;
       height: 100vh;
-      border: none !important;
+      border: none!important;
       background-color: transparent!important;
     }
     .ql-toolbar.ql-snow {
