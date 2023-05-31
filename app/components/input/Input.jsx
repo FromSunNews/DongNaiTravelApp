@@ -27,11 +27,11 @@ const Input = ({ label, hint, isPassword, onChange, onBlur, value, error, contai
         topFocused: -25,
         fontSizeFocused: 12,
         leftBlurred: -2,
-        colorBlurred: error ? '#F32424' : (isFocused ? app_c.HEX.fourth : '#808080'),
-        colorFocused: error ? '#F32424' : (isFocused ? app_c.HEX.fourth : '#808080')
+        colorBlurred: error ? '#F32424' : (isFocused ? app_c.HEX.fourth : app_c.HEX.ext_third),
+        colorFocused: error ? '#F32424' : (isFocused ? app_c.HEX.fourth : app_c.HEX.ext_third)
       }}
       containerStyles={[styles.container, {
-        borderColor: error ? '#F32424' : (isFocused ? app_c.HEX.fourth : '#808080'),
+        borderColor: error ? '#F32424' : (isFocused ? app_c.HEX.fourth : app_c.HEX.ext_third),
         borderWidth: isFocused ? 1.5 : 1,
         ...containerStyle
       }]}
@@ -43,7 +43,7 @@ const Input = ({ label, hint, isPassword, onChange, onBlur, value, error, contai
         <Icon 
           name='eye-slash' 
           size={16} 
-          color={isFocused ? app_c.HEX.fourth : '#808080'}
+          color={isFocused ? app_c.HEX.fourth : app_c.HEX.ext_third}
           style={styles.icon}
         />
       }
@@ -51,7 +51,7 @@ const Input = ({ label, hint, isPassword, onChange, onBlur, value, error, contai
         <Icon 
           name='eye' 
           size={16} 
-          color={isFocused ? app_c.HEX.fourth : '#808080'}
+          color={isFocused ? app_c.HEX.fourth : app_c.HEX.ext_third}
           style={styles.icon}
         />
       }

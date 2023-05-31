@@ -3,6 +3,9 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 
 import {
+  useNavigation
+} from '@react-navigation/native';
+import {
   NativeStackNavigationOptions
 } from '@react-navigation/native-stack'
 
@@ -75,18 +78,18 @@ const AppHeader = ({
   const canSetLeftPart = typeof setLeftPart === 'function' && Boolean(setLeftPart);
   const canSetCenterPart = typeof setCenterPart === 'function' && Boolean(setCenterPart);
   const canSetRightPart = typeof setRightPart === 'function' && Boolean(setRightPart);
-  const canSetBackButton = back || options.canBack;
+  const canSetBackButton = back || options?.canBack;
   const title = (
-    options.title !== "" && options.title
-    ? options.title
+    options?.title !== "" && options?.title
+    ? options?.title
     : screenName !== "" && screenName
     ? screenName
     : route.name
   )
-  const transparent = options.headerTransparent;
+  const transparent = options?.headerTransparent;
   const boxShadow = (
-    options.boxShadowType !== "" && options.boxShadowType
-    ? options.boxShadowType
+    options?.boxShadowType !== "" && options?.boxShadowType
+    ? options?.boxShadowType
     : boxShadowType !== "" && boxShadowType
     ? boxShadowType
     : ""
@@ -154,6 +157,9 @@ const AppHeader = ({
                 setIcon={(isActive, currentLabelStyle) => (
                   <Ionicons name="search-outline" size={18} style={currentLabelStyle} />
                 )}
+                onPress={() => {
+                  navigation.push("GlobalNavigator", { screen: "SearchScreen" });
+                }}
               />
             </>
           )

@@ -3,7 +3,7 @@
 // Phuong: Muon test api thi xem ipv4 trong may tinh => cmd => ipconfig => ipv4
 // Phuong: doi lai ipv4 cua minh
 const ip_v4 = {
-  tuan: '192.168.2.10',
+  tuan: '192.168.0.29',
   phuong: '192.168.2.62'
 }
 const API_PORT = '7500'
@@ -11,7 +11,22 @@ const API_PORT = '7500'
 // Phuong: This is the api web for DongNaiAppTravel
 // export const API_ROOT = 'https://dong-nai-travel-api.onrender.com'
 let useLocalServer = true;
-export const API_ROOT = useLocalServer ? `http://${ip_v4.phuong}:${API_PORT}` : 'https://dong-nai-travel-api.onrender.com';
+export const API_ROOT = useLocalServer ? `http://${ip_v4.tuan}:${API_PORT}` : 'https://dong-nai-travel-api.onrender.com';
+
+export const REDUX_SLICE_NAMES = {
+  BLOGS: "blogs",
+  PLACES: "places",
+  FILTER: "filter",
+  LANGUAGE: "language",
+  MANIFOLD: "manifold",
+  MAP: "map",
+  NOTIFICATIONS: "notifs",
+  PROFILE: "profile",
+  SETTING: "setting",
+  THEME: "theme",
+  USER: "user",
+  WAREHOUSE: "warehouse"
+};
 
 export const FilterConstants = {
   categories: {
@@ -58,8 +73,17 @@ export const FilterConstants = {
 export const HEADER_HEIGHT = 50;
 export const ALPHABET = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
 
-export const BRIEF_PLACE_DATA_FIELDS = "place_id;name;adr_address;types;rating;user_ratings_total;isRecommended;numberOfVisited;formatted_address"
+export const BRIEF_PLACE_DATA_FIELDS = "place_id;name;adr_address;types;rating;user_ratings_total;isRecommended;numberOfVisited;formatted_address;place_photos"
 export const PLACE_DETAILS_DATA_FIELDS = "rating;user_ratings_total;numberOfVisited;content;reviews"
+export const COMPLETE_PLACE_DETAILS_DATA_FIELDS = "place_id;name;adr_address;types;rating;user_ratings_total;isRecommended;numberOfVisited;formatted_address;place_photos;content;reviews"
+
+export const SEARCH_PLACE_DATA_FIELDS = "place_id;name;place_photo;_dataType;types";
+
+export const SEARCH_RESULT_TYPE = {
+  PLACE: "place",
+  BLOG: "blog",
+  USER: "user"
+}
 
 export const UPDATE_USER_CASES = {
   'default': 'default',
@@ -74,4 +98,8 @@ export const UPDATE_USER_CASES = {
 export const USER_ROLES = {
   GUEST: 'GUEST',
   MEMBER: 'MEMBER'
+}
+
+export const ASYNC_STORAGE_CONSTANT_KEYS = {
+  SAVED_BLOG_CONTENT_KEY: '_sbc'
 }

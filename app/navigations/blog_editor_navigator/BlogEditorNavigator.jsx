@@ -52,14 +52,7 @@ const BlogEditorNavigator = ({navigation}) => {
               name="BlogEditorScreen"
               options={{
                 title: 'Create a blog',
-                header: props => (
-                  <AppHeader
-                    {...props}
-                    setRightPart={() => (
-                      <AppText onPress={() => { props.navigation.navigate("PrepareBlogPushlishScreen") }}>Next</AppText>
-                    )}
-                  />
-                )
+                headerShown: false
               }}
               component={BlogEditorScreen}
             />
