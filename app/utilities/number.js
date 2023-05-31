@@ -55,10 +55,25 @@ const getRandomNumber = function(max = 10, min = 0) {
   return Math.round(Math.random() * (max - min) + 1);
 }
 
+/**
+ * Hàm này tính toán việc giảm dữ liệu đi ở một mức nào đó.
+ * Tránh việc giảm về quá 0.
+ * @param {number} value Số cần giảm
+ * @param {number} amount Lượng cần giảm
+ * @returns 
+ */
+const descreaseByAmount = function(value, amount) {
+  let afterDescrease = value - amount;
+  if(afterDescrease >= amount) value -= amount;
+  else value = 0;
+  return value;
+}
+
 const NumberUtility = {
   toThousandsSeparatedNumber,
   toMetricNumber,
-  getRandomNumber
+  getRandomNumber,
+  descreaseByAmount
 };
 
 export default NumberUtility;

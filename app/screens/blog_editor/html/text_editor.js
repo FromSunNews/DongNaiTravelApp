@@ -1,3 +1,7 @@
+import {
+  EditorHtmlOptionsProps
+} from 'types/index.d.ts'
+
 export const injectedJS = `
   const meta = document.createElement('meta');
   meta.setAttribute('content', 'width=width, initial-scale=1.2, maximum-scale=1.5, user-scalable=no');
@@ -5,7 +9,12 @@ export const injectedJS = `
   document.getElementsByTagName('head')[0].appendChild(meta);
 `;
 
-export const editorHtmlSource = `
+/**
+ * Hàm này tạo ra một chuỗi html để enject vào webview.
+ * @param {EditorHtmlOptionsProps} props 
+ * @returns 
+ */
+export const editorHtmlSource = (props = {}) => `
 <!DOCTYPE html>
 <head>
   <link href="https://cdn.quilljs.com/1.0.0/quill.snow.css" rel="stylesheet">
@@ -21,16 +30,26 @@ export const editorHtmlSource = `
       background-color: transparent;
     }
     .editor {
-      width: 100%;
-      height: 100vh;
+      margin-bottom: 62px;
       border: none!important;
-      background-color: transparent!important;
+    }
+    #editor-container {
+      height: fit-content;
+    }
+    .ql-editor {
+      width: 100%;
+      min-height: 100vh;
+      background-color: ${props.editorBackgroundColor ? props.editorBackgroundColor : "transparent"}!important;
+    }
+    .ql-toolbar {
+      position: sticky;
+      top: 0;
     }
     .ql-toolbar.ql-snow {
       outline: none;
       border: none!important;
       border-bottom: 1px solid rgba(38, 38, 38, 0.25)!important;
-      background-color: transparent!important;
+      background-color: ${props.editorToolsBarBackgroundColor ? props.editorToolsBarBackgroundColor : "transparent"}!important;
     }
   </style>
   <body>
@@ -46,9 +65,13 @@ export const editorHtmlSource = `
       ['clean']
     ];
 
+    let MAX_IMAGE_SIZE = 2 * 1024 * 1024;
+
     let editor = new Quill('#editor', {
-      modules: { toolbar: toolbarOptions },
-      theme: 'snow'
+      theme: 'snow',
+      modules: {
+        toolbar: toolbarOptions
+      }
     });
   </script>
 </html>

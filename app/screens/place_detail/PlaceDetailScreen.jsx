@@ -66,7 +66,7 @@ import {
  * @returns 
  */
 const PlaceDetailScreen = ({route, navigation}) => {
-  const { placeId, typeOfBriefPlace } = route.params;
+  const { placeId, typeOfBriefPlace, fromSearch } = route.params;
 
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.placeDetailScreen
@@ -124,7 +124,10 @@ const PlaceDetailScreen = ({route, navigation}) => {
   
   React.useEffect(() => {
     navigation.setOptions({'title': placeDetails.name})
-    fetchPlaceDetails(placeId, langCode);
+    fetchPlaceDetails(placeId, {
+      canGetComplete: fromSearch,
+      lang: langCode
+    });
     return () => { clearPlaceDetails(placeId) }
   }, [langCode]);
 
@@ -262,13 +265,13 @@ const AboutSlide = ({placeId}) => {
   const [voice, setVoice] = React.useState(false);
   const [relatedPlaces, setRelatedPlaces] = React.useState([]);
   
-  const imageUrls = placeDetails.place_photos ? placeDetails.place_photos : []
-  const type = placeDetails.types[0]
+  const imageUrls = placeDetails.place_photos ? placeDetails.place_photos : [];
+  const type = placeDetails.types ? placeDetails.types[0] : "";
   const speechMP3Url = placeDetails.content ? placeDetails.content.speech[langCode] : "";
 
   React.useEffect(() => {
     if(relatedPlaces.length === 0) {
-      let query = `limit=${5}&skip=${0}&filter=type:${type}%20except_by_placeid:${placeDetails.place_id}&fields=${BRIEF_PLACE_DATA_FIELDS}`;
+      let query = `limit=${5}&skip=${0}&filter=type:${type},except_by_placeid:${placeDetails.place_id}&fields=${BRIEF_PLACE_DATA_FIELDS}`;
       getPlacesAPI(query)
       .then(data => {
         setRelatedPlaces(data);
