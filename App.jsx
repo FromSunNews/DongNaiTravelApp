@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Text, StatusBar, SafeAreaView } from 'react-native'
 
+import { ScreenOrientation } from 'expo';
+
 import { store, persistor } from 'redux/store'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
@@ -45,11 +47,17 @@ export default function App() {
     setTimeout(checkInternetConnection, 3000) // Kiểm tra lại sau 5 giây
   }
 
+  const changeScreenOrientation = async () => {
+    // để khóa xoay ngang
+    await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE)
+  }
+
   useEffect(() => {
+    changeScreenOrientation()
     checkInternetConnection()
   }, [])
 
-  useEffect(() => {
+  useEffect(async () => {
     if (!isConnected && isPrevConnected) {
       store.dispatch(updateNotif({
         appearNotificationBottomSheet: true,

@@ -424,7 +424,20 @@ const AboutSlide = ({placeId}) => {
       <View style={[app_sp.ph_18]}>
         {
           relatedPlaces.length === 0
-          ? <AppText>{langData.relatedPlacesDataMessage[langCode]}</AppText>
+          ? 
+          <View style={{
+            display: 'flex',
+            justifyContent: 'center'
+          }}>
+            <AppText>{langData.relatedPlacesDataMessage[langCode]}</AppText>
+            <Image 
+              source={require('../../assets/images/no-data.png')} 
+              style={{
+                height: 300,
+                width: 300,
+                alignSelf: 'center'
+              }}/>
+          </View>
           : (
             relatedPlaces.map(relatedPlace => (
               <HorizontalPlaceCard key={relatedPlace.placeId} place={relatedPlace} />
