@@ -9,7 +9,8 @@ import React from 'react'
 import * as ImagePicker from "expo-image-picker"
 
 import {
-  getPlacesAPI
+  getPlacesAPI,
+  postNewBlogAPI
 } from 'request_api'
 
 import {
@@ -21,6 +22,7 @@ import { useForm, Controller } from 'react-hook-form'
 
 import StringUtility from 'utilities/string'
 import FunctionsUtility from 'utilities/functions'
+import AsyncStorageUtility from 'utilities/asyncStorage'
 
 import {
   SEARCH_PLACE_DATA_FIELDS,
@@ -43,6 +45,10 @@ import {
   app_sh,
   app_sp
 } from 'globals/styles'
+
+import {
+  BlogDataProps
+} from 'types/index.d.ts'
 
 const MyPlaceSearchResultList = createSearchWithResultList([
   async (text) => {
@@ -80,21 +86,67 @@ async function pickImageFromLibrary(options) {
   }
 }
 
-const PrepareBlogPushlishScreen = () => {
+const PrepareBlogPushlishScreen = (props) => {
   const [blogInfo, setBlogInfo] = React.useState({
     presentationImage: null,
     type: null,
-    mentionedPlaces: []
+    mentionedPlaces: [],
+    content: null
   });
 
   const { control, handleSubmit, formState: { errors } } = useForm ({
     defaultValues: {
-      title: ""
+      name: ""
     }
   })
 
   const theme = useTheme();
   const types = ["review", "rank", "introduct"];
+
+  const handlePostBlogSubmit = data => {
+    let keys = Object.keys(blogInfo)
+    console.log("Data: ", data)
+    if(!data.name) {
+      return;
+    }
+
+    for(let key of keys)
+      if(!blogInfo[key]) {
+        return;
+      }
+
+    /**
+     * @typedef {BlogDataProps}
+     */
+    let blog = {
+      name: data.name,
+      avatar: blogInfo.presentationImage,
+      userFavoritesTotal: 0,
+      userCommentsTotal: 0,
+      type: blogInfo.type,
+      mentionedPlaces: blogInfo.mentionedPlaces.map(place => place.place_id),
+      isApproved: false,
+    }
+
+    let requestBody = {
+      blog,
+      content: blogInfo.content
+    }
+
+    postNewBlogAPI(requestBody)
+    .then(result => {
+      console.log("Post blog result: ", result);
+      // props.navigation.replace("BlogsNavigator");
+    })
+    .catch(console.log)
+  }
+
+  React.useEffect(() => {
+    AsyncStorageUtility.getItemAsync("SAVED_BLOG_CONTENT_KEY")
+    .then(content => {
+      setBlogInfo(prevState => ({...prevState, content: JSON.stringify(content)}));
+    })
+  }, []);
 
   return (
     <KeyboardAwareScrollView
@@ -105,25 +157,25 @@ const PrepareBlogPushlishScreen = () => {
     >
       <View style={[styles.container, app_sp.mb_12]}>
         <View>
-          {/* TextInput để nhập title cho blog */}
-          <AppText font='h4'>Blog's title</AppText>
+          {/* TextInput để nhập name cho blog */}
+          <AppText font='h4'>Blog's name</AppText>
           <Controller
             control={control}
             rules={{
               required: {
                 value: true,
-                message: "You need to let we know your blog's title"
+                message: "You need to let we know your blog's name"
               },
             }}
-            name="title"
+            name="name"
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
-                label="Enter blog's title here"
+                label="Enter blog's name here"
                 isPassword={false}
                 onChange={onChange}
                 onBlur={onBlur}
                 value={value}
-                error={errors.title}
+                error={errors.name}
               />
             )}
           />
@@ -216,7 +268,6 @@ const PrepareBlogPushlishScreen = () => {
                 }}
                 style={[{justifyContent: 'flex-start'}, app_sp.pv_18]}
               >
-                {console.log("Item: ", item)}
                 <AppText>{item.name}</AppText>
               </RectangleButton>
             )}
@@ -264,7 +315,7 @@ const PrepareBlogPushlishScreen = () => {
           defaultColor='type_4'
           typeOfButton='opacity'
           overrideShape='capsule'
-          onPress={() => {}}
+          onPress={handleSubmit(handlePostBlogSubmit)}
           style={app_sp.pv_16}
         >
           {

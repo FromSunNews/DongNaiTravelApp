@@ -54,6 +54,7 @@ const HorizontalPlaceCard = ({
   const langData = useSelector(selectCurrentLanguage).data?.exploreScreen
 
   let [city, province] = getTextContentInHTMLTag(place.adr_address);
+  let presentationImage = place && place.place_photos ? {uri: place.place_photos[0]} : {}
 
   return React.useMemo(() => (
     <View style={styles.card}>
@@ -67,7 +68,7 @@ const HorizontalPlaceCard = ({
       >
         <ImageBackground
           style={styles.card_image_container}
-          source={place.place_photos.length > 0 ? {uri: place.place_photos[0]} : {}}
+          source={presentationImage}
         >
           {
             place.isRecommended &&

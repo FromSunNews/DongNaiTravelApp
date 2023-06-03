@@ -1,7 +1,17 @@
 import { View, ScrollView, Image } from 'react-native'
 import React from 'react'
 
+import useTheme from 'customHooks/useTheme'
+import {
+  useBlogDetails,
+  useBriefBlogs
+} from 'customHooks/useBlog'
+
+import { useSelector } from 'react-redux'
+import { selectCurrentMode } from 'redux/theme/ThemeSlice'
+
 import NumberUtility from 'utilities/number'
+import DateTimeUtility from 'utilities/datetime'
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
@@ -9,9 +19,6 @@ import { AppText, CircleButton, RectangleButton, MarkFormat } from 'components'
 
 import styles from './BlogDetailScreenStyle'
 import { app_sp } from 'globals/styles'
-import useTheme from 'customHooks/useTheme'
-import { useSelector } from 'react-redux'
-import { selectCurrentMode } from 'redux/theme/ThemeSlice'
 
 const text = `### What is Lorem Ipsum?
 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
@@ -20,10 +27,29 @@ Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
 It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
 `;
 
-const BlogDetailScreen = () => {
+const BlogDetailScreen = ({route, navigation}) => {
+  const { blogId, typeOfBriefBlog, fromSearch } = route.params;
   //theme
   const themeColor = useTheme();
   const themeMode = useSelector(selectCurrentMode).mode
+
+  const { blogDetails, fetchBlogDetailsById, clearBlogDetails } = useBlogDetails(blogId);
+
+  let displayAuthorName = blogDetails.author.lastName && blogDetails.author.firstName
+    ? blogDetails.author.lastName + " " + blogDetails.author.firstName
+    : blogDetails.author.displayName
+
+  React.useEffect(() => {
+    navigation.setOptions({'title': blogDetails.name});
+    fetchBlogDetailsById(blogId, {
+      canGetFull: true
+    })
+
+    return function() {
+      clearBlogDetails(blogId);
+    }
+  }, []);
+
   return (
     <View style={{flex: 1}}>
       <ScrollView style={[styles.bd_container,{backgroundColor: themeColor.primary}]}>
@@ -40,8 +66,8 @@ const BlogDetailScreen = () => {
 
               {/* Author name and other information  */}
               <View style={app_sp.ms_12}>
-                <AppText font="h5">Nguyen Anh Tuan</AppText>
-                <AppText font="sub1">{'Jan 6th, 2023 \t 8 min read'}</AppText>
+                <AppText font="h5">{displayAuthorName}</AppText>
+                <AppText font="sub1">{`${DateTimeUtility.getShortDateString(blogDetails.createdAt)} \t 0 min read`}</AppText>
               </View>
             </View>
 
@@ -59,7 +85,7 @@ const BlogDetailScreen = () => {
           </View>
           
           <View style={[styles.bd_row, app_sp.mb_12]}>
-            <AppText font="h2">What is Lorem Ipsum?</AppText>
+            <AppText font="h2">{blogDetails.name}</AppText>
           </View>
 
           <View style={[styles.bd_row, app_sp.mb_12]}>
@@ -90,25 +116,7 @@ const BlogDetailScreen = () => {
               style={{...app_sp.ph_8, ...app_sp.pv_0, ...app_sp.me_6}}
             >
               {(isActive, currentLabelStyle) => (
-                <AppText style={currentLabelStyle} font="body3">Top dia diem</AppText>
-              )}
-            </RectangleButton>
-            <RectangleButton
-              typeOfButton="highlight"
-              overrideShape="rounded_4"
-              style={{...app_sp.ph_8, ...app_sp.pv_0, ...app_sp.me_6}}
-            >
-              {(isActive, currentLabelStyle) => (
-                <AppText style={currentLabelStyle} font="body3">Bien Hoa</AppText>
-              )}
-            </RectangleButton>
-            <RectangleButton
-              typeOfButton="highlight"
-              overrideShape="rounded_4"
-              style={{...app_sp.ph_8, ...app_sp.pv_0}}
-            >
-              {(isActive, currentLabelStyle) => (
-                <AppText style={currentLabelStyle} font="body3">Dong Nai</AppText>
+                <AppText style={currentLabelStyle} font="body3">{blogDetails.type}</AppText>
               )}
             </RectangleButton>
           </View>
@@ -117,9 +125,14 @@ const BlogDetailScreen = () => {
         {/* Blog Content */}
         <View style={styles.bd_content_container}>
           {/* Dùng MarkFormat ở đây */}
-          <MarkFormat
-            text={text}
-          />
+          {
+            blogDetails.content
+            && (
+              <MarkFormat
+                text={blogDetails.content.plainTextMarkFormat.vi}
+              />
+            )
+          }
         </View>
 
         <View style={[styles.bd_content_container, { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}]}>
@@ -146,7 +159,7 @@ const BlogDetailScreen = () => {
               <Ionicons name={isActive ? 'heart' : 'heart-outline'} size={14} style={currentLabelStyle} />
             )}
           />
-          <AppText font="body3">{NumberUtility.toMetricNumber(1578)}</AppText>
+          <AppText font="body3">{NumberUtility.toMetricNumber(blogDetails.userFavoritesTotal)}</AppText>
         </View>
 
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -158,7 +171,7 @@ const BlogDetailScreen = () => {
               <Ionicons name={isActive ? 'map' : 'map-outline'} size={14} style={currentLabelStyle} />
             )}
           />
-          <AppText font="body3">{NumberUtility.toMetricNumber(576)}</AppText>
+          <AppText font="body3">{NumberUtility.toMetricNumber(blogDetails.userFavoritesTotal)}</AppText>
         </View>
       </View>
     </View>

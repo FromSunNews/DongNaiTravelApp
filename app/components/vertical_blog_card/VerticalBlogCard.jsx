@@ -1,13 +1,20 @@
 import {
   View,
   Text,
-  Image
+  Image,
+  ViewProps
 } from 'react-native'
 import React from 'react'
 
+import { useNavigation } from '@react-navigation/native'
+
+import useTheme from 'customHooks/useTheme'
+
+import { useSelector } from 'react-redux'
+import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
+
 import ComponentUtility from 'utilities/component'
 import DateTimeUtility from 'utilities/datetime'
-import { useNavigation } from '@react-navigation/native'
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
@@ -18,27 +25,13 @@ import CircleButton from 'components/buttons/CircleButton'
 import styles from './VerticalBlogCardStyles'
 import { app_c, app_sh, app_sp } from 'globals/styles'
 
-import { ViewProps } from 'types/index.d'
-import { useSelector } from 'react-redux'
-import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
-import useTheme from 'customHooks/useTheme'
-
-/**
- * @typedef BlogProps
- * @property {object} user Thông tin cơ bản của một user, là tác giả của blog.
- * @property {string} user.id Id của user.
- * @property {string} user.name Tên của user.
- * @property {string} user.avatar Đường dẫn ảnh đại diện của user.
- * @property {string} name Tên của blog.
- * @property {string} avatar Ảnh đại diện của blog.
- * @property {number} createdAt Thời gian blog này được tạo ra.
- * @property {number} readTime Thời gian đọc blog.
- * @property {boolean} isLiked Đây là một trường thời gian được thêm vào khi chuẩn bị dữ liệu.
- */
+import {
+  BlogDetailsDataProps
+} from 'types/index.d.ts'
 
 /**
  * @typedef VerticalBlogCardProps
- * @property {BlogProps} blog Thông tin ngắn của một địa điểm.
+ * @property {BlogDetailsDataProps} blog Thông tin ngắn của một địa điểm.
  */
 
 /**
@@ -58,7 +51,7 @@ import useTheme from 'customHooks/useTheme'
  * @returns Thẻ dọc chứa các thông tin cơ bản của một blog.
  */
 const VerticalBlogCard = ({ blog, ...props }) => {
-  const containerStyle = ComponentUtility.mergeStyle([styles.card, blog.isRecommended ? {} : {}], props.style);
+  const containerStyle = ComponentUtility.mergeStyle(styles.card, props.style);
   //Đức useNavagation to make when onPress Image of Blog => toScreen BlogDetailScreen
   const navigation = useNavigation() 
   //language
@@ -66,6 +59,10 @@ const VerticalBlogCard = ({ blog, ...props }) => {
   const langData = useSelector(selectCurrentLanguage).data?.homeScreen
   //theme
   const themeColor = useTheme();
+
+  let displayAuthorName = blog.author.lastName && blog.author.firstName
+    ? blog.author.lastName + " " + blog.author.firstName
+    : blog.author.displayName
 
   return (
     <View {...props} style={[containerStyle,{backgroundColor: themeColor.ext_primary}]}>
@@ -81,10 +78,10 @@ const VerticalBlogCard = ({ blog, ...props }) => {
       {/* Button & Recommended tag */}
       <View style={styles.card_mid}>
         {
-          blog.user.avatar === ""
+          !blog.author.avatar
           ? (<Ionicons name="person-circle" color={themeColor.ext_second} />)
-          : (<Image source={{uri: blog.user.avatar}} />)
-        }<AppText font="body2">{" " + blog.user.name}</AppText>
+          : (<Image source={{uri: blog.author.avatar}} />)
+        }<AppText font="body2">{" " + displayAuthorName}</AppText>
       </View>
 
       {/* Content */}
@@ -97,7 +94,7 @@ const VerticalBlogCard = ({ blog, ...props }) => {
             {DateTimeUtility.getShortDateString(blog.createdAt)}
           </AppText>
           <AppText numberOfLines={1} font="body2">
-            {DateTimeUtility.toMinute(blog.readTime)} min read
+            {DateTimeUtility.toMinute(0)} min read
           </AppText>
         </View>
       </View>

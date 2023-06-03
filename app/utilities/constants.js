@@ -2,16 +2,13 @@
 // Phuong: Created on 31/1/2023
 // Phuong: Muon test api thi xem ipv4 trong may tinh => cmd => ipconfig => ipv4
 // Phuong: doi lai ipv4 cua minh
-const ip_v4 = {
-  tuan: '192.168.0.29',
-  phuong: '192.168.2.62'
-}
+const ip_v4 = '192.168.0.29'
 const API_PORT = '7500'
 
 // Phuong: This is the api web for DongNaiAppTravel
 // export const API_ROOT = 'https://dong-nai-travel-api.onrender.com'
 let useLocalServer = true;
-export const API_ROOT = useLocalServer ? `http://${ip_v4.tuan}:${API_PORT}` : 'https://dong-nai-travel-api.onrender.com';
+export const API_ROOT = useLocalServer ? `http://${ip_v4}:${API_PORT}` : 'https://dong-nai-travel-api.onrender.com';
 
 export const REDUX_SLICE_NAMES = {
   BLOGS: "blogs",
@@ -76,8 +73,11 @@ export const ALPHABET = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 
 export const BRIEF_PLACE_DATA_FIELDS = "place_id;name;adr_address;types;rating;user_ratings_total;isRecommended;numberOfVisited;formatted_address;place_photos"
 export const PLACE_DETAILS_DATA_FIELDS = "rating;user_ratings_total;numberOfVisited;content;reviews"
 export const COMPLETE_PLACE_DETAILS_DATA_FIELDS = "place_id;name;adr_address;types;rating;user_ratings_total;isRecommended;numberOfVisited;formatted_address;place_photos;content;reviews"
-
 export const SEARCH_PLACE_DATA_FIELDS = "place_id;name;place_photo;_dataType;types";
+
+export const BRIEF_BLOG_DATA_FIELDS = "name;avatar;userFavoritesTotal;userCommentsTotal;createdAt;type;author";
+export const BLOG_DETAILS_DATA_FIELDS = "author;content;userFavoritesTotal;userCommentsTotal";
+export const SEARCH_BLOG_DATA_FIELDS = "name;avatar";
 
 export const SEARCH_RESULT_TYPE = {
   PLACE: "place",
