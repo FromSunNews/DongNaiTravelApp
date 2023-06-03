@@ -44,6 +44,7 @@ export const editorHtmlSource = (props = {}) => `
     .ql-toolbar {
       position: sticky;
       top: 0;
+      z-index: 10;
     }
     .ql-toolbar.ql-snow {
       outline: none;
@@ -67,10 +68,59 @@ export const editorHtmlSource = (props = {}) => `
 
     let MAX_IMAGE_SIZE = 2 * 1024 * 1024;
 
+    let customImageHandler = function() {
+      const imageInputWrapper = document.createElement("div");
+      const imageInput = document.createElement("input");
+      const quillRef = this.quill;
+
+      imageInputWrapper.style.display = "none";
+
+      imageInput.setAttribute("type", "file");
+      imageInput.setAttribute("accept", "image/*");
+      imageInput.dispatchEvent(new MouseEvent("click"));
+
+      imageInputWrapper.appendChild(imageInput);
+      document.body.appendChild(imageInputWrapper);
+
+      imageInput.onchange = function(e) {
+        let file = imageInput.files[0];
+        let fileName = file.name;
+        let reader = new FileReader();
+
+        if(file.size > MAX_IMAGE_SIZE) {
+          let message = {
+            type: "OVER_UPLOADED_IMG_SIZE",
+            data: "Size of image must be equal or less than 2mb."
+          }
+          imageInputWrapper.remove();
+          window.ReactNativeWebView.postMessage(JSON.stringify(message));
+          return;
+        }
+
+        reader.readAsDataURL(file);
+        reader.onloadend = function() {
+          imageInputWrapper.remove();
+          let message = {
+            type: "IMG_ADDED"
+          }
+          window.ReactNativeWebView.postMessage(JSON.stringify(message));
+          document.activeElement && document.activeElement.blur();
+
+          imageInputWrapper.remove();
+          quillRef.insertEmbed(quillRef.getSelection(true).index, "image", reader.result);
+        };
+      };
+    }
+
     let editor = new Quill('#editor', {
       theme: 'snow',
       modules: {
-        toolbar: toolbarOptions
+        toolbar: {
+          container: toolbarOptions,
+          handlers: {
+            'image': customImageHandler
+          }
+        }
       }
     });
   </script>

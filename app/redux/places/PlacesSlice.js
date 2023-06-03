@@ -57,7 +57,7 @@ export const fetchBriefPlacesByTypeAsyncThunk = createAsyncThunk(
       const skip = briefPlacesByType ? briefPlacesByType.skip : 0;
       const query = `limit=${limit}&skip=${skip}&filter=quality:${type}&fields=${fields}`;
       const data = await getPlacesAPI(query);
-    return [type, data];
+      return [type, data];
     } catch (error) {
       console.error(error.message);
     }

@@ -4,6 +4,10 @@ import { updateNotif } from 'redux/manifold/ManifoldSlice'
 
 import { API_ROOT } from 'utilities/constants'
 
+import {
+  BlogDataProps
+} from 'types/index.d.ts'
+
 let store
 export const injectStoreRequest = _store => {
   store = _store
@@ -140,14 +144,74 @@ export const updateManyNotifsAPI = async (data) => {
   return request.data
 }
 
+/**
+ * __Authorize Require__
+ * 
+ * Hàm này dùng để cập nhật dữ liệu cho user.
+ * @param {*} data 
+ * @returns 
+ */
 export const updateUserByCaseAPI = async (data) => {
   try {
     let user = store.getState().user;
     if(!user) throw new Error("You must be authorized.");
     let accessToken = user.currentUser.accessToken;
     data.accessToken = accessToken;
-    const request = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/update_by_case`, data)
-  return request.data
+    const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/update_by_case`, data);
+    return response.data;
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+
+/**
+ * __Authorize Require__
+ * 
+ * Dùng để tải lên một blog
+ * @param {{blog: BlogDataProps, content: string}} data 
+ * @returns 
+ */
+export const postNewBlogAPI = async (data) => {
+  try {
+    let user = store.getState().user;
+    if(!user) throw new Error("You must be authorized.");
+    let accessToken = user.currentUser.accessToken;
+    data.accessToken = accessToken;
+    data.blog.authorId = user.currentUser._id;
+    const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/blog/create_new`, data);
+    return response.data;
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+
+/**
+ * Dùng để lấy một blog.
+ * @param {string} query Params để lấy dữ liệu một blog.
+ * @returns 
+ */
+export const getBlogAPI = async (query) => {
+  try {
+    let user = store.getState().user.currentUser;
+    if(user) query += `&userId=${user._id}`;
+    const response = await axios.get(`${API_ROOT}/v1/blog/get_one?${query}`);
+    return response.data;
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+
+/**
+ * Dùng để lấy nhiều blog.
+ * @param {string} query Params để lấy dữ liệu nhiều blog.
+ * @returns 
+ */
+export const getBlogsAPI = async (query = "?limit=5&skip=0") => {
+  try {
+    let user = store.getState().user.currentUser;
+    if(user) query += `&userId=${user._id}`;
+    const response = await axios.get(`${API_ROOT}/v1/blog/get_multiple?${query}`);
+    return response.data;
   } catch (error) {
     console.error(error.message);
   }

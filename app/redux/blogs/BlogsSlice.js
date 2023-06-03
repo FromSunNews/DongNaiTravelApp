@@ -167,7 +167,7 @@ export const briefBlogsSeletor = (state, typeOfBriefBlogs) => {
 /**
  * Select blog details hiện tại.
  * @param state 
- * @returns {BriefBlogsReduxStateProps}
+ * @returns {BlogDetailsDataProps}
  */
 export const blogDetailsSelector = (state, blogId) => {
   return state[REDUX_SLICE_NAMES.BLOGS].blogDetailsList[blogId];

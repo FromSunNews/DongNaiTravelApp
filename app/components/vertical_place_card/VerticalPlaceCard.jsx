@@ -74,6 +74,7 @@ const VerticalPlaceCard = ({
   const themeColor = useTheme();
 
   let [city, province] = getTextContentInHTMLTag(place.adr_address);
+  let presentationImage = place && place.place_photos ? {uri: place.place_photos[0]} : {}
 
   return React.useMemo(() => (
     <View {...props} style={containerStyle}>
@@ -84,7 +85,7 @@ const VerticalPlaceCard = ({
         overrideShape="rounded_4"
         onPress={handlePressImageButton}
       >
-        <Image source={place.place_photos.length > 0 ? {uri: place.place_photos[0]} : {}} style={[styles.card_image, { backgroundColor: themeColor.ext_primary }]} />
+        <Image source={presentationImage} style={[styles.card_image, { backgroundColor: themeColor.ext_primary }]} />
       </RectangleButton>
       {/* Button & Recommended tag */}
       <View style={styles.card_mid}>

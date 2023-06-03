@@ -126,42 +126,48 @@ const formatTypeToStyle = {
     format: HEADING_0_TYPE,
     style: {
       fontWeight: "bold",
-      fontSize: HEADING_0_SIZE
+      fontSize: HEADING_0_SIZE,
+      marginBottom: 8
     }
   },
   [HEADING_1_TYPE] : {
     format: HEADING_1_TYPE,
     style: {
       fontWeight: "bold",
-      fontSize: HEADING_1_SIZE
+      fontSize: HEADING_1_SIZE,
+      marginBottom: 8
     }
   },
   [HEADING_2_TYPE] : {
     format: HEADING_2_TYPE,
     style: {
       fontWeight: "bold",
-      fontSize: HEADING_2_SIZE
+      fontSize: HEADING_2_SIZE,
+      marginBottom: 8
     }
   },
   [HEADING_3_TYPE] : {
     format: HEADING_3_TYPE,
     style: {
       fontWeight: "bold",
-      fontSize: HEADING_3_SIZE
+      fontSize: HEADING_3_SIZE,
+      marginBottom: 8
     }
   },
   [HEADING_4_TYPE] : {
     format: HEADING_4_TYPE,
     style: {
       fontWeight: "bold",
-      fontSize: HEADING_4_SIZE
+      fontSize: HEADING_4_SIZE,
+      marginBottom: 8
     }
   },
   [HEADING_5_TYPE] : {
     format: HEADING_5_TYPE,
     style: {
       fontWeight: "bold",
-      fontSize: HEADING_5_SIZE
+      fontSize: HEADING_5_SIZE,
+      marginBottom: 8
     }
   },
   [SUB_0_TYPE] : {
@@ -185,7 +191,8 @@ const formatTypeToStyle = {
     hasDescription: true,
     style: {
       width: "100%",
-      aspectRatio: 16 / 9
+      aspectRatio: 16 / 9,
+      marginVertical: 8
     }
   },
   [BLOCKQUOTE_TYPE] : {

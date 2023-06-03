@@ -29,7 +29,10 @@ export interface RequestBriefBlogsInfoProps {
 }
 
 export interface RequestBlogDetailsInfoProps {
-  blogId: string
+  blogId: string,
+  options: {
+    canGetFull?: boolean
+  }
 }
 
 export interface CoordinateDataProps {
@@ -189,9 +192,12 @@ export interface BlogDetailsDataProps extends BlogDataProps {
     _id?: string,
     reviews: Array<PlaceReviewsDataProps>,
   }
-  content?: {
-    _id?: string,
-    content?: PlaceContentDataProps
+  content?: PlaceContentDataProps,
+  author?: {
+    displayName?: string,
+    firstName?: string,
+    lastName?: string,
+    avatar?: string
   }
 }
 

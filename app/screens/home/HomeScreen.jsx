@@ -1,13 +1,37 @@
-import { View, Text, Button, TouchableOpacity, FlatList, ScrollView,TouchableNativeFeedback } from "react-native"
+import {
+  View, Text,
+  Button,
+  TouchableOpacity,
+  FlatList,
+  ScrollView,
+  TouchableNativeFeedback,
+  Platform
+} from "react-native"
 import React, { useEffect,useState } from "react"
-import { Ionicons, Entypo,Fontisto,FontAwesome5,MaterialCommunityIcons} from "react-native-vector-icons"
+import * as Location from "expo-location"
+
+import { useSelector } from "react-redux"
 
 import {
-  getPlacesAPI
+  getPlacesAPI,
+  getBlogsAPI,
+  getWeatherCurrentAPI
 } from 'request_api'
 
-import styles from "./HomeScreenStyles"
-import { app_sp, app_typo } from "globals/styles"
+import { useBriefPlaces } from "customHooks/usePlace"
+import useTheme from "customHooks/useTheme"
+
+import { selectCurrentMode } from "redux/theme/ThemeSlice"
+import { selectCurrentMap } from "redux/map/mapSlice"
+import { selectCurrentLanguage } from "redux/language/LanguageSlice"
+
+import {
+  BRIEF_PLACE_DATA_FIELDS,
+  BRIEF_BLOG_DATA_FIELDS
+} from "utilities/constants"
+
+import { Ionicons, Entypo,Fontisto,FontAwesome5,MaterialCommunityIcons} from "react-native-vector-icons"
+
 import { 
   AppText, 
   HorizontalPlaceCard, 
@@ -17,23 +41,15 @@ import {
   VerticalBlogCardSkeleton,
   VerticalBlogCard,
   VerticalPlaceCard,
-  VerticalPlaceCardSkeleton,
+  VerticalPlaceCardSkeleton
 } from "components"
+import CustomStatusBar from "components/custom_status_bar/CustomStatusBar"
 import TabSlideCategoryPlace from "components/tab_slide_category_place/TabSlideCategoryPlace"
 import TabSlideCategoryBlog from "components/tab_slide_category_blog/TabSlideCategoryBlog"
-
-import { getWeatherCurrentAPI } from "request_api"
-import * as Location from "expo-location"
-import { useSelector } from "react-redux"
-import { selectCurrentMap } from "redux/map/mapSlice"
-import { Platform } from "react-native"
 import HomeBannerSlider from "components/home_banner_slider/HomeBannerSlider"
-import { selectCurrentLanguage } from "redux/language/LanguageSlice"
-import { useBriefPlaces } from "customHooks/usePlace"
-import { BRIEF_PLACE_DATA_FIELDS } from "utilities/constants"
-import useTheme from "customHooks/useTheme"
-import CustomStatusBar from "components/custom_status_bar/CustomStatusBar"
-import { selectCurrentMode } from "redux/theme/ThemeSlice"
+
+import styles from "./HomeScreenStyles"
+import { app_sp, app_typo } from "globals/styles"
 
 const HomeScreen = ({navigation}) => {
   const currentMap = useSelector(selectCurrentMap)
@@ -46,9 +62,10 @@ const HomeScreen = ({navigation}) => {
   const [vision, setVision] = useState(null)
   const [wind, setWind] = useState(null)
   const [typePlace, setTypePlace] = React.useState("all");
-  const [typeBlog, setTypeBlog] = React.useState("");
-  const [currentBlogs, setCurrentBlogs] = React.useState(null);
-
+  const [typeBlog, setTypeBlog] = React.useState("all");
+  const [places, setPlaces] = React.useState(null);
+  const [blogs, setBlogs] = React.useState(null);
+  
   //language
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.homeScreen
@@ -56,7 +73,10 @@ const HomeScreen = ({navigation}) => {
   const themeColor = useTheme();
   const themeMode = useSelector(selectCurrentMode).mode
 
-  const [places, setPlaces] = React.useState(null);
+  const previousTypes = React.useRef({
+    place: typePlace,
+    blog: typeBlog
+  })
 
   // console.log('ChoseTypeOfPlace: '+ typePlace)
   // console.log('ChoseTypeOfBlog: '+ typeBlog)
@@ -91,19 +111,22 @@ const HomeScreen = ({navigation}) => {
   },[currentMap.userLocation])
 
   useEffect(() => {
-    let query = `limit=5&skip=0&filter=quality:${typePlace}&fields=${BRIEF_PLACE_DATA_FIELDS}`;
-    getPlacesAPI(query)
-    .then(data => {
-      setPlaces(data)
-    })
+    let placeQuery = `limit=5&skip=0&filter=quality:${typePlace}&fields=${BRIEF_PLACE_DATA_FIELDS}`;
 
-    if(!currentBlogs) {
-      setTimeout(() => {
-        setCurrentBlogs([...blogs]);
-        // setCurrentPlaces([...places]);
-      }, 2000);
-    }
+    getPlacesAPI(placeQuery)
+      .then(data => {
+        setPlaces(data)
+      })
   }, [typePlace])
+
+  React.useEffect(() => {
+    let blogQuery = `limit=5&skip=0&filter=quality:${typeBlog}&fields=${BRIEF_BLOG_DATA_FIELDS}`
+
+    getBlogsAPI(blogQuery)
+      .then(data => {
+        setBlogs(data)
+      })
+  }, [typeBlog]);
 
   return (
     
@@ -183,7 +206,7 @@ const HomeScreen = ({navigation}) => {
             <AppText><Entypo name="chevron-small-right" size={40}/></AppText>
           </TouchableOpacity>
           <TypeScrollView
-            types='all;recommended;popular;most_visit;most_favorite'
+            types='all;recommended;popular;most_visit;high_rating'
             callBack={setTypePlace}
             scrollStyle={[app_sp.ms_18, app_sp.mb_12]}
             containerStyle={{backgroundColor: themeColor.primary, ...app_sp.pv_10}}
@@ -215,20 +238,22 @@ const HomeScreen = ({navigation}) => {
             <AppText><Entypo name="chevron-small-right" size={40}/></AppText>
           </TouchableOpacity>
           <TypeScrollView
-            types='all;recommended;popular;most_visit;high_rating'
-            callBack={setTypeBlog}
+            types='all;most_favorites;most_comments'
+            callBack={(type) => {
+              setTypeBlog(type)
+            }}
             scrollStyle={[{paddingLeft:16}, app_sp.pv_12]}
             containerStyle={{backgroundColor: themeColor.primary}}
           />
           <View style={{ ...app_sp.mb_12}}>
             <ScrollView horizontal={true} style={{paddingBottom:10,paddingLeft:16}} showsHorizontalScrollIndicator={false}>
               {
-                !currentBlogs
+                !blogs
                 ? [1, 2, 3].map((value, index) => <VerticalBlogCardSkeleton key={value + index} style={{  marginLeft: index !== 0 ? 16 : 0,}} />)
-                : currentBlogs.map((blog, index) => {
+                : blogs.map((blog, index) => {
                   let actualStyle = [app_sp.me_18];
                   if(index === 0) actualStyle.push(app_sp.ms_18);
-                  return <VerticalBlogCard blog={blog}  style={{ marginLeft: index !== 0 ? 16 : 2, marginRight : currentBlogs.length - 1 === index ? 36 : 0}}/>
+                  return <VerticalBlogCard blog={blog} style={{ marginLeft: index !== 0 ? 16 : 2, marginRight : blogs.length - 1 === index ? 36 : 0}}/>
                 }
                 )
               }
@@ -241,180 +266,3 @@ const HomeScreen = ({navigation}) => {
 }
 
 export default HomeScreen
-
-const places = [
-  {
-    id: '1a',
-    name: 'Pho di bo',
-    avatar: 'https://lh3.googleusercontent.com/p/AF1QipPoYDJXCAlOR3Oc0RgjhQ5WBZt9s2VkvqpbbuNN=s680-w680-h510',
-    location: {
-      province: 'Dong Nai',
-      city: 'Bien Hoa'
-    },
-    tags: [
-      {
-        title: 'Walking'
-      },
-      {
-        title: 'Exercise'
-      }
-    ],
-    ratingPoints: 4.3,
-    numberOfReviews: 300,
-    numberOfVisited: 3200,
-    isRecommended: false,
-    isVisited: false
-  },
-  {
-    id: '1b',
-    name: 'Quang truong tinh',
-    avatar: 'https://lh3.googleusercontent.com/p/AF1QipPUoQ-BfuMVqLUZog0RrNnF4HVrFLXlXLQ4wak2=s680-w680-h510',
-    location: {
-      province: 'Dong Nai',
-      city: 'Bien Hoa'
-    },
-    tags: [
-      {
-        title: 'Walking'
-      },
-      {
-        title: 'Exercise'
-      }
-    ],
-    ratingPoints: 4.6,
-    numberOfReviews: 5687,
-    numberOfVisited: 32242,
-    isRecommended: true,
-    isVisited: true
-  },
-  {
-    id: '1c',
-    name: 'Cong vien Tam Hiep',
-    avatar: 'https://lh3.googleusercontent.com/p/AF1QipOFHqO2nUTvyj0fYEvwt-9AHoQS8e5yajbKLjQE=s680-w680-h510',
-    location: {
-      province: 'Dong Nai',
-      city: 'Bien Hoa'
-    },
-    tags: [
-      {
-        title: 'Walking'
-      },
-      {
-        title: 'Exercise'
-      }
-    ],
-    ratingPoints: 3.7,
-    numberOfReviews: 1687,
-    numberOfVisited: 2242,
-    isRecommended: false,
-    isVisited: false
-  },
-  {
-    id: '1d',
-    name: 'Pho di bo',
-    avatar: 'https://lh3.googleusercontent.com/p/AF1QipPoYDJXCAlOR3Oc0RgjhQ5WBZt9s2VkvqpbbuNN=s680-w680-h510',
-    location: {
-      province: 'Dong Nai',
-      city: 'Bien Hoa'
-    },
-    tags: [
-      {
-        title: 'Walking'
-      },
-      {
-        title: 'Exercise'
-      }
-    ],
-    ratingPoints: 4.3,
-    numberOfReviews: 300,
-    numberOfVisited: 3200,
-    isRecommended: false,
-    isVisited: false
-  },
-  {
-    id: '1e',
-    name: 'Quang truong tinh',
-    avatar: 'https://lh3.googleusercontent.com/p/AF1QipPUoQ-BfuMVqLUZog0RrNnF4HVrFLXlXLQ4wak2=s680-w680-h510',
-    location: {
-      province: 'Dong Nai',
-      city: 'Bien Hoa'
-    },
-    tags: [
-      {
-        title: 'Walking'
-      },
-      {
-        title: 'Exercise'
-      }
-    ],
-    ratingPoints: 4.6,
-    numberOfReviews: 5687,
-    numberOfVisited: 32242,
-    isRecommended: true,
-    isVisited: true
-  },
-  {
-    id: '1f',
-    name: 'Cong vien Tam Hiep',
-    avatar: 'https://lh3.googleusercontent.com/p/AF1QipOFHqO2nUTvyj0fYEvwt-9AHoQS8e5yajbKLjQE=s680-w680-h510',
-    location: {
-      province: 'Dong Nai',
-      city: 'Bien Hoa'
-    },
-    tags: [
-      {
-        title: 'Walking'
-      },
-      {
-        title: 'Exercise'
-      }
-    ],
-    ratingPoints: 3.7,
-    numberOfReviews: 1687,
-    numberOfVisited: 2242,
-    isRecommended: false,
-    isVisited: false
-  }
-]
-
-const blogs = [
-  {
-    id: 'b1',
-    user: {
-      id: 'user1',
-      name: 'Lost Teach',
-      avatar: ''
-    },
-    name: 'Top 10 dia diem neu ghe qua khi du lich o Dong Nai',
-    avatar: '',
-    createdAt: 1675908513000,
-    readTime: 480,
-    isLiked: true
-  },
-  {
-    id: 'b2',
-    user: {
-      id: 'user2',
-      name: 'Du Lich Bui',
-      avatar: ''
-    },
-    name: 'Nhung con duong nhon nhip nhat o Dong Nai',
-    avatar: '',
-    createdAt: 1675217313000,
-    readTime: 300,
-    isLiked: false
-  },
-  {
-    id: 'b3',
-    user: {
-      id: 'user3',
-      name: 'Bac Thay Du Lich',
-      avatar: ''
-    },
-    name: 'Cac quan an hap dan nen thu khi den Dong Nai',
-    avatar: '',
-    createdAt: 1674353313000,
-    readTime: 300,
-    isLiked: false
-  }
-]
