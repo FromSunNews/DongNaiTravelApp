@@ -4,7 +4,7 @@ import React from 'react'
 import { ReactNativeTextGeneratorProto } from 'libs/mark-format/react-native'
 import { configStyleOfFTTS } from 'libs/mark-format/react-native/config/toReactNative.config'
 
-import { app_c, app_typo } from 'globals/styles'
+import { app_c, app_sp, app_typo } from 'globals/styles'
 import useTheme from 'customHooks/useTheme'
 
 

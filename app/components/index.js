@@ -24,6 +24,8 @@ import TypeScrollView from "./type_scroll_view/TypeScrollView"
 import { SimpleBarChart } from "./app_chart/app_bar_chart/AppBarChart"
 import MarkFormat from "./mark_format/MarkFormat"
 import ReviewSectionPromise from "./review_section_promise/ReviewSectionPromise"
+import Search from "./search/Search"
+import SearchResultList from "./search/SearchResultList"
 
 export {
   AppText,
@@ -51,5 +53,7 @@ export {
   TypeScrollView,
   SimpleBarChart,
   MarkFormat,
-  ReviewSectionPromise
+  ReviewSectionPromise,
+  Search,
+  SearchResultList
 }

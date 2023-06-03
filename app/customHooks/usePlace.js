@@ -25,7 +25,8 @@ import {
 
 import {
   PlaceDataProps,
-  PlaceDetailsDataProps
+  PlaceDetailsDataProps,
+  RequestPlaceDetailsInfoProps
 } from 'types/index.d.ts'
 
 export const {
@@ -188,10 +189,13 @@ export const {
   /**
    * Hàm này dùng để lấy dữ liệu chi tiết của một place trên server theo `place_id` và `lang`.
    * @param {string} placeId là `place_id` của một place.
-   * @param {string} lang ngôn ngữ mong muốn của dữ liệu trả về (với các trường có hỗ trợ nhiều ngôn ngữ).
+   * @param {object} options Options để gọi async thunk.
+   * @param {string} options.lang ngôn ngữ mong muốn của dữ liệu trả về (với các trường có hỗ trợ nhiều ngôn ngữ).
+   * @param {boolean} options.canGetComplete Có thể lấy dữ liệu đủ dùng cho place details hay không?
+   * @param {boolean} options.canGetFull Có thể lấy toàn bộ dữ liệu cho place details hay không?
    * @returns 
    */
-  (placeId, lang) => dispatch(fetchPlaceDetailsByIdAsyncThunk({placeId, lang}));
+  (placeId, options) => dispatch(fetchPlaceDetailsByIdAsyncThunk({placeId, options}));
   
   /**
    * @param {Dispatch<AnyAction>} dispatch 
@@ -217,7 +221,6 @@ export const {
       
       let {
         addPlaceDetails,
-        
         fetchPlaceDetails,
         clearPlaceDetails,
       } = React.useMemo(() => ({

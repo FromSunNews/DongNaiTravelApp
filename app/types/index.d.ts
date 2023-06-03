@@ -16,13 +16,23 @@ export interface RequestBriefPlacesInfoProps {
 
 export interface RequestPlaceDetailsInfoProps {
   placeId: string,
-  lang: string,
+  options: {
+    lang: string,
+    canGetComplete?: boolean,
+    canGetFull?: boolean
+  }
 }
 
-export interface BriefPlacesDataProps {
-  limit: number,
-  skip: number,
-  data: Array<PlaceDataProps>
+export interface RequestBriefBlogsInfoProps {
+  type: string,
+  fields: string
+}
+
+export interface RequestBlogDetailsInfoProps {
+  blogId: string,
+  options: {
+    canGetFull?: boolean
+  }
 }
 
 export interface CoordinateDataProps {
@@ -156,6 +166,47 @@ export interface PlaceDetailsDataProps extends PlaceDataProps {
   }
 }
 
+export interface BriefPlacesReduxStateProps {
+  limit: number,
+  skip: number,
+  data: Array<PlaceDataProps>
+}
+
+export interface BlogDataProps {
+  authorId?: string,
+  reviewId?: string,
+  contentId?: string,
+  name?: string,
+  avatar?: string,
+  userFavoritesTotal?: number,
+  userCommentsTotal?: number,
+  type?: string,
+  mentionedPlaces?: Array<string>,
+  isApproved?: boolean,
+  updatedAt?: number,
+  createdAt?: number
+}
+
+export interface BlogDetailsDataProps extends BlogDataProps {
+  reviews?: {
+    _id?: string,
+    reviews: Array<PlaceReviewsDataProps>,
+  }
+  content?: PlaceContentDataProps,
+  author?: {
+    displayName?: string,
+    firstName?: string,
+    lastName?: string,
+    avatar?: string
+  }
+}
+
+export interface BriefBlogsReduxStateProps {
+  limit: number,
+  skip: number,
+  data: Array<BlogDataProps>
+}
+
 // Use for redux
 export type UserRoles = 'GUEST' | 'MEMBER'
 export interface ActionProps<T> {
@@ -197,4 +248,25 @@ export interface WithPlaceCardWrappedComponentProps extends ViewProps {
   handlePressImageButton: () => void,
   handleLikeButton: () => void,
   handleVisitButton: () => void
+}
+
+// For Html getter (WebView)
+export interface EditorHtmlOptionsProps {
+  editorBackgroundColor: string,
+  editorToolsBarBackgroundColor: string
+}
+
+// For component
+export interface SearchResultListProps {
+  results: any,
+  resultListPosition: "normal" | "float-top" | "float-bottom",
+  renderResultItem: (item: any) => JSX.Element,
+  keyExtractor: (item: any, index: number) => string,
+  scrollEnabled: boolean
+}
+
+export interface SearchProps {
+  placeHolder: string,
+  callBack: (searchString: string, data: any) => void,
+  apis: Array<(text: string) => Promise<any>>
 }

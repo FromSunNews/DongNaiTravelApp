@@ -59,6 +59,7 @@ const RectangleButton = ({
   ...props
 }) => {
   let isChildrenFunc = typeof children === 'function' && React.isValidElement(children());
+  let ButtonChildren;
 
   let shape = overrideShape !== 'none' ? app_sh[overrideShape] : {};
 
@@ -94,6 +95,9 @@ const RectangleButton = ({
   }
 
   contentContainerStyle = ComponentUtility.mergeStyle(contentContainerStyle, props.style);
+  ButtonChildren = isChildrenFunc
+  ? children(isActive, currentLabelStyle)
+  : children
 
   props.underlayColor = props.underlayColor ? props.underlayColor : app_c.HEX.sub_third;
 
@@ -102,13 +106,24 @@ const RectangleButton = ({
       {...props}
       style={typeOfButton === "none" ? {} : contentContainerStyle}
     >
-      <View style={typeOfButton === "none" ? contentContainerStyle : {}}>
-        {
-          isChildrenFunc
-          ? children(isActive, currentLabelStyle)
-          : children
-        }
-      </View>
+      {
+        typeOfButton === "none"
+        ? (
+          <View style={contentContainerStyle}>
+            {
+              <>
+                { ButtonChildren }
+              </>
+            }
+          </View>
+        )
+        : (
+          <>
+            { ButtonChildren }
+          </>
+        )
+      }
+      
     </Button>
   )
 }
