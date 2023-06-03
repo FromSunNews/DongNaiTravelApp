@@ -152,3 +152,14 @@ export const updateUserByCaseAPI = async (data) => {
     console.error(error.message);
   }
 }
+
+
+// Api for chatbot
+export const getTextChatBotAPI = async (data) => {
+  try {
+    const request = await axios.post(`${API_ROOT}/v1/chatbot/get_text`, data)
+  return request.data
+  } catch (error) {
+    console.error(error.message);
+  }
+}

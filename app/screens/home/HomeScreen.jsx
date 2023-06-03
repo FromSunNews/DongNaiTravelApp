@@ -162,9 +162,7 @@ const HomeScreen = ({navigation}) => {
                       {
                         vision ? (
                           <AppText style={{...app_typo.fonts.normal.normal.sub0,paddingHorizontal:8}}>{`${vision.toFixed(1)}`}<Text style={{fontSize:12}}>km</Text></AppText>
-                        ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.sub0,marginTop:4}}><Entypo name="minus"/><Entypo name="minus" color='red
-                        
-                        '  /><Text style={{ fontSize: 12 }}>km</Text></AppText>
+                        ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.sub0,marginTop:4}}><Entypo name="minus"/><Entypo name="minus" color='red'  /><Text style={{ fontSize: 12 }}>km</Text></AppText>
                       }
                   </View>
                 </View>

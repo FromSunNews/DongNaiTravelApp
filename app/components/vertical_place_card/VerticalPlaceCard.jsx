@@ -63,6 +63,7 @@ const VerticalPlaceCard = ({
   handlePressImageButton,
   handleLikeButton,
   handleVisitButton,
+  isChatBotScreen = false,
   ...props
 }) => {
   const containerStyle = ComponentUtility.mergeStyle([styles.card, place.isRecommended ? {} : {}], props.style);
@@ -107,39 +108,58 @@ const VerticalPlaceCard = ({
           </AppText>
         </View>
       </View>
-
+      
+      
       {/* Like button */}
-      <View style={styles.card_buttons_container}>
-        <RectangleButton
-          isActive={extendedPlaceInfo.isLiked}
-          isTransparent
-          typeOfButton="opacity"
-          style={styles.card_button}
-          onPress={handleLikeButton}
-        >
-          {
-            (isActive, currentLabelStyle) => (
-              <AppText font="body2" style={currentLabelStyle}>
-                <Ionicons name={isActive ? "heart" : "heart-outline"} style={currentLabelStyle} size={14} /> {langData.like[langCode]}
-              </AppText>
-            )
-          }
-        </RectangleButton>
+      {
+        isChatBotScreen ?
+        <>
+          <RectangleButton
+            // isActive={extendedPlaceInfo.isVisited}
+            // typeOfButton="highlight"
+            overrideShape="capsule"
+            onPress={handlePressImageButton}
+            style={{
+              marginTop: 5,
+            }}
+          >
+            {(isActive, currentLabelStyle) => (
+              <AppText style={currentLabelStyle} font="body2">Khám phá ngay</AppText>
+            )}
+          </RectangleButton>
+        </> : 
+        <View style={styles.card_buttons_container}>
+          <RectangleButton
+            isActive={extendedPlaceInfo.isLiked}
+            isTransparent
+            typeOfButton="opacity"
+            style={styles.card_button}
+            onPress={handleLikeButton}
+          >
+            {
+              (isActive, currentLabelStyle) => (
+                <AppText font="body2" style={currentLabelStyle}>
+                  <Ionicons name={isActive ? "heart" : "heart-outline"} style={currentLabelStyle} size={14} /> {langData.like[langCode]}
+                </AppText>
+              )
+            }
+          </RectangleButton>
 
-        <RectangleButton
-          isTransparent
-          typeOfButton="opacity"
-          style={styles.card_button}
-        >
-          {
-            (isActive, currentLabelStyle) => (
-              <AppText font="body2" style={currentLabelStyle}>
-              <Ionicons name={isActive ? "flag" : "flag-outline"} style={currentLabelStyle} size={14} /> {langData.report[langCode]}
-              </AppText>
-            )
-          }
-        </RectangleButton>
-      </View>
+          <RectangleButton
+            isTransparent
+            typeOfButton="opacity"
+            style={styles.card_button}
+          >
+            {
+              (isActive, currentLabelStyle) => (
+                <AppText font="body2" style={currentLabelStyle}>
+                <Ionicons name={isActive ? "flag" : "flag-outline"} style={currentLabelStyle} size={14} /> {langData.report[langCode]}
+                </AppText>
+              )
+            }
+          </RectangleButton>
+        </View>
+      }
     </View>
   ), [extendedPlaceInfo.isLiked, extendedPlaceInfo.isVisited, place.rating, place.numberOfVisited, place.user_ratings_total])
 }

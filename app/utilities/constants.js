@@ -4,7 +4,7 @@
 // Phuong: doi lai ipv4 cua minh
 const ip_v4 = {
   tuan: '192.168.2.10',
-  phuong: '192.168.2.62'
+  phuong: '192.168.2.78'
 }
 const API_PORT = '7500'
 
