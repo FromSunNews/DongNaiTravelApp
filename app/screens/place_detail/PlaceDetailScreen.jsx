@@ -113,14 +113,6 @@ const PlaceDetailScreen = ({route, navigation}) => {
     (data, state) => updateBriefPlace(placeDetails.place_id, 0, { isLiked: state }),
     (state) => updateBriefPlace(placeDetails.place_id, 0, { isLiked: state })
   )
-
-  /**
-   * Hàm này dùng để yêu thích / bỏ yêu thích một place, nó sẽ gửi id của place về server và tự server nó sẽ xử lý.
-   */
-  const handleVisitButton = () => visitPlace(
-    (data, state) => updateBriefPlace(placeDetails.place_id, 0, { isVisited: state }),
-    (state) => updateBriefPlace(placeDetails.place_id, 0, { isVisited: state })
-  )
   
   React.useEffect(() => {
     navigation.setOptions({'title': placeDetails.name})
@@ -200,16 +192,6 @@ const PlaceDetailScreen = ({route, navigation}) => {
                   <Ionicons name={isActive ? 'map' : 'map-outline'} size={14} style={currentLabelStyle} />
                 )}
               />
-              <RectangleButton
-                isActive={extendedPlaceInfo.isVisited}
-                typeOfButton="highlight"
-                overrideShape="capsule"
-                onPress={handleVisitButton}
-              >
-                {(isActive, currentLabelStyle) => (
-                  <AppText style={currentLabelStyle} font="body2">{isActive ? langVisit.visited[langCode] : langVisit.visit[langCode]}</AppText>
-                )}
-              </RectangleButton>
             </View>
 
             {/* Tags container row */}

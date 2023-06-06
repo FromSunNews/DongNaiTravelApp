@@ -55,7 +55,7 @@ import {
  * export default withPlaceCard(VerticalPlaceCard)
  * ...
  */
-export function withPlaceCard(Component) {
+export function withPlaceCard(WrappedComponent) {
   /**
    * Hàm này dùng để lấy text content trong `adr_address`. Mặc định là 2 thẻ
    * `<span class"locality"></span>` và `<span class"region"></span>`. Nếu như có gì
@@ -64,13 +64,14 @@ export function withPlaceCard(Component) {
   const getTextContentInHTMLTag = StringUtility.createTextContentInHTMLTagGetter("<span class=\"(locality|region)\">", "<\/span>");
 
   /**
-   * Component này đã được w
+   * Component này sẽ nhận một component khác và bọc nó lại, đồng thời function này sẽ truyền logic lại cho
+   * component được bọc đó (WrappedComponent).
    * @param {ViewProps & PlaceCardProps} props Props của component.
    */
   return function({ place, placeIndex, typeOfBriefPlace, ...props }) {
     const { addPlaceDetails } = usePlaceDetailsActions();
     const { updateBriefPlace } = useBriefPlacesActions(typeOfBriefPlace);
-    const { extendedPlaceInfo, likePlace, visitPlace } = usePlaceInteractionActions(place);
+    const { extendedPlaceInfo, likePlace } = usePlaceInteractionActions(place);
     const navigation = useNavigation();
   
     /**
@@ -92,16 +93,8 @@ export function withPlaceCard(Component) {
       (state) => updateBriefPlace(place.place_id, placeIndex, { isLiked: state })
     )
 
-    /**
-     * Hàm này dùng để yêu thích / bỏ yêu thích một place, nó sẽ gửi id của place về server và tự server nó sẽ xử lý.
-     */
-    const handleVisitButton = () => visitPlace(
-      (data, state) => updateBriefPlace(place.place_id, placeIndex, { isVisited: state }),
-      (state) => updateBriefPlace(place.place_id, placeIndex, { isVisited: state })
-    )
-
     return (
-      <Component
+      <WrappedComponent
         {...props}
         place={place}
         placeIndex={placeIndex}
@@ -112,7 +105,6 @@ export function withPlaceCard(Component) {
         getTextContentInHTMLTag={getTextContentInHTMLTag}
         handlePressImageButton={handlePressImageButton}
         handleLikeButton={handleLikeButton}
-        handleVisitButton={handleVisitButton}
       />
     )
   }

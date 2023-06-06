@@ -171,7 +171,7 @@ const BlogDetailScreen = ({route, navigation}) => {
               <Ionicons name={isActive ? 'map' : 'map-outline'} size={14} style={currentLabelStyle} />
             )}
           />
-          <AppText font="body3">{NumberUtility.toMetricNumber(blogDetails.userFavoritesTotal)}</AppText>
+          <AppText font="body3">{NumberUtility.toMetricNumber(blogDetails.userCommentsTotal)}</AppText>
         </View>
       </View>
     </View>

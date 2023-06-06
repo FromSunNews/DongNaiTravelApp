@@ -122,7 +122,7 @@ export const placesSlice = createSlice({
      * @param state 
      * @param action 
      */
-    inscreaseSkipBriefPlacesAmountState: (state, action) => {
+    increaseSkipBriefPlacesAmountState: (state, action) => {
       const typeOfBriefPlaces = action.payload;
       state.briefPlaces[typeOfBriefPlaces].skip += state.briefPlaces[typeOfBriefPlaces].limit;
     },
@@ -131,9 +131,9 @@ export const placesSlice = createSlice({
      * @param state 
      * @param action 
      */
-    descreaseSkipBriefPlacesAmountState: (state, action) => {
+    decreaseSkipBriefPlacesAmountState: (state, action) => {
       const typeOfBriefPlaces = action.payload;
-      state.briefPlaces[typeOfBriefPlaces].skip = NumberUtility.descreaseByAmount(
+      state.briefPlaces[typeOfBriefPlaces].skip = NumberUtility.decreaseByAmount(
         state.briefPlaces[typeOfBriefPlaces].skip,
         state.briefPlaces[typeOfBriefPlaces].limit
       )
@@ -168,7 +168,7 @@ export const placesSlice = createSlice({
       }
 
       if(briefPlaces.length === 0) {
-        state.briefPlaces[typeOfBriefPlaces].skip = NumberUtility.descreaseByAmount(
+        state.briefPlaces[typeOfBriefPlaces].skip = NumberUtility.decreaseByAmount(
           state.briefPlaces[typeOfBriefPlaces].skip,
           state.briefPlaces[typeOfBriefPlaces].limit
         )
@@ -189,8 +189,8 @@ export const placesSlice = createSlice({
 // Phương: Để ý ở trên thì không thấy properties actions đâu cả, bởi vì những cái actions này đơn giản là được thằng redux tạo tự động theo tên của reducer nhé.
 export const {
   addPlaceDetailsState,
-  inscreaseSkipBriefPlacesAmountState,
-  descreaseSkipBriefPlacesAmountState,
+  increaseSkipBriefPlacesAmountState,
+  decreaseSkipBriefPlacesAmountState,
   updateBriefPlaceState,
   clearAllBriefPlacesState,
   clearPlaceDetailsState
