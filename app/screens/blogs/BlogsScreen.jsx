@@ -96,6 +96,7 @@ const BlogsScreen = () => {
           <View
             style={[
               app_sp.ph_18,
+              app_sp.pt_12,
               {
                 backgroundColor: themeColor.primary,
                 position: 'relative',

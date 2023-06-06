@@ -64,7 +64,7 @@ const APP_EXT_THIRD_COLOR = {
 };
 //Phap: mau cho group-button-tab
 const APP_EXT_BG_GROUP_BUTTON_TAB = {
-  HEX: "#112D4E",
+  HEX: "#3F72AF",
   RGB: "180, 180, 180",
   HEX_DARK: "#232323",
 };

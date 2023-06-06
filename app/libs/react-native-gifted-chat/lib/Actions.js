@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, } from 'react-native';
 import Color from './Color';
 import { StylePropType } from './utils';
 import { useChatContext } from './GiftedChatContext';
-import { useCallbackOne } from 'use-memo-one';
+// import { useCallbackOne } from 'use-memo-one';
 export function Actions({ options = {}, optionTintColor = Color.optionTintColor, icon, wrapperStyle, iconTextStyle, onPressActionButton, containerStyle, }) {
     const { actionSheet } = useChatContext();
-    const onActionsPress = useCallbackOne(() => {
+    const onActionsPress = useCallback(() => {
         const optionKeys = Object.keys(options);
         const cancelButtonIndex = optionKeys.indexOf('Cancel');
         actionSheet().showActionSheetWithOptions({
@@ -21,7 +21,7 @@ export function Actions({ options = {}, optionTintColor = Color.optionTintColor,
             }
         });
     }, []);
-    const renderIcon = useCallbackOne(() => {
+    const renderIcon = useCallback(() => {
         if (icon) {
             return icon();
         }

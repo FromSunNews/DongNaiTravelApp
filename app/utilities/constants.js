@@ -13,7 +13,7 @@ const API_PORT = '7500'
 // Phuong: This is the api web for DongNaiAppTravel
 // export const API_ROOT = 'https://dong-nai-travel-api.onrender.com'
 let useLocalServer = true;
-export const API_ROOT = useLocalServer ? `http://${ip_v4}:${API_PORT}` : 'https://dong-nai-travel-api.onrender.com';
+export const API_ROOT = useLocalServer ? `http://${ip_v4.phuong}:${API_PORT}` : 'https://dong-nai-travel-api.onrender.com';
 
 export const REDUX_SLICE_NAMES = {
   BLOGS: "blogs",
