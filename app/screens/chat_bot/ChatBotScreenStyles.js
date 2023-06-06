@@ -4,7 +4,8 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: app_c.HEX.primary
+        backgroundColor: 'white',
+        paddingBottom: 20
     },
     h1: {
         color: 'blue',

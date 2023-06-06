@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView } from 'react-native'
+import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
 import styles from './ChatBotScreenStyles'
 import { useSelector } from 'react-redux'
@@ -7,9 +7,24 @@ import useTheme from 'customHooks/useTheme'
 import { getTextChatBotAPI } from 'request_api'
 import { selectCurrentUser } from 'redux/user/UserSlice'
 import { selectTemporaryUserId } from 'redux/user/UserSlice'
-import { GiftedChat, Bubble } from 'libs/react-native-gifted-chat/lib'
-import { app_c } from 'globals/styles'
+import { app_c, app_dms, app_shdw, app_sp, app_typo } from 'globals/styles';
 import { selectCurrentMap } from 'redux/map/mapSlice'
+
+import { AppText, VerticalPlaceCard, VerticalPlaceCardSkeleton } from 'components';
+
+import { GiftedChat, Bubble, InputToolbar, Actions, Composer, Send } from 'react-native-gifted-chat'
+
+import { getPlacesAPI } from 'request_api';
+import { weatherIcons } from 'utilities/mapdata';
+import WeatherChart from 'libs/react-native-weather-chart';
+import { Ionicons, Entypo, Fontisto, FontAwesome5, FontAwesome, MaterialIcons, MaterialCommunityIcons} from "react-native-vector-icons"
+import moment from 'moment/moment'
+
+import { BRIEF_PLACE_DATA_FIELDS } from 'utilities/constants';
+import MessageFeature from 'components/message_feature/MessageFeature'
+
+
+
 
 const botAvatar = require('../../assets/images/avatar_chatbot.jpg')
 
@@ -42,72 +57,48 @@ const ChatBotScreen = () => {
     // data?.response, data.action, data.weatherData
     let msg
     const action = data.action
-    if (action === 'input.welcome') {
-      msg = {
-        _id: messages.length + 1,
-        text: data.response,
-        createdAt: new Date(),
-        user: {
-          _id: 2,
-          name: 'TravelBot',
-          avatar: botAvatar
-        },
-        quickReplies: {
-          type: 'radio', // or 'checkbox',
-          keepIt: true,
-          values: [
-            {
-              title: 'Gợi ý du lịch',
-              value: 'suggest',
-              bdColor: '#E76161',
-              bgColor: '#E76161'
-            },
-            {
-              title: 'Thời tiết',
-              value: 'weather',
-              bdColor: '#146C94',
-              bgColor: '#146C94'
-            },
-            {
-              title: 'Bản đồ',
-              value: 'map',
-              bdColor: '#617A55',
-              bgColor: '#617A55'
-            },
-          ],
-          isUpperCase: true,
-          action: action
-        }
-      }
-    } else if (action === 'input.suggest-place' || action === 'input.get-weather') {
-      msg = {
-        _id: messages.length + 1,
-        text: data.response,
-        createdAt: new Date(),
-        user: {
-          _id: 2,
-          name: 'TravelBot',
-          avatar: botAvatar
-        },
-        quickReplies: {
-          type: 'radio', // or 'checkbox',
-          keepIt: true,
-          action: action,
-          data: data.data
-        }
-      }
-    } else {
-      msg = {
-        _id: messages.length + 1,
-        text: data.response,
-        createdAt: new Date(),
-        user: {
-          _id: 2,
-          name: 'TravelBot',
-          avatar: botAvatar
-        }
-      }
+    msg = {
+      _id: messages.length + 1,
+      text: data.response,
+      createdAt: new Date(),
+      user: {
+        _id: 2,
+        name: 'TravelBot',
+        avatar: botAvatar
+      },
+      action: action,
+      data: data.data ?? null 
     }
+    // if (action === 'input.welcome') {
+    // } else if (action === 'input.suggest-place' || action === 'input.get-weather') {
+    //   msg = {
+    //     _id: messages.length + 1,
+    //     text: data.response,
+    //     createdAt: new Date(),
+    //     user: {
+    //       _id: 2,
+    //       name: 'TravelBot',
+    //       avatar: botAvatar
+    //     },
+    //     quickReplies: {
+    //       type: 'radio', // or 'checkbox',
+    //       keepIt: true,
+    //       action: action,
+    //       data: data.data
+    //     }
+    //   }
+    // } else {
+    //   msg = {
+    //     _id: messages.length + 1,
+    //     text: data.response,
+    //     createdAt: new Date(),
+    //     user: {
+    //       _id: 2,
+    //       name: 'TravelBot',
+    //       avatar: botAvatar
+    //     }
+    //   }
+    // }
     
     setMessages(previousMessages => GiftedChat.append(previousMessages, msg))
   }
@@ -146,32 +137,150 @@ const ChatBotScreen = () => {
 
   const renderBubble = (props) => {
     return (
-      <Bubble 
-        {...props}
-        // màu text
-        textStyle={{
-          right: {color: app_c.HEX.primary},
-          left: {color: app_c.HEX.fourth}
-        }}
-        // màu bubble
-        wrapperStyle={{
-          right: {backgroundColor: app_c.HEX.third},
-          left: {backgroundColor: app_c.HEX.ext_primary},
-        }}
-      />
+      <View style={{
+        display: 'flex',
+        flexDirection: 'column',
+        width: '90%'
+      }}>
+        <Bubble
+          {...props}
+          // màu text
+          textStyle={{
+            right: {color: app_c.HEX.primary},
+            left: {color: app_c.HEX.fourth}
+          }}
+          // màu bubble
+          wrapperStyle={{
+            right: {backgroundColor: app_c.HEX.third},
+            left: {backgroundColor: app_c.HEX.ext_primary},
+          }}
+        />
+        <MessageFeature action={props.currentMessage.action} data={props.currentMessage.data}/>
+      </View>
     )
   }
 
+  const renderInputToolbar = (props) => {
+    <InputToolbar
+      {...props}
+      containerStyle={{
+        backgroundColor: '#222B45',
+        paddingTop: 6,
+      }}
+      primaryStyle={{ alignItems: 'center' }}
+    />
+  }
+
+  const renderActions = (props) => (
+    <Actions
+      {...props}
+      containerStyle={{
+        width: 44,
+        height: 44,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginLeft: 4,
+        marginRight: 4,
+        marginBottom: 0,
+      }}
+      icon={() => (
+        <Image
+          style={{ width: 32, height: 32 }}
+          source={{
+            uri: 'https://placeimg.com/32/32/any',
+          }}
+        />
+      )}
+      options={{
+        'Choose From Library': () => {
+          console.log('Choose From Library');
+        },
+        Cancel: () => {
+          console.log('Cancel');
+        },
+      }}
+      optionTintColor="#222B45"
+    />
+  )
+
+  const renderComposer = (props) => (
+    <Composer
+      {...props}
+      textInputStyle={{
+        color: app_c.HEX.fourth,
+        backgroundColor: app_c.HEX.primary,
+        borderWidth: 1,
+        borderRadius: 8,
+        borderColor: app_c.HEX.ext_primary,
+        paddingTop: 10.5,
+        paddingHorizontal: 12,
+        marginLeft: 18,
+        marginRight: 8,
+        minHeight: 40
+      }}
+    />
+  )
+
+  const renderSend = (props) => (
+    <Send
+      {...props}
+      disabled={!props.text}
+      containerStyle={{
+        width: 44,
+        height: 44,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginRight: 8,
+      }}
+    >
+      <FontAwesome
+        name="send"
+        size={25}
+        color={app_c.HEX.third}
+      />
+    </Send>
+  )
+
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
+      {/* https://www.npmjs.com/package/react-native-gifted-chat */}
       <GiftedChat 
+        // alignTop
+        // isTyping={true}
+        // multiline={false}
+        // renderUsernameOnMessage
+        alwaysShowSend
+        bottomOffset={10}
+        minInputToolbarHeight={50}
+        placeholder={'Nhập tin nhắn...'}
         messages={messages}
         onSend={(value) => handLeSendMessages(value)}
         onQuickReply={(quickReply) => handleQuicklyReply(quickReply)}
         renderBubble={renderBubble}
+        // renderInputToolbar={renderInputToolbar}
         user={{_id: 1}}
+        scrollToBottom
+
+        // renderInputToolbar={renderInputToolbar}
+        // renderActions={renderActions}
+        renderComposer={renderComposer}
+        renderSend={renderSend}
+        // renderAvatar={renderAvatar}
+        // renderSystemMessage={renderSystemMessage}
+        // renderMessage={renderMessage}
+        // renderMessageText={renderMessageText}
+        // renderCustomView={renderCustomView}
+        // isCustomViewBottom
+        // messagesContainerStyle={{ backgroundColor: 'indigo' }}
+        // parsePatterns={(linkStyle) => [
+        //   {
+        //     pattern: /#(\w+)/,
+        //     style: linkStyle,
+        //     onPress: (tag) => console.log(`Pressed on hashtag: ${tag}`),
+        //   },
+        // ]}
       />
-    </SafeAreaView>
+    </View>
   )
 }
 
