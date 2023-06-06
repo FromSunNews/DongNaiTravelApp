@@ -14,8 +14,7 @@ import {
 
 import {
   BriefBlogsReduxStateProps,
-  BlogDataProps,
-  BlogDetailsDataProps
+  BlogDataProps
 } from 'types/index.d.ts'
 
 /**
@@ -33,7 +32,7 @@ function createDefaultBriefBlog(limit = 5, skip = 0) {
 }
 
 /**
- * @type {{blogDetailsList: {[key: string]: BlogDetailsDataProps}, briefBlogs: {[key: string]: BlogDataProps}}}
+ * @type {{blogDetailsList: {[key: string]: BlogDataProps}, briefBlogs: {[key: string]: BlogDataProps}}}
  */
 const initialState = {
   blogDetailsList: {},
@@ -55,7 +54,7 @@ export const blogsSlice = createSlice({
     /**
      * Action này dùng để thêm một thông tin của blog vào blog details list, thường thì được thêm từ một briefblog.
      * @param state 
-     * @param {{type: string, payload: BlogDetailsDataProps}} action 
+     * @param {{type: string, payload: BlogDataProps}} action 
      */
     addBlogDetailsState: (state, action) => {
       const blogDetails = action.payload;
@@ -80,7 +79,7 @@ export const blogsSlice = createSlice({
      * @param state 
      * @param {{type: string, payload: string}} action 
      */
-    inscreaseSkipBriefBlogsAmountState: (state, action) => {
+    increaseSkipBriefBlogsAmountState: (state, action) => {
       const typeOfBriefBlogs = action.payload;
       state.briefBlogs[typeOfBriefBlogs].skip += state.briefBlogs[typeOfBriefBlogs].limit;
     },
@@ -89,9 +88,9 @@ export const blogsSlice = createSlice({
      * @param state 
      * @param {{type: string, payload: string}} action 
      */
-    descreaseSkipBriefBlogsAmountState: (state, action) => {
+    decreaseSkipBriefBlogsAmountState: (state, action) => {
       const typeOfBriefBlogs = action.payload;
-      state.briefBlogs[typeOfBriefBlogs].skip = NumberUtility.descreaseByAmount(
+      state.briefBlogs[typeOfBriefBlogs].skip = NumberUtility.decreaseByAmount(
         state.briefBlogs[typeOfBriefBlogs].skip,
         state.briefBlogs[typeOfBriefBlogs].limit
       )
@@ -126,7 +125,7 @@ export const blogsSlice = createSlice({
       }
 
       if(briefBlogs.length === 0) {
-        state.briefBlogs[typeOfBriefBlogs].skip = NumberUtility.descreaseByAmount(
+        state.briefBlogs[typeOfBriefBlogs].skip = NumberUtility.decreaseByAmount(
           state.briefBlogs[typeOfBriefBlogs].skip,
           state.briefBlogs[typeOfBriefBlogs].limit
         )
@@ -145,8 +144,8 @@ export const blogsSlice = createSlice({
 export const { 
   addBlogDetailsState,
   updateBriefBlogState,
-  inscreaseSkipBriefBlogsAmountState,
-  descreaseSkipBriefBlogsAmountState,
+  increaseSkipBriefBlogsAmountState,
+  decreaseSkipBriefBlogsAmountState,
   clearAllBriefBlogsState,
   clearBlogDetailsState,
 
@@ -167,7 +166,7 @@ export const briefBlogsSeletor = (state, typeOfBriefBlogs) => {
 /**
  * Select blog details hiện tại.
  * @param state 
- * @returns {BlogDetailsDataProps}
+ * @returns {BlogDataProps}
  */
 export const blogDetailsSelector = (state, blogId) => {
   return state[REDUX_SLICE_NAMES.BLOGS].blogDetailsList[blogId];

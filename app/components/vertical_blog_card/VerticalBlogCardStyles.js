@@ -57,6 +57,12 @@ const styles = StyleSheet.create({
 
   card_ske_bg: {
     backgroundColor: app_c.HEX.ext_primary
+  },
+
+  card_user_avatar: {
+    width: 14,
+    aspectRatio: 1,
+    ...app_sh.circle
   }
 });
 

@@ -229,7 +229,7 @@ export const languageData = {
   exploreScreen: {
     banner_button: {
       vi: 'Xem vị trí của bạn trên bản đồ',
-      en: ' Let’s see your location in map'
+      en: 'Let’s see your location in map'
     },
     place_card_recommended: {
       vi: 'Đề xuất',

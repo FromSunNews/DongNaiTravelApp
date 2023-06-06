@@ -126,17 +126,11 @@ const AuthNavigator = ({navigation}) => {
         component={GlobalNavigator} 
         options={{ headerShown: false }} 
       />
-      
-      <AppStack.Screen 
-        name="OnboardingChatBot" 
-        component={OnboardingChatbot} 
-        options={{ headerShown: false }} 
-      />
 
       <AppStack.Screen 
         name="ChatBotNavigator" 
         component={ChatBotNavigator} 
-        options={{ headerShown: false, presentation: 'containedModal', }} 
+        options={{ headerShown: false}} 
       />
     </AppStack.Navigator>
   )

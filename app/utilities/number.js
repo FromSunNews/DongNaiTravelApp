@@ -62,7 +62,7 @@ const getRandomNumber = function(max = 10, min = 0) {
  * @param {number} amount Lượng cần giảm
  * @returns 
  */
-const descreaseByAmount = function(value, amount) {
+const decreaseByAmount = function(value, amount) {
   let afterDescrease = value - amount;
   if(afterDescrease >= amount) value -= amount;
   else value = 0;
@@ -73,7 +73,7 @@ const NumberUtility = {
   toThousandsSeparatedNumber,
   toMetricNumber,
   getRandomNumber,
-  descreaseByAmount
+  decreaseByAmount
 };
 
 export default NumberUtility;
