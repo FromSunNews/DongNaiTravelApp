@@ -109,7 +109,7 @@ const BottomTabBar = ({
 	const themeColor = useTheme();
 
 	return (
-		<View style={[styles.tab_bottom_container,{backgroundColor: themeColor.ext_bg_tab}]}>
+		<View style={[styles.tab_bottom_container,{backgroundColor: themeColor.fourth}]}>
 			<View style={styles.tab_bottom_buttons_container}>
 				{state.routes.map((route, index) => {
 					const { options } = descriptors[route.key];
