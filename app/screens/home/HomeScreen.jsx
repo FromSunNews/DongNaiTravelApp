@@ -187,7 +187,7 @@ const HomeScreen = ({navigation}) => {
                       {
                         vision ? (
                           <AppText style={{...app_typo.fonts.normal.normal.sub0,paddingHorizontal:8}}>{`${vision.toFixed(1)}`}<Text style={{fontSize:12}}>km</Text></AppText>
-                        ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.sub0,marginTop:4}}><Entypo name="minus"/><Entypo name="minus" color='red'  /><Text style={{ fontSize: 12 }}>km</Text></AppText>
+                        ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.sub0,marginTop:4}}><Entypo name="minus"/><Entypo name="minus"  /><Text style={{ fontSize: 12 }}>km</Text></AppText>
                       }
                   </View>
                 </View>
@@ -206,7 +206,7 @@ const HomeScreen = ({navigation}) => {
             <AppText><Entypo name="chevron-small-right" size={40}/></AppText>
           </TouchableOpacity>
           <TypeScrollView
-            types={PLACE_QUALITIES}
+            types={PLACE_QUALITIES[langCode]}
             callBack={setTypePlace}
             scrollStyle={[app_sp.ms_18, app_sp.mb_12]}
             containerStyle={{backgroundColor: themeColor.primary, ...app_sp.pv_10}}
@@ -238,7 +238,7 @@ const HomeScreen = ({navigation}) => {
             <AppText><Entypo name="chevron-small-right" size={40}/></AppText>
           </TouchableOpacity>
           <TypeScrollView
-            types={BLOG_QUANLITIES}
+            types={BLOG_QUANLITIES[langCode]}
             callBack={(type) => {
               setTypeBlog(type)
             }}

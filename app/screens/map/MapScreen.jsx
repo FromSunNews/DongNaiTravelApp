@@ -89,10 +89,16 @@ import { computeDestinationPoint } from 'geolib'
 import moment from 'moment/moment'
 import { selectCurrentMap, updateCurrentMap, updateMapDetails, updateMapTypes, updatePlaces, updateSuggestions } from 'redux/map/mapSlice'
 import BottomSheetExample from '../../components/bottom_sheet/BottomSheetExample'
+import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
 
 const Map = () => {
 // Phương: https://docs.expo.dev/versions/latest/sdk/map-view/
-// Phương: https://www.npmjs.com/package/react-native-google-places-autocomplete
+  // Phương: https://www.npmjs.com/package/react-native-google-places-autocomplete
+  //language
+  const langData = useSelector(selectCurrentLanguage).data?.mapScreen
+  const langCode = useSelector(selectCurrentLanguage).languageCode
+
+  const contentNotificationBottomSheet = langCode === 'vi' ? 'Không có bất kỳ kết quả cho tìm kiếm của bạn!' : 'Do not have any result for your search!'
 
   const Stack = createNativeStackNavigator()
   const navigation = useNavigation()
@@ -881,7 +887,7 @@ const Map = () => {
       } else {
         dispatch(updateNotif({
           appearNotificationBottomSheet: true,
-          contentNotificationBottomSheet: 'Do not have any result for your search!'
+          contentNotificationBottomSheet: contentNotificationBottomSheet
         }))
       }
     })
@@ -1179,7 +1185,7 @@ const Map = () => {
                   color: tagSelected === item.id ? app_c.HEX.primary : app_c.HEX.fourth
                 }]}
                 >
-                  {item.title}
+                  {item.title[langCode]}
                 </Text>
               </TouchableOpacity>
             ))
@@ -1281,7 +1287,7 @@ const Map = () => {
                 Keyboard.dismiss()
                 handleGetPlacesSearchText(addressText)
               }}
-              placeholder='Where do you want to go?'
+              placeholder={langData.find_placeholder[langCode]}
               isShowBackIcon={isShowBackIcon}
               isHaveRightButton={true}
               handlePressFilter={() => setIsOpenBottomSheetFilter(true)}
@@ -1401,7 +1407,7 @@ const Map = () => {
               style={styles.iconBack}
             />
           </TouchableOpacity>
-          <Text style={styles.headerRouteInfo}>Your route's infomation</Text>
+          <Text style={styles.headerRouteInfo}>{langData.your_router[langCode]}</Text>
           {
             isShowOptionRoute &&
             <TouchableOpacity 
@@ -1656,17 +1662,16 @@ const Map = () => {
                       } else if (directionModeGCP === 'BICYCLE') {
                         routeModifiers = null
                       }
-
                       handleGetDirections(start, end, typeOri, typeDes, startCoor, endCoor, directionModeGCP, directionModeORS, tagModeSelected, routeModifiers)
                     }
                   }}
                   style={styles.routeBtn}
                 >
-                  <Text style={styles.routeBtnText}>Route</Text>
+                      <Text style={styles.routeBtnText}>{langData.router_title[langCode]}</Text>
                 </TouchableOpacity>
                 <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0}}>
                   <InputAutoComplete
-                    placeholder='Choose a destination place'
+                    placeholder={langData.choose_a_des_place[langCode]}
                     onPlaceSelected={(details) => {
                       // if (!details.place_id) { 
                       //   setTextOrigin(details.description)
@@ -1692,7 +1697,7 @@ const Map = () => {
                 </View>
                 <View style={{ position: 'absolute', top: 0, left: 0, right: 0}}>
                   <InputAutoComplete
-                    placeholder='Choose an origin place'
+                    placeholder={langData.choose_an_origin_place[langCode]}
                     onPlaceSelected={(details) => {
                       // Thằng đầy đủ nó có trả về plcae_id
                       // if (!details.place_id) { 
@@ -2713,7 +2718,7 @@ const Map = () => {
           childView={
             <View style={{ backgroundColor: app_c.HEX.primary, flex: 1}}>
               <BottomSheetView>
-                <Text style={[styles.headerTextFilter,{ marginLeft: 18}]}>Setting Map</Text>
+                <Text style={[styles.headerTextFilter, { marginLeft: 18 }]}>{langData.setting_map[langCode]}</Text>
                 <View style={{ marginTop: 15}}>
                   <Text style={[styles.titleBottomSheet, {color: app_c.HEX.ext_second, paddingHorizontal: 18}]}>Loại bản đồ</Text>
                   <View 
