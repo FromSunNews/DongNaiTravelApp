@@ -1,6 +1,10 @@
 import { View, ScrollView, Image } from 'react-native'
 import React from 'react'
 
+import {
+  getBlogsAPI
+} from 'request_api'
+
 import useTheme from 'customHooks/useTheme'
 import {
   useBlogDetails,
@@ -10,6 +14,7 @@ import {
 import { useSelector } from 'react-redux'
 import { selectCurrentMode } from 'redux/theme/ThemeSlice'
 
+import { BRIEF_BLOG_DATA_FIELDS } from 'utilities/constants'
 import NumberUtility from 'utilities/number'
 import DateTimeUtility from 'utilities/datetime'
 
@@ -20,7 +25,8 @@ import {
   CircleButton,
   RectangleButton,
   MarkFormat,
-  Speech
+  Speech,
+  HorizontalBlogCard
 } from 'components'
 
 import styles from './BlogDetailScreenStyle'
@@ -41,6 +47,9 @@ const BlogDetailScreen = ({route, navigation}) => {
 
   const { blogDetails, fetchBlogDetailsById, clearBlogDetails } = useBlogDetails(blogId);
 
+  const [relatedBlogs, setRelatedBlogs] = React.useState([]);
+
+  let type = blogDetails.type ? blogDetails.type : "";
   let displayAuthorName = blogDetails.author.lastName && blogDetails.author.firstName
     ? blogDetails.author.lastName + " " + blogDetails.author.firstName
     : blogDetails.author.displayName
@@ -51,6 +60,15 @@ const BlogDetailScreen = ({route, navigation}) => {
       canGetFull: true
     })
 
+    if(relatedBlogs.length === 0) {
+      let query = `limit=${5}&skip=${0}&quality=type:${type},except_by_placeid:${blogDetails._id}&fields=${BRIEF_BLOG_DATA_FIELDS}`;
+      getBlogsAPI(query)
+      .then(data => {
+        setRelatedBlogs(data);
+      })
+      .catch(error => console.error(error))
+    }
+
     return function() {
       clearBlogDetails(blogId);
     }
@@ -58,7 +76,10 @@ const BlogDetailScreen = ({route, navigation}) => {
 
   return (
     <View style={{flex: 1}}>
-      <ScrollView style={[styles.bd_container,{backgroundColor: themeColor.primary}]}>
+      <ScrollView
+        style={[styles.bd_container,{backgroundColor: themeColor.primary}]}
+        contentContainerStyle={{paddingBottom: 18}}
+      >
           {/* Author, Blog information section */}
         <View style={[styles.bd_header, app_sp.mt_12,{borderBottomColor: themeColor.fourth}]}>
           <View style={[styles.bd_row, app_sp.mb_12, { justifyContent: 'space-between' }]}>
@@ -157,7 +178,30 @@ const BlogDetailScreen = ({route, navigation}) => {
             )}
           />
         </View>
-        <View style={{height: 175}}></View>
+        <View>
+          {
+            relatedBlogs.length === 0
+            ? 
+            <View style={{
+              display: 'flex',
+              justifyContent: 'center'
+            }}>
+              {/* <AppText>{langData.relatedPlacesDataMessage[langCode]}</AppText> */}
+              <Image 
+                source={require('../../assets/images/no-data.png')} 
+                style={{
+                  height: 300,
+                  width: 300,
+                  alignSelf: 'center'
+                }}/>
+            </View>
+            : (
+              relatedBlogs.map(relatedBlog => (
+                <HorizontalBlogCard key={relatedBlog._id} blog={relatedBlog} />
+              ))
+            )
+          }
+        </View>
       </ScrollView>
 
       {/* Float container */}

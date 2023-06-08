@@ -137,8 +137,9 @@ const HomeScreen = ({navigation}) => {
       })
   }, [typeBlog]);
 
+  console.log("Place: ", places);
+
   return (
-    
     <ScrollView style={[styles.container,{backgroundColor: themeColor.primary,}]} showsVerticalScrollIndicator={false}>
       <View style={styles.home_content}>
         <View style={[styles.home_banner, {backgroundColor: themeColor.ext_third,}]}>
@@ -253,21 +254,22 @@ const HomeScreen = ({navigation}) => {
         }
 
         {/* Place and Blog*/}
-        <View style={styles.home_category}>
+        <View style={[{backgroundColor: themeColor.primary}]}>
           <TouchableOpacity style={styles.category_header} onPress={()=>navigation.navigate("ExploreNavigator")}>
             <AppText style={styles.category_name}>{langData.title_place[langCode]}</AppText>
             <AppText><Entypo name="chevron-small-right" size={40}/></AppText>
           </TouchableOpacity>
           <TypeScrollView
-            types={PLACE_QUALITIES[langCode]}
+            types={PLACE_QUALITIES[langCode].values}
+            labels={PLACE_QUALITIES[langCode].labels}
             callBack={setTypePlace}
-            scrollStyle={[app_sp.ms_18, app_sp.mb_12]}
-            containerStyle={{backgroundColor: themeColor.primary, ...app_sp.pv_10}}
+            scrollStyle={[app_sp.mb_12, app_sp.ps_18]}
+            containerStyle={[{backgroundColor: themeColor.primary}, app_sp.pv_10]}
           />
           <ScrollView 
             horizontal={true}
-            style={[{backgroundColor:themeColor.primary}, app_sp.pb_10]}
-            contentContainerStyle={{flexGrow: 1}}
+            style={[{backgroundColor:themeColor.primary}]}
+            contentContainerStyle={[{flexGrow: 1}, app_sp.pb_10]}
             showsHorizontalScrollIndicator={false}
           >
             {
@@ -285,33 +287,35 @@ const HomeScreen = ({navigation}) => {
             }
           </ScrollView>
         </View>
-        <View style={[styles.home_category,{backgroundColor: themeColor.primary}]}>
+        <View style={[{backgroundColor: themeColor.primary}]}>
           <TouchableOpacity style={styles.category_header} onPress={()=>navigation.navigate("BlogsNavigator")}>
             <AppText style={styles.category_name}>{langData.title_Blog[langCode]}</AppText>
             <AppText><Entypo name="chevron-small-right" size={40}/></AppText>
           </TouchableOpacity>
           <TypeScrollView
-            types={BLOG_QUANLITIES[langCode]}
-            callBack={(type) => {
-              setTypeBlog(type)
-            }}
-            scrollStyle={[{paddingLeft:16}, app_sp.pv_12]}
-            containerStyle={{backgroundColor: themeColor.primary}}
+            types={BLOG_QUANLITIES[langCode].values}
+            labels={BLOG_QUANLITIES[langCode].labels}
+            callBack={setTypeBlog}
+            scrollStyle={[app_sp.mb_12, app_sp.ps_18]}
+            containerStyle={[{backgroundColor: themeColor.primary}, app_sp.pv_10]}
           />
-          <View style={{ ...app_sp.mb_12}}>
-            <ScrollView horizontal={true} style={{paddingBottom:10,paddingLeft:16}} showsHorizontalScrollIndicator={false}>
-              {
-                !blogs
-                ? [1, 2, 3].map((value, index) => <VerticalBlogCardSkeleton key={value + index} style={{  marginLeft: index !== 0 ? 16 : 0,}} />)
-                : blogs.map((blog, index) => {
-                  let actualStyle = [app_sp.me_18];
-                  if(index === 0) actualStyle.push(app_sp.ms_18);
-                  return <VerticalBlogCard blog={blog} style={{ marginLeft: index !== 0 ? 16 : 2, marginRight : blogs.length - 1 === index ? 36 : 0}}/>
-                }
-                )
+          <ScrollView
+            horizontal={true}
+            style={[{backgroundColor:themeColor.primary}]}
+            contentContainerStyle={[{flexGrow: 1}, app_sp.pb_10]}
+            showsHorizontalScrollIndicator={false}
+          >
+            {
+              !blogs
+              ? [1, 2, 3].map((value, index) => <VerticalBlogCardSkeleton key={value + index} style={{  marginLeft: index !== 0 ? 16 : 0,}} />)
+              : blogs.map((blog, index) => {
+                let actualStyle = [app_sp.me_18];
+                if(index === 0) actualStyle.push(app_sp.ms_18);
+                return <VerticalBlogCard blog={blog} blogIndex={index} typeOfBriefBlog={typeBlog} style={actualStyle} key={blog._id}  />
               }
-            </ScrollView>
-          </View>
+              )
+            }
+          </ScrollView>
         </View>
       </View>
     </ScrollView>

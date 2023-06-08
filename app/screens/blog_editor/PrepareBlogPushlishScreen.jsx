@@ -20,6 +20,9 @@ import {
 import useTheme from 'customHooks/useTheme'
 import { useForm, Controller } from 'react-hook-form'
 
+import {
+  callWithGlobalLoading
+} from 'utilities/reduxStore'
 import StringUtility from 'utilities/string'
 import FunctionsUtility from 'utilities/functions'
 import AsyncStorageUtility from 'utilities/asyncStorage'
@@ -139,16 +142,17 @@ const PrepareBlogPushlishScreen = (props) => {
         console.log(`Upload Progress: ${progress}%`);
       }
     }
-
-    postNewBlogAPI(requestBody, configs)
-    .then(result => {
-      console.log("Post blog result: ", result);
-      AsyncStorageUtility.removeItemAsync("SAVED_BLOG_CONTENT_KEY")
-      .then(() => {
-        props.navigation.replace('GroupBottomTab')
+    callWithGlobalLoading(async () => {
+      return postNewBlogAPI(requestBody, configs)
+      .then(result => {
+        console.log("Post blog result: ", result);
+        AsyncStorageUtility.removeItemAsync("SAVED_BLOG_CONTENT_KEY")
+        .then(() => {
+          props.navigation.replace('GroupBottomTab')
+        })
       })
+      .catch(console.log)
     })
-    .catch(console.log)
   }
 
   React.useEffect(() => {

@@ -111,8 +111,6 @@ const Filter = ({
     }))
     closeTermCondition()
     bottomSheetExampleRef.current?.close()
-
-    
   }
 
   return (

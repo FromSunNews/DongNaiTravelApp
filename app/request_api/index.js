@@ -22,44 +22,60 @@ const handleNotif = (content) => {
 
 
 export const signUpUserAPI = async (data) => {
-  const request = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/sign_up`, data)
+  let request = await callWithGlobalLoading(async () => {
+    return await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/sign_up`, data)
+  })
   return request.data
 }
 
 export const signInUserAPI = async (data) => {
-  const request = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/sign_in`, data)
+  let request = await callWithGlobalLoading(async () => {
+    return await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/sign_in`, data)
+  })
   return request.data
 }
 
 export const getInfoUserAPI = async (data) => {
-  const request = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/get_info_user`, data)
+  let request = await callWithGlobalLoading(async () => {
+    return await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/get_info_user`, data)
+  })
   return request.data
 }
 
 export const updateUserAPI = async (data) => {
-  const request = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/update`, data)
+  let request = await callWithGlobalLoading(async () => {
+    return await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/update`, data)
+  })
   return request.data
 }
 
 export const refreshTokenAPI = async () => {
-  const request = await authorizedAxiosInstance.get(`${API_ROOT}/v1/users/refresh_token`, {
-    refreshToken: injectedStore.getState().user.currentUser?.refreshToken
+  let request = await callWithGlobalLoading(async () => {
+    return await authorizedAxiosInstance.get(`${API_ROOT}/v1/users/refresh_token`, {
+      refreshToken: injectedStore.getState().user.currentUser?.refreshToken
+    })
   })
   return request.data
 }
 
 export const sendOtpAPI = async (data) => {
-  const request = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/send_otp`, data)
+  let request = await callWithGlobalLoading(async () => {
+    return await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/send_otp`, data)
+  })
   return request.data
 }
 
 export const verifyOtpAPI = async (data) => {
-  const request = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/verify_otp`, data)
+  let request = await callWithGlobalLoading(async () => {
+    return await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/verify_otp`, data)
+  })
   return request.data
 }
 
 export const resetPasswordAPI = async (data) => {
-  const request = await authorizedAxiosInstance.put(`${API_ROOT}/v1/users/reset_password`, data)
+  let request = await callWithGlobalLoading(async () => {
+    return await authorizedAxiosInstance.put(`${API_ROOT}/v1/users/reset_password`, data)
+  })
   handleNotif('Reset your password successfully!')
   return request.data
 }
@@ -77,7 +93,9 @@ export const getPlaceDetailsAPI = async (data) => {
 }
 
 export const getPlacesTextSearchAPI = async (data) => {
-  const request = await authorizedAxiosInstance.post(`${API_ROOT}/v1/map/places_text_search`, data)
+  let request = await callWithGlobalLoading(async () => {
+    return await authorizedAxiosInstance.post(`${API_ROOT}/v1/map/places_text_search`, data)
+  })
   return request.data
 }
 
@@ -87,7 +105,9 @@ export const getMorePlacesTextSearchAPI = async (data) => {
 }
 
 export const getRouteDirectionAPI = async (data) => {
-  const request = await authorizedAxiosInstance.post(`${API_ROOT}/v1/direction/route_direction`, data)
+  let request = await callWithGlobalLoading(async () => {
+    return await authorizedAxiosInstance.post(`${API_ROOT}/v1/direction/route_direction`, data)
+  })
   return request.data
 }
 
@@ -97,7 +117,9 @@ export const getWeatherCurrentAPI = async (data) => {
 }
 
 export const getWeatherForecastAPI = async (data) => {
-  const request = await authorizedAxiosInstance.post(`${API_ROOT}/v1/map/weather_forecast`, data)
+  let request = await callWithGlobalLoading(async () => {
+    return await authorizedAxiosInstance.post(`${API_ROOT}/v1/map/weather_forecast`, data)
+  })
   return request.data
 }
 
@@ -137,7 +159,9 @@ export const createNewNotifAPI = async (data) => {
 }
 
 export const updateNotifAPI = async (data) => {
-  const request = await authorizedAxiosInstance.post(`${API_ROOT}/v1/notif/update`, data)
+  let request = await callWithGlobalLoading(async () => {
+    return await authorizedAxiosInstance.post(`${API_ROOT}/v1/notif/update`, data)
+  })
   return request.data
 }
 
@@ -159,7 +183,7 @@ export const updateUserByCaseAPI = async (data) => {
     if(!user) throw new Error("You must be authorized.");
     let accessToken = user.currentUser.accessToken;
     data.accessToken = accessToken;
-    const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/update_by_case`, data);
+    let response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/update_by_case`, data);
     return response.data;
   } catch (error) {
     console.error(error.message);
@@ -182,7 +206,7 @@ export const postNewBlogAPI = async (data, configs) => {
     data.accessToken = accessToken;
     data.blog.authorId = user.currentUser._id;
     // let [ formData, headers ] = AxiosUtility.createMultipartFormData(data);
-    const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/blog/create_new`, data, configs);
+    let response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/blog/create_new`, data, configs);
     return response.data;
   } catch (error) {
     console.error(error.message);
