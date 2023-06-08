@@ -172,7 +172,7 @@ const ExploreScreen = () => {
         ListHeaderComponent={
           <TypeScrollView
             buttonStyle="capsule"
-            types={PLACE_QUALITIES}
+            types={PLACE_QUALITIES[langCode]}
             callBack={setType}
             scrollStyle={[app_sp.ms_18, app_sp.pv_12]}
             containerStyle={{backgroundColor: themeColor.primary, ...app_sp.pv_10}}

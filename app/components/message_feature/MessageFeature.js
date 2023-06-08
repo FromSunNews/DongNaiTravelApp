@@ -56,11 +56,7 @@ const MessageFeature = ({action, data = {}}) => {
 }, [])
 
   if (action ==='input.welcome') {
-    return (
-      <View>
-        <Text>MessageFeature</Text>
-      </View>
-    )
+    return
   } else if (action ==='input.suggest-place') {
     return (
       <ScrollView 
@@ -124,7 +120,7 @@ const MessageFeature = ({action, data = {}}) => {
         height: 280,
         borderRadius:12,
         marginTop: 10,
-        width: 300
+        width: '90%'
       }}>
         <View style={{
           width: 300,

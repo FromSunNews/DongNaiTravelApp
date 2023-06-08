@@ -22,6 +22,7 @@ import { cloneDeep } from 'lodash'
 import InputAutoComplete from 'components/input_auto_complete/InputAutoComplete'
 import { useRef } from 'react'
 import { LogBox } from 'react-native'
+import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
 
 const Filter = ({
   locationCurrent,
@@ -31,6 +32,9 @@ const Filter = ({
   arrPlaceInput
 }) => {
   const route = useRoute()
+  //language
+  const langData = useSelector(selectCurrentLanguage).data?.filter
+  const langCode = useSelector(selectCurrentLanguage).languageCode
 
   const navigation = useNavigation() 
   const dispatch = useDispatch()
@@ -119,14 +123,14 @@ const Filter = ({
           onPress={() => null}
           style={styles.leftHeaderBtnFilter}
         >
-          <Text style={styles.rightHeaderBtnTextFilter} onPress={() => dispatch(resetFilter())}>Reset</Text>
+            <Text style={styles.rightHeaderBtnTextFilter} onPress={() => dispatch(resetFilter())}>{langData.reset[langCode]}</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTextFilter}>Filter</Text>
+        <Text style={styles.headerTextFilter}>{langData.header_title[langCode]}</Text>
         <TouchableOpacity
           onPress={() => handlePressSaveBtn()}
           style={styles.rightHeaderBtnFilter}
         >
-          <Text style={styles.rightHeaderBtnTextFilter}>Save</Text>
+          <Text style={styles.rightHeaderBtnTextFilter}>{langData.save[langCode]}</Text>
         </TouchableOpacity>
       </View>
       </BottomSheetView>
@@ -147,13 +151,13 @@ const Filter = ({
             <View 
               style={styles.sectionSeclectMultipleHeaderContainer}
             >
-              <Text style={styles.sectionSeclectMultipleHeaderLeft}>Category</Text>
+              <Text style={styles.sectionSeclectMultipleHeaderLeft}>{langData.category[langCode]}</Text>
               <TouchableOpacity 
               onPress={() => navigation.navigate('CategoriesScreen', {
                 category: category.id 
               })}
               style={styles.sectionSeclectMultipleHeaderRight}>
-                <Text style={styles.multipleHeaderRightText}>Select category</Text>
+                <Text style={styles.multipleHeaderRightText}>{langData.select_category[langCode]}</Text>
                 <MaterialIcons 
                   name='arrow-forward-ios' 
                   size={18} 
@@ -183,7 +187,7 @@ const Filter = ({
                 }) : 
               } */}
               <View style={styles.sectionSeclectMultipleBodySelectAll}>
-                <Text style={styles.bodySelectAllText}>{category[category.id].en} have been selected</Text>
+                <Text style={styles.bodySelectAllText}>{category[category.id][langCode]}{" "}{langData.have_been_selected[langCode]}</Text>
               </View>
 
             </View>
@@ -196,7 +200,7 @@ const Filter = ({
           {/* 2. theo star */}
           <View style={styles.sectionSeclectMultipleFilterContainer}>
             <View style={styles.sectionSeclectMultipleHeaderContainer}>
-              <Text style={styles.sectionSeclectMultipleHeaderLeft}>Sort by</Text>
+              <Text style={styles.sectionSeclectMultipleHeaderLeft}>{langData.sort_by[langCode]}</Text>
               <View style={styles.sectionSeclectMultipleHeaderRight}>
               </View>
             </View>
@@ -211,7 +215,7 @@ const Filter = ({
                     >
                       <Text style={[styles.sectionRadioItemText, {
                         color: s.id === sortBySelected ? app_c.HEX.third : app_c.HEX.ext_third
-                      }]}>{s.tilte}</Text>
+                      }]}>{s.tilte[langCode]}</Text>
                       {
                         s.id === sortBySelected ?
                         <Ionicons 
@@ -237,7 +241,7 @@ const Filter = ({
           {/* Tìm Kiếm theo mức giá */}
           <View style={[styles.sectionSeclectMultipleFilterContainer, {marginTop: 10, marginBottom: 5}]}>
             <View style={styles.sectionSeclectMultipleHeaderContainer}>
-              <Text style={styles.sectionSeclectMultipleHeaderLeft}>Price levels</Text>
+              <Text style={styles.sectionSeclectMultipleHeaderLeft}>{langData.price_levels[langCode]}</Text>
               <View style={styles.sectionSeclectMultipleHeaderRight}>
               </View>
             </View>
@@ -286,7 +290,7 @@ const Filter = ({
                               color: app_c.HEX.ext_second,
                               ...app_typo.fonts.normal.lighter.h5
                             }}>
-                                Level {e.currentValue}</Text>
+                          {langData.Level[langCode]} {e.currentValue}</Text>
                         </View>
                     )
                 }}
@@ -299,7 +303,7 @@ const Filter = ({
           {/* Timg Kiếm trogn bán kính */}
           <View style={[styles.sectionSeclectMultipleFilterContainer, {marginTop: 10, marginBottom: 5,}]}>
             <View style={styles.sectionSeclectMultipleHeaderContainer}>
-              <Text style={styles.sectionSeclectMultipleHeaderLeft}>Search within radius</Text>
+              <Text style={styles.sectionSeclectMultipleHeaderLeft}>{langData.search_within_radius[langCode]}</Text>
               <View style={styles.sectionSeclectMultipleHeaderRight}>
               </View>
             </View>
@@ -310,7 +314,7 @@ const Filter = ({
                 keyboardType='numeric'
                 onChangeText={(e) => setRadius(e)}
               />
-              <Text style={styles.sectionRadiusText}>Meters</Text>
+              <Text style={styles.sectionRadiusText}>{langData.meters[langCode]}</Text>
             </View>
           </View>
           
@@ -319,7 +323,7 @@ const Filter = ({
           {/* Timf Kiếm theo địa điểm */}
           <View style={[styles.sectionSeclectMultipleFilterContainer, {marginTop: 15,}]}>
             <View style={styles.sectionSeclectMultipleHeaderContainer}>
-              <Text style={styles.sectionSeclectMultipleHeaderLeft}>Search from location</Text>
+              <Text style={styles.sectionSeclectMultipleHeaderLeft}>{langData.search_from_location[langCode]}</Text>
               <View style={styles.sectionSeclectMultipleHeaderRight}>
               </View>
             </View>
@@ -366,7 +370,7 @@ const Filter = ({
                 onPress={() => setOpenReposition(true)}
                 style={styles.controlLocationBtn}
               >
-                <Text style={styles.controlLocationText}>Reposition</Text>
+                  <Text style={styles.controlLocationText}>{langData.reposition[langCode]}</Text>
               </TouchableOpacity> :
               <TouchableOpacity 
                 onPress={() => {
@@ -375,7 +379,7 @@ const Filter = ({
                 }}
                 style={styles.controlLocationBtn}
               >
-                <Text style={styles.controlLocationText}>Save location</Text>
+                  <Text style={styles.controlLocationText}>{langData.save_location[langCode]}</Text>
               </TouchableOpacity>
             }
 
