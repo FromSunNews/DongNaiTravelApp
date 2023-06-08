@@ -2269,6 +2269,81 @@ export const weatherIcons = {
   "50n": require('../assets/images/weather/50n.png')
 }
 
+export const weatherImages = [
+  {
+    id:'01d',
+    image: require('../assets/images/weather_forcast/sun.png')
+  },
+  {
+    id:'01n',
+    image: require('../assets/images/weather_forcast/half-moon.png')
+  },
+  {
+    id:'02d',
+    image: require('../assets/images/weather_forcast/sunny.png')
+  },
+  {
+    id:'02n',
+    image: require('../assets/images/weather_forcast/night.png')
+  },
+  {
+    id:'03d',
+    image: require('../assets/images/weather/03d.png')
+  },
+  {
+    id:'03n',
+    image: require('../assets/images/weather/03n.png')
+  },
+  {
+    id:'04d',
+    image: require('../assets/images/weather_forcast/04d.png')
+  },
+  {
+    id:'04n',
+    image: require('../assets/images/weather_forcast/04d.png')
+  },
+  {
+    id:'09d',
+    image: require('../assets/images/weather_forcast/heavy-rain.png')
+  },
+  {
+    id:'09n',
+    image: require('../assets/images/weather_forcast/heavy-rain.png')
+  },
+  {
+    id:'10d',
+    image: require('../assets/images/weather_forcast/rainy-day.png')
+  },
+  {
+    id:'10n',
+    image: require('../assets/images/weather_forcast/rain-night.png')
+  },
+  {
+    id:'11d',
+    image: require('../assets/images/weather_forcast/storm.png')
+  },
+  {
+    id:'11n',
+    image: require('../assets/images/weather_forcast/storm.png')
+  },
+  {
+    id:'13d',
+    image: require('../assets/images/weather_forcast/frozen.png')
+  },
+  {
+    id:'13n',
+    image: require('../assets/images/weather_forcast/frozen.png')
+  },
+  {
+    id:'14d',
+    image: require('../assets/images/weather_forcast/fog.png')
+  },
+  {
+    id:'14n',
+    image: require('../assets/images/weather_forcast/frozen.png')
+  },
+]
+
 export const mapTypes = [
   {
     id: 'standard',

@@ -45,7 +45,7 @@ const HomeBannerSlider = ()=>{
           />
         }
         paginationStyle={{
-          bottom: 10,
+          bottom: -12,
         }}
       >
           {
@@ -92,18 +92,18 @@ const styles = {
     height:200,
   },
   dot:{
-    backgroundColor:app_c.HEX.ext_primary ,
-    width: 10,
-    height: 10,
-    borderRadius: 5,
+    backgroundColor:app_c.HEX.ext_third,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
     marginLeft: 3,
     marginRight: 3,
   },
   active_dot:{
     backgroundColor: app_c.HEX.third,
-    width: 10,
-    height: 10,
-    borderRadius: 5,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
     marginLeft: 3,
     marginRight: 3,
   }

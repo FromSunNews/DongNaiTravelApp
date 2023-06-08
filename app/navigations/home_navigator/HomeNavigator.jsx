@@ -14,6 +14,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { updateStatusBar } from "redux/manifold/ManifoldSlice";
 import OnboardingChatbot from "screens/onaboarding_chatbot/OnboardingChatbot";
 import ChatBotScreen from "screens/chat_bot/ChatBotScreen";
+import WeatherScreen from "screens/weather/WeatherScreen";
 
 const HomeStack=createNativeStackNavigator()
 
@@ -80,6 +81,13 @@ const HomeNavigator=({ navigation })=>{
           title: `${langCode === 'vi' ? 'Chi Tiết Bài Viết' : 'Blog Detail'}`
         }}
         component={BlogDetailScreen}
+      />
+      <HomeStack.Screen
+        name='WeatherScreen'
+        options={{
+          title: `${langCode === 'vi' ? 'Thời tiết' : 'Weather forecast'}`
+        }}
+        component={WeatherScreen}
       />
     </HomeStack.Navigator>
   )
