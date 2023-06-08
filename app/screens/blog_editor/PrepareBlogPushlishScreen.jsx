@@ -127,16 +127,26 @@ const PrepareBlogPushlishScreen = (props) => {
       mentionedPlaces: blogInfo.mentionedPlaces.map(place => place.place_id),
       isApproved: false,
     }
-
     let requestBody = {
       blog,
       content: blogInfo.content
     }
 
-    postNewBlogAPI(requestBody)
+    let configs = {
+      onUploadProgress: function(progressEvent) {
+        // Do whatever you want with the progress event
+        const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+        console.log(`Upload Progress: ${progress}%`);
+      }
+    }
+
+    postNewBlogAPI(requestBody, configs)
     .then(result => {
       console.log("Post blog result: ", result);
-      // props.navigation.replace("BlogsNavigator");
+      AsyncStorageUtility.removeItemAsync("SAVED_BLOG_CONTENT_KEY")
+      .then(() => {
+        props.navigation.replace('GroupBottomTab')
+      })
     })
     .catch(console.log)
   }
@@ -152,11 +162,11 @@ const PrepareBlogPushlishScreen = (props) => {
     <KeyboardAwareScrollView
       nestedScrollEnabled
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      contentContainerStyle={[app_sp.pt_12, app_sp.ph_18]}
+      contentContainerStyle={[app_sp.pt_12]}
       style={{flex: 1, backgroundColor: app_c.HEX.primary}}
     >
-      <View style={[styles.container, app_sp.mb_12]}>
-        <View>
+      <View style={[styles.container, app_sp.mb_12, {position: 'relative'}]}>
+        <View style={app_sp.ph_18}>
           {/* TextInput để nhập name cho blog */}
           <AppText font='h4'>Blog's name</AppText>
           <Controller
@@ -182,7 +192,7 @@ const PrepareBlogPushlishScreen = (props) => {
         </View>
 
         {/* Button mở ImagePicker trong Native */}
-        <View style={app_sp.mv_12}>
+        <View style={[app_sp.mv_12, app_sp.ph_18]}>
           <AppText font='h4' style={app_sp.mb_12}>Blog's image</AppText>
           <RectangleButton
             typeOfButton='highlight'
@@ -219,7 +229,7 @@ const PrepareBlogPushlishScreen = (props) => {
         </View>
 
         {/* Type của blog, một blog chỉ được có một type duy nhất, bởi vì chính những blog này đã có kiểu là "Blog du lịch" */}
-        <View style={app_sp.mv_12}>
+        <View style={[app_sp.mv_12, app_sp.ph_18]}>
           <AppText font='h4' style={app_sp.mb_12}>Blog's type</AppText>
           <View style={{flexDirection: 'row'}}>
             {
@@ -249,66 +259,66 @@ const PrepareBlogPushlishScreen = (props) => {
         </View>
 
         {/* Chỗ này dùng để chọn những địa điểm mà người viết nhắc tới trong bài */}
-        <View style={app_sp.mv_12}>
-          <AppText font='h4' style={app_sp.mb_12}>Mentioned places</AppText>
-          <MyPlaceSearchResultList
-            placeHolder='Search places...'
-            keyExtractor={item => { return item.place_id }}
-            resultListPosition='float-top'
-            renderResultItem={item => (
-              <RectangleButton
-                typeOfButton='highlight'
-                defaultColor='type2'
-                onPress={() => {
-                  setBlogInfo(prevState => {
-                    let m = prevState.mentionedPlaces.slice();
-                    m.push({place_id: item.place_id, name: item.name});
-                    return {...prevState, mentionedPlaces: m}
-                  })
-                }}
-                style={[{justifyContent: 'flex-start'}, app_sp.pv_18]}
-              >
-                <AppText>{item.name}</AppText>
-              </RectangleButton>
-            )}
-          />
-          <View style={[{flexDirection: 'row', flexWrap: 'wrap'}, app_sp.mt_12]}>
-            {
-              blogInfo.mentionedPlaces.map(place => {
-                // let isActive = type === blogInfo.type;
-                return (
-                  <View
-                    key={place.place_id}
-                    style={[{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      borderWidth: 1,
-                      borderColor: app_c.HEX.ext_third
-                    }, app_sh.capsule, app_sp.ps_18]}
-                  >
-                    <AppText>
-                      {StringUtility.toTitleCase(place.name)}
-                    </AppText>
-                    <CircleButton
-                      isTransparent
-                      typeOfButton="opacity"
-                      onPress={() => {
-                        setBlogInfo(prevState => {
-                          let m = prevState.mentionedPlaces.slice();
-                          return {...prevState, mentionedPlaces: FunctionsUtility.removeFrom(
-                            m, (ele, index) => ele.place_id, place.place_id
-                          )}
-                        });
-                      }}
-                      setIcon={(isActive, currentLabelStyle) => (
-                        <Ionicons name="close-outline" size={18} style={currentLabelStyle} />
-                      )}
-                    />
-                  </View>
-                )
-              })
-            }
-          </View>
+        <AppText font='h4' style={[app_sp.mb_12, app_sp.mh_18]}>Mentioned places</AppText>
+        <MyPlaceSearchResultList
+          style={app_sp.mh_18}
+          placeHolder='Search places...'
+          keyExtractor={item => { return item.place_id }}
+          resultListPosition='float-top'
+          renderResultItem={item => (
+            <RectangleButton
+              typeOfButton='highlight'
+              defaultColor='type2'
+              onPress={() => {
+                setBlogInfo(prevState => {
+                  let m = prevState.mentionedPlaces.slice();
+                  m.push({place_id: item.place_id, name: item.name});
+                  return {...prevState, mentionedPlaces: m}
+                })
+              }}
+              style={[{justifyContent: 'flex-start'}, app_sp.pv_18]}
+            >
+              <AppText>{item.name}</AppText>
+            </RectangleButton>
+          )}
+        />
+          
+        <View style={[{flexDirection: 'row', flexWrap: 'wrap'}, app_sp.mt_12, app_sp.ph_18]}>
+          {
+            blogInfo.mentionedPlaces.map(place => {
+              // let isActive = type === blogInfo.type;
+              return (
+                <View
+                  key={place.place_id}
+                  style={[{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    borderWidth: 1,
+                    borderColor: app_c.HEX.ext_third
+                  }, app_sh.capsule, app_sp.ps_18]}
+                >
+                  <AppText>
+                    {StringUtility.toTitleCase(place.name)}
+                  </AppText>
+                  <CircleButton
+                    isTransparent
+                    typeOfButton="opacity"
+                    onPress={() => {
+                      setBlogInfo(prevState => {
+                        let m = prevState.mentionedPlaces.slice();
+                        return {...prevState, mentionedPlaces: FunctionsUtility.removeFrom(
+                          m, (ele, index) => ele.place_id, place.place_id
+                        )}
+                      });
+                    }}
+                    setIcon={(isActive, currentLabelStyle) => (
+                      <Ionicons name="close-outline" size={18} style={currentLabelStyle} />
+                    )}
+                  />
+                </View>
+              )
+            })
+          }
         </View>
 
         <RectangleButton
@@ -316,7 +326,7 @@ const PrepareBlogPushlishScreen = (props) => {
           typeOfButton='opacity'
           overrideShape='capsule'
           onPress={handleSubmit(handlePostBlogSubmit)}
-          style={app_sp.pv_16}
+          style={[app_sp.pv_16, app_sp.mh_18]}
         >
           {
             (isActive, currentLabelStyle) => (

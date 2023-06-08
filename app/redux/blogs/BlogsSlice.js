@@ -9,7 +9,8 @@ import {
 
 import {
   fetchBlogDetailsByIdAsyncThunk,
-  fetchBriefBlogsByTypeAsyncThunk
+  fetchBriefBlogsByTypeAsyncThunk,
+  refetchBriefBlogsByTypeAsyncThunk
 } from './BlogsAsyncThunks.js'
 
 import {
@@ -131,12 +132,19 @@ export const blogsSlice = createSlice({
         )
       }
       state.briefBlogs[typeOfBriefBlogs].data.push(...briefBlogs);
-    }),
+    });
 
     builder.addCase(fetchBlogDetailsByIdAsyncThunk.fulfilled, (state, action) => {
       let [blogId, blogDetails] = action.payload;
 
       state.blogDetailsList[blogId] = Object.assign({}, state.blogDetailsList[blogId], blogDetails)
+    });
+
+    builder.addCase(refetchBriefBlogsByTypeAsyncThunk.fulfilled, (state, action) => {
+      let [typeOfBriefBlogs, briefBlogs] = action.payload;
+      
+      state.briefBlogs[typeOfBriefBlogs] = createDefaultBriefBlog();
+      state.briefBlogs[typeOfBriefBlogs].data.push(...briefBlogs);
     })
   }
 })

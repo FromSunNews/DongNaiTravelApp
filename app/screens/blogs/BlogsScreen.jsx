@@ -3,7 +3,8 @@ import {
   SafeAreaView,
   ScrollView,
   FlatList,
-  LayoutAnimation
+  LayoutAnimation,
+  ActivityIndicator
 } from 'react-native'
 import React from 'react'
 
@@ -44,19 +45,20 @@ const BlogsScreen = () => {
   const blogsInfo = React.useRef({
     isFirstFetch: true,
     briefBlogDataFields: BRIEF_BLOG_DATA_FIELDS,
-    isEndReach: false
+    isEndReach: false,
+    blogsInstance: undefined
   });
   const [type, setType] = React.useState("all");
   const [isOnTop, setIsOnTop] = React.useState(true);
-  const navigation = useNavigation();
-  const { blogs, increaseSkip, fetchBriefBlogsByType } = useBriefBlogs(type);
+  const [isReload, setIsReload] = React.useState(false);
 
-  React.useEffect(() => {
-    if(!blogs || blogs.data.length === 0) {
-      fetchBriefBlogsByType(blogsInfo.current.briefBlogDataFields);
-    }
-    // dispatch(updateSkipBriefPlacesAmount({typeOfBriefPlaces: type, skip: 5}));
-  }, [type]);
+  const navigation = useNavigation();
+  const {
+    blogs,
+    increaseSkip,
+    fetchBriefBlogsByType,
+    reloadBriefBlogsByType
+  } = useBriefBlogs(type);
 
   const showBannderButton = isVisible => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -84,14 +86,35 @@ const BlogsScreen = () => {
     } else {
       showBannderButton(false)
     }
+
+    if(val <= -100 && !isReload) {
+      setIsReload(true);
+    }
   }
 
   const handleEndReach = e => {
     blogsInfo.current.isEndReach = true;
   }
 
+  React.useEffect(() => {
+    if(!blogs || blogs.data.length === 0) {
+      fetchBriefBlogsByType(blogsInfo.current.briefBlogDataFields);
+    }
+    // dispatch(updateSkipBriefPlacesAmount({typeOfBriefPlaces: type, skip: 5}));
+  }, [type]);
+
+  React.useEffect(() => {
+    if(blogsInfo.current.blogsInstance !== blogs && isReload) {
+      blogsInfo.current.blogsInstance = blogs;
+      setIsReload(false);
+    }
+    if(isReload) {
+      reloadBriefBlogsByType(blogsInfo.current.briefBlogDataFields);
+    }
+  }, [isReload, blogs]);
+
   return (
-    <View>
+    <View style={{backgroundColor: themeColor.primary}}>
       {
         isOnTop && (
           <View
@@ -99,7 +122,6 @@ const BlogsScreen = () => {
               app_sp.ph_18,
               app_sp.pt_12,
               {
-                backgroundColor: themeColor.primary,
                 position: 'relative',
                 zIndex: 2,
               }
@@ -116,6 +138,13 @@ const BlogsScreen = () => {
               {langData.banner_button[langCode]}
             </BannerButton>
           </View>
+        )
+      }
+      {
+        isReload && (
+          <ActivityIndicator
+            style={app_sp.mt_18}
+          />
         )
       }
       <FlatList

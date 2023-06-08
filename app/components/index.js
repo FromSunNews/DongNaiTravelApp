@@ -26,6 +26,7 @@ import MarkFormat from "./mark_format/MarkFormat"
 import ReviewSectionPromise from "./review_section_promise/ReviewSectionPromise"
 import Search from "./search/Search"
 import SearchResultList from "./search/SearchResultList"
+import Speech from "./speech/Speech"
 
 export {
   AppText,
@@ -55,5 +56,6 @@ export {
   MarkFormat,
   ReviewSectionPromise,
   Search,
-  SearchResultList
+  SearchResultList,
+  Speech
 }

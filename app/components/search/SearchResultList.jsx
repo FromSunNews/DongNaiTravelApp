@@ -43,7 +43,6 @@ const SearchResultList = (props) => {
       ...position,
       ...app_shdw.type_3,
       position: 'absolute',
-      zIndex: 10,
       maxHeight: 240
     }
   }
@@ -53,7 +52,8 @@ const SearchResultList = (props) => {
       style={[
         {
           backgroundColor: app_c.HEX.primary,
-          width: '100%'
+          width: '100%',
+          zIndex: 10
         }, 
         position,
         app_sh.rounded_8
@@ -62,7 +62,7 @@ const SearchResultList = (props) => {
       <FlatList
         style={{
           position: 'relative',
-          zIndex: 10
+          width: '100%'
         }}
         contentContainerStyle={{
           justifyContent: 'flex-end'

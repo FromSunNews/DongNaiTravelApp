@@ -16,8 +16,13 @@ import {
 
 import { Buffer } from 'buffer';
 import { deltaToMarkdown } from 'quill-delta-to-markdown';
+import markdownToDelta from "markdown-to-quill-delta";
+import { MarkdownToQuill } from "md-to-quill-delta";
 
 import AsyncStorageUtility from 'utilities/asyncStorage.js';
+import {
+  callWithGlobalLoading
+} from 'utilities/reduxStore.js'
 
 import {
   AppText,
@@ -37,11 +42,14 @@ app_c, app_sp
 const BlogEditorScreen = (props) => {
   const [blogInfo, setBlogInfo] = React.useState({
     content: null,
-    isContentFromStorage: false
+    isContentFromStorage: false,
+    isWebviewLoaded: false
   });
 
   const webViewRef = React.useRef(null);
   const textInputRef = React.useRef(null);
+
+  const mdToDeltaConverter = React.useMemo(() => new MarkdownToQuill({debug: false}));
 
   const handleWebViewMessage = e => {
     let message = JSON.parse(e.nativeEvent.data);
@@ -68,11 +76,11 @@ const BlogEditorScreen = (props) => {
   const handleGetQuillContentPress = () => {
     if(webViewRef.current) {
       webViewRef.current.injectJavaScript(`
-        let message = {
+        globalMessage = {
           type: "COMPLETE_CONTENT_ADDED",
           data: editor.getContents()
         }
-        window.ReactNativeWebView.postMessage(JSON.stringify(message));
+        window.ReactNativeWebView.postMessage(JSON.stringify(globalMessage));
       `);
     }
   }
@@ -105,14 +113,30 @@ const BlogEditorScreen = (props) => {
   `;
 
   React.useEffect(() => {
-    if(blogInfo.content && blogInfo.isContentFromStorage) {
-      let delta;
+    if(blogInfo.content && blogInfo.isContentFromStorage && blogInfo.isWebviewLoaded) {
+      let reg = /\n(.+)/
+      let delta = JSON.stringify(
+        mdToDeltaConverter.convert(blogInfo.content).map(item => {
+          if(!reg.test(item.insert)) return item;
+          let newValue = item.insert.match(reg);
+          console.log("New value: ", newValue)
+          return ({...item, insert: newValue[1]})
+        })
+      );
+      console.log("Delta: ", delta)
+      console.log("Markdown: ", blogInfo.content)
       webViewRef.current.injectJavaScript(`
         editor.setContents(${delta})
       `);
     }
 
-    if(blogInfo.content && !blogInfo.isContentFromStorage) AsyncStorageUtility.setItemAsync("SAVED_BLOG_CONTENT_KEY", blogInfo.content);
+    if(blogInfo.content && !blogInfo.isContentFromStorage) {
+      console.log("Blog content (Before save): ", JSON.stringify(blogInfo.content));
+      callWithGlobalLoading(async () => {
+        await AsyncStorageUtility.setItemAsync("SAVED_BLOG_CONTENT_KEY", blogInfo.content);
+      })
+    }
+
     if(!blogInfo.content && !blogInfo.isContentFromStorage) {
       AsyncStorageUtility
       .getItemAsync("SAVED_BLOG_CONTENT_KEY")
@@ -149,6 +173,7 @@ const BlogEditorScreen = (props) => {
         )}
       />
       <WebView
+        startInLoadingState
         ref={webViewRef}
         style={{ flex: 1, backgroundColor: "transparent" }}
         injectedJavaScript={extendInjectedJS}
@@ -156,6 +181,10 @@ const BlogEditorScreen = (props) => {
           editorToolsBarBackgroundColor: app_c.HEX.primary
         })}}
         onMessage={handleWebViewMessage}
+        onLoadEnd={() => setBlogInfo(prevState => ({
+          ...prevState,
+          isWebviewLoaded: true
+        }))}
       />
       <TextInput ref={textInputRef} style={{width: 0, height: 0}} />
       <View style={styles.buttonsContainer}>

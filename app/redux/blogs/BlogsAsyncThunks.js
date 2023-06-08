@@ -24,7 +24,7 @@ import {
 } from 'types/index.d.ts'
 
 export const fetchBriefBlogsByTypeAsyncThunk = createAsyncThunk(
-  `${REDUX_SLICE_NAMES.BLOGS}/fetchBriefBlogsByTypeAsyncThunk`,
+  `${REDUX_SLICE_NAMES.BLOGS}/fetchBriefBlogsByType`,
   /**
    * @param {RequestBriefBlogsInfoProps} requestBriefBlogsInfo
    */
@@ -45,7 +45,7 @@ export const fetchBriefBlogsByTypeAsyncThunk = createAsyncThunk(
 );
 
 export const fetchBlogDetailsByIdAsyncThunk = createAsyncThunk(
-  `${REDUX_SLICE_NAMES.BLOGS}/fetchBlogDetailsByIdAsyncThunk`,
+  `${REDUX_SLICE_NAMES.BLOGS}/fetchBlogDetailsById`,
   /**
    * @param {RequestBlogDetailsInfoProps} requestBlogDetailsInfo 
    */
@@ -58,6 +58,25 @@ export const fetchBlogDetailsByIdAsyncThunk = createAsyncThunk(
       const query = `blogId=${blogId}` + fields;
       const data = await getBlogAPI(query);
       return [blogId, data];
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+);
+
+export const refetchBriefBlogsByTypeAsyncThunk = createAsyncThunk(
+  `${REDUX_SLICE_NAMES.BLOGS}/refetchBriefBlogsByType`,
+  /**
+   * @param {RequestBriefBlogsInfoProps} requestBriefBlogsInfo
+   */
+  async (requestBriefBlogsInfo) => {
+    try {
+      const { type, fields } = requestBriefBlogsInfo;
+      const limit = 5;
+      const skip = 0;
+      const query = `limit=${limit}&skip=${skip}&filter=quality:${type}&fields=${fields}`;
+      const data = await getBlogsAPI(query);
+      return [type, data];
     } catch (error) {
       console.error(error.message);
     }

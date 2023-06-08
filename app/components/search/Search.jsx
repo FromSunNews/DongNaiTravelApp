@@ -85,7 +85,8 @@ const Search = (props) => {
         position: 'relative',
         borderColor: app_c.HEX.ext_third,
         borderWidth: 1,
-        flex: 1
+        flex: 1,
+        zIndex: 10
       }
     ]}>
       <Ionicons
