@@ -179,7 +179,7 @@ const HomeScreen = ({navigation}) => {
                   }
                 </View>
                 <View style={styles.temperature_other_info}>
-                  <View style={[styles.temperature_other_info_half]}>==
+                  <View style={[styles.temperature_other_info_half]}>
                     <View style={styles.temperature_other_info_quarter}>
                       {/* <Fontisto name='wind' size={14} color={themeColor.ext_second}/> */}
                       <AppText style={{...app_typo.fonts.normal.normal.h4,color:themeColor.ext_second}}>Sức gió:</AppText>
