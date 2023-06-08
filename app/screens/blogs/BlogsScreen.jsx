@@ -50,7 +50,6 @@ const BlogsScreen = () => {
   });
   const [type, setType] = React.useState("all");
   const [isOnTop, setIsOnTop] = React.useState(true);
-  const [isReload, setIsReload] = React.useState(false);
 
   const navigation = useNavigation();
   const {
@@ -86,10 +85,6 @@ const BlogsScreen = () => {
     } else {
       showBannderButton(false)
     }
-
-    if(val <= -100 && !isReload) {
-      setIsReload(true);
-    }
   }
 
   const handleEndReach = e => {
@@ -102,16 +97,6 @@ const BlogsScreen = () => {
     }
     // dispatch(updateSkipBriefPlacesAmount({typeOfBriefPlaces: type, skip: 5}));
   }, [type]);
-
-  React.useEffect(() => {
-    if(blogsInfo.current.blogsInstance !== blogs && isReload) {
-      blogsInfo.current.blogsInstance = blogs;
-      setIsReload(false);
-    }
-    if(isReload) {
-      reloadBriefBlogsByType(blogsInfo.current.briefBlogDataFields);
-    }
-  }, [isReload, blogs]);
 
   return (
     <View style={{backgroundColor: themeColor.primary}}>
@@ -138,13 +123,6 @@ const BlogsScreen = () => {
               {langData.banner_button[langCode]}
             </BannerButton>
           </View>
-        )
-      }
-      {
-        isReload && (
-          <ActivityIndicator
-            style={app_sp.mt_18}
-          />
         )
       }
       <FlatList
@@ -175,6 +153,8 @@ const BlogsScreen = () => {
         }
         renderItem={item => {console.log(item); return <View style={app_sp.ph_18}><HorizontalBlogCard blog={item.item} typeOfBriefBlog={type} /></View>}}
         keyExtractor={item => item._id}
+        onRefresh={() => reloadBriefBlogsByType(blogsInfo.current.briefBlogDataFields)}
+        refreshing={false}
       />
     </View>
   )
