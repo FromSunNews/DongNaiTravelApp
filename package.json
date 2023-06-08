@@ -97,7 +97,7 @@
     "eslint-plugin-react": "^7.32.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-native": "^4.0.0",
-    "react-native-svg-transformer": "^1.0.0"
+    "react-native-svg-transformer": "^0.14.3"
   },
   "private": true
 }

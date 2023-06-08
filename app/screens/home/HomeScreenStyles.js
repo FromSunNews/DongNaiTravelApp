@@ -14,63 +14,55 @@ const styles = StyleSheet.create({
   },
   home_banner: {
     height:200,
-    backgroundColor: app_c.HEX.ext_third,
-    overflow:'hidden'
-
   },
   home_temperature: {
     paddingHorizontal:16,
-    ...app_sp.mt_16,
+    ...app_sp.mt_22,
     width: '100%',
-    height: 64,
     ...app_sh.rounded_8,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent:'space-between',
-    
   },
   temperature: {
-    width: app_dms.screenWidth * 0.72,
-    height: app_dms.screenWidth * 0.17,
+    width:'100%',
+    height: 140,
     flexDirection: 'row',
     backgroundColor: app_c.HEX.ext_primary,
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    
     ...app_sh.rounded_8
   },
   temperature_degrees: {
-    width: 120,
+    width: app_dms.screenWidth * 0.3,
     height: '100%',
     justifyContent:'center',
     alignItems:'center',
     
+  },
+  temperature_degrees_icon:{
+    width:60,
+    height:60
   },
   temperature_degrees_info:{
     ...app_typo.fonts.normal.normal.h1,
     color:app_c.HEX.ext_second,
   },
   temperature_other_info:{
-  
+    width: app_dms.screenWidth * 0.7 - 32,
+    height:70,
+    marginTop:16,
   },
   temperature_other_info_half: {
-    width:130,
-    height: 20,
+    height:30,
+    marginBottom:5,
+    marginTop:5,
     flexDirection:'row',
     alignItems:"center",
-    justifyContent:'space-around',
-    // marginTop:3,
-    
+
+
     
   },
   temperature_other_info_quarter:{
-    flexDirection:'row',
-    width:'60%',
+   flexDirection:'row'
 
   },
-  temperature_other_info:{
-    width:145,
-  },
-
   temperature_reload: {
     width: app_dms.screenWidth * 0.17,
     height: app_dms.screenWidth * 0.17,
