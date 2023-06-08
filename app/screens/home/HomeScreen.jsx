@@ -192,7 +192,9 @@ const HomeScreen = ({navigation}) => {
                           <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5,paddingHorizontal:5,color:themeColor.ext_second}}>{`${wind}`}
                             <AppText style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}}>Km/h</AppText>
                           </AppText>
-                          ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h4,marginTop:4}}><Entypo name="minus"/><Entypo name="minus"/><Text style={{fontSize:12}}>km/h</Text></AppText>
+                          ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5,marginTop:4}}>
+                              <AppText style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}}>km/h</AppText>
+                          </AppText>
                         }
                       </View>
                       <AppText style={{fontSize:22,color:themeColor.ext_second}}>-</AppText>
@@ -216,7 +218,7 @@ const HomeScreen = ({navigation}) => {
                         {
                           cloud ? (
                             <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5,paddingHorizontal:5,color:themeColor.ext_second}}>{`${cloud}`+`%`}</AppText>
-                          ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5,marginTop:4}}><Entypo name="minus"/><Entypo name="minus"/>
+                          ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5,marginTop:4}}>
                           <Text style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}}>%</Text>
                           </AppText>
                         }
