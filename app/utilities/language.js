@@ -292,7 +292,8 @@ export const languageData = {
   },
   blogsScreen: {
     banner_button: {
-      vi: 'Bài viết của bạn',
+      // vi: 'Bài viết của bạn',
+      vi: 'Xem vị trí của bạn trên bản đồ',
       en: 'Your blogs'
     }
   },

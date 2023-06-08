@@ -49,7 +49,7 @@ import { cloneDeep, debounce } from 'lodash'
 
 // Related to Styles
 import { styles } from './MapScreenStyles'
-import { app_c, app_dms, app_sh, app_shdw, app_typo } from 'globals/styles'
+import { app_c, app_dms, app_sh, app_shdw, app_sp, app_typo } from 'globals/styles'
 
 // Related to components
 import { BottomSheetScroll, CheckBoxText } from 'components'
@@ -3377,15 +3377,20 @@ const Map = () => {
 
             {
               (placeDetails?.reviews) ?
-              placeDetails?.reviews.map((review, index) => {
-                return (
-                  <ReviewSectionPromise
-                    review={review}
-                    key={index}
-                    isTranformData={placeDetails?.isTranformData ? true : false}
-                  />
-                )
-              }) : null
+              <View style={app_sp.ph_18}>
+               {
+                placeDetails?.reviews.map((review, index) => {
+                  return (
+                    <ReviewSectionPromise
+                      review={review}
+                      key={index}
+                      isTranformData={placeDetails?.isTranformData ? true : false}
+                    />
+                  )
+                })
+              }
+              </View>
+              : null
             }
           </View>
         }

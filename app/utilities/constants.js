@@ -100,17 +100,29 @@ export const HEADER_HEIGHT = 50;
 export const ALPHABET = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
 
 export const PLACE_QUALITIES = {
-  vi: "Tất_cả;Đề_xuất;Phổ_biến;Yêu_thích_nhất;Đánh_giá_cao",
-  en: "all;recommended;popular;most_favorite;high_rating"
-}
+  vi: {
+    labels: "Tất_cả;Đề_xuất;Phổ_biến;Yêu_thích_nhất;Đánh_giá_cao",
+    values: "all;recommended;popular;most_favorite;high_rating"
+  },
+  en: {
+    labels: "all;recommended;popular;most_favorite;high_rating",
+    values: "all;recommended;popular;most_favorite;high_rating"
+  }
+};
 export const BRIEF_PLACE_DATA_FIELDS = "place_id;name;adr_address;types;rating;user_ratings_total;isRecommended;user_favorites_total;formatted_address;place_photos"
 export const PLACE_DETAILS_DATA_FIELDS = "rating;user_ratings_total;user_favorites_total;content;reviews"
 export const COMPLETE_PLACE_DETAILS_DATA_FIELDS = "place_id;name;adr_address;types;rating;user_ratings_total;isRecommended;user_favorites_total;formatted_address;place_photos;content;reviews"
 export const SEARCH_PLACE_DATA_FIELDS = "place_id;name;place_photo;_dataType;types";
 
 export const BLOG_QUANLITIES = {
-  vi: "tất_cả;yêu_thích_nhất;nhiều_bình_luận_nhất",
-  en:"all;most_favorites;most_comments"
+  vi: {
+    labels: "tất_cả;yêu_thích_nhất;nhiều_bình_luận_nhất",
+    values: "all;most_favorites;most_comments"
+  },
+  en: {
+    labels: "all;most_favorites;most_comments",
+    values: "all;most_favorites;most_comments"
+  }
 }
 export const BRIEF_BLOG_DATA_FIELDS = "name;avatar;userFavoritesTotal;userCommentsTotal;createdAt;type;author;readTime";
 export const BLOG_DETAILS_DATA_FIELDS = "author;content;userFavoritesTotal;userCommentsTotal";

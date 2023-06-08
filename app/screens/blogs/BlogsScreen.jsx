@@ -70,7 +70,7 @@ const BlogsScreen = () => {
       if(blogsInfo.current.isEndReach) {
         if(blogs) {
           increaseSkip();
-          fetchBriefBlogsByType();
+          fetchBriefBlogsByType(blogsInfo.current.briefBlogDataFields);
         }
       }
       blogsInfo.current.isEndReach = false;
@@ -145,7 +145,8 @@ const BlogsScreen = () => {
         ListHeaderComponent={
           <TypeScrollView
             buttonStyle="capsule"
-            types={BLOG_QUANLITIES[langCode]}
+            types={BLOG_QUANLITIES[langCode].values}
+            labels={BLOG_QUANLITIES[langCode].labels}
             callBack={setType}
             scrollStyle={[app_sp.ms_18, app_sp.pv_12]}
             containerStyle={{backgroundColor: themeColor.primary, ...app_sp.pv_10}}
