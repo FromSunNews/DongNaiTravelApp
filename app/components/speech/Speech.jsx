@@ -66,7 +66,7 @@ const Speech = ({
       style={[{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}, props.style]}
     >
       <View>
-        <AppText font="h3" style={app_sp.mb_6}>Read</AppText>
+        <AppText font="h3" style={app_sp.mb_6}>Đọc/Dừng</AppText>
         <View style={{flex: 1, flexDirection: 'row'}}>
           <RectangleButton
             disabled={!canPlay}
@@ -102,7 +102,7 @@ const Speech = ({
       </View>
 
       <View>
-        <AppText font="h3" style={app_sp.mb_6}>Voice</AppText>
+        <AppText font="h3" style={app_sp.mb_6}>Giọng Đọc</AppText>
         <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
           <RectangleButton
             isActive={!voice}

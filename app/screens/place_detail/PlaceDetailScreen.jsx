@@ -2,12 +2,15 @@ import {
   View,
   Text,
   Pressable,
-  ScrollView,
   Animated,
-  Image,
-  FlatList
+  Image
 } from 'react-native'
 import React from 'react'
+
+import {
+  ScrollView,
+  FlatList
+} from 'react-native-gesture-handler';
 
 import {
   getPlaceDetailsWithPipelineAPI,
