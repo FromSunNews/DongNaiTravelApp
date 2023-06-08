@@ -4,7 +4,8 @@ import { updateNotif } from 'redux/manifold/ManifoldSlice'
 
 import { API_ROOT } from 'utilities/constants'
 import {
-  injectedStore
+  injectedStore,
+  callWithGlobalLoading
 } from 'utilities/reduxStore'
 import AxiosUtility from 'utilities/axios'
 
@@ -69,7 +70,9 @@ export const getPrivateKeysAPI = async () => {
 }
 
 export const getPlaceDetailsAPI = async (data) => {
-  const request = await authorizedAxiosInstance.post(`${API_ROOT}/v1/map/place_details`, data)
+  let request = await callWithGlobalLoading(async () => {
+    return await authorizedAxiosInstance.post(`${API_ROOT}/v1/map/place_details`, data)
+  })
   return request.data
 }
 

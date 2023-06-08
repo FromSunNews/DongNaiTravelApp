@@ -82,7 +82,7 @@ const VerticalBlogCard = ({
     : blog.author.displayName
 
   return React.useMemo(() => (
-    <View {...props} style={[containerStyle,{backgroundColor: themeColor.ext_primary}]}>
+    <View {...props} style={[containerStyle,{backgroundColor: themeColor.primary}]}>
       {/* Image */}
       <RectangleButton
         isOnlyContent
