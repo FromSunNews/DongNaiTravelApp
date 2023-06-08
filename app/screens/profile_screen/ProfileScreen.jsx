@@ -444,7 +444,7 @@ function ProfileScreen({ route, navigation}) {
           <View style={styles.blog_block}>
             {
               isMyProfile &&
-              <TouchableOpacity style={[styles.btn_create_blog,{backgroundColor: themeColor.third}]} onPress={()=>navigation.navigate("CreatePostScreen")}>
+              <TouchableOpacity style={[styles.btn_create_blog,{backgroundColor: themeColor.ext_second}]} onPress={()=>navigation.navigate("CreatePostScreen")}>
                 <MaterialCommunityIcons
                   style={{ color: themeColor.ext_primary, marginRight: 6 }}
                   name="pencil-outline"
@@ -453,7 +453,7 @@ function ProfileScreen({ route, navigation}) {
                 <Text style={[styles.btn_create_blog_name,{color:themeColor.ext_primary,}]}>{langData.write_new_blog[langCode]}</Text>
               </TouchableOpacity>
             }
-            <TouchableOpacity style={[styles.btn_manage_blog,{backgroundColor:themeColor.third}]}>
+            <TouchableOpacity style={[styles.btn_manage_blog,{backgroundColor:themeColor.ext_second}]}>
               <Text style={[styles.btn_manage_blog_name,{color:themeColor.primary}]}>{langData.manage_blogs[langCode]}</Text>
             </TouchableOpacity>
             <View style={styles.blogs_list}>

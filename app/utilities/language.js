@@ -371,8 +371,8 @@ export const languageData = {
       en: 'Profile'
     },
     archive: {
-      vi: 'Kho lưu trữ của bạn',
-      en: 'Your Archive'
+      vi: 'Kho lưu trữ của tôi',
+      en: 'My Archive'
     },
     archive_place: {
       vi: 'Địa điểm',
@@ -503,8 +503,52 @@ export const languageData = {
       en: "Choose a destination place"
     },
     choose_an_origin_place: {
-      vi: "Chọn một nơi xuất xứ",
+      vi: "Chọn một nơi xuất phát",
       en:"Choose an origin place"
+    },
+    to: {
+      vi: "đến",
+      en: "to"
+    },
+    day: {
+      vi: "ngày",
+      en: "day"
+    },
+    days: {
+      vi: "ngày",
+      en: "days"
+    },
+    hour: {
+      vi: "giờ",
+      en: "hour"
+    },
+    hours: {
+      vi: "giờ",
+      en: "hours"
+    },
+    min: {
+      vi: "phút",
+      en: "min"
+    },
+    mins: {
+      vi: "phút",
+      en: "mins"
+    },
+    by: {
+      vi: "bằng",
+      en: "by"
+    },
+    summary: {
+      vi: "Tổng",
+      en: "Summary"
+    },
+    direction: {
+      vi: "Đường đi",
+      en: "Direction"
+    },
+    start:{
+      vi: "Bắt đầu",
+      en: "Start"
     }
   },
   

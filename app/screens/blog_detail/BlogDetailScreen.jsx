@@ -135,7 +135,7 @@ const BlogDetailScreen = ({route, navigation}) => {
           {/* Tags */}
           <View style={styles.bd_row}>
             <AppText font="body2" style={app_sp.me_12}>
-              <Ionicons name='pricetag-outline' /> Tags:
+              <Ionicons name='pricetag-outline' /> Thể loại:
             </AppText>
             <RectangleButton
               typeOfButton="highlight"
