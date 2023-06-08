@@ -20,14 +20,14 @@ const styles = StyleSheet.create({
     ...app_sp.mt_22,
     width: '100%',
     ...app_sh.rounded_8,
+    borderRadius:20
   },
   temperature: {
     width:'100%',
     height: 140,
-    flexDirection: 'row',
-    backgroundColor: app_c.HEX.ext_primary,
-    
-    ...app_sh.rounded_8
+    flexDirection: 'row',    
+    ...app_sh.rounded_8,
+
   },
   temperature_degrees: {
     width: app_dms.screenWidth * 0.3,
