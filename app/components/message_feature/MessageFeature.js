@@ -55,6 +55,7 @@ const MessageFeature = ({action, data = {}}) => {
     }
 }, [])
 
+
   if (action ==='input.welcome') {
     return
   } else if (action ==='input.suggest-place') {
@@ -358,7 +359,40 @@ const MessageFeature = ({action, data = {}}) => {
             </View>
         </View>
 
-        <WeatherChart data={Data} settings={Settings} selectedIndex={weatherHourSelectedIndex} handeChangeIndex={(index) => setWeatherHourSelectedIndex(index)}/>
+        <WeatherChart data={Data} settings={Settings} selectedIndex={weatherHourSelectedIndex} 
+        handeChangeIndex={(index) => {
+        console.log("==========================================", index)
+
+          setWeatherHourSelectedIndex(index)
+          if (index === 0) {
+            setWeatherDataSelected({
+              icon: weatherIcons[weatherData.weatherCurrent.weather[0].icon],
+              temp: `${weatherData.weatherCurrent.main.temp.toFixed(1)}°C`,
+              description: weatherData.weatherCurrent.weather[0].description,
+              address: weatherData.nameGeocoding,
+              wind: `${weatherData.weatherCurrent.wind.speed.toFixed(1)}km/h`,
+              humidity: `${weatherData.weatherCurrent.main.humidity}%`,
+              clouds: `${weatherData.weatherCurrent.clouds.all}%`,
+              visibility: `${(weatherData.weatherCurrent.visibility/1000).toFixed(1)}km`,
+              temp_min: `${weatherData.weatherCurrent.main.temp_min.toFixed(1)}°C`,
+              temp_max: `${weatherData.weatherCurrent.main.temp_max.toFixed(1)}°C`,
+          })
+        } else {
+          setWeatherDataSelected({
+            icon: weatherIcons[weatherData.weatherForecast[index - 1].weather[0].icon],
+            temp: `${weatherData.weatherForecast[index - 1].main.temp.toFixed(1)}°C`,
+            description: weatherData.weatherForecast[index - 1].weather[0].description,
+            address: weatherData.nameGeocoding,
+            wind: `${weatherData.weatherForecast[index - 1].wind.speed.toFixed(1)}km/h`,
+            humidity: `${weatherData.weatherForecast[index - 1].main.humidity}%`,
+            clouds: `${weatherData.weatherForecast[index - 1].clouds.all}%`,
+            visibility: `${(weatherData.weatherForecast[index - 1].visibility/1000).toFixed(1)}km`,
+            temp_min: `${weatherData.weatherForecast[index - 1].main.temp_min.toFixed(1)}°C`,
+            temp_max: `${weatherData.weatherForecast[index - 1].main.temp_max.toFixed(1)}°C`,
+          })
+        }
+        }}
+        />
       </View>
     );
   } else {

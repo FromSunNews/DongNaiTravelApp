@@ -138,7 +138,7 @@ const ChatBotScreen = () => {
       <View style={{
         display: 'flex',
         flexDirection: 'column',
-        width: '90%'
+        width: '90%',
       }}>
         <Bubble
           {...props}
@@ -214,7 +214,8 @@ const ChatBotScreen = () => {
         paddingHorizontal: 12,
         marginLeft: 18,
         marginRight: 8,
-        minHeight: 40
+        minHeight: 40,
+         marginBottom: 40,
       }}
     />
   )
@@ -229,6 +230,7 @@ const ChatBotScreen = () => {
         alignItems: 'center',
         justifyContent: 'center',
         marginRight: 8,
+        marginBottom: 40,
       }}
     >
       <FontAwesome
@@ -243,13 +245,13 @@ const ChatBotScreen = () => {
     <SafeAreaView style={styles.container}>
       {/* https://www.npmjs.com/package/react-native-gifted-chat */}
       <GiftedChat 
-        // alignTop
+        alignTop
         isTyping={true}
         // multiline={false}
         // renderUsernameOnMessage
         alwaysShowSend
         bottomOffset={10}
-        minInputToolbarHeight={50}
+        minInputToolbarHeight={70}
         placeholder={'Nhập tin nhắn...'}
         messages={messages}
         onSend={(value) => handLeSendMessages(value)}

@@ -318,7 +318,8 @@ function ProfileScreen({ route, navigation}) {
                   activeColor={themeMode === 'light' ? 'type_1' : 'type_2'}
                   typeOfButton="opacity"
                   style= {{
-                    flex: 0.4
+                    flex: 0.4,
+                    backgroundColor: app_c.HEX.third
                   }}
                   onPress={() => navigation.navigate("ViewStatsScreen")}
                 >
@@ -443,7 +444,7 @@ function ProfileScreen({ route, navigation}) {
           <View style={styles.blog_block}>
             {
               isMyProfile &&
-              <TouchableOpacity style={[styles.btn_create_blog,{backgroundColor: themeColor.fourth}]} onPress={()=>navigation.navigate("CreatePostScreen")}>
+              <TouchableOpacity style={[styles.btn_create_blog,{backgroundColor: themeColor.third}]} onPress={()=>navigation.navigate("CreatePostScreen")}>
                 <MaterialCommunityIcons
                   style={{ color: themeColor.ext_primary, marginRight: 6 }}
                   name="pencil-outline"
@@ -452,7 +453,7 @@ function ProfileScreen({ route, navigation}) {
                 <Text style={[styles.btn_create_blog_name,{color:themeColor.ext_primary,}]}>{langData.write_new_blog[langCode]}</Text>
               </TouchableOpacity>
             }
-            <TouchableOpacity style={[styles.btn_manage_blog,{backgroundColor:themeColor.fourth}]}>
+            <TouchableOpacity style={[styles.btn_manage_blog,{backgroundColor:themeColor.third}]}>
               <Text style={[styles.btn_manage_blog_name,{color:themeColor.primary}]}>{langData.manage_blogs[langCode]}</Text>
             </TouchableOpacity>
             <View style={styles.blogs_list}>
