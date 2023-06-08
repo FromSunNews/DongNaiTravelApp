@@ -44,7 +44,8 @@ export const editorHtmlSource = (props = {}) => `
     .ql-toolbar {
       position: sticky;
       top: 0;
-      z-index: 10;
+      z-index: 9999;
+      background-color: ${props.editorToolsBarBackgroundColor ? props.editorToolsBarBackgroundColor : "transparent"}!important;
     }
     .ql-toolbar.ql-snow {
       outline: none;
@@ -67,7 +68,7 @@ export const editorHtmlSource = (props = {}) => `
     ];
 
     let MAX_IMAGE_SIZE = 2 * 1024 * 1024;
-
+    let globalMessage;
     let customImageHandler = function() {
       const imageInputWrapper = document.createElement("div");
       const imageInput = document.createElement("input");

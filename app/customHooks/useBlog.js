@@ -18,7 +18,8 @@ import {
 
 import {
   fetchBlogDetailsByIdAsyncThunk,
-  fetchBriefBlogsByTypeAsyncThunk
+  fetchBriefBlogsByTypeAsyncThunk,
+  refetchBriefBlogsByTypeAsyncThunk
 } from 'redux/blogs/BlogsAsyncThunks'
 
 
@@ -71,6 +72,13 @@ export const {
     fetchBriefBlogsByType: function(fields) {
       dispatch(fetchBriefBlogsByTypeAsyncThunk({ fields, type: typeOfBriefBlogs }));
     },
+    /**
+     * Hàm này dùng để refresh dữ liệu của brief blogs theo type (typeOfBriefBlogs).
+     * @param {string} fields 
+     */
+    reloadBriefBlogsByType: function(fields) {
+      dispatch(refetchBriefBlogsByTypeAsyncThunk({ fields, type: typeOfBriefBlogs }));
+    }
   })
 
   return {

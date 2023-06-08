@@ -10,18 +10,22 @@ import {
  * @returns 
  */
 const createMultipartFormData = function(data) {
-  const jsonString = JSON.stringify(data);
   const formData = new FormData();
-  formData.append('data', new Blob([jsonString], {type: 'application/json'}));
-  return {
+  let keys = Object.keys(data);
+
+  for(let key of keys) {
+    formData.append(key, data[key])
+  }
+
+  return [
     formData,
     /**
      * @type {AxiosRequestHeaders}
      */
-    headers: {
+    {
       'Content-Type': 'multipart/form-data'
     }
-  };
+  ];
 }
 
 const AxiosUtility = {

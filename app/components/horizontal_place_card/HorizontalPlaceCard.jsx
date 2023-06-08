@@ -55,6 +55,8 @@ const HorizontalPlaceCard = ({
   let [city, province] = getTextContentInHTMLTag(place.adr_address);
   let presentationImage = place && place.place_photos ? {uri: place.place_photos[0]} : {}
 
+  console.log("User favorites total: ", place.user_favorites_total);
+
   return React.useMemo(() => (
     <View style={styles.card}>
       {/* Cột đâu tiên - Image Container */}
@@ -142,7 +144,7 @@ const HorizontalPlaceCard = ({
         />
       </View>
     </View>
-  ), [extendedPlaceInfo.isLiked, place.rating, place.numberOfVisited, place.user_ratings_total]);
+  ), [extendedPlaceInfo.isLiked, place.rating, place.user_favorites_total, place.user_ratings_total]);
 }
 
 export default withPlaceCard(HorizontalPlaceCard)

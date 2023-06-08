@@ -5,7 +5,8 @@ import {
   Text,
   FlatList,
   LayoutAnimation,
-  Animated
+  Animated,
+  ActivityIndicator
 } from 'react-native'
 import React from 'react'
 
@@ -39,22 +40,28 @@ const ExploreScreen = () => {
   //theme
   const themeColor = useTheme();
   
+  
   const exploreInfo = React.useRef({
     isFirstFetch: true,
     briefPlaceDataFields: BRIEF_PLACE_DATA_FIELDS,
-    isEndReach: false
+    isEndReach: false,
+    isReload: false,
+    placesInstance: undefined
   });
+  
   const [type, setType] = React.useState("all");
   const [isOnTop, setIsOnTop] = React.useState(true);
-  const navigation = useNavigation();
-  const { places, increaseSkip, fetchBriefPlaceByType } = useBriefPlaces(type);
+  const [isReload, setIsReload] = React.useState(false);
 
-  React.useEffect(() => {
-    if(!places || places.data.length === 0) {
-      fetchBriefPlaceByType(exploreInfo.current.briefPlaceDataFields);
-    }
-    // dispatch(updateSkipBriefPlacesAmount({typeOfBriefPlaces: type, skip: 5}));
-  }, [type]);
+  const navigation = useNavigation();
+  const {
+    places,
+    increaseSkip,
+    fetchBriefPlaceByType,
+    reloadBriefPlacesByType
+  } = useBriefPlaces(type);
+
+  if(!exploreInfo.current.placesInstance) exploreInfo.current.placesInstance = places
 
   const showBannderButton = isVisible => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -82,6 +89,10 @@ const ExploreScreen = () => {
     } else {
       showBannderButton(false)
     }
+
+    if(val <= -100 && !isReload) {
+      setIsReload(true);
+    }
   }
 
   const handleEndReach = e => {
@@ -90,15 +101,31 @@ const ExploreScreen = () => {
 
   console.log("Render Explore!!!");
 
+  React.useEffect(() => {
+    if(!places || places.data.length === 0) {
+      fetchBriefPlaceByType(exploreInfo.current.briefPlaceDataFields);
+    }
+    // dispatch(updateSkipBriefPlacesAmount({typeOfBriefPlaces: type, skip: 5}));
+  }, [type]);
+
+  React.useEffect(() => {
+    if(exploreInfo.current.placesInstance !== places && isReload) {
+      exploreInfo.current.placesInstance = places;
+      setIsReload(false);
+    }
+    if(isReload) {
+      reloadBriefPlacesByType(exploreInfo.current.briefPlaceDataFields);
+    }
+  }, [isReload, places]);
+
   return (
-    <View>
+    <View style={{backgroundColor: themeColor.primary}}>
       {
         isOnTop && (
           <View
             style={[
               app_sp.ph_18,
               {
-                backgroundColor: themeColor.primary,
                 position: 'relative',
                 zIndex: 2,
               }
@@ -117,14 +144,22 @@ const ExploreScreen = () => {
           </View>
         )
       }
+      {
+        isReload && (
+          <ActivityIndicator
+            style={app_sp.mt_18}
+          />
+        )
+      }
       <FlatList
         data={places ? places.data : []}
+        key={exploreInfo.current.placesInstance}
         style={[styles.scroll_view_container,{backgroundColor: themeColor.primary}]}
         contentContainerStyle={{paddingBottom: 200}}
         onMomentumScrollEnd={handleExploreMomentumScrollEnd}
         onEndReached={handleEndReach}
         onScroll={handleExploreScroll}
-        // scrollEventThrottle={1000}
+        scrollEventThrottle={1000}
         stickyHeaderHiddenOnScroll
         stickyHeaderIndices={[0]}
         ListEmptyComponent={

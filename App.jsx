@@ -1,38 +1,38 @@
 import React, { useEffect, useState } from 'react'
 import { Text, StatusBar, SafeAreaView } from 'react-native'
-
 import { ScreenOrientation } from 'expo';
-
-import { store, persistor } from 'redux/store'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
-
-import { NavigationContainer } from '@react-navigation/native'
-
-import NotificationBottomSheet from 'components/notification_bottom_sheet/NotificationBottomSheet'
+import { io } from 'socket.io-client'
 
 import { useFonts } from 'expo-font'
-import AuthNavigator from 'navigations/auth_navigator/AuthNavigator'
-import Loading from 'components/loading/Loading'
 
-// Phuong: How can I use the Redux store in non-component files?
-import { injectStore } from 'axios/authorizedAxiosInstance'
-injectStore(store)
+import { store, persistor } from 'redux/store'
 
-import { injectStoreRequest } from 'request_api'
-import { app_c, app_typo } from 'globals/styles'
-import { ToastProvider } from 'react-native-toast-notifications'
-
-// Phương: này là dùng cho socket
-import { io } from 'socket.io-client'
-import { API_ROOT } from 'utilities/constants'
-import { GestureHandlerRootView } from 'react-native-gesture-handler'
-import CustomStatusBar from './app/components/custom_status_bar/CustomStatusBar'
-export const socketIoInstance = io(API_ROOT)
-import NetInfo from '@react-native-community/netinfo'
 import { updateNotif } from './app/redux/manifold/ManifoldSlice'
 
-injectStoreRequest(store)
+import { NavigationContainer } from '@react-navigation/native'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { ToastProvider } from 'react-native-toast-notifications'
+import NetInfo from '@react-native-community/netinfo'
+
+
+import AuthNavigator from 'navigations/auth_navigator/AuthNavigator'
+import NotificationBottomSheet from 'components/notification_bottom_sheet/NotificationBottomSheet'
+import Loading from 'components/loading/Loading'
+import CustomStatusBar from 'components/custom_status_bar/CustomStatusBar'
+
+import {
+  injectStore
+} from 'utilities/reduxStore'
+import { API_ROOT } from 'utilities/constants'
+
+import { app_c, app_typo } from 'globals/styles'
+
+// Phương: này là dùng cho socket
+export const socketIoInstance = io(API_ROOT)
+
+injectStore(store)
 
 export default function App() {
 

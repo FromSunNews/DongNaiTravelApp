@@ -1,20 +1,19 @@
-import axios from 'axios'
+import axios, { AxiosRequestConfig } from 'axios'
 import authorizedAxiosInstance from 'axios/authorizedAxiosInstance'
 import { updateNotif } from 'redux/manifold/ManifoldSlice'
 
 import { API_ROOT } from 'utilities/constants'
+import {
+  injectedStore
+} from 'utilities/reduxStore'
+import AxiosUtility from 'utilities/axios'
 
 import {
   BlogDataProps
 } from 'types/index.d.ts'
 
-let store
-export const injectStoreRequest = _store => {
-  store = _store
-}
-
 const handleNotif = (content) => {
-  store.dispatch(updateNotif({
+  injectedStore.dispatch(updateNotif({
     appearNotificationBottomSheet: true,
     contentNotificationBottomSheet: content
   }))
@@ -43,7 +42,7 @@ export const updateUserAPI = async (data) => {
 
 export const refreshTokenAPI = async () => {
   const request = await authorizedAxiosInstance.get(`${API_ROOT}/v1/users/refresh_token`, {
-    refreshToken: store.getState().user.currentUser?.refreshToken
+    refreshToken: injectedStore.getState().user.currentUser?.refreshToken
   })
   return request.data
 }
@@ -106,14 +105,14 @@ export const getGeocodingReverseAPI = async (data) => {
 }
 
 export const getPlacesAPI = async (query) => {
-  let user = store.getState().user.currentUser;
+  let user = injectedStore.getState().user.currentUser;
   if(user) query += `&userId=${user._id}`;
   const response = await axios.get(`${API_ROOT}/v1/map/places?${query}`)
   return response.data
 }
 
 export const getPlaceDetailsWithPipelineAPI = async (query) => {
-  let user = store.getState().user.currentUser;
+  let user = injectedStore.getState().user.currentUser;
   if(user) query += `&userId=${user._id}`;
   const response = await axios.get(`${API_ROOT}/v1/map/place_details?${query}`)
   return response.data
@@ -153,7 +152,7 @@ export const updateManyNotifsAPI = async (data) => {
  */
 export const updateUserByCaseAPI = async (data) => {
   try {
-    let user = store.getState().user;
+    let user = injectedStore.getState().user;
     if(!user) throw new Error("You must be authorized.");
     let accessToken = user.currentUser.accessToken;
     data.accessToken = accessToken;
@@ -169,16 +168,18 @@ export const updateUserByCaseAPI = async (data) => {
  * 
  * Dùng để tải lên một blog
  * @param {{blog: BlogDataProps, content: string}} data 
+ * @param {AxiosRequestConfig} configs
  * @returns 
  */
-export const postNewBlogAPI = async (data) => {
+export const postNewBlogAPI = async (data, configs) => {
   try {
-    let user = store.getState().user;
+    let user = injectedStore.getState().user;
     if(!user) throw new Error("You must be authorized.");
     let accessToken = user.currentUser.accessToken;
     data.accessToken = accessToken;
     data.blog.authorId = user.currentUser._id;
-    const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/blog/create_new`, data);
+    // let [ formData, headers ] = AxiosUtility.createMultipartFormData(data);
+    const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/blog/create_new`, data, configs);
     return response.data;
   } catch (error) {
     console.error(error.message);
@@ -192,7 +193,7 @@ export const postNewBlogAPI = async (data) => {
  */
 export const getBlogAPI = async (query) => {
   try {
-    let user = store.getState().user.currentUser;
+    let user = injectedStore.getState().user.currentUser;
     if(user) query += `&userId=${user._id}`;
     const response = await axios.get(`${API_ROOT}/v1/blog/get_one?${query}`);
     return response.data;
@@ -208,7 +209,7 @@ export const getBlogAPI = async (query) => {
  */
 export const getBlogsAPI = async (query = "?limit=5&skip=0") => {
   try {
-    let user = store.getState().user.currentUser;
+    let user = injectedStore.getState().user.currentUser;
     if(user) query += `&userId=${user._id}`;
     const response = await axios.get(`${API_ROOT}/v1/blog/get_multiple?${query}`);
     return response.data;
