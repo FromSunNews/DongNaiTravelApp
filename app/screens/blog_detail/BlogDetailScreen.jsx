@@ -78,7 +78,7 @@ const BlogDetailScreen = ({route, navigation}) => {
     <View style={{flex: 1}}>
       <ScrollView
         style={[styles.bd_container,{backgroundColor: themeColor.primary}]}
-        contentContainerStyle={{paddingBottom: 18}}
+        contentContainerStyle={{paddingBottom: 120}}
       >
           {/* Author, Blog information section */}
         <View style={[styles.bd_header, app_sp.mt_12,{borderBottomColor: themeColor.fourth}]}>

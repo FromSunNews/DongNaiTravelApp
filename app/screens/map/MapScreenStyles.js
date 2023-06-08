@@ -559,7 +559,7 @@ export const styles = StyleSheet.create({
     backgroundColor: app_c.HEX.third,
     position: 'absolute',
     bottom: -40,
-    right: '40%',
+    right: '30%',
   },
   routeBtnText: {
     color: app_c.HEX.primary,

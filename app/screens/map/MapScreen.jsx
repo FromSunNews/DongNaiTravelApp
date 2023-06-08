@@ -1540,7 +1540,8 @@ const Map = () => {
                     </TouchableOpacity>
 
                     <TouchableOpacity 
-                      onPress={handleStartTrackingUserLocation}
+                      // onPress={handleStartTrackingUserLocation}
+                      onPress={() => null}
                       style={[styles.btnStart, {marginLeft: 12}]}
                     >
                       <Text style={styles.textStart}>Start</Text>
