@@ -62,7 +62,7 @@ const SettingScreen = ({ route, navigation }) => {
             <View style={[styles.genre_content, { ...styles.flexDirection }]}>
               <RectangleButton
                 overrideShape="rounded_8"
-                style={[styles.option_setting,{backgroundColor:themeColor.second}]}
+                style={[styles.option_setting,{backgroundColor:app_c.HEX.ext_primary}]}
                 handlePressButton={() => navigation.navigate("Places")}
               >
                 <AppText>
@@ -79,7 +79,7 @@ const SettingScreen = ({ route, navigation }) => {
               </RectangleButton>
               <RectangleButton
                 overrideShape="rounded_8"
-                style={[styles.option_setting,{backgroundColor:themeColor.second}]}
+                style={[styles.option_setting,{backgroundColor:app_c.HEX.ext_primary}]}
                 handlePressButton={() => navigation.navigate("Blogs")}
               >
                 <AppText>

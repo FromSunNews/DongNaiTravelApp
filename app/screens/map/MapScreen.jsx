@@ -2229,12 +2229,12 @@ const Map = () => {
             setIsShowWeatherBottomSheet(false)
             setWeatherSelected(0)
           }}
-          snapPoints={['30%', '60%', '100%']}
+          snapPoints={['50%', '60%', '100%']}
           haveBtn={false}
           haveOverlay={false}
           bottomView={{
             paddingHorizontal: 0,
-            paddingBottom: 120,
+            paddingBottom: 130,
           }}
           childView={
             <View style={{ backgroundColor: app_c.HEX.primary}}>
@@ -2515,41 +2515,43 @@ const Map = () => {
                     return (
                       <>
                         { index === 0 &&
-                          <TouchableOpacity
-                            onPress={() => {
-                              setWeatherSelected(0)
-                            }}
-                            style={{
-                              height: 150,
-                              width: 90,
-                              borderRadius: 45,
-                              backgroundColor: weatherSelected === 0 ? app_c.HEX.third : app_c.HEX.ext_primary,
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                              marginLeft: 0,
-                              ...app_shdw.type_2,
-                              marginBottom: 20
-                            }}
-                            >
-                            <Text style={{
-                              color: weatherSelected === 0 ? app_c.HEX.primary : app_c.HEX.ext_second,
-                              ...app_typo.fonts.normal.lighter.h5
-                            }}>{moment(new Date(weatherData.weatherCurrent.dt * 1000)).format("DD/MM/YYYY")}</Text>
-                            <Text style={{
-                              color: weatherSelected === 0 ? app_c.HEX.primary : app_c.HEX.ext_second,
-                              ...app_typo.fonts.normal.lighter.h5
-                            }}>{moment(new Date(weatherData.weatherCurrent.dt * 1000)).format("kk:mm")}</Text>
-                            <Image source={weatherIcons[weatherData.weatherCurrent.weather[0].icon]} style={{
-                              height: 50,
-                              width: 50,
-                              ...app_shdw.type_2,
-                              marginVertical: -5
-                            }}/>
-                            <Text style={{
-                              color: weatherSelected === 0 ? app_c.HEX.primary : app_c.HEX.ext_second,
-                              ...app_typo.fonts.normal.lighter.h3
-                            }}>{weatherData.weatherCurrent.main.temp.toFixed(1)}°C</Text>
-                          </TouchableOpacity>
+                         <View style={{paddingBottom:70}}>
+                            <TouchableOpacity
+                              onPress={() => {
+                                setWeatherSelected(0)
+                              }}
+                              style={{
+                                height: 130,
+                                width: 90,
+                                borderRadius: 45,
+                                backgroundColor: weatherSelected === 0 ? app_c.HEX.third : app_c.HEX.ext_primary,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                marginLeft: 0,
+                                ...app_shdw.type_2,
+                                marginBottom: 20
+                              }}
+                              >
+                              <Text style={{
+                                color: weatherSelected === 0 ? app_c.HEX.primary : app_c.HEX.ext_second,
+                                ...app_typo.fonts.normal.lighter.h5
+                              }}>{moment(new Date(weatherData.weatherCurrent.dt * 1000)).format("DD/MM/YYYY")}</Text>
+                              <Text style={{
+                                color: weatherSelected === 0 ? app_c.HEX.primary : app_c.HEX.ext_second,
+                                ...app_typo.fonts.normal.lighter.h5
+                              }}>{moment(new Date(weatherData.weatherCurrent.dt * 1000)).format("kk:mm")}</Text>
+                              <Image source={weatherIcons[weatherData.weatherCurrent.weather[0].icon]} style={{
+                                height: 50,
+                                width: 50,
+                                ...app_shdw.type_2,
+                                marginVertical: -5
+                              }}/>
+                              <Text style={{
+                                color: weatherSelected === 0 ? app_c.HEX.primary : app_c.HEX.ext_second,
+                                ...app_typo.fonts.normal.lighter.h3
+                              }}>{weatherData.weatherCurrent.main.temp.toFixed(1)}°C</Text>
+                            </TouchableOpacity>
+                         </View>
                         }
       
                         <TouchableOpacity
@@ -2840,7 +2842,7 @@ const Map = () => {
           
           setIsOpenBottomSheet(false)
         }}
-        snapPoints={['20%', '40%', '100%']}
+        snapPoints={['50%', '40%', '100%']}
         haveBtn={false}
         haveOverlay={false}
         bottomView={{
@@ -3402,7 +3404,7 @@ const Map = () => {
         closeTermCondition={() => {
           setIsOpenBottomSheetFilter(false)
         }}
-        snapPoints={['20%', '40%', '100%']}
+        snapPoints={['50%', '40%', '100%']}
         labelBtn='Save'
         handleLabelBtn={() => null}
         haveBtn={true}
@@ -3461,7 +3463,7 @@ const Map = () => {
           // Đặt lại stepPolyLine
           setStepPolyLine([])
         }}
-        snapPoints={['20%', '50%', '90%']}
+        snapPoints={['50%', '50%', '90%']}
         haveBtn={false}
         haveOverlay={false}
         bottomView={{
