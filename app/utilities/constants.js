@@ -9,12 +9,14 @@ const ip_v4 = {
   duc: '192.168.146.83'
 }
 
+
 const API_PORT = '7500'
 
 // Phuong: This is the api web for DongNaiAppTravel
 // export const API_ROOT = 'https://dong-nai-travel-api.onrender.com'
 let useLocalServer = true;
 export const API_ROOT = useLocalServer ? `http://${ip_v4.duc}:${API_PORT}` : 'https://dong-nai-travel-api.onrender.com';
+
 
 export const REDUX_SLICE_NAMES = {
   BLOGS: "blogs",
@@ -38,31 +40,52 @@ export const FilterConstants = {
   sortBy: [
     {
       id: 'DEFAULT',
-      tilte: 'Default',
+      tilte: {
+        vi: "Mặc định",
+        en:"Default"
+      },
     },
     {
       id: 'PROMINENCE',
-      tilte: 'Prominence'
+      tilte: {
+        vi: "Nổi bật",
+        en:'Prominence'
+      }
     },
     {
       id: 'NEAR_BY',
-      tilte: 'Near by'
+      tilte: {
+        vi: "Gần đây",
+        en:'Near by'
+      }
     },
     {
       id: 'STAR_LOW_TO_HIGH',
-      tilte: 'Star: Low to high'
+      tilte: {
+        vi: "Đánh giá: Thấp đến cao",
+        en: 'Star: Low to high'
+      }
     },
     {
       id: 'STAR_HIGH_TO_LOW',
-      tilte: 'Star: High to low'
+      tilte: {
+        vi: "Đánh giá: Cao đến thấp",
+        en:'Star: High to low'
+      }
     },
     {
       id: 'RATING_LOW_TO_HIGH',
-      tilte: 'Rating total: Low to high'
+      tilte: {
+        vi: "Xếp hạng: Thấp đến cao",
+        en:'Rating total: Low to high'
+      }
     },
     {
       id: 'RATING_HIGH_TO_LOW',
-      tilte: 'Rating total: High to low'
+      tilte: {
+        vi: "Xếp hạng: Cao đến thấp",
+        en: "Rating total: High to low"
+      }
     }
   ],
   priceLevels: {
@@ -76,12 +99,20 @@ export const FilterConstants = {
 export const HEADER_HEIGHT = 50;
 export const ALPHABET = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
 
-export const BRIEF_PLACE_DATA_FIELDS = "place_id;name;adr_address;types;rating;user_ratings_total;isRecommended;numberOfVisited;formatted_address;place_photos"
-export const PLACE_DETAILS_DATA_FIELDS = "rating;user_ratings_total;numberOfVisited;content;reviews"
-export const COMPLETE_PLACE_DETAILS_DATA_FIELDS = "place_id;name;adr_address;types;rating;user_ratings_total;isRecommended;numberOfVisited;formatted_address;place_photos;content;reviews"
+export const PLACE_QUALITIES = {
+  vi: "Tất_cả;Đề_xuất;Phổ_biến;Yêu_thích_nhất;Đánh_giá_cao",
+  en: "all;recommended;popular;most_favorite;high_rating"
+}
+export const BRIEF_PLACE_DATA_FIELDS = "place_id;name;adr_address;types;rating;user_ratings_total;isRecommended;user_favorites_total;formatted_address;place_photos"
+export const PLACE_DETAILS_DATA_FIELDS = "rating;user_ratings_total;user_favorites_total;content;reviews"
+export const COMPLETE_PLACE_DETAILS_DATA_FIELDS = "place_id;name;adr_address;types;rating;user_ratings_total;isRecommended;user_favorites_total;formatted_address;place_photos;content;reviews"
 export const SEARCH_PLACE_DATA_FIELDS = "place_id;name;place_photo;_dataType;types";
 
-export const BRIEF_BLOG_DATA_FIELDS = "name;avatar;userFavoritesTotal;userCommentsTotal;createdAt;type;author";
+export const BLOG_QUANLITIES = {
+  vi: "tất_cả;yêu_thích_nhất;nhiều_bình_luận_nhất",
+  en:"all;most_favorites;most_comments"
+}
+export const BRIEF_BLOG_DATA_FIELDS = "name;avatar;userFavoritesTotal;userCommentsTotal;createdAt;type;author;readTime";
 export const BLOG_DETAILS_DATA_FIELDS = "author;content;userFavoritesTotal;userCommentsTotal";
 export const SEARCH_BLOG_DATA_FIELDS = "name;avatar";
 
@@ -97,8 +128,18 @@ export const UPDATE_USER_CASES = {
   'removeEle:savedPlaces': 'removeEle:savedPlaces',
   'addEle:follower': 'addEle:follower',
   'removeEle:follower': 'removeEle:follower',
-  'addEle:visitedPlaces': 'addEle:visitedPlaces',
-  'removeEle:visitedPlaces': 'removeEle:visitedPlaces'
+  'addEle:savedBlogs': 'addEle:savedBlogs',
+  'removeEle:savedBlogs': 'removeEle:savedBlogs'
+}
+
+export const UPDATE_BLOG_BY_CASES = {
+  'default': 'default',
+  'addEle:reviewIds': 'addEle:reviewIds',
+  'removeEle:reviewIds': 'removeEle:reviewIds',
+  'inc:userFavoritesTotal': 'inc:userFavoritesTotal',
+  'dec:userFavoritesTotal': 'dec:userFavoritesTotal',
+  'inc:userCommentsTotal': 'inc:userCommentsTotal',
+  'dec:userCommentsTotal': 'dec:userCommentsTotal'
 }
 
 export const USER_ROLES = {

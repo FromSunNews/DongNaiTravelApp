@@ -28,7 +28,9 @@ import { selectCurrentLanguage } from "redux/language/LanguageSlice"
 
 import {
   BRIEF_PLACE_DATA_FIELDS,
-  BRIEF_BLOG_DATA_FIELDS
+  BRIEF_BLOG_DATA_FIELDS,
+  PLACE_QUALITIES,
+  BLOG_QUANLITIES
 } from "utilities/constants"
 import { weatherImages } from "utilities/mapdata"
 import { Ionicons, Entypo,Fontisto,FontAwesome5,MaterialCommunityIcons} from "react-native-vector-icons"
@@ -177,7 +179,7 @@ const HomeScreen = ({navigation}) => {
                   }
                 </View>
                 <View style={styles.temperature_other_info}>
-                  <View style={[styles.temperature_other_info_half]}>
+                  <View style={[styles.temperature_other_info_half]}>==
                     <View style={styles.temperature_other_info_quarter}>
                       {/* <Fontisto name='wind' size={14} color={themeColor.ext_second}/> */}
                       <AppText style={{...app_typo.fonts.normal.normal.h4,color:themeColor.ext_second}}>Sức gió:</AppText>
@@ -251,7 +253,7 @@ const HomeScreen = ({navigation}) => {
             <AppText><Entypo name="chevron-small-right" size={40}/></AppText>
           </TouchableOpacity>
           <TypeScrollView
-            types='all;recommended;popular;most_visit;high_rating'
+            types={PLACE_QUALITIES[langCode]}
             callBack={setTypePlace}
             scrollStyle={[app_sp.ms_18, app_sp.mb_12]}
             containerStyle={{backgroundColor: themeColor.primary, ...app_sp.pv_10}}
@@ -283,7 +285,7 @@ const HomeScreen = ({navigation}) => {
             <AppText><Entypo name="chevron-small-right" size={40}/></AppText>
           </TouchableOpacity>
           <TypeScrollView
-            types='all;most_favorites;most_comments'
+            types={BLOG_QUANLITIES[langCode]}
             callBack={(type) => {
               setTypeBlog(type)
             }}

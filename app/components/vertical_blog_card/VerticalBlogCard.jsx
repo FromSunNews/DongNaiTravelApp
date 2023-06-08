@@ -6,6 +6,10 @@ import {
 } from 'react-native'
 import React from 'react'
 
+import {
+  withBlogCard
+} from 'hocs/withBlogCard'
+
 import { useNavigation } from '@react-navigation/native'
 
 import useTheme from 'customHooks/useTheme'
@@ -26,7 +30,8 @@ import styles from './VerticalBlogCardStyles'
 import { app_c, app_sh, app_sp } from 'globals/styles'
 
 import {
-  BlogDetailsDataProps
+  BlogDetailsDataProps,
+  WithBlogCardWrapperdComponentProps
 } from 'types/index.d.ts'
 
 /**
@@ -47,10 +52,22 @@ import {
  * // Margin end cho card 
  * <VerticalBlogCard blog={blog[0]} style={app_sp.me_18} />
  * ```
- * @param {ViewProps & VerticalBlogCardProps} props Props của component.
+ * @param {WithBlogCardWrapperdComponentProps} props Props của component.
  * @returns Thẻ dọc chứa các thông tin cơ bản của một blog.
  */
-const VerticalBlogCard = ({ blog, ...props }) => {
+const VerticalBlogCard = ({
+  blog,
+  blogIndex,
+  typeOfBriefBlog,
+  extendedBlogInfo,
+  addBlogDetails,
+  updateBriefBlog,
+  getTextContentInHTMLTag,
+  handlePressImageButton,
+  handleLikeButton,
+  handleVisitButton,
+  ...props
+}) => {
   const containerStyle = ComponentUtility.mergeStyle(styles.card, props.style);
   //Đức useNavagation to make when onPress Image of Blog => toScreen BlogDetailScreen
   const navigation = useNavigation() 
@@ -64,7 +81,7 @@ const VerticalBlogCard = ({ blog, ...props }) => {
     ? blog.author.lastName + " " + blog.author.firstName
     : blog.author.displayName
 
-  return (
+  return React.useMemo(() => (
     <View {...props} style={[containerStyle,{backgroundColor: themeColor.ext_primary}]}>
       {/* Image */}
       <RectangleButton
@@ -79,8 +96,8 @@ const VerticalBlogCard = ({ blog, ...props }) => {
       <View style={styles.card_mid}>
         {
           !blog.author.avatar
-          ? (<Ionicons name="person-circle" color={themeColor.ext_second} />)
-          : (<Image source={{uri: blog.author.avatar}} />)
+          ? (<Ionicons name="person-circle" size={14} color={themeColor.ext_second} />)
+          : (<Image source={{uri: blog.author.avatar}} style={styles.card_user_avatar} />)
         }<AppText font="body2">{" " + displayAuthorName}</AppText>
       </View>
 
@@ -94,7 +111,7 @@ const VerticalBlogCard = ({ blog, ...props }) => {
             {DateTimeUtility.getShortDateString(blog.createdAt)}
           </AppText>
           <AppText numberOfLines={1} font="body2">
-            {DateTimeUtility.toMinute(0)} min read
+            {DateTimeUtility.toMinute(blog.readTime ? blog.readTime : 0)} min
           </AppText>
         </View>
       </View>
@@ -102,9 +119,11 @@ const VerticalBlogCard = ({ blog, ...props }) => {
       {/* Like button */}
       <View style={styles.card_buttons_container}>
         <RectangleButton
+          isActive={extendedBlogInfo.isLiked}
           isTransparent
           typeOfButton="opacity"
           style={styles.card_button}
+          onPress={handleLikeButton}
         >
           {
             (isActive, currentLabelStyle) => (
@@ -130,7 +149,7 @@ const VerticalBlogCard = ({ blog, ...props }) => {
         </RectangleButton>
       </View>
     </View>
-  )
+  ), [extendedBlogInfo.isLiked, blog.userCommentsTotal, blog.userFavoritesTotal]);
 }
 
-export default VerticalBlogCard
+export default withBlogCard(VerticalBlogCard)

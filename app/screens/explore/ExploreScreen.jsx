@@ -10,9 +10,14 @@ import {
 import React from 'react'
 
 import { useNavigation } from '@react-navigation/native'
+
+import useTheme from 'customHooks/useTheme'
 import { useBriefPlaces } from 'customHooks/usePlace'
 
-import { BRIEF_PLACE_DATA_FIELDS } from 'utilities/constants'
+import {
+  BRIEF_PLACE_DATA_FIELDS,
+  PLACE_QUALITIES
+} from 'utilities/constants'
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { TypeScrollView, HorizontalPlaceCard, HorizontalPlaceCardSkeleton, BannerButton } from 'components'
@@ -21,7 +26,6 @@ import styles from './ExploreScreenStyles'
 import { app_sp } from 'globals/styles'
 import { useSelector } from 'react-redux'
 import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
-import useTheme from 'customHooks/useTheme'
 
 /**
  * __Creator__: @NguyenAnhTuan1912
@@ -43,10 +47,10 @@ const ExploreScreen = () => {
   const [type, setType] = React.useState("all");
   const [isOnTop, setIsOnTop] = React.useState(true);
   const navigation = useNavigation();
-  const { places, inscreaseSkip, fetchBriefPlaceByType } = useBriefPlaces(type);
+  const { places, increaseSkip, fetchBriefPlaceByType } = useBriefPlaces(type);
 
   React.useEffect(() => {
-    if(!places) {
+    if(!places || places.data.length === 0) {
       fetchBriefPlaceByType(exploreInfo.current.briefPlaceDataFields);
     }
     // dispatch(updateSkipBriefPlacesAmount({typeOfBriefPlaces: type, skip: 5}));
@@ -62,7 +66,7 @@ const ExploreScreen = () => {
     return function(e) {
       if(exploreInfo.current.isEndReach) {
         if(places) {
-          inscreaseSkip();
+          increaseSkip();
           fetchBriefPlaceByType(exploreInfo.current.briefPlaceDataFields);
         }
       }
@@ -133,7 +137,7 @@ const ExploreScreen = () => {
         ListHeaderComponent={
           <TypeScrollView
             buttonStyle="capsule"
-            types='all;recommended;popular;most_visit;high_rating'
+            types={PLACE_QUALITIES[langCode]}
             callBack={setType}
             scrollStyle={[app_sp.ms_18, app_sp.pv_12]}
             containerStyle={{backgroundColor: themeColor.primary, ...app_sp.pv_10}}

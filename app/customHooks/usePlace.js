@@ -8,8 +8,8 @@ import {
 
 import {
   addPlaceDetailsState,
-  inscreaseSkipBriefPlacesAmountState,
-  descreaseSkipBriefPlacesAmountState,
+  increaseSkipBriefPlacesAmountState,
+  decreaseSkipBriefPlacesAmountState,
   updateBriefPlaceState,
   clearAllBriefPlaces,
   fetchBriefPlacesByTypeAsyncThunk,
@@ -42,7 +42,7 @@ export const {
    * Hàm này dùng để tăng số brief places cần bỏ qua khi request về server.
    * @returns 
    */
-  () => dispatch(inscreaseSkipBriefPlacesAmountState(typeOfBriefPlaces));
+  () => dispatch(increaseSkipBriefPlacesAmountState(typeOfBriefPlaces));
 
   /**
    * @param {Dispatch<AnyAction>} dispatch 
@@ -53,7 +53,7 @@ export const {
    * Hàm này dùng để giảm số brief places cần bỏ qua khi request về server.
    * @returns 
    */
-  () => dispatch(descreaseSkipBriefPlacesAmountState(typeOfBriefPlaces));
+  () => dispatch(decreaseSkipBriefPlacesAmountState(typeOfBriefPlaces));
 
   /**
    * @param {Dispatch<AnyAction>} dispatch 
@@ -99,14 +99,14 @@ export const {
       let dispatch = useDispatch();
 
       let {
-        inscreaseSkip,
-        descreaseSkip,
+        increaseSkip,
+        decreaseSkip,
         clearAll,
         updateBriefPlace,
         fetchBriefPlaceByType
       } = React.useMemo(() => ({
-        inscreaseSkip: createInscreaseSkipFn(dispatch, typeOfBriefPlaces),
-        descreaseSkip: createDescreaseSkipFn(dispatch, typeOfBriefPlaces),
+        increaseSkip: createInscreaseSkipFn(dispatch, typeOfBriefPlaces),
+        decreaseSkip: createDescreaseSkipFn(dispatch, typeOfBriefPlaces),
         clearAll: createClearAllFn(dispatch),
         updateBriefPlace: createUpdateBriefPlaceFn(dispatch, typeOfBriefPlaces),
         fetchBriefPlaceByType: createFetchBriefPlaceByTypeFn(dispatch, typeOfBriefPlaces)
@@ -114,8 +114,8 @@ export const {
 
       return {
         places,
-        inscreaseSkip,
-        descreaseSkip,
+        increaseSkip,
+        decreaseSkip,
         clearAll,
         updateBriefPlace,
         fetchBriefPlaceByType
@@ -131,22 +131,22 @@ export const {
       let dispatch = useDispatch();
 
       let {
-        inscreaseSkip,
-        descreaseSkip,
+        increaseSkip,
+        decreaseSkip,
         clearAll,
         updateBriefPlace,
         fetchBriefPlaceByType
       } = React.useMemo(() => ({
-        inscreaseSkip: createInscreaseSkipFn(dispatch, typeOfBriefPlaces),
-        descreaseSkip: createDescreaseSkipFn(dispatch, typeOfBriefPlaces),
+        increaseSkip: createInscreaseSkipFn(dispatch, typeOfBriefPlaces),
+        decreaseSkip: createDescreaseSkipFn(dispatch, typeOfBriefPlaces),
         clearAll: createClearAllFn(dispatch),
         updateBriefPlace: createUpdateBriefPlaceFn(dispatch, typeOfBriefPlaces),
         fetchBriefPlaceByType: createFetchBriefPlaceByTypeFn(dispatch, typeOfBriefPlaces)
       }), [typeOfBriefPlaces]);
 
       return {
-        inscreaseSkip,
-        descreaseSkip,
+        increaseSkip,
+        decreaseSkip,
         clearAll,
         updateBriefPlace,
         fetchBriefPlaceByType
@@ -311,7 +311,7 @@ export function usePlaceInteractionActions(place) {
    * Hàm này sẽ tạo ra một function dùng để sử dụng Interaction Actions. Interaction Actions là các Actions dùng để
    * sử dụng tính năng tương tác với địa điểm như là thích, ghé thăm hoặc ghi review ngắn về một địa điểm.
    * Thì hàm này dùng để tạo ra các Toggle Interaction Actions, `Toggle Action` là sự tương tác chuyển đổi,
-   * chuyển đổi ở đây là chuyển đổi boolean, true và false.
+   * chuyển đổi ở đây là chuyển đổi boolean giữa true và false.
    * 
    * Ví dụ có một địa điểm A, và dựa vào kết quả trả về từ server thì người dùng này chưa thích địa điểm A, và
    * cũng chưa ghé thăm, thì khi đó state của `isLiked` và `isVisited` sẽ là `false`. Nếu như ấn like thì state
@@ -381,11 +381,6 @@ export function usePlaceInteractionActions(place) {
      * `callWhenAPIResolve` và `callWhenAPIReject`
      */
     likePlace: createToggleInteractionActionsFunc("isLiked", UPDATE_USER_CASES["addEle:savedPlaces"], UPDATE_USER_CASES["removeEle:savedPlaces"]),
-    /**
-     * Hàm này dùng dể đánh dấu hoặc bỏ đánh dấu ghé thăm một địa điểm nào đó. Nhận vào hai tham số là
-     * `callWhenAPIResolve` và `callWhenAPIReject`
-     */
-    visitPlace: createToggleInteractionActionsFunc("isVisited", UPDATE_USER_CASES["addEle:visitedPlaces"], UPDATE_USER_CASES["removeEle:visitedPlaces"])
   }), [])
 
   React.useEffect(() => {

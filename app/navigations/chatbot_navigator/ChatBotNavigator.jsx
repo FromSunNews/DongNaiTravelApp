@@ -16,6 +16,7 @@ import {
   USER_ROLES
 } from 'utilities/constants'
 import ChatBotScreen from 'screens/chat_bot/ChatBotScreen'
+import OnboardingChatbot from 'screens/onaboarding_chatbot/OnboardingChatbot'
 import PlaceDetailScreen from 'screens/place_detail/PlaceDetailScreen'
 
 const ChatBotStack = createNativeStackNavigator();
@@ -41,24 +42,32 @@ const ChatBotNavigator = ({navigation}) => {
     <ChatBotStack.Navigator
       screenOptions={{ header: AppHeader }}
     >
-      <>
-        <ChatBotStack.Screen
-          name="ChatBotScreen"
-          options={{
-            title: 'TravelBot'
-          }}
-          component={ChatBotScreen}
-        />
+      <ChatBotStack.Screen
+        name="OnboardingChatbot"
+        options={{
+          title: 'TravelBot',
+          headerShown: false
+        }}
+        component={OnboardingChatbot}
+      />
 
-        <ChatBotStack.Screen
-          name='PlaceDetailScreen'
-          options={{
-            title: 'Chi Tiết Địa Điểm',
-            headerTransparent: true
-          }}
-          component={PlaceDetailScreen}
-        />
-      </>
+      <ChatBotStack.Screen
+        name="ChatBotScreen"
+        options={{
+          title: 'TravelBot',
+          presentation: 'containedModal'
+        }}
+        component={ChatBotScreen}
+      />
+
+      <ChatBotStack.Screen
+        name='PlaceDetailScreen'
+        options={{
+          title: 'Chi Tiết Địa Điểm',
+          headerTransparent: true
+        }}
+        component={PlaceDetailScreen}
+      />
     </ChatBotStack.Navigator>
   )
 }

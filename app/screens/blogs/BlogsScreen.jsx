@@ -15,7 +15,8 @@ import {
 import useTheme from 'customHooks/useTheme'
 
 import {
-  BRIEF_BLOG_DATA_FIELDS
+  BRIEF_BLOG_DATA_FIELDS,
+  BLOG_QUANLITIES
 } from 'utilities/constants'
 
 import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
@@ -48,10 +49,10 @@ const BlogsScreen = () => {
   const [type, setType] = React.useState("all");
   const [isOnTop, setIsOnTop] = React.useState(true);
   const navigation = useNavigation();
-  const { blogs, inscreaseSkip, fetchBriefBlogsByType } = useBriefBlogs(type);
+  const { blogs, increaseSkip, fetchBriefBlogsByType } = useBriefBlogs(type);
 
   React.useEffect(() => {
-    if(!blogs) {
+    if(!blogs || blogs.data.length === 0) {
       fetchBriefBlogsByType(blogsInfo.current.briefBlogDataFields);
     }
     // dispatch(updateSkipBriefPlacesAmount({typeOfBriefPlaces: type, skip: 5}));
@@ -67,7 +68,7 @@ const BlogsScreen = () => {
     return function(e) {
       if(blogsInfo.current.isEndReach) {
         if(blogs) {
-          inscreaseSkip();
+          increaseSkip();
           fetchBriefBlogsByType();
         }
       }
@@ -137,7 +138,7 @@ const BlogsScreen = () => {
         ListHeaderComponent={
           <TypeScrollView
             buttonStyle="capsule"
-            types='all;most_favorites;most_comments'
+            types={BLOG_QUANLITIES[langCode]}
             callBack={setType}
             scrollStyle={[app_sp.ms_18, app_sp.pv_12]}
             containerStyle={{backgroundColor: themeColor.primary, ...app_sp.pv_10}}

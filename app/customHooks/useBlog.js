@@ -1,10 +1,15 @@
+import React from 'react';
 import { useDispatch, useSelector } from "react-redux";
+
+import {
+  updateUserByCaseAPI
+} from 'request_api'
 
 import {
   addBlogDetailsState,
   updateBriefBlogState,
-  inscreaseSkipBriefBlogsAmountState,
-  descreaseSkipBriefBlogsAmountState,
+  increaseSkipBriefBlogsAmountState,
+  decreaseSkipBriefBlogsAmountState,
   clearAllBriefBlogsState,
   clearBlogDetailsState,
   blogDetailsSelector,
@@ -16,8 +21,13 @@ import {
   fetchBriefBlogsByTypeAsyncThunk
 } from 'redux/blogs/BlogsAsyncThunks'
 
+
 import {
-  BlogDetailsDataProps
+  UPDATE_USER_CASES
+} from 'utilities/constants'
+
+import {
+  BlogDataProps
 } from 'types/index.d.ts'
 
 export const {
@@ -31,7 +41,7 @@ export const {
      * @param {string} blogId Id của blog.
      * @param {string} typeOfBriefBlogs Loại blog.
      * @param {BlogDataProps} updateData Dữ liệu của blog, không cần thiết là phải đầy đủ các trường dữ liệu.
-     * @param {number} blogIndex Index của blog trong mảng `data` của briefPlace, mặc định = 0.
+     * @param {number} blogIndex Index của blog trong mảng `data` của briefBlog, mặc định = 0.
      */
     updateBriefBlog: function(blogId, updateData, blogIndex = 0) {
       dispatch(updateBriefBlogState({blogId, typeOfBriefBlogs, updateData, blogIndex}));
@@ -39,14 +49,14 @@ export const {
     /**
      * Hàm này dùng để tăng skip dữ liệu của một loại brief blog.
      */
-    inscreaseSkip: function() {
-      dispatch(inscreaseSkipBriefBlogsAmountState(typeOfBriefBlogs));
+    increaseSkip: function() {
+      dispatch(increaseSkipBriefBlogsAmountState(typeOfBriefBlogs));
     },
     /**
      * Hàm này dùng để giảm skip dữ liệu của một loại brief blog.
      */
-    descreaseSkip: function() {
-      dispatch(descreaseSkipBriefBlogsAmountState(typeOfBriefBlogs));
+    decreaseSkip: function() {
+      dispatch(decreaseSkipBriefBlogsAmountState(typeOfBriefBlogs));
     },
     /**
      * Hàm này dùng để clear dữ liệu của brief blog.
@@ -109,7 +119,7 @@ export const {
     },
     /**
      * Hàm này dùng để thêm dữ liệu chi tiết của một blog.
-     * @param {BlogDetailsDataProps} blog Dữ liệu chi tiết của blog (có thể không)
+     * @param {BlogDataProps} blog Dữ liệu chi tiết của blog (có thể không)
      */
     addBlogDetails: function(blog) {
       dispatch(addBlogDetailsState(blog))
@@ -142,3 +152,92 @@ export const {
     },
   }
 })();
+
+/**
+ * Hook này tạo ra các functions cho việc tương tác với Blog, còn ý tưởng như nào thì ae sang đọc file
+ * `useBlog`, t cũng có để ở đó rồi.
+ * @param {BlogDataProps} blog Dữ liệu của blog.
+ * @returns
+ * @example
+ * ...
+ * import { useBlogInteractionAPI } from 'customHooks/useBlog'
+ * 
+ * function MyComponent({blog, blogIndex}) {
+ *   // Ta có likeBlog là 1 interact action
+ *   let { extendedBlogInfo, likeBlog } = useBlogInteractionAPI(blog);
+ * 
+ *   let handleLikeButton = () => likeBlog(
+ *     // Hàm này sẽ được gọi khi 
+ *     (data, state) => updateBlogDetail(blog.blog_id, blogIndex, { isLiked: state }),
+ *     (state) => updateBlogDetail(blog.blog_id, blogIndex, { isLiked: state })
+ *   )
+ * }
+ * ...
+ */
+export function useBlogInteractionActions(blog) {
+  const [extendedBlogInfo, setExtendedBlogInfo] = React.useState({
+    isLiked: blog.isLiked ? true : false
+  });
+
+  const createToggleInteractionActionsFunc = React.useCallback(
+    /**
+     * @param {"isLiked"} toggleInteraction
+     * @param {string} updateCaseWhenActive 
+     * @param {string} updateCaseWhenInActive 
+     * @returns 
+     */
+    (toggleInteraction, updateCaseWhenActive, updateCaseWhenInActive) => {
+      /**
+       * @param {(data: any, state: boolean) => {}} callWhenAPIResolve Callback gọi khi API resolve
+       * @param {(state: boolean) => {}} callWhenAPIReject Callback gọi khi API reject
+       */
+      return function(callWhenAPIResolve, callWhenAPIReject) {
+        setExtendedBlogInfo(prevState => {
+          let state = true;
+          let updateCase = updateCaseWhenActive;
+          if(prevState[toggleInteraction]) {
+            state = false;
+            updateCase = updateCaseWhenInActive;
+          }
+          let data = {
+            updateCase: updateCase,
+            updateData: blog._id
+          }
+          updateUserByCaseAPI(data)
+          .then(data => {
+            // Update lên store.
+            if(callWhenAPIResolve) callWhenAPIResolve(data, state)
+          })
+          .catch(error => {
+            if(callWhenAPIReject) callWhenAPIReject(!state)
+            setExtendedBlogInfo(prevState => ({...prevState, [toggleInteraction]: !state}))
+            console.error(error.message)
+          })
+          return {...prevState, [toggleInteraction]: state}
+        })
+      }
+  }, [])
+
+  /**
+   * Hàm này dùng để yêu thích một blog, nó sẽ gửi id của blog về server và tự server nó sẽ xử lý.
+   */
+  const { likeBlog } = React.useMemo(() => ({
+    /**
+     * Hàm này dùng để yêu thích/bỏ yêu thích một địa điểm nào đó. Nhận vào hai tham số là
+     * `callWhenAPIResolve` và `callWhenAPIReject`
+     */
+    likeBlog: createToggleInteractionActionsFunc("isLiked", UPDATE_USER_CASES["addEle:savedBlogs"], UPDATE_USER_CASES["removeEle:savedBlogs"]),
+  }), [])
+
+  React.useEffect(() => {
+    // console.log("Isliked from blog: ", Boolean(blog.isLiked));
+    if(Boolean(blog.isLiked) !== extendedBlogInfo.isLiked) {
+      setExtendedBlogInfo(prevState => ({...prevState, isLiked: Boolean(blog.isLiked)}))
+    }
+  }, [blog.isLiked, blog.isVisited]);
+
+  return {
+    extendedBlogInfo,
+    likeBlog
+  }
+}

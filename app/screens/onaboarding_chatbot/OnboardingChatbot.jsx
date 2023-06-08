@@ -23,7 +23,7 @@ const OnboardingChatbot = () => {
           style={styles.btnAction}
           onPress={() => {
             dispatch(updateStatusBar(false))
-            navigation.replace('ChatBotNavigator')}
+            navigation.replace('ChatBotScreen')}
           }
         >
           <Text style={styles.textBtnAction}>Trải nghiệm ngay</Text>

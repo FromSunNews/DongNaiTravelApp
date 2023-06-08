@@ -229,7 +229,7 @@ export const languageData = {
   exploreScreen: {
     banner_button: {
       vi: 'Xem vị trí của bạn trên bản đồ',
-      en: ' Let’s see your location in map'
+      en: 'Let’s see your location in map'
     },
     place_card_recommended: {
       vi: 'Đề xuất',
@@ -480,6 +480,32 @@ export const languageData = {
       en: 'Version'
     }
   },
+  mapScreen: {
+    find_placeholder: {
+      vi: "Bạn muốn đi đâu?",
+      en:"Where do you want to go?"
+    },
+    setting_map: {
+      vi: "Cài đặt bản đồ",
+      en:"Setting Map"
+    },
+    your_router: {
+      vi: "Thông tin tuyến đường của bạn",
+      en:"Your route's infomation"
+    },
+    router_title: {
+      vi: "Tuyến đường",
+      en:"Route"
+    },
+    choose_a_des_place: {
+      vi: "Chọn một nơi đến",
+      en: "Choose a destination place"
+    },
+    choose_an_origin_place: {
+      vi: "Chọn một nơi xuất xứ",
+      en:"Choose an origin place"
+    }
+  },
   
   // Component
   notificationBottomSheet: {
@@ -497,5 +523,63 @@ export const languageData = {
       vi: 'Trang chủ',
       en: 'Home'
     }
-  }
+  },
+  filter: {
+    header_title: {
+      vi: "Bộ lọc",
+      en: "Filter"
+    },
+    reset: {
+      vi: "Cài lại",
+      en:"Reset"
+    },
+    save: {
+      vi: "Lưu",
+      en: "Save"
+    },
+    category: {
+      vi: "Danh mục",
+      en: "Category"
+    },
+    select_category: {
+      vi: "Chọn danh mục",
+      en: "Select category"
+    },
+    have_been_selected: {
+      vi: "đã được chọn",
+      en: "have been selected"
+    },
+    sort_by: {
+      vi: "Sắp xếp theo",
+      en: "Sort by"
+    },
+    price_levels: {
+      vi: "Cấp độ",
+      en: 'Price level'
+    },
+    Level: {
+      vi: "Cấp",
+      en: "Level"
+    },
+    search_within_radius: {
+      vi: "Tìm kiếm trong bán kính",
+      en: "Search within radius"
+    },
+    meters: {
+      vi: "Mét",
+      en: "Meters"
+    },
+    search_from_location: {
+      vi: "Tìm kiếm từ vị trí",
+      en: "Search from location"
+    },
+    reposition: {
+      vi: "Định vị lại",
+      en:"Reposition"
+    },
+    save_location: {
+      vi: "Lưu vị trí",
+      en: "Save location"
+    }
+ }
 }

@@ -41,7 +41,7 @@ const HomeNavigator=({ navigation })=>{
                   typeOfButton="opacity"
                   onPress={() => {
                     dispatch(updateStatusBar(true))
-                    navigation.navigate("OnboardingChatBot", {screen: 'OnboardingChatBot'})
+                    navigation.navigate("ChatBotNavigator", {screen: 'OnboardingChatBot'})
                   }}
                   setIcon={(isActive, currentLabelStyle) => (
                     <FontAwesome5 name="robot" size={16} style={currentLabelStyle} />
