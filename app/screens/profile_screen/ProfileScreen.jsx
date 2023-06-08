@@ -459,7 +459,7 @@ function ProfileScreen({ route, navigation}) {
               <View style={styles.blog_title_container}>
                 <Text style={[styles.blog_title,{color:themeColor.fourth}]}>{langData.blog_list[langCode]}</Text>
               </View>
-              <View style={[styles.blog_container,{backgroundColor:themeColor.sub_primary}]}>
+              {/* <View style={[styles.blog_container,{backgroundColor:themeColor.sub_primary}]}>
                 {
                   userBlogData.map(blog=>(
                     <RectangleButton onPress={()=>navigation.navigate("BlogDetailScreen")} defaultColor="">
@@ -467,7 +467,7 @@ function ProfileScreen({ route, navigation}) {
                     </RectangleButton>
                   ))
                 }
-              </View>
+              </View> */}
             </View>
           </View>
         </View>

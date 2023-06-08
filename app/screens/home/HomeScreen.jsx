@@ -190,7 +190,7 @@ const HomeScreen = ({navigation}) => {
                         {
                           wind ?(
                           <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5,paddingHorizontal:5,color:themeColor.ext_second}}>{`${wind}`}
-                            <AppText style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}}>Km/h</AppText>
+                            <AppText style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second,paddingHorizontal:5}}>Km/h</AppText>
                           </AppText>
                           ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5,marginTop:4}}>
                               <AppText style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}}>km/h</AppText>
