@@ -12,7 +12,7 @@ import { selectCurrentMap } from 'redux/map/mapSlice'
 
 import { AppText, VerticalPlaceCard, VerticalPlaceCardSkeleton } from 'components';
 
-import { GiftedChat, Bubble, InputToolbar, Actions, Composer, Send } from 'react-native-gifted-chat'
+import { GiftedChat, Bubble, InputToolbar, Actions, Composer, Send, F } from 'react-native-gifted-chat'
 
 import { getPlacesAPI } from 'request_api';
 import { weatherIcons } from 'utilities/mapdata';
@@ -22,8 +22,6 @@ import moment from 'moment/moment'
 
 import { BRIEF_PLACE_DATA_FIELDS } from 'utilities/constants';
 import MessageFeature from 'components/message_feature/MessageFeature'
-
-
 
 
 const botAvatar = require('../../assets/images/avatar_chatbot.jpg')
@@ -212,7 +210,7 @@ const ChatBotScreen = () => {
         borderWidth: 1,
         borderRadius: 8,
         borderColor: app_c.HEX.ext_primary,
-        paddingTop: 10.5,
+        paddingTop: 11.5,
         paddingHorizontal: 12,
         marginLeft: 18,
         marginRight: 8,
@@ -242,11 +240,11 @@ const ChatBotScreen = () => {
   )
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/* https://www.npmjs.com/package/react-native-gifted-chat */}
       <GiftedChat 
         // alignTop
-        // isTyping={true}
+        isTyping={true}
         // multiline={false}
         // renderUsernameOnMessage
         alwaysShowSend
@@ -260,11 +258,18 @@ const ChatBotScreen = () => {
         // renderInputToolbar={renderInputToolbar}
         user={{_id: 1}}
         scrollToBottom
-
+        scrollToBottomComponent={() => (
+          <Ionicons
+            name="arrow-down"
+            size={25}
+            color={app_c.HEX.ext_second}
+          />
+        )}
         // renderInputToolbar={renderInputToolbar}
         // renderActions={renderActions}
         renderComposer={renderComposer}
         renderSend={renderSend}
+        // renderFooter={renderFooter}
         // renderAvatar={renderAvatar}
         // renderSystemMessage={renderSystemMessage}
         // renderMessage={renderMessage}
@@ -280,7 +285,7 @@ const ChatBotScreen = () => {
         //   },
         // ]}
       />
-    </View>
+    </SafeAreaView>
   )
 }
 
