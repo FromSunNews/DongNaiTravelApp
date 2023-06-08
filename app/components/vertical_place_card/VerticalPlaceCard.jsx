@@ -161,7 +161,7 @@ const VerticalPlaceCard = ({
         </View>
       }
     </View>
-  ), [extendedPlaceInfo.isLiked, place.rating, place.numberOfVisited, place.user_ratings_total])
+  ), [extendedPlaceInfo.isLiked, place.rating, place.user_favorites_total, place.user_ratings_total])
 }
 
 export default withPlaceCard(VerticalPlaceCard)

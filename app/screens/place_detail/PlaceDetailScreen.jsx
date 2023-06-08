@@ -51,7 +51,8 @@ import {
   MarkFormat,
   HorizontalPlaceCard,
   HorizontalPlaceCardSkeleton,
-  ReviewSectionPromise
+  ReviewSectionPromise,
+  Speech
 } from 'components'
 
 import styles from './PlaceDetailScreenStyles'
@@ -242,14 +243,12 @@ const AboutSlide = ({placeId}) => {
   const langData = useSelector(selectCurrentLanguage).data?.placeDetailScreen
 
   const placeDetails = usePlaceDetailsState(placeId);
-  const { playAudioAsync, stopAudioAsync, prepareMP3Async, canPlay } = useAudio();
-
-  const [voice, setVoice] = React.useState(false);
+  
   const [relatedPlaces, setRelatedPlaces] = React.useState([]);
   
   const imageUrls = placeDetails.place_photos ? placeDetails.place_photos : [];
   const type = placeDetails.types ? placeDetails.types[0] : "";
-  const speechMP3Url = placeDetails.content ? placeDetails.content.speech[langCode] : "";
+  const speech = placeDetails.content ? placeDetails.content.speech[langCode] : "";
 
   React.useEffect(() => {
     if(relatedPlaces.length === 0) {
@@ -260,83 +259,15 @@ const AboutSlide = ({placeId}) => {
       })
       .catch(error => console.error(error))
     }
-
-    if(Boolean(speechMP3Url)) {
-      let audioVoicePrefix = langCode === "vi" ? "VN" : langCode.toUpperCase();
-      let url = voice ? speechMP3Url[`${audioVoicePrefix}_MALE_1`] : speechMP3Url[`${audioVoicePrefix}_FEMALE_1`]
-      prepareMP3Async(url);
-    }
-  }, [speechMP3Url, voice])
+  }, [])
 
   return (
     <View style={styles.pd_content_container}>
       {/* Read */}
-      <View style={[{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}, app_sp.ph_18, app_sp.mb_12]}>
-        <View>
-          <AppText font="h3" style={app_sp.mb_6}>Read</AppText>
-          <View style={{flex: 1, flexDirection: 'row'}}>
-            <RectangleButton
-              disabled={!canPlay}
-              typeOfButton='opacity'
-              onPress={playAudioAsync}
-              defaultColor='type_4'
-              style={[app_sp.me_6]}
-              overrideShape='capsule'
-            >
-              {
-                (isActive, currentLabelStyle) => (
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Ionicons style={currentLabelStyle} name="play-outline" />
-                    <AppText style={currentLabelStyle}> / </AppText>
-                    <Ionicons style={currentLabelStyle} name="pause-outline" />
-                  </View>
-                )
-              }
-            </RectangleButton>
-            <RectangleButton
-              disabled={!canPlay}
-              typeOfButton='opacity'
-              onPress={stopAudioAsync}
-              overrideShape='capsule'
-            >
-              {
-                (isActive, currentLabelStyle) => (
-                  <Ionicons style={currentLabelStyle} name="stop-outline" />
-                )
-              }
-            </RectangleButton>
-          </View>
-        </View>
-
-        <View>
-          <AppText font="h3" style={app_sp.mb_6}>Voice</AppText>
-          <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-            <RectangleButton
-              isActive={!voice}
-              disabled={!canPlay}
-              typeOfButton='opacity'
-              onPress={() => setVoice(false)}
-              style={[app_sp.me_6]}
-              overrideShape='capsule'
-            >
-              {
-                (isActive, currentLabelStyle) => <AppText style={currentLabelStyle}>Female</AppText>
-              }
-            </RectangleButton>
-            <RectangleButton
-              isActive={voice}
-              disabled={!canPlay}
-              typeOfButton='opacity'
-              onPress={() => setVoice(true)}
-              overrideShape='capsule'
-            >
-              {
-                (isActive, currentLabelStyle) => <AppText style={currentLabelStyle}>Male</AppText>
-              }
-            </RectangleButton>
-          </View>
-        </View>
-      </View>
+      <Speech
+        content={speech}
+        style={[app_sp.mb_12, app_sp.ph_18]}
+      />
 
       {/* Description */}
       <View style={[styles.pd_content_article, app_sp.ph_18]}>

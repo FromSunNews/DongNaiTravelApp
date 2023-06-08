@@ -44,6 +44,8 @@
     "html-entities": "^2.3.3",
     "lodash": "^4.17.21",
     "lottie-react-native": "5.1.4",
+    "markdown-to-quill-delta": "^0.7.0",
+    "md-to-quill-delta": "^1.1.1",
     "moment": "^2.29.4",
     "openrouteservice-js": "^0.2.0",
     "quill-delta-to-markdown": "^0.6.0",
@@ -73,6 +75,7 @@
     "react-native-shadow": "^1.2.2",
     "react-native-shadow-2": "^7.0.7",
     "react-native-svg": "^13.4.0",
+    "react-native-svg-transformer": "^0.14.3",
     "react-native-swiper": "^1.6.0",
     "react-native-toast-notifications": "^3.3.1",
     "react-native-vector-icons": "^9.2.0",
@@ -96,8 +99,7 @@
     "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-plugin-react": "^7.32.1",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-native": "^4.0.0",
-    "react-native-svg-transformer": "^0.14.3"
+    "eslint-plugin-react-native": "^4.0.0"
   },
   "private": true
 }

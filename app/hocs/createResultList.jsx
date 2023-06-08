@@ -1,5 +1,8 @@
 import {
-  View
+  View,
+  Pressable,
+  StyleProp,
+  ViewStyle
 } from 'react-native'
 import React from 'react'
 
@@ -8,6 +11,10 @@ import {
   SearchResultList
 } from 'components'
 
+import {
+  app_dms
+} from 'globals/styles'
+
 /**
  * @typedef SearchCreatorOptionsProps
  * @property {string} placeHolder Cái này là place holder.
@@ -15,6 +22,7 @@ import {
  * @property {(item: any, index: number) => string} keyExtractor Cái này là hàm set key cho mỗi `RenderItem`, bởi vì cái này nó dùng `FlatList`
  * @property {(props: any) => JSX.Element} renderResultItem Các function component để render kết quả.
  * @property {boolean} scrollEnabled Result list có thể scroll không? Mặc định là `true`
+ * @property {StyleProp<ViewStyle>} style style cho container.
  */
 
 /**
@@ -33,7 +41,8 @@ export function createSearchWithResultList(apis) {
     options = React.useMemo(() => Object.assign({}, {
       placeHolder: "Search...",
       resultListPosition: "normal",
-      scrollEnabled: true
+      scrollEnabled: true,
+      style: []
     }, options), []);
 
     if(!options.renderResultItem) {
@@ -41,32 +50,53 @@ export function createSearchWithResultList(apis) {
       return null;
     }
 
-    console.log("APIs: ", apis);
+    let hasResult = result.length > 1
+
+    const handleClearResult = () => {
+      setResult([])
+    }
 
     return (
-      <View
-        style={{
-          position: 'relative',
-          width: '100%',
-          zIndex: 10
-        }}
-      >
-        <Search
-          apis={apis}
-          placeHolder={options.placeHolder}
-          callBack={(searchString, data) => {
-            if(!data) return;
-            setResult(data);
-          }}
-        />
-        <SearchResultList
-          results={result}
-          resultListPosition={options.resultListPosition}
-          renderResultItem={options.renderResultItem}
-          keyExtractor={options.keyExtractor}
-          scrollEnabled={options.scrollEnabled}
-        />
-      </View>
+      <>
+      {
+        hasResult && (
+          <Pressable
+            style={{
+              flex: 1,
+              width: app_dms.screenWidth,
+              height: app_dms.screenHeight,
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              zIndex: 10
+            }}
+            onPress={handleClearResult}
+          />
+        )
+      }
+        <View
+          style={[{
+            position: 'relative',
+            zIndex: 10
+          }, options.style]}
+        >
+          <Search
+            apis={apis}
+            placeHolder={options.placeHolder}
+            callBack={(searchString, data) => {
+              if(!data) return;
+              setResult(data);
+            }}
+          />
+          <SearchResultList
+            results={result}
+            resultListPosition={options.resultListPosition}
+            renderResultItem={options.renderResultItem}
+            keyExtractor={options.keyExtractor}
+            scrollEnabled={options.scrollEnabled}
+          />
+        </View>
+      </>
     )
   }
 }

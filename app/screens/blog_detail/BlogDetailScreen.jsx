@@ -15,7 +15,13 @@ import DateTimeUtility from 'utilities/datetime'
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
-import { AppText, CircleButton, RectangleButton, MarkFormat } from 'components'
+import {
+  AppText,
+  CircleButton,
+  RectangleButton,
+  MarkFormat,
+  Speech
+} from 'components'
 
 import styles from './BlogDetailScreenStyle'
 import { app_sp } from 'globals/styles'
@@ -54,7 +60,7 @@ const BlogDetailScreen = ({route, navigation}) => {
     <View style={{flex: 1}}>
       <ScrollView style={[styles.bd_container,{backgroundColor: themeColor.primary}]}>
           {/* Author, Blog information section */}
-        <View style={[styles.bd_header, app_sp.mt_12,{borderBottomColor: themeColor.fourth,}]}>
+        <View style={[styles.bd_header, app_sp.mt_12,{borderBottomColor: themeColor.fourth}]}>
           <View style={[styles.bd_row, app_sp.mb_12, { justifyContent: 'space-between' }]}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <CircleButton
@@ -120,6 +126,12 @@ const BlogDetailScreen = ({route, navigation}) => {
               )}
             </RectangleButton>
           </View>
+
+          {/* Speech, tạm thời vẫn chưa có, cho nên là chờ ở đây thôi */}
+          <Speech
+            content={""}
+            style={app_sp.mt_12}
+          />
         </View>
 
         {/* Blog Content */}
