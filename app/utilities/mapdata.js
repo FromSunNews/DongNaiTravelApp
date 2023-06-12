@@ -2088,28 +2088,40 @@ export const mapStandardStyle = [
 export const typeModeTransport = [
   {
     id: '1',
-    title: 'Car',
+    title: {
+      vi: "Xe hơi",
+      en: 'Car',
+    },
     icon: 'car',
     modeGCP: 'DRIVE',
     modeORS: 'driving-car',
   },
   {
     id: '2',
-    title: 'Motorcycle',
+    title: {
+      vi: "Xe máy",
+      en: 'Motorcycle',
+    },
     icon: 'motorcycle',
     modeGCP: 'TWO_WHEELER',
     modeORS: 'driving-car',
   },
   {
     id: '3',
-    title: 'Bicyle',
+    title: {
+      vi: "Xe đạp",
+      en: 'Bicyle',
+    },
     icon: 'bicycle',
     modeGCP: 'BICYCLE',
     modeORS: 'cycling-regular',
   },
   {
     id: '4',
-    title: 'Walk',
+    title: {
+      vi: "Đi bộ",
+      en: 'Walk',
+    },
     icon: 'walking',
     modeGCP: 'WALK',
     modeORS: 'foot-walking'

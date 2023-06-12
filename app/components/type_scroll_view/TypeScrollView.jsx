@@ -54,6 +54,7 @@ import { ViewStyles } from 'types/index.d'
  */
 const TypeScrollView = ({
   types = "",
+  labels = "",
   scrollStyle = {},
   containerStyle = {},
   buttonStyle = 'capsule',
@@ -64,8 +65,10 @@ const TypeScrollView = ({
   // các type buttons rồi.
   // Nếu chưa thì trả về cho typesArr là một mảng gồm 5 phần tử để làm skeletion loading.
   const typesArr = React.useMemo(() => types === "" ? [1, 2, 3, 4, 5] : types.split(";"), [types]);
+  const labelsArr = React.useMemo(() => labels === "" ? [1, 2, 3, 4, 5] : labels.split(";"), [labels]);
   // Bời vì typesArr là số cho nên là mình check luôn types ở khúc này. Trả về tương tự như typesArr.
   const typesArrInTitleCase = React.useMemo(() => types === "" ? [1, 2, 3, 4, 5] : typesArr.map(type => StringUtility.toTitleCase(type)), [typesArr]);
+  const labelsArrInTitleCase = React.useMemo(() => labels === "" ? [1, 2, 3, 4, 5] : labelsArr.map(type => StringUtility.toTitleCase(type)), [labelsArr]);
 
   const [currenttypeIndex, setTypeIndex] = React.useState(0);
   const [isParentLayouted, setIsParentLayouted] = React.useState(false);
@@ -168,7 +171,7 @@ const TypeScrollView = ({
                       style={app_sp.me_12}
                     >
                       {(isActive, currentLabelStyle) => (
-                        <AppText style={currentLabelStyle} font="body1">{typesArrInTitleCase[index]}</AppText>
+                        <AppText style={currentLabelStyle} font="body1">{labelsArrInTitleCase[index]}</AppText>
                       )}
                     </RectangleButton>
                   )

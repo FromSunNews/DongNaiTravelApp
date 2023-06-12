@@ -318,7 +318,8 @@ function ProfileScreen({ route, navigation}) {
                   activeColor={themeMode === 'light' ? 'type_1' : 'type_2'}
                   typeOfButton="opacity"
                   style= {{
-                    flex: 0.4
+                    flex: 0.4,
+                    backgroundColor: app_c.HEX.third
                   }}
                   onPress={() => navigation.navigate("ViewStatsScreen")}
                 >
@@ -443,7 +444,7 @@ function ProfileScreen({ route, navigation}) {
           <View style={styles.blog_block}>
             {
               isMyProfile &&
-              <TouchableOpacity style={[styles.btn_create_blog,{backgroundColor: themeColor.fourth}]} onPress={()=>navigation.navigate("CreatePostScreen")}>
+              <TouchableOpacity style={[styles.btn_create_blog,{backgroundColor: themeColor.ext_second}]} onPress={()=>navigation.navigate("CreatePostScreen")}>
                 <MaterialCommunityIcons
                   style={{ color: themeColor.ext_primary, marginRight: 6 }}
                   name="pencil-outline"
@@ -452,14 +453,14 @@ function ProfileScreen({ route, navigation}) {
                 <Text style={[styles.btn_create_blog_name,{color:themeColor.ext_primary,}]}>{langData.write_new_blog[langCode]}</Text>
               </TouchableOpacity>
             }
-            <TouchableOpacity style={[styles.btn_manage_blog,{backgroundColor:themeColor.fourth}]}>
+            <TouchableOpacity style={[styles.btn_manage_blog,{backgroundColor:themeColor.ext_second}]}>
               <Text style={[styles.btn_manage_blog_name,{color:themeColor.primary}]}>{langData.manage_blogs[langCode]}</Text>
             </TouchableOpacity>
             <View style={styles.blogs_list}>
               <View style={styles.blog_title_container}>
                 <Text style={[styles.blog_title,{color:themeColor.fourth}]}>{langData.blog_list[langCode]}</Text>
               </View>
-              <View style={[styles.blog_container,{backgroundColor:themeColor.sub_primary}]}>
+              {/* <View style={[styles.blog_container,{backgroundColor:themeColor.sub_primary}]}>
                 {
                   userBlogData.map(blog=>(
                     <RectangleButton onPress={()=>navigation.navigate("BlogDetailScreen")} defaultColor="">
@@ -467,7 +468,7 @@ function ProfileScreen({ route, navigation}) {
                     </RectangleButton>
                   ))
                 }
-              </View>
+              </View> */}
             </View>
           </View>
         </View>

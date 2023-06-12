@@ -65,7 +65,6 @@ const VerticalBlogCard = ({
   getTextContentInHTMLTag,
   handlePressImageButton,
   handleLikeButton,
-  handleVisitButton,
   ...props
 }) => {
   const containerStyle = ComponentUtility.mergeStyle(styles.card, props.style);
@@ -82,13 +81,13 @@ const VerticalBlogCard = ({
     : blog.author.displayName
 
   return React.useMemo(() => (
-    <View {...props} style={[containerStyle,{backgroundColor: themeColor.ext_primary}]}>
+    <View {...props} style={[containerStyle,{backgroundColor: themeColor.primary}]}>
       {/* Image */}
       <RectangleButton
         isOnlyContent
         typeOfButton="none"
         overrideShape="rounded_4"
-        onPress={()=>navigation.navigate("BlogDetailScreen")}
+        onPress={handlePressImageButton}
       >
         <Image source={{ uri: blog.avatar ? blog.avatar : undefined }} style={[styles.card_image,{backgroundColor: themeColor.ext_primary,}]} />
       </RectangleButton>

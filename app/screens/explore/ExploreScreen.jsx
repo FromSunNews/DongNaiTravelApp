@@ -51,7 +51,6 @@ const ExploreScreen = () => {
   
   const [type, setType] = React.useState("all");
   const [isOnTop, setIsOnTop] = React.useState(true);
-  const [isReload, setIsReload] = React.useState(false);
 
   const navigation = useNavigation();
   const {
@@ -89,10 +88,6 @@ const ExploreScreen = () => {
     } else {
       showBannderButton(false)
     }
-
-    if(val <= -100 && !isReload) {
-      setIsReload(true);
-    }
   }
 
   const handleEndReach = e => {
@@ -107,16 +102,6 @@ const ExploreScreen = () => {
     }
     // dispatch(updateSkipBriefPlacesAmount({typeOfBriefPlaces: type, skip: 5}));
   }, [type]);
-
-  React.useEffect(() => {
-    if(exploreInfo.current.placesInstance !== places && isReload) {
-      exploreInfo.current.placesInstance = places;
-      setIsReload(false);
-    }
-    if(isReload) {
-      reloadBriefPlacesByType(exploreInfo.current.briefPlaceDataFields);
-    }
-  }, [isReload, places]);
 
   return (
     <View style={{backgroundColor: themeColor.primary}}>
@@ -144,13 +129,6 @@ const ExploreScreen = () => {
           </View>
         )
       }
-      {
-        isReload && (
-          <ActivityIndicator
-            style={app_sp.mt_18}
-          />
-        )
-      }
       <FlatList
         data={places ? places.data : []}
         key={exploreInfo.current.placesInstance}
@@ -172,7 +150,8 @@ const ExploreScreen = () => {
         ListHeaderComponent={
           <TypeScrollView
             buttonStyle="capsule"
-            types={PLACE_QUALITIES[langCode]}
+            types={PLACE_QUALITIES[langCode].values}
+            labels={PLACE_QUALITIES[langCode].labels}
             callBack={setType}
             scrollStyle={[app_sp.ms_18, app_sp.pv_12]}
             containerStyle={{backgroundColor: themeColor.primary, ...app_sp.pv_10}}
@@ -180,6 +159,8 @@ const ExploreScreen = () => {
         }
         renderItem={item => <View style={app_sp.ph_18}><HorizontalPlaceCard typeOfBriefPlace={type} place={item.item} placeIndex={item.index} /></View>}
         keyExtractor={item => item._id}
+        onRefresh={() => {reloadBriefPlacesByType(exploreInfo.current.briefPlaceDataFields)}}
+        refreshing={false}
       />
     </View>
   )

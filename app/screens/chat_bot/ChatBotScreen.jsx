@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native'
+import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, ScrollView, Image, SafeAreaViewBase, Platform } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
 import styles from './ChatBotScreenStyles'
 import { useSelector } from 'react-redux'
@@ -138,7 +138,7 @@ const ChatBotScreen = () => {
       <View style={{
         display: 'flex',
         flexDirection: 'column',
-        width: '90%'
+        width: '90%',
       }}>
         <Bubble
           {...props}
@@ -162,8 +162,7 @@ const ChatBotScreen = () => {
     <InputToolbar
       {...props}
       containerStyle={{
-        backgroundColor: '#222B45',
-        paddingTop: 6,
+        backgroundColor: '#222B45'
       }}
       primaryStyle={{ alignItems: 'center' }}
     />
@@ -210,11 +209,13 @@ const ChatBotScreen = () => {
         borderWidth: 1,
         borderRadius: 8,
         borderColor: app_c.HEX.ext_primary,
-        paddingTop: 11.5,
+        paddingTop: Platform.OS === 'ios' ? 11.5 : 0,
         paddingHorizontal: 12,
         marginLeft: 18,
         marginRight: 8,
-        minHeight: 40
+        minHeight: 40,
+        marginBottom: Platform.OS === 'ios' ? 40 :10 ,
+        marginTop: Platform.OS === 'ios' ? 0 : 5 ,
       }}
     />
   )
@@ -229,6 +230,8 @@ const ChatBotScreen = () => {
         alignItems: 'center',
         justifyContent: 'center',
         marginRight: 8,
+        marginBottom: Platform.OS === 'ios' ? 40 :10 ,
+        marginTop: Platform.OS === 'ios' ? 0 : 5 ,
       }}
     >
       <FontAwesome
@@ -243,18 +246,20 @@ const ChatBotScreen = () => {
     <SafeAreaView style={styles.container}>
       {/* https://www.npmjs.com/package/react-native-gifted-chat */}
       <GiftedChat 
-        // alignTop
+        alignTop
         isTyping={true}
+        wrapInSafeArea={false}
         // multiline={false}
         // renderUsernameOnMessage
         alwaysShowSend
-        bottomOffset={10}
-        minInputToolbarHeight={50}
+        bottomOffset={22}
+        minInputToolbarHeight={Platform.OS === 'ios' ? 90 : 60}
         placeholder={'Nhập tin nhắn...'}
         messages={messages}
         onSend={(value) => handLeSendMessages(value)}
         onQuickReply={(quickReply) => handleQuicklyReply(quickReply)}
         renderBubble={renderBubble}
+        keyboardShouldPersistTaps={false}
         // renderInputToolbar={renderInputToolbar}
         user={{_id: 1}}
         scrollToBottom

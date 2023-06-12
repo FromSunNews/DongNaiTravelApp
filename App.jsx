@@ -29,6 +29,10 @@ import { API_ROOT } from 'utilities/constants'
 
 import { app_c, app_typo } from 'globals/styles'
 
+import { LogBox } from 'react-native';
+LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+LogBox.ignoreAllLogs();//Ignore all log notifications
+
 // Phương: này là dùng cho socket
 export const socketIoInstance = io(API_ROOT)
 

@@ -6,7 +6,8 @@ import {
   ScrollView,
   TouchableNativeFeedback,
   Platform,
-  Image
+  Image,
+  ImageBackground
 } from "react-native"
 import React, { useEffect,useState } from "react"
 import * as Location from "expo-location"
@@ -107,9 +108,7 @@ const HomeScreen = ({navigation}) => {
   console.log("🚀 ~ file: HomeScreen.jsx:105 ~ HomeScreen ~ iconId:", iconId)
 
   
-  const handleReloadLocation = ()=>{
-    getCurrentWeather()
-  }
+
 
   useEffect(()=>{
     if (currentMap.userLocation) {
@@ -138,8 +137,9 @@ const HomeScreen = ({navigation}) => {
       })
   }, [typeBlog]);
 
+  console.log("Place: ", places);
+
   return (
-    
     <ScrollView style={[styles.container,{backgroundColor: themeColor.primary,}]} showsVerticalScrollIndicator={false}>
       <View style={styles.home_content}>
         <View style={[styles.home_banner, {backgroundColor: themeColor.ext_third,}]}>
@@ -148,120 +148,128 @@ const HomeScreen = ({navigation}) => {
 
         {
           showPanelWeather &&
-          <TouchableOpacity >
             <View style={styles.home_temperature}>
-              <View style={[styles.temperature,{backgroundColor: themeColor.ext_primary,}]}>
-                <View style={styles.temperature_degrees}>
-                  {
-                    weatherImages.map(image => {
-                      if(image.id === iconId)
-                      {
-                        return  <Image source={image.image} style={styles.temperature_degrees_icon}/>
-                      }
-                      else null
-                    })
-                  }
-                  {
-                    celsius ? (
-                      <AppText style={[styles.temperature_degrees_info,{fontSize:22,marginTop:-4,color:themeColor.ext_second,}]}>{`${celsius}°C`}</AppText>
-                    ): <AppText style={[styles.temperature_degrees_info,{fontSize:22,marginTop:-4,color:themeColor.ext_second,}]}><Entypo name="minus"/><Entypo name="minus"/>{`°C`}</AppText>
-                  }
-                  {
-                    desWeather ? (
-                      <AppText numberOfLines={2}  
-                      style={[styles.temperature_degrees_info,{fontSize:14,paddingHorizontal:4,textAlign:"center",color:themeColor.ext_second,}]}
-                      >
-                        {capitalizeFirstLetter(desWeather)}
-                      </AppText>
-                    ) : <AppText numberOfLines={2} style={[styles.temperature_degrees_info,{fontSize:13,paddingHorizontal:4,textAlign:"center",color:themeColor.ext_second,}]}>
-                      {langData.desWeather[langCode]}
-                      </AppText>
-                  }
-                </View>
-                <View style={styles.temperature_other_info}>
-                  <View style={[styles.temperature_other_info_half]}>
-                    <View style={styles.temperature_other_info_quarter}>
-                      {/* <Fontisto name='wind' size={14} color={themeColor.ext_second}/> */}
-                      <AppText style={{...app_typo.fonts.normal.normal.h4,color:themeColor.ext_second}}>Sức gió:</AppText>
-                      {
-                        wind ?(
-                        <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h4,paddingHorizontal:5,color:themeColor.ext_second}}>{`${wind}`}
-                          <AppText style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}}>Km/h</AppText>
+             <ImageBackground source={require('../../assets/images/weather_forcast/5564526.jpg')}
+              resizeMode="cover" 
+              style={{flex:1,marginTop:14, }}
+              borderRadius={12}
+              >
+                <View style={[styles.temperature]}>
+                  <View style={styles.temperature_degrees}>
+                    {
+                      weatherImages.map(image => {
+                        if(image.id === iconId)
+                        {
+                          return  <Image source={image.image} style={styles.temperature_degrees_icon}/>
+                        }
+                        else null
+                      })
+                    }
+                    {
+                      celsius ? (
+                        <AppText style={[styles.temperature_degrees_info,{fontSize:22,marginTop:-4,color:themeColor.ext_second,}]}>{`${celsius}°C`}</AppText>
+                      ): <AppText style={[styles.temperature_degrees_info,{fontSize:22,marginTop:-4,color:themeColor.ext_second,}]}><Entypo name="minus"/><Entypo name="minus"/>{`°C`}</AppText>
+                    }
+                    {
+                      desWeather ? (
+                        <AppText numberOfLines={2}  
+                        style={[styles.temperature_degrees_info,{fontSize:14,paddingHorizontal:4,textAlign:"center",color:themeColor.ext_second,}]}
+                        >
+                          {capitalizeFirstLetter(desWeather)}
                         </AppText>
-                        ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h4,marginTop:4}}><Entypo name="minus"/><Entypo name="minus"/><Text style={{fontSize:12}}>km/h</Text></AppText>
-                      }
+                      ) : <AppText numberOfLines={2} style={[styles.temperature_degrees_info,{fontSize:13,paddingHorizontal:4,textAlign:"center",color:themeColor.ext_second,}]}>
+                        {langData.desWeather[langCode]}
+                        </AppText>
+                    }
+                  </View>
+                  <View style={styles.temperature_other_info}>
+                    <View style={[styles.temperature_other_info_half]}>
+                      <View style={styles.temperature_other_info_quarter}>
+                        {/* <Fontisto name='wind' size={14} color={themeColor.ext_secon d}/> */}
+                        <AppText style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}}>Sức gió:</AppText>
+                        {
+                          wind ?(
+                          <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5,paddingHorizontal:5,color:themeColor.ext_second}}>{`${wind}`}
+                            <AppText style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second,paddingHorizontal:5}}>Km/h</AppText>
+                          </AppText>
+                          ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5,marginTop:4}}>
+                              <AppText style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}}>km/h</AppText>
+                          </AppText>
+                        }
+                      </View>
+                      <AppText style={{fontSize:22,color:themeColor.ext_second}}>-</AppText>
+                      <View style={[styles.temperature_other_info_quarter,{ marginLeft:6}]}>
+                         <AppText style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}}>Độ ẩm:</AppText>
+                            {
+                              humidity ? (
+                                <AppText style={{...app_typo.fonts.normal.normal.h5,paddingHorizontal:5,color:themeColor.ext_second}}>{`${humidity}`}
+                                  <Text style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}} >%</Text>
+                                </AppText>
+                              ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5  ,marginTop:4}}>
+                                <Text style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}}>%</Text>
+                                </AppText>
+                            }
+                      </View>
                     </View>
-                    <AppText style={{fontSize:22,color:themeColor.ext_second}}>-</AppText>
-                    <View style={[styles.temperature_other_info_quarter,{ marginLeft:6}]}>
-                       <AppText style={{...app_typo.fonts.normal.normal.h4,color:themeColor.ext_second}}>Độ ẩm:</AppText>
+                    <View style={styles.temperature_other_info_half}>
+                      <View style={styles.temperature_other_info_quarter}>
+                        {/* <Entypo name='cloud' size={15} color={themeColor.ext_second}/> */}
+                        <AppText style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}}>Mây:</AppText>
+                        {
+                          cloud ? (
+                            <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5,paddingHorizontal:5,color:themeColor.ext_second}}>{`${cloud}`+`%`}</AppText>
+                          ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5,marginTop:4}}>
+                          <Text style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}}>%</Text>
+                          </AppText>
+                        }
+                      </View>
+                      <AppText style={{fontSize:22,color:themeColor.ext_second}}>-</AppText>
+                      <View style={[styles.temperature_other_info_quarter,{marginLeft:6}]}>
+                          {/* <MaterialCommunityIcons name='weather-fog' size={15} color={themeColor.ext_second}/> */}
+                          
+                        <AppText style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}}>Tầm nhìn:</AppText>
                           {
-                            humidity ? (
-                              <AppText style={{...app_typo.fonts.normal.normal.h4,paddingHorizontal:5,color:themeColor.ext_second}}>{`${humidity}`}
-                                <Text style={{...app_typo.fonts.normal.normal.h4,color:themeColor.ext_second}} >%</Text>
+                            vision ? (
+                              <AppText style={{...app_typo.fonts.normal.normal.h5,paddingHorizontal:5,color:themeColor.ext_second}}>{`${vision.toFixed(1)}`}
+                              <Text style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}}>Km</Text>
                               </AppText>
-                            ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5  ,marginTop:4}}>
-                              <Text style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}}>%</Text>
+                            ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5,marginTop:4}}>
+                              <Text style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}}>Km</Text>
                               </AppText>
                           }
+                      </View>
                     </View>
-                  </View>
-                  <View style={styles.temperature_other_info_half}>
-                    <View style={styles.temperature_other_info_quarter}>
-                      {/* <Entypo name='cloud' size={15} color={themeColor.ext_second}/> */}
-                      <AppText style={{...app_typo.fonts.normal.normal.h4,color:themeColor.ext_second}}>Mây:</AppText>
-                      {
-                        cloud ? (
-                          <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h4,paddingHorizontal:5,color:themeColor.ext_second}}>{`${cloud}`+`%`}</AppText>
-                        ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5,marginTop:4}}><Entypo name="minus"/><Entypo name="minus"/>
-                        <Text style={{...app_typo.fonts.normal.normal.h4,color:themeColor.ext_second}}>%</Text>
-                        </AppText>
-                      }
+                    <View style={[styles.temperature_other_info_half,{width:'100%',justifyContent:'center'}]}>
+                          <AppText style={{...app_typo.fonts.normal.normal.h5,color:app_c.HEX.ext_bg_tab}}>Chi tiết dự báo thời tiết</AppText>
+                          <Image style={{width:20,height:20,marginLeft:8}} source={require('../../assets/images/weather_forcast/weather-app.png')}/>
                     </View>
-                    <AppText style={{fontSize:22,color:themeColor.ext_second}}>-</AppText>
-                    <View style={[styles.temperature_other_info_quarter,{marginLeft:6}]}>
-                        {/* <MaterialCommunityIcons name='weather-fog' size={15} color={themeColor.ext_second}/> */}
-                        
-                      <AppText style={{...app_typo.fonts.normal.normal.h4,color:themeColor.ext_second}}>Tầm nhìn:</AppText>
-                        {
-                          vision ? (
-                            <AppText style={{...app_typo.fonts.normal.normal.h4,paddingHorizontal:5,color:themeColor.ext_second}}>{`${vision.toFixed(1)}`}
-                            <Text style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}}>Km</Text>
-                            </AppText>
-                          ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.sub0,marginTop:4}}>
-                            <Text style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}}>Km</Text>
-                            </AppText>
-                        }
-                    </View>
-                  </View>
-                  <View style={[styles.temperature_other_info_half,{width:'100%',justifyContent:'center'}]}>
-                        <AppText style={{...app_typo.fonts.normal.normal.h5,color:app_c.HEX.ext_bg_tab}}>Chi tiết dự báo thời tiết</AppText>
-                        <Image style={{width:20,height:20,marginLeft:8}} source={require('../../assets/images/weather_forcast/weather-app.png')}/>
                   </View>
                 </View>
-              </View>
+             </ImageBackground>
               {/* <TouchableOpacity style={[styles.temperature_reload,{backgroundColor: themeColor.ext_primary,}]} onPress={getCurrentWeather}>
                 <Ionicons name="reload-sharp" size={30} color={themeColor.fourth} />
               </TouchableOpacity> */}
             </View>
-          </TouchableOpacity>
+        
         }
 
         {/* Place and Blog*/}
-        <View style={styles.home_category}>
+        <View style={[{backgroundColor: themeColor.primary}]}>
           <TouchableOpacity style={styles.category_header} onPress={()=>navigation.navigate("ExploreNavigator")}>
             <AppText style={styles.category_name}>{langData.title_place[langCode]}</AppText>
             <AppText><Entypo name="chevron-small-right" size={40}/></AppText>
           </TouchableOpacity>
           <TypeScrollView
-            types={PLACE_QUALITIES[langCode]}
+            types={PLACE_QUALITIES[langCode].values}
+            labels={PLACE_QUALITIES[langCode].labels}
             callBack={setTypePlace}
-            scrollStyle={[app_sp.ms_18, app_sp.mb_12]}
-            containerStyle={{backgroundColor: themeColor.primary, ...app_sp.pv_10}}
+            scrollStyle={[app_sp.mb_12, app_sp.ps_18]}
+            containerStyle={[{backgroundColor: themeColor.primary}, app_sp.pv_10]}
           />
           <ScrollView 
             horizontal={true}
-            style={[{backgroundColor:themeColor.primary}, app_sp.pb_10]}
-            contentContainerStyle={{flexGrow: 1}}
+            style={[{backgroundColor:themeColor.primary}]}
+            contentContainerStyle={[{flexGrow: 1}, app_sp.pb_10]}
             showsHorizontalScrollIndicator={false}
           >
             {
@@ -279,33 +287,35 @@ const HomeScreen = ({navigation}) => {
             }
           </ScrollView>
         </View>
-        <View style={[styles.home_category,{backgroundColor: themeColor.primary}]}>
+        <View style={[{backgroundColor: themeColor.primary}]}>
           <TouchableOpacity style={styles.category_header} onPress={()=>navigation.navigate("BlogsNavigator")}>
             <AppText style={styles.category_name}>{langData.title_Blog[langCode]}</AppText>
             <AppText><Entypo name="chevron-small-right" size={40}/></AppText>
           </TouchableOpacity>
           <TypeScrollView
-            types={BLOG_QUANLITIES[langCode]}
-            callBack={(type) => {
-              setTypeBlog(type)
-            }}
-            scrollStyle={[{paddingLeft:16}, app_sp.pv_12]}
-            containerStyle={{backgroundColor: themeColor.primary}}
+            types={BLOG_QUANLITIES[langCode].values}
+            labels={BLOG_QUANLITIES[langCode].labels}
+            callBack={setTypeBlog}
+            scrollStyle={[app_sp.mb_12, app_sp.ps_18]}
+            containerStyle={[{backgroundColor: themeColor.primary}, app_sp.pv_10]}
           />
-          <View style={{ ...app_sp.mb_12}}>
-            <ScrollView horizontal={true} style={{paddingBottom:10,paddingLeft:16}} showsHorizontalScrollIndicator={false}>
-              {
-                !blogs
-                ? [1, 2, 3].map((value, index) => <VerticalBlogCardSkeleton key={value + index} style={{  marginLeft: index !== 0 ? 16 : 0,}} />)
-                : blogs.map((blog, index) => {
-                  let actualStyle = [app_sp.me_18];
-                  if(index === 0) actualStyle.push(app_sp.ms_18);
-                  return <VerticalBlogCard blog={blog} style={{ marginLeft: index !== 0 ? 16 : 2, marginRight : blogs.length - 1 === index ? 36 : 0}}/>
-                }
-                )
+          <ScrollView
+            horizontal={true}
+            style={[{backgroundColor:themeColor.primary}]}
+            contentContainerStyle={[{flexGrow: 1}, app_sp.pb_10]}
+            showsHorizontalScrollIndicator={false}
+          >
+            {
+              !blogs
+              ? [1, 2, 3].map((value, index) => <VerticalBlogCardSkeleton key={value + index} style={{  marginLeft: index !== 0 ? 16 : 0,}} />)
+              : blogs.map((blog, index) => {
+                let actualStyle = [app_sp.me_18];
+                if(index === 0) actualStyle.push(app_sp.ms_18);
+                return <VerticalBlogCard blog={blog} blogIndex={index} typeOfBriefBlog={typeBlog} style={actualStyle} key={blog._id}  />
               }
-            </ScrollView>
-          </View>
+              )
+            }
+          </ScrollView>
         </View>
       </View>
     </ScrollView>

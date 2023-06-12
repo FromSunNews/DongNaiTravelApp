@@ -42,8 +42,8 @@ const BottomSheetScroll = ({
         <BottomSheet
           ref={bottomSheetRef}
           snapPoints={snapPoints}
-          enableContentPanningGesture={false}
-          enablePanDownToClose={true}
+          // enableContentPanningGesture={false}
+          // enablePanDownToClose={true}
           onClose={() => closeTermCondition()}
           backgroundStyle={styles.bottomSheetContainer}
         >

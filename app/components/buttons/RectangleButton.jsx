@@ -15,6 +15,7 @@ import AppText from '../app_text/AppText'
 
 import styles from './ButtonsStyles'
 import { app_shdw, app_sp, app_sh, app_c } from 'globals/styles'
+import { withPreventDoubleClick } from 'hocs/preventDoubleClick'
 
 const default_style = {
   flexDirection: 'row',
@@ -101,8 +102,10 @@ const RectangleButton = ({
 
   props.underlayColor = props.underlayColor ? props.underlayColor : app_c.HEX.sub_third;
 
+  const ButtonEx = withPreventDoubleClick(Button);
+
   return (
-    <Button
+    <ButtonEx
       {...props}
       style={typeOfButton === "none" ? {} : contentContainerStyle}
     >
@@ -124,7 +127,7 @@ const RectangleButton = ({
         )
       }
       
-    </Button>
+    </ButtonEx>
   )
 }
 

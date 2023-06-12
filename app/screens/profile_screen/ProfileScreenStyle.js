@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
   },
   // start blog block
   blog_block:{
-    width:'100%',
+    paddingHorizontal: 18
   },
   btn_create_blog:{
     width:'100%',

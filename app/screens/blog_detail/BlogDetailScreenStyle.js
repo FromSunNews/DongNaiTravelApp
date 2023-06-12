@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   },
 
   bd_content_container: {
-    ...app_sp.mt_22
+    ...app_sp.mt_22,
   },
 
   bd_content_article: {

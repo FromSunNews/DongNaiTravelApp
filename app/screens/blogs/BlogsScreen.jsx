@@ -50,7 +50,6 @@ const BlogsScreen = () => {
   });
   const [type, setType] = React.useState("all");
   const [isOnTop, setIsOnTop] = React.useState(true);
-  const [isReload, setIsReload] = React.useState(false);
 
   const navigation = useNavigation();
   const {
@@ -71,7 +70,7 @@ const BlogsScreen = () => {
       if(blogsInfo.current.isEndReach) {
         if(blogs) {
           increaseSkip();
-          fetchBriefBlogsByType();
+          fetchBriefBlogsByType(blogsInfo.current.briefBlogDataFields);
         }
       }
       blogsInfo.current.isEndReach = false;
@@ -86,10 +85,6 @@ const BlogsScreen = () => {
     } else {
       showBannderButton(false)
     }
-
-    if(val <= -100 && !isReload) {
-      setIsReload(true);
-    }
   }
 
   const handleEndReach = e => {
@@ -102,16 +97,6 @@ const BlogsScreen = () => {
     }
     // dispatch(updateSkipBriefPlacesAmount({typeOfBriefPlaces: type, skip: 5}));
   }, [type]);
-
-  React.useEffect(() => {
-    if(blogsInfo.current.blogsInstance !== blogs && isReload) {
-      blogsInfo.current.blogsInstance = blogs;
-      setIsReload(false);
-    }
-    if(isReload) {
-      reloadBriefBlogsByType(blogsInfo.current.briefBlogDataFields);
-    }
-  }, [isReload, blogs]);
 
   return (
     <View style={{backgroundColor: themeColor.primary}}>
@@ -140,13 +125,6 @@ const BlogsScreen = () => {
           </View>
         )
       }
-      {
-        isReload && (
-          <ActivityIndicator
-            style={app_sp.mt_18}
-          />
-        )
-      }
       <FlatList
         data={blogs ? blogs.data : []}
         style={[styles.scroll_view_container,{backgroundColor: themeColor.primary,}]}
@@ -167,7 +145,8 @@ const BlogsScreen = () => {
         ListHeaderComponent={
           <TypeScrollView
             buttonStyle="capsule"
-            types={BLOG_QUANLITIES[langCode]}
+            types={BLOG_QUANLITIES[langCode].values}
+            labels={BLOG_QUANLITIES[langCode].labels}
             callBack={setType}
             scrollStyle={[app_sp.ms_18, app_sp.pv_12]}
             containerStyle={{backgroundColor: themeColor.primary, ...app_sp.pv_10}}
@@ -175,6 +154,8 @@ const BlogsScreen = () => {
         }
         renderItem={item => {console.log(item); return <View style={app_sp.ph_18}><HorizontalBlogCard blog={item.item} typeOfBriefBlog={type} /></View>}}
         keyExtractor={item => item._id}
+        onRefresh={() => reloadBriefBlogsByType(blogsInfo.current.briefBlogDataFields)}
+        refreshing={false}
       />
     </View>
   )

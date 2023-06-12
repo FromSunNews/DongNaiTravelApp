@@ -2,12 +2,15 @@ import {
   View,
   Text,
   Pressable,
-  ScrollView,
   Animated,
-  Image,
-  FlatList
+  Image
 } from 'react-native'
 import React from 'react'
+
+import {
+  ScrollView,
+  FlatList
+} from 'react-native-gesture-handler';
 
 import {
   getPlaceDetailsWithPipelineAPI,
@@ -252,7 +255,7 @@ const AboutSlide = ({placeId}) => {
 
   React.useEffect(() => {
     if(relatedPlaces.length === 0) {
-      let query = `limit=${5}&skip=${0}&filter=type:${type},except_by_placeid:${placeDetails.place_id}&fields=${BRIEF_PLACE_DATA_FIELDS}`;
+      let query = `limit=${5}&skip=${0}&quality=type:${type},except_by_placeid:${placeDetails.place_id}&fields=${BRIEF_PLACE_DATA_FIELDS}`;
       getPlacesAPI(query)
       .then(data => {
         setRelatedPlaces(data);
