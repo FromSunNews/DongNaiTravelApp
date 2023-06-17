@@ -15,13 +15,13 @@ const SettingNotificationsScreen = () => {
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.settingNotification
   //theme
-  const themeColor = useTheme();
+  const {themeColor} = useTheme();
 
   const currentSetting = useSelector(selectCurrentSetting)
   const dispatch = useDispatch()
 
   return (
-    <ScrollView style={[styles.container,{backgroundColor: themeColor.primary}]}>
+    <ScrollView style={[styles.container,{backgroundColor: themeColor.bg_primary}]}>
       <View style={styles.notification_container}>
         <View style={{...styles.dropdown_container}}>
           <DropDown 

@@ -47,7 +47,7 @@ const AppText = ({
   
 }) => {
   //theme
-  var themeColor = useTheme();
+  var {themeColor} = useTheme();
 
   let stylePropIsArray = props.style instanceof Array;
 

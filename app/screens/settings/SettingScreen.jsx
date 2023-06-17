@@ -14,12 +14,10 @@ import { useNavigation } from '@react-navigation/native'
 
 import { styles } from "./SettingScreenStyles";
 import { AppText, RectangleButton } from "components";
-import { app_c, app_dms, app_sh, app_typo } from "globals/styles";
 import DropDown from "components/drop_down/DropDown";
 import { values } from "lodash";
 import { selectCurrentLanguage } from "../../redux/language/LanguageSlice";
 import useTheme from "customHooks/useTheme";
-import { selectCurrentMode } from "redux/theme/ThemeSlice";
 
 
 const SettingScreen = ({ route, navigation }) => {
@@ -27,16 +25,16 @@ const SettingScreen = ({ route, navigation }) => {
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.settingScreen
   //theme
-  const themeColor = useTheme()
+  const {themeColor} = useTheme()
 
   const user = useSelector(selectCurrentUser)
   const dispatch = useDispatch()
 
   return (
-    <ScrollView style={[styles.container,{backgroundColor: themeColor.primary}]}>
+    <ScrollView style={[styles.container,{backgroundColor: themeColor.bg_second}]}>
       <View style={{paddingBottom:130}}>
-        <View style={styles.setting_genre}>
-          <View style={styles.genre_title_block}>
+        <View style={[styles.setting_genre]}>
+          <View style={[styles.genre_title_block]}>
             <AppText weight="bolder" font="body1">
               {langData.account[langCode]}
             </AppText>
@@ -62,7 +60,7 @@ const SettingScreen = ({ route, navigation }) => {
             <View style={[styles.genre_content, { ...styles.flexDirection }]}>
               <RectangleButton
                 overrideShape="rounded_8"
-                style={[styles.option_setting,{backgroundColor:app_c.HEX.ext_primary}]}
+                style={[styles.option_setting,{backgroundColor:themeColor.bg_tertiary}]}
                 handlePressButton={() => navigation.navigate("Places")}
               >
                 <AppText>
@@ -79,7 +77,7 @@ const SettingScreen = ({ route, navigation }) => {
               </RectangleButton>
               <RectangleButton
                 overrideShape="rounded_8"
-                style={[styles.option_setting,{backgroundColor:app_c.HEX.ext_primary}]}
+                style={[styles.option_setting,{backgroundColor:themeColor.bg_tertiary}]}
                 handlePressButton={() => navigation.navigate("Blogs")}
               >
                 <AppText>

@@ -1,7 +1,5 @@
 import {
   View,
-  SafeAreaView,
-  ScrollView,
   FlatList,
   LayoutAnimation,
   ActivityIndicator
@@ -32,7 +30,7 @@ import {
 } from 'components'
 
 import styles from './BlogsScreenStyles'
-import { app_sp, app_c } from 'globals/styles'
+import { app_sp } from 'globals/styles'
 import { useSelector } from 'react-redux'
 
 const BlogsScreen = () => {
@@ -40,7 +38,7 @@ const BlogsScreen = () => {
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.blogsScreen
   //theme
-  const themeColor = useTheme();
+  const { themeColor, themeMode } = useTheme();
 
   const blogsInfo = React.useRef({
     isFirstFetch: true,
@@ -99,25 +97,27 @@ const BlogsScreen = () => {
   }, [type]);
 
   return (
-    <View style={{backgroundColor: themeColor.primary}}>
+    <View style={{backgroundColor: themeColor.bg_second}}>
       {
         isOnTop && (
           <View
             style={[
               app_sp.ph_18,
-              app_sp.pt_12,
+              app_sp.mt_12,
               {
+                backgroundColor: themeColor.bg_second,
                 position: 'relative',
                 zIndex: 2,
               }
             ]}
           >
             <BannerButton
+              defaultColor ={ themeMode === 'light' ? 'type_3' : 'type_1_dark'}
               typeOfButton="highlight"
-              style={[app_sp.mt_12, {backgroundColor: themeColor.primary}]}
+              style={[app_sp.mt_12, {backgroundColor: themeColor.bg_second}]}
               toScreen={{screenName: "MapScreen"}}
               setRightIcon={(isActive, currentLabelStyle) =>
-                <Ionicons name="chevron-forward-outline" style={currentLabelStyle} size={25} />
+                <Ionicons name="chevron-forward-outline" style={currentLabelStyle} size={25}color={themeColor.ext_third} />
               }
             >
               {langData.banner_button[langCode]}
@@ -127,7 +127,7 @@ const BlogsScreen = () => {
       }
       <FlatList
         data={blogs ? blogs.data : []}
-        style={[styles.scroll_view_container,{backgroundColor: themeColor.primary,}]}
+        style={[styles.scroll_view_container,{backgroundColor: themeColor.bg_second}]}
         contentContainerStyle={{paddingBottom: 200}}
         onMomentumScrollEnd={handleExploreMomentumScrollEnd}
         onEndReached={handleEndReach}
@@ -149,7 +149,7 @@ const BlogsScreen = () => {
             labels={BLOG_QUANLITIES[langCode].labels}
             callBack={setType}
             scrollStyle={[app_sp.ms_18, app_sp.pv_12]}
-            containerStyle={{backgroundColor: themeColor.primary, ...app_sp.pv_10}}
+            containerStyle={{backgroundColor: themeColor.bg_second, ...app_sp.pv_10}}
           />
         }
         renderItem={item => {console.log(item); return <View style={app_sp.ph_18}><HorizontalBlogCard blog={item.item} typeOfBriefBlog={type} /></View>}}
