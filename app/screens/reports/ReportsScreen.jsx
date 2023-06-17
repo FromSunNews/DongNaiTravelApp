@@ -13,10 +13,10 @@ const ReportsScreen = () => {
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.settingReport
   //theme
-  const themeColor = useTheme();
+  const {themeColor} = useTheme();
 
   return (
-    <View style={[styles.container,{backgroundColor: themeColor.primary}]}>
+    <View style={[styles.container,{backgroundColor: themeColor.bg_primary}]}>
       <View style={{ ...styles.dropdown_container }}>
         <DropDown
           isParagraph={true}

@@ -54,7 +54,7 @@ function ProfileScreen({ route, navigation}) {
   //theme
   const themeMode = useSelector(selectCurrentMode).mode
   console.log("🚀 ~ file: ProfileScreen.jsx:56 ~ ProfileScreen ~ themeMode:", themeMode)
-  const themeColor = useTheme();
+  const {themeColor} = useTheme();
   
   const [currentUser, setCurrentUser] = useState(null)
   const [isFollowed, setIsFollowed] = useState(null)
@@ -237,7 +237,7 @@ function ProfileScreen({ route, navigation}) {
   }
   return (
     <>
-      <ScrollView style={[styles.wrapper,{backgroundColor: themeColor.primary}]}>
+      <ScrollView style={[styles.wrapper,{backgroundColor: themeColor.bg_second}]}>
         <View style={styles.container}>
           <View style={{ ...app_dms.screenWidth }}>
             <View>
@@ -303,7 +303,7 @@ function ProfileScreen({ route, navigation}) {
                 {currentUser?.followerIds.length} {langData.user_follower[langCode]}
               </Text>
               <Text>
-                <Entypo name="dot-single" size={20} color={themeColor.fourth} />
+                <Entypo name="dot-single" size={20} color={themeColor.ext_second} />
               </Text>
               <Text style={[styles.user_following,{color: themeColor.ext_second}]}>
                 {currentUser?.followingIds.length} {langData.user_following[langCode]}
@@ -392,7 +392,7 @@ function ProfileScreen({ route, navigation}) {
             <View style={styles.user_infos}>
               <View style={styles.user_info_block}>
                 <Text style={[styles.user_info_title, {color:themeColor.fourth}]}>{langData.bio[langCode]}</Text>
-                <Text style={[styles.user_bio_content,{color:themeColor.ext_second,}]}>{user.userBio}</Text>
+                <Text style={[styles.user_bio_content,{color:themeColor.ext_second}]}>{user.userBio}</Text>
               </View>
             </View>
             <View style={styles.user_infos}>
@@ -438,18 +438,18 @@ function ProfileScreen({ route, navigation}) {
                 </View>
               </View>
             </View>
-            <View style={[styles.line_horizontal,{borderBottomColor:themeColor.ext_second,}]}></View>
+            <View style={[styles.line_horizontal,{borderBottomColor:themeColor.seperator}]}></View>
           </View>
           <View style={styles.blog_block}>
             {
               isMyProfile &&
               <TouchableOpacity style={[styles.btn_create_blog,{backgroundColor: themeColor.fourth}]} onPress={()=>navigation.navigate("CreatePostScreen")}>
                 <MaterialCommunityIcons
-                  style={{ color: themeColor.ext_primary, marginRight: 6 }}
+                  style={{ color: themeColor.primary, marginRight: 6 }}
                   name="pencil-outline"
                   size={18}
                 />
-                <Text style={[styles.btn_create_blog_name,{color:themeColor.ext_primary,}]}>{langData.write_new_blog[langCode]}</Text>
+                <Text style={[styles.btn_create_blog_name,{color:themeColor.primary}]}>{langData.write_new_blog[langCode]}</Text>
               </TouchableOpacity>
             }
             <TouchableOpacity style={[styles.btn_manage_blog,{backgroundColor:themeColor.fourth}]}>
@@ -459,7 +459,7 @@ function ProfileScreen({ route, navigation}) {
               <View style={styles.blog_title_container}>
                 <Text style={[styles.blog_title,{color:themeColor.fourth}]}>{langData.blog_list[langCode]}</Text>
               </View>
-              <View style={[styles.blog_container,{backgroundColor:themeColor.sub_primary}]}>
+              <View style={[styles.blog_container,{backgroundColor:themeColor.bg_second}]}>
                 {
                   userBlogData.map(blog=>(
                     <RectangleButton onPress={()=>navigation.navigate("BlogDetailScreen")} defaultColor="">

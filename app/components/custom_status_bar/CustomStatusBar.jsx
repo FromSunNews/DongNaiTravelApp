@@ -7,12 +7,11 @@ import { useSelector } from 'react-redux';
 import { selectCurrentMode } from 'redux/theme/ThemeSlice';
 
 const CustomStatusBar = ({...props }) => {
-  const themeColor = useTheme();
-  const themeMode = useSelector(selectCurrentMode).mode
+  const {themeColor,themeMode} = useTheme();
   return(
-  <View style={[styles.statusBar, { backgroundColor:themeColor.primary }]}>
+  <View style={[styles.statusBar, { backgroundColor:themeColor.bg_second }]}>
     <SafeAreaView>
-      <StatusBar translucent backgroundColor={themeColor.primary} barStyle = {themeMode === 'light' ? "dark-content" : "light-content"} {...props} />
+      <StatusBar translucent backgroundColor={themeColor.bg_second} barStyle = {themeMode === 'light' ? "dark-content" : "light-content"} {...props} />
     </SafeAreaView>
   </View>)
 }

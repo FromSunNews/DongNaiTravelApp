@@ -10,8 +10,6 @@ import { AppText, CircleButton, RectangleButton, MarkFormat } from 'components'
 import styles from './BlogDetailScreenStyle'
 import { app_sp } from 'globals/styles'
 import useTheme from 'customHooks/useTheme'
-import { useSelector } from 'react-redux'
-import { selectCurrentMode } from 'redux/theme/ThemeSlice'
 
 const text = `### What is Lorem Ipsum?
 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
@@ -22,13 +20,12 @@ It is a long established fact that a reader will be distracted by the readable c
 
 const BlogDetailScreen = () => {
   //theme
-  const themeColor = useTheme();
-  const themeMode = useSelector(selectCurrentMode).mode
+  const {themeColor,themeMode} = useTheme();
   return (
     <View style={{flex: 1}}>
-      <ScrollView style={[styles.bd_container,{backgroundColor: themeColor.primary}]}>
+      <ScrollView style={[styles.bd_container,{backgroundColor: themeColor.bg_primary}]}>
           {/* Author, Blog information section */}
-        <View style={[styles.bd_header, app_sp.mt_12,{borderBottomColor: themeColor.fourth,}]}>
+        <View style={[styles.bd_header, app_sp.mt_12,{borderBottomColor: themeColor.seperator}]}>
           <View style={[styles.bd_row, app_sp.mb_12, { justifyContent: 'space-between' }]}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <CircleButton

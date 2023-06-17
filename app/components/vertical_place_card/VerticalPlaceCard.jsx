@@ -22,13 +22,12 @@ import AppText from 'components/app_text/AppText'
 import RectangleButton from 'components/buttons/RectangleButton'
 
 import styles from './VerticalPlaceCardStyles'
-import { app_sp } from 'globals/styles'
+import { app_shdw, app_sp } from 'globals/styles'
 
 import {
   PlaceDataProps,
   WithPlaceCardWrappedComponentProps
 } from 'types/index.d.ts'
-
 /**
  * @typedef VerticalPlaceCardProps
  * @property {PlaceDataProps} place Thông tin về một địa điểm của một nơi nào đó.
@@ -71,20 +70,23 @@ const VerticalPlaceCard = ({
   const langData = useSelector(selectCurrentLanguage).data?.homeScreen
 
   //theme
-  const themeColor = useTheme();
+  const {themeColor, themeMode} = useTheme();
+  const background = themeMode === 'light' ? themeColor.bg_second : themeColor.bg_tertiary
+  const dataBshdw = themeMode === 'light' ? 'type_1' : 'type_1_dark'
 
   let [city, province] = getTextContentInHTMLTag(place.adr_address);
 
   return React.useMemo(() => (
-    <View {...props} style={containerStyle}>
+    <View {...props} style={[containerStyle,{...app_shdw[dataBshdw],backgroundColor: background}]}>
       {/* Image */}
       <RectangleButton
+        boxShadowType={themeMode === 'light' ? 'type_1' : 'type_1_dark'}
         isOnlyContent
         typeOfButton="none"
         overrideShape="rounded_4"
         onPress={handlePressImageButton}
       >
-        <Image source={place.place_photos.length > 0 ? {uri: place.place_photos[0]} : {}} style={[styles.card_image, { backgroundColor: themeColor.ext_primary }]} />
+        <Image source={place.place_photos.length > 0 ? {uri: place.place_photos[0]} : {}} style={[styles.card_image, { backgroundColor: themeColor.bg_tertiary }]} />
       </RectangleButton>
       {/* Button & Recommended tag */}
       <View style={styles.card_mid}>
@@ -141,7 +143,7 @@ const VerticalPlaceCard = ({
         </RectangleButton>
       </View>
     </View>
-  ), [extendedPlaceInfo.isLiked, extendedPlaceInfo.isVisited, place.rating, place.numberOfVisited, place.user_ratings_total])
+  ), [extendedPlaceInfo.isLiked, extendedPlaceInfo.isVisited, place.rating, place.numberOfVisited, place.user_ratings_total,themeColor])
 }
 
 export default withPlaceCard(VerticalPlaceCard)

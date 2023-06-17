@@ -12,7 +12,8 @@ import RectangleButton from 'components/buttons/RectangleButton'
 import CircleButton from 'components/buttons/CircleButton'
 
 import styles from './HorizontalBlogCardStyles'
-import { app_c, app_sp } from 'globals/styles'
+import { app_c, app_shdw, app_sp } from 'globals/styles'
+import useTheme from 'customHooks/useTheme'
 
 /**
  * @typedef BlogProps
@@ -37,14 +38,19 @@ import { app_c, app_sp } from 'globals/styles'
  * @param {BlogProps} props.blog - Dữ liệu của blog, thông tin này chủ yếu là thông tin đã được làm gọn lại.
  * @returns Thẻ ngang chứa các thông tin cơ bản của một blog.
  */
-const HorizontalBlogCard = ({blog}) => {
+const HorizontalBlogCard = ({ blog }) => {
+  //theme
+  const {themeColor, themeMode} = useTheme();
+  //shadow for card
+  let shadw = themeMode === 'light' ? 'type_1' : 'type_1_dark'
+  let bg = themeMode === 'light' ? 'bg_second' : 'bg_tertiary'
   const navigation = useNavigation()
 
   const handlePressImageButton = () => {
     navigation.navigate({name: 'BlogDetailScreen'});
   }
   return (
-    <View style={styles.card}>
+    <View style={[styles.card,{backgroundColor: themeColor[bg], ...app_shdw[shadw]}]}>
       {/* Cột đâu tiên - Image Container */}
       <RectangleButton
         typeOfButton="highlight"
@@ -53,7 +59,7 @@ const HorizontalBlogCard = ({blog}) => {
         onPress={handlePressImageButton}
         style={app_sp.me_12}
       >
-        <ImageBackground style={styles.card_image_container} source={blog.avatar !== "" ? {uri: blog.avatar} : {}}>
+        <ImageBackground style={[styles.card_image_container,{backgroundColor: themeColor.bg_second,}]} source={blog.avatar !== "" ? {uri: blog.avatar} : {}}>
           {/*
             blog.isRecommended &&
             <View style={styles.card_recommended_mark_container}>
@@ -69,21 +75,21 @@ const HorizontalBlogCard = ({blog}) => {
           <View style={styles.card_user_container}>
             {
               blog.user.avatar === ""
-              ? (<Ionicons name="person-circle" color={app_c.HEX.ext_second} />)
+              ? (<Ionicons name="person-circle" color={themeColor.fourth} />)
               : (<Image source={{uri: blog.user.avatar}} />)
-            }<AppText font="body2" style={styles.card_text_color}>{" " + blog.user.name}</AppText>
+            }<AppText font="body2" style={{color: themeColor.fourth}}>{" " + blog.user.name}</AppText>
           </View>
           <View>
-            <AppText numberOfLines={2} font="h3" style={styles.card_title}>{blog.name}</AppText>
+            <AppText numberOfLines={2} font="h3" style={[styles.card_title,{color: themeColor.fourth}]}>{blog.name}</AppText>
           </View>
           <View style={styles.card_information_container}>
             <View style={styles.card_information_col}>
-              <AppText font="body2" style={styles.card_text_color}>
+              <AppText font="body2" style={{color:themeColor.fourth}}>
                 {DateTimeUtility.getShortDateString(blog.createdAt)}
               </AppText>
             </View>
             <View style={{...styles.card_information_col, alignItems: 'flex-end'}}>
-              <AppText font="body2" style={styles.card_text_color}>
+              <AppText font="body2" style={{color:themeColor.fourth}}>
                 <Ionicons name='time-outline' /> {DateTimeUtility.toMinute(blog.readTime)} min
               </AppText>
             </View>
@@ -113,7 +119,7 @@ const HorizontalBlogCard = ({blog}) => {
         <CircleButton
           isOnlyContent={true}
           setIcon={(isActive, currentLabelStyle) => (
-            <Ionicons name="share-outline" size={20} style={currentLabelStyle} />
+            <Ionicons name="share-outline" size={20} style={[currentLabelStyle,{color:themeColor.fourth}]} />
           )}
         />
       </View>

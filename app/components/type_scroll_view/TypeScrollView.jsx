@@ -10,6 +10,8 @@ import styles from './TypeScrollViewStyle'
 import { app_sp ,app_shdw } from 'globals/styles'
 
 import { ViewStyles } from 'types/index.d'
+import useTheme from 'customHooks/useTheme'
+import { useSelector } from 'react-redux'
 
 /**
  * @typedef TypeScrollViewProps
@@ -77,6 +79,8 @@ const TypeScrollView = ({
     buttonScrollContainerWidth: 0,
     isButtonPress: false,
   });
+  //theme
+  const {themeColor,themeMode} = useTheme();
 
   const direction = currenttypeIndex > buttonInfoRef.current.prevButtonIndex ? 1 : (-1);
   const lineTranslateAmin = new Animated.Value(lineIndexTranslateXStart * direction * -1);
@@ -166,6 +170,8 @@ const TypeScrollView = ({
                       key={slideName + 'button'}
                       onPress={handlePressTabSlider(index)}
                       style={app_sp.me_12}
+                      defaultColor={themeMode === 'light' ? 'type_2' : 'type_1_dark'}
+                      activeColor={themeMode === 'light' ? 'type_1' : 'type_1_dark'}
                     >
                       {(isActive, currentLabelStyle) => (
                         <AppText style={currentLabelStyle} font="body1">{typesArrInTitleCase[index]}</AppText>

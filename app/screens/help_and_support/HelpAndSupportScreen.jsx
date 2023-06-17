@@ -13,10 +13,10 @@ const HelpAndSupportScreen = () => {
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.settingHelpAndSupport
   //theme
-  const themeColor = useTheme();
+  const {themeColor} = useTheme();
 
   return (
-    <View style={[styles.container,{backgroundColor: themeColor.primary}]}>
+    <View style={[styles.container,{backgroundColor: themeColor.bg_primary}]}>
       <View style={{ ...styles.dropdown_container }}>
         <DropDown
           name={langData.send_email[langCode]}

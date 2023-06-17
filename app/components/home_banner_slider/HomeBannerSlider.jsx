@@ -13,8 +13,6 @@ const HomeBannerSlider = ()=>{
   const langCode = useSelector(selectCurrentLanguage).languageCode // vi or en 
   const [ banners, setBanner ] =  useState([])
 
-  console.log(langCode)
-
   useEffect(()=>{
     if(langCode === 'vi')
     {
@@ -25,7 +23,6 @@ const HomeBannerSlider = ()=>{
       setBanner(bannersEn)
     }
   })
-  console.log(banners)
   
   return (
     <View style={styles.container}>

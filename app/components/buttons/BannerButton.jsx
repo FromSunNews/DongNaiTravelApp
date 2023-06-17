@@ -1,49 +1,49 @@
-import { 
+import {
   View,
   TouchableOpacity,
   TouchableWithoutFeedback,
   TouchableHighlight,
   ImageBackground,
   Linking,
-  StyleSheet
-} from 'react-native'
-import React from 'react'
+  StyleSheet,
+} from "react-native";
+import React from "react";
 
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation } from "@react-navigation/native";
 
-import AppText from '../app_text/AppText'
+import AppText from "../app_text/AppText";
 
-import styles from './ButtonsStyles'
-import { app_sp, app_sh, app_c } from 'globals/styles'
-import useTheme from 'customHooks/useTheme'
+import styles from "./ButtonsStyles";
+import { app_sp, app_sh, app_c } from "globals/styles";
+import useTheme from "customHooks/useTheme";
 
 const default_style = {
-  width: '100%',
+  width: "100%",
   minHeight: 72,
-  overflow: 'hidden',
-  ...app_sh.rounded_8
-}
+  overflow: "hidden",
+  ...app_sh.rounded_8,
+};
 
 const banner_button_styles = StyleSheet.create({
   image: {
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     ...app_sp.p_12,
   },
-  
+
   lbl_container: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    width: '45%'
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    width: "45%",
   },
 });
 
 /**
  * __Creator__: @NguyenAnhTuan1912
- * 
+ *
  * Banner Button là một nút lớn trong app, có thể có background (ảnh), button này bao gồm 2 icon (trái và phải), text và background.
  * Được sử dụng ở những nơi đặc biệt, thường là để đi tới một nơi nào đó (như screen khác, app khác).
  * @param {object} props - Props của component.
@@ -77,7 +77,7 @@ const BannerButton = ({
   isChangeColorWhenActive = false,
   typeOfButton = "none",
   defaultColor = "type_1",
-  activeColor = "type_1",
+  activeColor = "type_2",
   fontOfText = "body0",
   imageUrl = "",
   hyperLink,
@@ -85,91 +85,128 @@ const BannerButton = ({
   style = {},
   setLeftIcon,
   setRightIcon,
-  handlePressButton
+  handlePressButton,
 }) => {
-  let canLoadLeftIcon = typeof setLeftIcon === 'function' && React.isValidElement(setLeftIcon());
-  let canLoadRightIcon = typeof setRightIcon === 'function' && React.isValidElement(setRightIcon());
+  let canLoadLeftIcon =
+    typeof setLeftIcon === "function" && React.isValidElement(setLeftIcon());
+  let canLoadRightIcon =
+    typeof setRightIcon === "function" && React.isValidElement(setRightIcon());
 
   //theme
-  const themeColor = useTheme();
-  console.log("🚀 ~ file: BannerButton.jsx:95 ~ themeColor:", themeColor)
+  const { themeColor } = useTheme();
 
-
-  if(isDisable) {
+  if (isDisable) {
     return (
       <TouchableOpacity
         disabled={isDisable}
-        style={{...style, ...default_style, ...styles.btn_disable}}
+        style={{ ...style, ...default_style, ...styles.btn_disable }}
       >
-        <ImageBackground source={{url: `${imageUrl}`}} resizeMode="cover" style={banner_button_styles.image}>
+        <ImageBackground
+          source={{ url: `${imageUrl}` }}
+          resizeMode="cover"
+          style={banner_button_styles.image}
+        >
           <View style={banner_button_styles.lbl_container}>
-            {canLoadLeftIcon && setLeftIcon(isActive = false, [styles.lbl_disable,{color: themeColor.ext_third}])}
-            {
-              canLoadLeftIcon
-              ? <AppText font={fontOfText} style={{...styles.lbl_disable,color: themeColor.ext_third, ...app_sp.ms_8}} numberOfLines={2}>{children}</AppText>
-              : <AppText font={fontOfText} style={[styles.lbl_disable,{color: themeColor.ext_third,}]} numberOfLines={2}>{children}</AppText>
-            }
+            {canLoadLeftIcon &&
+              setLeftIcon((isActive = false), [
+                styles.lbl_disable,
+                { color: themeColor.ext_third },
+              ])}
+            {canLoadLeftIcon ? (
+              <AppText
+                font={fontOfText}
+                style={{
+                  ...styles.lbl_disable,
+                  color: themeColor.ext_third,
+                  ...app_sp.ms_8,
+                }}
+                numberOfLines={2}
+              >
+                {children}
+              </AppText>
+            ) : (
+              <AppText
+                font={fontOfText}
+                style={[styles.lbl_disable, { color: themeColor.ext_third }]}
+                numberOfLines={2}
+              >
+                {children}
+              </AppText>
+            )}
           </View>
-          {canLoadRightIcon && setRightIcon(isActive = false, [styles.lbl_disable,{color: themeColor.ext_third}])}
+          {canLoadRightIcon &&
+            setRightIcon((isActive = false), [
+              styles.lbl_disable,
+              { color: themeColor.ext_third },
+            ])}
         </ImageBackground>
       </TouchableOpacity>
     );
   }
-  
-  let handlePressBannerButton = handlePressButton;
-  let currentButtonStyle = currentButtonStyle = {...style, ...default_style, ...styles[`btn_default_${defaultColor}`]};
-  let currentLabelStyle = currentLabelStyle = styles[`lbl_default_${defaultColor}`];
-  console.log("🚀 ~ file: BannerButton.jsx:122 ~ currentButtonStyle:", currentButtonStyle)
 
-  if(isChangeColorWhenActive) {
+  let handlePressBannerButton = handlePressButton;
+  let currentButtonStyle = (currentButtonStyle = {
+    ...style,
+    ...default_style,
+    ...styles[`btn_default_${defaultColor}`],
+  });
+  let currentLabelStyle = (currentLabelStyle =
+    styles[`lbl_default_${defaultColor}`]);
+  console.log(
+    "🚀 ~ file: BannerButton.jsx:122 ~ currentButtonStyle:",
+    currentButtonStyle
+  );
+
+  if (isChangeColorWhenActive) {
     currentButtonStyle = {
       ...style,
       ...default_style,
-      ...(
-        isActive
+      ...(isActive
         ? styles[`btn_active_${activeColor}`]
-        : styles[`btn_default_${defaultColor}`]
-    )};
-    currentLabelStyle = isActive ? styles[`lbl_active_${activeColor}`] : styles[`lbl_default_${defaultColor}`];
+        : styles[`btn_default_${defaultColor}`]),
+    };
+    currentLabelStyle = isActive
+      ? styles[`lbl_active_${activeColor}`]
+      : styles[`lbl_default_${defaultColor}`];
   }
 
-  if(isOnlyContent) {
+  if (isOnlyContent) {
     currentButtonStyle = style;
   }
 
-  if(isTransparent) {
-    currentButtonStyle = {...style, ...default_style};
+  if (isTransparent) {
+    currentButtonStyle = { ...style, ...default_style };
   }
-  
+
   // Valid sau
   // Vì không thể ghi đè việc navigate của button, cho nên việc navigate sang app khác sẽ được ưu tiên hơn.
-  if(hyperLink !== "" && hyperLink !== undefined) {
+  if (hyperLink !== "" && hyperLink !== undefined) {
     handlePressBannerButton = () => {
       Linking.openURL(hyperLink);
-    }
+    };
   }
-  
+
   // Valid sau
-  if(toScreen.screenName !== "" && toScreen.screenName !== undefined) {
+  if (toScreen.screenName !== "" && toScreen.screenName !== undefined) {
     const navigation = useNavigation();
     handlePressBannerButton = () => {
       navigation.navigate(toScreen.screenName);
-    }
+    };
   }
 
   let ButtonComponent = TouchableWithoutFeedback;
   let ButtonComponentProps;
 
-  if(typeOfButton === "opacity") {
+  if (typeOfButton === "opacity") {
     ButtonComponent = TouchableOpacity;
   }
 
-  if(typeOfButton === "highlight") {
+  if (typeOfButton === "highlight") {
     ButtonComponent = TouchableHighlight;
     ButtonComponentProps = {
       underlayColor: themeColor.ext_third,
-      style: currentButtonStyle
-    }
+      style: currentButtonStyle,
+    };
   }
 
   return (
@@ -177,21 +214,44 @@ const BannerButton = ({
       {...ButtonComponentProps}
       onPress={handlePressBannerButton}
     >
-      <View style={typeOfButton === "highlight" ? {flex: 1, flexDirection: 'row'} : currentButtonStyle}>
-        <ImageBackground source={{url: `${imageUrl}`}} resizeMode="cover" style={banner_button_styles.image}>
+      <View
+        style={
+          typeOfButton === "highlight"
+            ? { flex: 1, flexDirection: "row" }
+            : currentButtonStyle
+        }
+      >
+        <ImageBackground
+          source={{ url: `${imageUrl}` }}
+          resizeMode="cover"
+          style={banner_button_styles.image}
+        >
           <View style={banner_button_styles.lbl_container}>
-            {canLoadLeftIcon && setLeftIcon(isActive = false, currentLabelStyle)}
-            {
-                canLoadLeftIcon
-                ? <AppText font={fontOfText} style={{...currentLabelStyle, ...app_sp.ms_8}} numberOfLines={2}>{children}</AppText>
-                : <AppText font={fontOfText} style={currentLabelStyle} numberOfLines={2}>{children}</AppText>
-              }
+            {canLoadLeftIcon &&
+              setLeftIcon((isActive = false), currentLabelStyle)}
+            {canLoadLeftIcon ? (
+              <AppText
+                font={fontOfText}
+                style={{ ...currentLabelStyle, ...app_sp.ms_8 }}
+                numberOfLines={2}
+              >
+                {children}
+              </AppText>
+            ) : (
+              <AppText
+                font={fontOfText}
+                style={currentLabelStyle}
+                numberOfLines={2}
+              >
+                {children}
+              </AppText>
+            )}
           </View>
           {canLoadRightIcon && setRightIcon(isActive, currentLabelStyle)}
         </ImageBackground>
       </View>
     </ButtonComponent>
-  )
-}
+  );
+};
 
-export default BannerButton
+export default BannerButton;

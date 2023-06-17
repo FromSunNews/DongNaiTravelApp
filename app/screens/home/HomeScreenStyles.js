@@ -21,6 +21,8 @@ const styles = StyleSheet.create({
   home_temperature: {
     paddingHorizontal:16,
     ...app_sp.mt_16,
+    ...app_sp.mb_16,
+    ...app_sp.p_16,
     width: '100%',
     height: 64,
     ...app_sh.rounded_8,

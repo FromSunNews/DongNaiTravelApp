@@ -12,7 +12,7 @@ import RectangleButton from '../buttons/RectangleButton'
 import CircleButton from '../buttons/CircleButton'
 
 import styles from './HorizontalPlaceCardStyles'
-import { app_sp } from 'globals/styles'
+import { app_sp, app_shdw } from 'globals/styles'
 import { useSelector } from 'react-redux'
 import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
 
@@ -20,7 +20,7 @@ import {
   PlaceDataProps,
   WithPlaceCardWrappedComponentProps
 } from 'types/index.d.ts'
-
+import useTheme from 'customHooks/useTheme'
 /**
  * @typedef HorizontalPlaceCardProps
  * @property {PlaceDataProps} place Thông tin về một địa điểm của một nơi nào đó.
@@ -52,11 +52,18 @@ const HorizontalPlaceCard = ({
 }) => {
   const langCode = useSelector(selectCurrentLanguage).languageCode 
   const langData = useSelector(selectCurrentLanguage).data?.exploreScreen
+  //theme
+  const {themeColor, themeMode} = useTheme();
 
   let [city, province] = getTextContentInHTMLTag(place.adr_address);
 
+  //shadow for card
+  let shadw = themeMode === 'light' ? 'type_1' : 'type_1_dark'
+  let bg = themeMode === 'light' ? 'bg_second' : 'bg_tertiary'
+  let heart = themeMode === 'light' ? 'heart' : 'heart_dark'
+  let activeHeart = themeMode === 'light' ? 'type_1' : 'type_1_dark'
   return React.useMemo(() => (
-    <View style={styles.card}>
+    <View style={[styles.card,{backgroundColor: themeColor[bg], ...app_shdw[shadw]}]}>
       {/* Cột đâu tiên - Image Container */}
       <RectangleButton
         isOnlyContent
@@ -84,7 +91,7 @@ const HorizontalPlaceCard = ({
           <View style={styles.card_tag_container}>
             <AppText
               font="body2"
-              style={styles.card_text_color}
+              style={themeMode === 'light' ? styles.card_text_color : {color: themeColor.fourth}}
               numberOfLines={1}
             >
               {place.types.map((type, index) => (
@@ -94,19 +101,19 @@ const HorizontalPlaceCard = ({
           </View>
           <View>
             <AppText numberOfLines={1} font="h3" style={styles.card_title}>{place.name}</AppText>
-            <AppText style={styles.car_subtitle} font="body2">{StringUtility.toTitleCase(city)}{province && " - "}{StringUtility.toTitleCase(province)}</AppText>
+            <AppText style={themeMode === 'light' ? styles.car_subtitle : { color: themeColor.fourth }} font="body2">{StringUtility.toTitleCase(city)}{province && " - "}{StringUtility.toTitleCase(province)}</AppText>
           </View>
           <View style={styles.card_information_container}>
             <View style={styles.card_information_col}>
-              <AppText font="body2" style={styles.card_text_color}>
+              <AppText font="body2" style={themeMode === 'light' ? styles.card_text_color : { color: themeColor.fourth }}>
                 <Ionicons name='star-outline' /> {place.rating}
               </AppText>
-              <AppText font="body2" style={styles.card_text_color}>
+              <AppText font="body2" style={themeMode === 'light' ? styles.card_text_color : { color: themeColor.fourth }}>
                 <Ionicons name='chatbubble-outline' /> {NumberUtility.toMetricNumber(place.user_ratings_total)}
               </AppText>
             </View>
             <View style={styles.card_information_col}>
-              <AppText font="body2" style={styles.card_text_color}>
+              <AppText font="body2" style={themeMode === 'light' ? styles.card_text_color : { color: themeColor.fourth }}>
                 <Ionicons name='eye-outline' /> {NumberUtility.toMetricNumber(place.numberOfVisited)}
               </AppText>
             </View>
@@ -118,6 +125,8 @@ const HorizontalPlaceCard = ({
             style={app_sp.me_8}
             typeOfButton="highlight"
             onPress={handleLikeButton}
+            defaultColor={heart}
+            activeColor={activeHeart}
             setIcon={(isActive, currentLabelStyle) => (
               <Ionicons name={isActive ? 'heart' : 'heart-outline'} size={14} style={currentLabelStyle} />
             )}
@@ -125,6 +134,8 @@ const HorizontalPlaceCard = ({
           <CircleButton
             style={app_sp.me_8}
             typeOfButton="highlight"
+            defaultColor={heart}
+            activeColor={activeHeart}
             setIcon={(isActive, currentLabelStyle) => (
               <Ionicons name={isActive ? 'map' : 'map-outline'} size={14} style={currentLabelStyle} />
             )}
@@ -133,6 +144,8 @@ const HorizontalPlaceCard = ({
             isActive={extendedPlaceInfo.isVisited}
             typeOfButton="highlight"
             onPress={handleVisitButton}
+            defaultColor={heart}
+            activeColor={activeHeart}
             overrideShape="capsule"
           >
             {(isActive, currentLabelStyle) => (
@@ -147,12 +160,12 @@ const HorizontalPlaceCard = ({
         <CircleButton
           isOnlyContent={true}
           setIcon={(isActive, currentLabelStyle) => (
-            <Ionicons name="share-outline" size={20} style={currentLabelStyle} />
+            <Ionicons name="share-outline" size={20} style={[currentLabelStyle,{color: themeColor.fourth}]} />
           )}
         />
       </View>
     </View>
-  ), [extendedPlaceInfo.isLiked, extendedPlaceInfo.isVisited, place.rating, place.numberOfVisited, place.user_ratings_total]);
+  ), [extendedPlaceInfo.isLiked, extendedPlaceInfo.isVisited, place.rating, place.numberOfVisited, place.user_ratings_total,themeColor]);
 }
 
 export default withPlaceCard(HorizontalPlaceCard)

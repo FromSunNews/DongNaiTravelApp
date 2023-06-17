@@ -3,8 +3,9 @@
 // Phuong: Muon test api thi xem ipv4 trong may tinh => cmd => ipconfig => ipv4
 // Phuong: doi lai ipv4 cua minh
 const ip_v4 = {
-  tuan: '192.168.2.10',
-  phuong: '192.168.2.62'
+  tuan: '192.168.1.9',
+  phuong: '192.168.2.10',
+  phap: '192.168.1.17'
 }
 const API_PORT = '7500'
 

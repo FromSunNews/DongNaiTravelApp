@@ -33,7 +33,7 @@ const ExploreScreen = () => {
   const langCode = useSelector(selectCurrentLanguage).languageCode 
   const langData = useSelector(selectCurrentLanguage).data?.exploreScreen
   //theme
-  const themeColor = useTheme();
+  const {themeColor, themeMode} = useTheme();
   
   const exploreInfo = React.useRef({
     isFirstFetch: true,
@@ -87,14 +87,14 @@ const ExploreScreen = () => {
   console.log("Render Explore!!!");
 
   return (
-    <View>
+    <View style={{backgroundColor: themeColor.bg_primary}}>
       {
         isOnTop && (
           <View
             style={[
               app_sp.ph_18,
               {
-                backgroundColor: themeColor.primary,
+                backgroundColor: themeColor.bg_second,
                 position: 'relative',
                 zIndex: 2,
               }
@@ -103,10 +103,12 @@ const ExploreScreen = () => {
             <BannerButton
               typeOfButton="highlight"
               style={app_sp.mt_12}
-              toScreen={{screenName: "MapScreen"}}
+              toScreen={{ screenName: "MapScreen" }}
               setRightIcon={(isActive, currentLabelStyle) =>
                 <Ionicons name="chevron-forward-outline" style={currentLabelStyle} size={25} color={themeColor.ext_third}/>
               }
+              defaultColor={themeMode === 'light' ? 'type_3' : 'type_1_dark'}
+              activeColor='type_2'
             >
               {langData.banner_button[langCode]}
             </BannerButton>
@@ -115,7 +117,7 @@ const ExploreScreen = () => {
       }
       <FlatList
         data={places ? places.data : []}
-        style={[styles.scroll_view_container,{backgroundColor: themeColor.primary}]}
+        style={[styles.scroll_view_container,{backgroundColor: themeColor.bg_second}]}
         contentContainerStyle={{paddingBottom: 200}}
         onMomentumScrollEnd={handleExploreMomentumScrollEnd}
         onEndReached={handleEndReach}
@@ -136,7 +138,7 @@ const ExploreScreen = () => {
             types='all;recommended;popular;most_visit;high_rating'
             callBack={setType}
             scrollStyle={[app_sp.ms_18, app_sp.pv_12]}
-            containerStyle={{backgroundColor: themeColor.primary, ...app_sp.pv_10}}
+            containerStyle={{backgroundColor: themeColor.bg_second, ...app_sp.pv_10}}
           />
         }
         renderItem={item => <View style={app_sp.ph_18}><HorizontalPlaceCard typeOfBriefPlace={type} place={item.item} placeIndex={item.index} /></View>}

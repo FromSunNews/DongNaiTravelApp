@@ -67,7 +67,7 @@ const AppHeader = ({
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.appHeader
   //theme
-  const themeColor = useTheme()
+  const {themeColor} = useTheme()
 
   const currentNotif = useSelector(selectCurrentNotifs)
   const [numberOfVisited, setNumberOfVisited] = useState(0)
@@ -94,7 +94,7 @@ const AppHeader = ({
   const headerStyle = {
     ...styles.container,
     ...app_shdw[boxShadow],
-    backgroundColor: themeColor.primary,
+    backgroundColor: themeColor.bg_second,
     ...(transparent ?  { backgroundColor: `rgba(${255, 255, 255}, 0)` } : {} )
   }
 
@@ -134,7 +134,7 @@ const AppHeader = ({
           canSetCenterPart
           ? setCenterPart()
           : (
-              <AppText weight="lighter" font="h5" style={{textAlign: 'center'}}>{title}</AppText>
+              <AppText weight="lighter" font="h5" style={{textAlign: 'center'}} color = 'fourth' >{title}</AppText>
             )
         }
       </View>
