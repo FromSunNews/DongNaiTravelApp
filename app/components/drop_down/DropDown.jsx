@@ -10,7 +10,7 @@ import {
 } from "react-native"
 import { Entypo, AntDesign } from "react-native-vector-icons"
 
-import { app_typo } from "globals/styles"
+import { app_c, app_typo } from "globals/styles"
 import styles from "./DropDownStyle"
 import { selectCurrentSetting, updateDarkMode, updateNotification } from "redux/setting/SettingSlice"
 import { useDispatch, useSelector } from "react-redux"

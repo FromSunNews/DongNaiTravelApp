@@ -1,14 +1,45 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
-import { API_ROOT } from 'utilities/constants'
 
-// Phương: Khởi tạo giá trị của một Slice trong redux
-const initialState = {
-  currentBlogs: null
+import NumberUtility from 'utilities/number'
+import {
+  API_ROOT,
+  REDUX_SLICE_NAMES
+} from 'utilities/constants'
+
+import {
+  fetchBlogDetailsByIdAsyncThunk,
+  fetchBriefBlogsByTypeAsyncThunk,
+  refetchBriefBlogsByTypeAsyncThunk
+} from './BlogsAsyncThunks.js'
+
+import {
+  BriefBlogsReduxStateProps,
+  BlogDataProps
+} from 'types/index.d.ts'
+
+/**
+ * Hàm này dùng để tạo ra các Brief Blog khác nhau, tránh các type dùng chung với nhau.
+ * @param {number} limit 
+ * @param {number} skip 
+ * @returns {BriefBlogsReduxStateProps}
+ */
+function createDefaultBriefBlog(limit = 5, skip = 0) {
+  return {
+    limit: limit,
+    skip: skip,
+    data: []
+  }
 }
 
-// Phương: Các hành động gọi api (bất đồng bộ) và cập nhật dữ liệu vào Redux, dùng createAsyncThunk đi kèm với extraReducers
-// Phương: https://redux-toolkit.js.org/api/createAsyncThunk
+/**
+ * @type {{blogDetailsList: {[key: string]: BlogDataProps}, briefBlogs: {[key: string]: BlogDataProps}}}
+ */
+const initialState = {
+  blogDetailsList: {},
+  briefBlogs: {}
+}
+
 export const fetchBlogsAPI = createAsyncThunk(
   'blogs/fetchBlogsAPI',
   async () => {
@@ -18,37 +49,135 @@ export const fetchBlogsAPI = createAsyncThunk(
 )
 // Phương: Khởi tạo một slice trong redux store
 export const blogsSlice = createSlice({
-  name: 'blogs',
+  name: REDUX_SLICE_NAMES.BLOGS,
   initialState,
   reducers: {
-    // Phương: Lưu ý luôn là ở đây cần cặp ngoặc nhọn cho function trong reducer cho dù code bên trong chỉ có 1 dòng, đây là rule của Redux
-    // Phương: https:// Phương:redux-toolkit.js.org/usage/immer-reducers#mutating-and-returning-state
-    updateCurrentBlogs: (state, action) => {
-      const blogs = action.payload
-      state.currentBlogs = blogs
+    /**
+     * Action này dùng để thêm một thông tin của blog vào blog details list, thường thì được thêm từ một briefblog.
+     * @param state 
+     * @param {{type: string, payload: BlogDataProps}} action 
+     */
+    addBlogDetailsState: (state, action) => {
+      const blogDetails = action.payload;
+      if(!state.blogDetailsList[blogDetails._id]) state.blogDetailsList[blogDetails._id] = blogDetails;
+    },
+    /**
+     * Action này dùng để update một brief blog theo `_id`.
+     * @param state 
+     * @param {{type: string, payload: { blogId: string, blogIndex?: string, typeOfBriefBlogs: string, updateData: BlogDataProps }}} action 
+     */
+    updateBriefBlogState: (state, action) => {
+      let {blogId, blogIndex, typeOfBriefBlogs, updateData} = action.payload;
+      if(state.briefBlogs[typeOfBriefBlogs]) {
+        let sliceOfBriefBlogs = state.briefBlogs[typeOfBriefBlogs].data.slice(blogIndex);
+        let newBlogIndex = sliceOfBriefBlogs.findIndex(briefBlog => briefBlog._id === blogId);
+        let blog = state.briefBlogs[typeOfBriefBlogs].data[newBlogIndex];
+        if(blog) state.briefBlogs[typeOfBriefBlogs].data[newBlogIndex] = Object.assign({}, blog, updateData);
+      }
+    },
+    /**
+     * Action này dùng để tăng skip của một loại brief blogs
+     * @param state 
+     * @param {{type: string, payload: string}} action 
+     */
+    increaseSkipBriefBlogsAmountState: (state, action) => {
+      const typeOfBriefBlogs = action.payload;
+      state.briefBlogs[typeOfBriefBlogs].skip += state.briefBlogs[typeOfBriefBlogs].limit;
+    },
+    /**
+     * Action này dùng để giảm skip của một loại brief blogs. Tránh giảm quá 0.
+     * @param state 
+     * @param {{type: string, payload: string}} action 
+     */
+    decreaseSkipBriefBlogsAmountState: (state, action) => {
+      const typeOfBriefBlogs = action.payload;
+      state.briefBlogs[typeOfBriefBlogs].skip = NumberUtility.decreaseByAmount(
+        state.briefBlogs[typeOfBriefBlogs].skip,
+        state.briefBlogs[typeOfBriefBlogs].limit
+      )
+    },
+    /**
+     * Action này dùng để clear all state của blog
+     * @param state 
+     * @param action 
+     */
+    clearAllBriefBlogsState: (state, action) => {
+      state.briefBlogs = {}
+    },
+    /**
+     * Action này dùng để clear all state của blog details
+     * @param state 
+     * @param action 
+     */
+    clearBlogDetailsState: (state, action) => {
+      let blogId = action.payload;
+      if(state.blogDetailsList[blogId]) {
+        state.blogDetailsList[blogId] = {}
+        delete state.blogDetailsList[blogId]
+      }
     }
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchBlogsAPI.fulfilled, (state, action) => {
-      let blogs = action.payload // Phương: chính là cái request.data phía trên
+    builder.addCase(fetchBriefBlogsByTypeAsyncThunk.fulfilled, (state, action) => {
+      let [typeOfBriefBlogs, briefBlogs] = action.payload;
 
-      state.currentBlogs = blogs
+      if(!state.briefBlogs[typeOfBriefBlogs]) {
+        state.briefBlogs[typeOfBriefBlogs] = createDefaultBriefBlog();
+      }
+
+      if(briefBlogs.length === 0) {
+        state.briefBlogs[typeOfBriefBlogs].skip = NumberUtility.decreaseByAmount(
+          state.briefBlogs[typeOfBriefBlogs].skip,
+          state.briefBlogs[typeOfBriefBlogs].limit
+        )
+      }
+      state.briefBlogs[typeOfBriefBlogs].data.push(...briefBlogs);
+    });
+
+    builder.addCase(fetchBlogDetailsByIdAsyncThunk.fulfilled, (state, action) => {
+      let [blogId, blogDetails] = action.payload;
+
+      state.blogDetailsList[blogId] = Object.assign({}, state.blogDetailsList[blogId], blogDetails)
+    });
+
+    builder.addCase(refetchBriefBlogsByTypeAsyncThunk.fulfilled, (state, action) => {
+      let [typeOfBriefBlogs, briefBlogs] = action.payload;
+      
+      state.briefBlogs[typeOfBriefBlogs] = createDefaultBriefBlog();
+      state.briefBlogs[typeOfBriefBlogs].data.push(...briefBlogs);
     })
   }
 })
 
-// Phương: Action creators are generated for each case reducer function
-// Phương: Actions: dành cho các components bên dưới gọi bằng dispatch() tới nó để cập nhật lại dữ liệu thông qua reducer (chạy đồng bộ)
-// Phương: Để ý ở trên thì không thấy properties actions đâu cả, bởi vì những cái actions này đơn giản là được thằng redux tạo tự động theo tên của reducer nhé.
 export const { 
-  updateCurrentBlogs,
+  addBlogDetailsState,
+  updateBriefBlogState,
+  increaseSkipBriefBlogsAmountState,
+  decreaseSkipBriefBlogsAmountState,
+  clearAllBriefBlogsState,
+  clearBlogDetailsState,
+
   // Phương
 } = blogsSlice.actions
 
-// Phương: Selectors: mục đích là dành cho các components bên dưới gọi bằng useSelector() tới nó để lấy dữ liệu từ trong redux store ra sử dụng
-export const selectCurrentBlogs = (state) => {
-  return state.blogs.currentBlogs
+/**
+ * Select tất cả thông tin của briefblogs theo type.
+ * @param state 
+ * @param {string} typeOfBriefBlogs 
+ * @returns {BriefBlogsReduxStateProps}
+ */
+export const briefBlogsSeletor = (state, typeOfBriefBlogs) => {
+  // if(!state[REDUX_SLICE_NAMES.BLOGS].briefBlogs[typeOfBriefBlogs]) return undefined;
+  return state[REDUX_SLICE_NAMES.BLOGS].briefBlogs[typeOfBriefBlogs];
 }
 
-// Phương: Export default cái blogsReducer của chúng ta để combineReducers trong store
+/**
+ * Select blog details hiện tại.
+ * @param state 
+ * @returns {BlogDataProps}
+ */
+export const blogDetailsSelector = (state, blogId) => {
+  return state[REDUX_SLICE_NAMES.BLOGS].blogDetailsList[blogId];
+}
+
 export const blogsReducer = blogsSlice.reducer

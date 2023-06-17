@@ -253,6 +253,8 @@ ReactNativeRenderer.prototype.render = function(mf_tree) {
 
   // Trước khi render thì merge các font weight với font style lại.
   
+  console.log("Tree: ", tree)
+
   tree.forEach((ele, index) => {
     if(ele instanceof MFNode) {
       weightAndStyleMerger(ele);
@@ -374,6 +376,7 @@ ReactNativeRenderer.prototype.renderNode = function(renderer) {
       };
 
       case IMAGE_TYPE: {
+        console.log("Image url: ", url)
         ele = ftts.hasDescription ? (
           <View key={_id}>
             <Image source={{uri: url}} style={styles} resizeMode="contain" />

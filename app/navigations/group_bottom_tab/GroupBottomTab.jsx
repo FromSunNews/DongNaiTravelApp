@@ -247,14 +247,16 @@ const GroupBottomTab = () => {
 				<Tab.Navigator
 					tabBar={props => (<BottomTabBar {...props} tabOffsetValue={tabOffsetValue} />)}
 					screenOptions={{
-						'tabBarShowLabel': false
+						'tabBarShowLabel': false,
+						tabBarHideOnKeyboard: true
 					}}
 				>
 						<Tab.Screen
 							name={'HomeScreen'}
 							component={HomeNavigator}
 							options={{
-								headerShown: false
+								headerShown: false,
+								tabBarHideOnKeyboard: true
 							}}>
 						</Tab.Screen>
 
@@ -262,7 +264,8 @@ const GroupBottomTab = () => {
 							name={'ExploreNavigator'}
 							component={ExploreNavigator}
 							options={{
-								headerShown: false
+								headerShown: false,
+								tabBarHideOnKeyboard: true
 							}}>
 						</Tab.Screen>
 
@@ -270,7 +273,8 @@ const GroupBottomTab = () => {
 							name={'MapScreen'}
 							component={MapScreen}
 							options={{
-								headerShown: false
+								headerShown: false,
+								tabBarHideOnKeyboard: true
 							}}>
 						</Tab.Screen>
 
@@ -278,7 +282,8 @@ const GroupBottomTab = () => {
 							name={'BlogsNavigator'}
 							component={BlogsNavigator}
 							options={{
-								headerShown: false
+								headerShown: false,
+								tabBarHideOnKeyboard: true
 							}}>
 					</Tab.Screen>
 
@@ -286,7 +291,8 @@ const GroupBottomTab = () => {
 							name={'SettingScreen'}
 							component={SettingNavigator}
 							options={{
-								headerShown: false
+								headerShown: false,
+								tabBarHideOnKeyboard: true
 							}}>
 						</Tab.Screen>
 				</Tab.Navigator>

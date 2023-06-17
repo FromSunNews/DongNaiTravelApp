@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
-import { API_ROOT } from 'utilities/constants'
+import { API_ROOT, COMPLETE_PLACE_DETAILS_DATA_FIELDS } from 'utilities/constants'
 
 import {
   getPlacesAPI,
@@ -8,36 +8,29 @@ import {
 } from 'request_api'
 
 import {
+  fetchBriefPlacesByTypeAsyncThunk,
+  fetchPlaceDetailsByIdAsyncThunk,
+  refetchBriefPlaceByTypeAsyncThunk
+} from './PlacesAsyncThunks'
+
+import NumberUtility from 'utilities/number'
+import {
   PLACE_DETAILS_DATA_FIELDS
 } from 'utilities/constants'
 
 import {
   RequestBriefPlacesInfoProps,
   RequestPlaceDetailsInfoProps,
-  BriefPlacesDataProps,
+  BriefPlacesReduxStateProps,
   PlaceDataProps,
   PlaceDetailsDataProps
 } from 'types/index.d.ts'
 
 /**
- * Hàm này tính toán việc giảm dữ liệu đi ở một mức nào đó.
- * Tránh việc giảm về quá 0.
- * @param {number} value Số cần giảm
- * @param {number} amount Lượng cần giảm
- * @returns 
- */
-function descreaseByAmount(value, amount) {
-  let afterDescrease = value - amount;
-  if(afterDescrease >= amount) value -= amount;
-  else value = 0;
-  return value;
-}
-
-/**
  * Hàm này dùng để tạo ra các Brief Place khác nhau, tránh các type dùng chung với nhau.
  * @param {number} limit 
  * @param {number} skip 
- * @returns {BriefPlacesDataProps}
+ * @returns {BriefPlacesReduxStateProps}
  */
 function createDefaultBriefPlace(limit = 5, skip = 0) {
   return {
@@ -52,48 +45,6 @@ const initialState = {
   placeDetailsList: {},
   briefPlaces: {}
 }
-
-// Phương: Các hành động gọi api (bất đồng bộ) và cập nhật dữ liệu vào Redux, dùng createAsyncThunk đi kèm với extraReducers
-// Phương: https://redux-toolkit.js.org/api/createAsyncThunk
-export const fetchBriefPlacesByTypeAsyncThunk = createAsyncThunk(
-  'places/fetchPlacesByType',
-  /**
-   * @param {RequestBriefPlacesInfoProps} requestBriefPlacesInfo
-   * @returns 
-   */
-  async (requestBriefPlacesInfo, thunkAPI) => {
-    try {
-      const state = thunkAPI.getState();
-      const { type, fields } = requestBriefPlacesInfo;
-      const briefPlacesByType = briefPlacesSeletor(state, type);
-      const limit = briefPlacesByType ? briefPlacesByType.limit : 5;
-      const skip = briefPlacesByType ? briefPlacesByType.skip : 0;
-      const query = `limit=${limit}&skip=${skip}&filter=quality:${type}&fields=${fields}`;
-      const data = await getPlacesAPI(query);
-    return [type, data];
-    } catch (error) {
-      console.error(error.message);
-    }
-  }
-)
-
-export const fetchPlaceDetailsByIdAsyncThunk = createAsyncThunk(
-  'places/fetchPlaceDetailsById',
-  /**
-   * @param {RequestPlaceDetailsInfoProps} requestPlaceDetailsInfo 
-   * @param thunkAPI 
-   */
-  async (requestPlaceDetailsInfo, thunkAPI) => {
-    try {
-      const { placeId, lang } = requestPlaceDetailsInfo;
-      const query = `placeId=${placeId}&fields=${PLACE_DETAILS_DATA_FIELDS}&lang=${lang}`;
-      const data = await getPlaceDetailsWithPipelineAPI(query);
-      return [placeId, data];
-    } catch (error) {
-      console.error(error.message);
-    }
-  }
-)
 
 // Phương: Khởi tạo một slice trong redux store
 export const placesSlice = createSlice({
@@ -114,15 +65,13 @@ export const placesSlice = createSlice({
     /**
      * Action này dùng để update một brief place theo `place_id`.
      * @param state 
-     * @param {{type: string, payload: { placeId: string, typeOfBriefPlaces: string, updateData: PlaceDataProps }}} action 
+     * @param {{type: string, payload: { placeId: string, placeIndex?: string, typeOfBriefPlaces: string, updateData: PlaceDataProps }}} action 
      */
     updateBriefPlaceState: (state, action) => {
       let {placeId, placeIndex, typeOfBriefPlaces, updateData} = action.payload;
       if(state.briefPlaces[typeOfBriefPlaces]) {
-        let sliceOfBriefPlaces = state.briefPlaces[typeOfBriefPlaces].data.slice(placeIndex);
-        let newPlaceIndex = sliceOfBriefPlaces.findIndex(briefPlace => briefPlace.place_id === placeId);
-        let place = state.briefPlaces[typeOfBriefPlaces].data[newPlaceIndex];
-        if(place) state.briefPlaces[typeOfBriefPlaces].data[newPlaceIndex] = Object.assign({}, place, updateData);
+        let place = state.briefPlaces[typeOfBriefPlaces].data[placeIndex];
+        if(place) state.briefPlaces[typeOfBriefPlaces].data[placeIndex] = Object.assign({}, place, updateData);
       }
     },
     /**
@@ -130,7 +79,7 @@ export const placesSlice = createSlice({
      * @param state 
      * @param action 
      */
-    inscreaseSkipBriefPlacesAmountState: (state, action) => {
+    increaseSkipBriefPlacesAmountState: (state, action) => {
       const typeOfBriefPlaces = action.payload;
       state.briefPlaces[typeOfBriefPlaces].skip += state.briefPlaces[typeOfBriefPlaces].limit;
     },
@@ -139,9 +88,9 @@ export const placesSlice = createSlice({
      * @param state 
      * @param action 
      */
-    descreaseSkipBriefPlacesAmountState: (state, action) => {
+    decreaseSkipBriefPlacesAmountState: (state, action) => {
       const typeOfBriefPlaces = action.payload;
-      state.briefPlaces[typeOfBriefPlaces].skip = descreaseByAmount(
+      state.briefPlaces[typeOfBriefPlaces].skip = NumberUtility.decreaseByAmount(
         state.briefPlaces[typeOfBriefPlaces].skip,
         state.briefPlaces[typeOfBriefPlaces].limit
       )
@@ -176,18 +125,25 @@ export const placesSlice = createSlice({
       }
 
       if(briefPlaces.length === 0) {
-        state.briefPlaces[typeOfBriefPlaces].skip = descreaseByAmount(
+        state.briefPlaces[typeOfBriefPlaces].skip = NumberUtility.decreaseByAmount(
           state.briefPlaces[typeOfBriefPlaces].skip,
           state.briefPlaces[typeOfBriefPlaces].limit
         )
       }
       state.briefPlaces[typeOfBriefPlaces].data.push(...briefPlaces);
-    }),
+    });
 
     builder.addCase(fetchPlaceDetailsByIdAsyncThunk.fulfilled, (state, action) => {
       let [placeId, placeDetails] = action.payload;
 
       state.placeDetailsList[placeId] = Object.assign({}, state.placeDetailsList[placeId], placeDetails)
+    });
+
+    builder.addCase(refetchBriefPlaceByTypeAsyncThunk.fulfilled, (state, action) => {
+      let [typeOfBriefPlaces, briefPlaces] = action.payload;
+      
+      state.briefPlaces[typeOfBriefPlaces] = createDefaultBriefPlace();
+      state.briefPlaces[typeOfBriefPlaces].data.push(...briefPlaces);
     })
   }
 })
@@ -197,8 +153,8 @@ export const placesSlice = createSlice({
 // Phương: Để ý ở trên thì không thấy properties actions đâu cả, bởi vì những cái actions này đơn giản là được thằng redux tạo tự động theo tên của reducer nhé.
 export const {
   addPlaceDetailsState,
-  inscreaseSkipBriefPlacesAmountState,
-  descreaseSkipBriefPlacesAmountState,
+  increaseSkipBriefPlacesAmountState,
+  decreaseSkipBriefPlacesAmountState,
   updateBriefPlaceState,
   clearAllBriefPlacesState,
   clearPlaceDetailsState
@@ -210,9 +166,9 @@ export const {
  * Select tất cả thông tin của briefplaces theo type.
  * @param state 
  * @param {string} typeOfBriefPlaces 
- * @returns {BriefPlacesDataProps}
+ * @returns {BriefPlacesReduxStateProps}
  */
-export const briefPlacesSeletor = (state, typeOfBriefPlaces) => {
+export const briefPlacesSelector = (state, typeOfBriefPlaces) => {
   // if(!state.places.briefPlaces[typeOfBriefPlaces]) return undefined;
   return state.places.briefPlaces[typeOfBriefPlaces];
 }
@@ -220,7 +176,7 @@ export const briefPlacesSeletor = (state, typeOfBriefPlaces) => {
 /**
  * Select place details hiện tại.
  * @param state 
- * @returns {PlaceDataProps}
+ * @returns {import('types/index.d.ts').BlogDetailsDataProps}
  */
 export const placeDetailsSelector = (state, placeId) => {
   return state.places.placeDetailsList[placeId];

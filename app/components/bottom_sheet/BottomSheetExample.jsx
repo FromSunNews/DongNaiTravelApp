@@ -36,7 +36,7 @@ const BottomSheetExample = ({
         <BottomSheet
           ref={bottomSheetExampleRef}
           index={1}
-          enableContentPanningGesture={enableContentPanningGesture}
+          // enableContentPanningGesture={enableContentPanningGesture}
           snapPoints={snapPoints}
           enablePanDownToClose
           onClose={() => closeTermCondition()}

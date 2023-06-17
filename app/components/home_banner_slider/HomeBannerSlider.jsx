@@ -42,22 +42,22 @@ const HomeBannerSlider = ()=>{
           />
         }
         paginationStyle={{
-          bottom: 10,
+          bottom: -12,
         }}
       >
-        {
-          banners.map((banner,index)=>{
-            return(
-            <View key={index} style={styles.slide}>
-              <Image
-                style={styles.image}
-                source={{uri : banner.uri}}
-                resizeMode="cover"
-              />
-            </View>
-            )
-          })
-        }
+          {
+            banners.map((banner,index)=>{
+              return(
+              <View key={index} style={styles.slide}>
+                <Image
+                  style={styles.image}
+                  source={{uri : banner}}
+                  resizeMode="cover"
+                />
+              </View>
+              )
+            })
+          }
       </Swiper>
     </View>
   );
@@ -89,44 +89,44 @@ const styles = {
     height:200,
   },
   dot:{
-    backgroundColor:app_c.HEX.ext_primary ,
-    width: 10,
-    height: 10,
-    borderRadius: 5,
+    backgroundColor:app_c.HEX.ext_third,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
     marginLeft: 3,
     marginRight: 3,
   },
   active_dot:{
     backgroundColor: app_c.HEX.third,
-    width: 10,
-    height: 10,
-    borderRadius: 5,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
     marginLeft: 3,
     marginRight: 3,
   }
 };
 
 const bannersVi = [
-  {
-    uri: "https://res.cloudinary.com/dbtb0sjby/image/upload/v1681829574/banners/z4274604337154_4c684a28b00a8fa4bc273dee07d24440-min_rqpmcq.jpg",
-  },
-  {
-    uri: "https://res.cloudinary.com/dbtb0sjby/image/upload/v1681829447/banners/chuachan_vi_hs3b4n.png",
-  },
-  {
-    uri: "https://res.cloudinary.com/dbtb0sjby/image/upload/v1681829232/banners/dahan_vi_kpo4ml.png",
-  },
-
+  'https://res.cloudinary.com/dbtb0sjby/image/upload/v1685983477/banners/vi/1_nqx0pu.jpg',
+  'https://res.cloudinary.com/dbtb0sjby/image/upload/v1685983478/banners/vi/3_i3makt.jpg',
+  'https://res.cloudinary.com/dbtb0sjby/image/upload/v1685983478/banners/vi/5_uijds1.jpg',
+  'https://res.cloudinary.com/dbtb0sjby/image/upload/v1685983475/banners/vi/7_hnspu5.jpg',
+  'https://res.cloudinary.com/dbtb0sjby/image/upload/v1685983476/banners/vi/9_w9iskz.jpg',
+  'https://res.cloudinary.com/dbtb0sjby/image/upload/v1685983476/banners/vi/11_brt1fg.jpg',
+  'https://res.cloudinary.com/dbtb0sjby/image/upload/v1685983478/banners/vi/13_vd6g6b.jpg',
+  'https://res.cloudinary.com/dbtb0sjby/image/upload/v1685983477/banners/vi/15_uaiyk7.jpg',
+  'https://res.cloudinary.com/dbtb0sjby/image/upload/v1685983477/banners/vi/17_dvgaqn.jpg',
+  'https://res.cloudinary.com/dbtb0sjby/image/upload/v1685983476/banners/vi/19_bxjlbj.jpg'
 ];
 const bannersEn = [
-  {
-    uri: "https://res.cloudinary.com/dbtb0sjby/image/upload/v1681829574/banners/z4274604000111_d25b95af67a4619a2a50324240bf9abd-min_zmekol.jpg",
-  },
-  {
-    uri: "https://res.cloudinary.com/dbtb0sjby/image/upload/v1681829446/banners/chuachan_en_vxdup4.png",
-  },
-  {
-    uri: "https://res.cloudinary.com/dbtb0sjby/image/upload/v1681829228/banners/dahan_en_cy8rx6.png",
-  },
-  
+  'https://res.cloudinary.com/dbtb0sjby/image/upload/v1685983504/banners/en/2_vwpe7c.jpg',
+  'https://res.cloudinary.com/dbtb0sjby/image/upload/v1685983504/banners/en/4_trp9xj.jpg',
+  'https://res.cloudinary.com/dbtb0sjby/image/upload/v1685983504/banners/en/6_tdup44.jpg',
+  'https://res.cloudinary.com/dbtb0sjby/image/upload/v1685983502/banners/en/8_srf8ww.jpg',
+  'https://res.cloudinary.com/dbtb0sjby/image/upload/v1685983502/banners/en/10_hcpe5m.jpg',
+  'https://res.cloudinary.com/dbtb0sjby/image/upload/v1685983502/banners/en/12_kilqkr.jpg',
+  'https://res.cloudinary.com/dbtb0sjby/image/upload/v1685983502/banners/en/14_dynbxz.jpg',
+  'https://res.cloudinary.com/dbtb0sjby/image/upload/v1685983503/banners/en/16_xad7dt.jpg',
+  'https://res.cloudinary.com/dbtb0sjby/image/upload/v1685983503/banners/en/18_ffz6co.jpg',
+  'https://res.cloudinary.com/dbtb0sjby/image/upload/v1685983503/banners/en/20_lnzglb.jpg'
 ];

@@ -100,10 +100,24 @@ function validateRegex(text, regex) {
   return regex.test(text)
 }
 
+/**
+ * Trả về một mảng mới đã remove item theo `condition`. Không nên dùng mảng
+ * quá sâu.
+ * @param {Array<any>} arr 
+ * @param {(ele: any, index: number) => any} selectValueToCompare 
+ * @param {value} value 
+ */
+function removeFrom(arr, selectValueToCompare, value) {
+  if(arr.length === 1) return [];
+  let cpArr = arr.slice();
+  return cpArr.filter((ele, index) => selectValueToCompare(ele, index) !== value)
+}
+
 const FunctionsUtility = {
   getHeaderTitle,
   deepCompare,
-  validateRegex
+  validateRegex,
+  removeFrom
 }
 
 export default FunctionsUtility;

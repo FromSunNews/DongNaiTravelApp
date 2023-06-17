@@ -5,14 +5,20 @@ import {
   Text,
   FlatList,
   LayoutAnimation,
-  Animated
+  Animated,
+  ActivityIndicator
 } from 'react-native'
 import React from 'react'
 
 import { useNavigation } from '@react-navigation/native'
+
+import useTheme from 'customHooks/useTheme'
 import { useBriefPlaces } from 'customHooks/usePlace'
 
-import { BRIEF_PLACE_DATA_FIELDS } from 'utilities/constants'
+import {
+  BRIEF_PLACE_DATA_FIELDS,
+  PLACE_QUALITIES
+} from 'utilities/constants'
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { TypeScrollView, HorizontalPlaceCard, HorizontalPlaceCardSkeleton, BannerButton } from 'components'
@@ -21,7 +27,6 @@ import styles from './ExploreScreenStyles'
 import { app_sp } from 'globals/styles'
 import { useSelector } from 'react-redux'
 import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
-import useTheme from 'customHooks/useTheme'
 
 /**
  * __Creator__: @NguyenAnhTuan1912
@@ -35,22 +40,27 @@ const ExploreScreen = () => {
   //theme
   const {themeColor, themeMode} = useTheme();
   
+  
   const exploreInfo = React.useRef({
     isFirstFetch: true,
     briefPlaceDataFields: BRIEF_PLACE_DATA_FIELDS,
-    isEndReach: false
+    isEndReach: false,
+    isReload: false,
+    placesInstance: undefined
   });
+  
   const [type, setType] = React.useState("all");
   const [isOnTop, setIsOnTop] = React.useState(true);
-  const navigation = useNavigation();
-  const { places, inscreaseSkip, fetchBriefPlaceByType } = useBriefPlaces(type);
 
-  React.useEffect(() => {
-    if(!places) {
-      fetchBriefPlaceByType(exploreInfo.current.briefPlaceDataFields);
-    }
-    // dispatch(updateSkipBriefPlacesAmount({typeOfBriefPlaces: type, skip: 5}));
-  }, [type]);
+  const navigation = useNavigation();
+  const {
+    places,
+    increaseSkip,
+    fetchBriefPlaceByType,
+    reloadBriefPlacesByType
+  } = useBriefPlaces(type);
+
+  if(!exploreInfo.current.placesInstance) exploreInfo.current.placesInstance = places
 
   const showBannderButton = isVisible => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -62,7 +72,7 @@ const ExploreScreen = () => {
     return function(e) {
       if(exploreInfo.current.isEndReach) {
         if(places) {
-          inscreaseSkip();
+          increaseSkip();
           fetchBriefPlaceByType(exploreInfo.current.briefPlaceDataFields);
         }
       }
@@ -85,6 +95,13 @@ const ExploreScreen = () => {
   }
 
   console.log("Render Explore!!!");
+
+  React.useEffect(() => {
+    if(!places || places.data.length === 0) {
+      fetchBriefPlaceByType(exploreInfo.current.briefPlaceDataFields);
+    }
+    // dispatch(updateSkipBriefPlacesAmount({typeOfBriefPlaces: type, skip: 5}));
+  }, [type]);
 
   return (
     <View style={{backgroundColor: themeColor.bg_primary}}>
@@ -117,12 +134,13 @@ const ExploreScreen = () => {
       }
       <FlatList
         data={places ? places.data : []}
+        key={exploreInfo.current.placesInstance}
         style={[styles.scroll_view_container,{backgroundColor: themeColor.bg_second}]}
         contentContainerStyle={{paddingBottom: 200}}
         onMomentumScrollEnd={handleExploreMomentumScrollEnd}
         onEndReached={handleEndReach}
         onScroll={handleExploreScroll}
-        // scrollEventThrottle={1000}
+        scrollEventThrottle={1000}
         stickyHeaderHiddenOnScroll
         stickyHeaderIndices={[0]}
         ListEmptyComponent={
@@ -135,7 +153,8 @@ const ExploreScreen = () => {
         ListHeaderComponent={
           <TypeScrollView
             buttonStyle="capsule"
-            types='all;recommended;popular;most_visit;high_rating'
+            types={PLACE_QUALITIES[langCode].values}
+            labels={PLACE_QUALITIES[langCode].labels}
             callBack={setType}
             scrollStyle={[app_sp.ms_18, app_sp.pv_12]}
             containerStyle={{backgroundColor: themeColor.bg_second, ...app_sp.pv_10}}
@@ -143,6 +162,8 @@ const ExploreScreen = () => {
         }
         renderItem={item => <View style={app_sp.ph_18}><HorizontalPlaceCard typeOfBriefPlace={type} place={item.item} placeIndex={item.index} /></View>}
         keyExtractor={item => item._id}
+        onRefresh={() => {reloadBriefPlacesByType(exploreInfo.current.briefPlaceDataFields)}}
+        refreshing={false}
       />
     </View>
   )

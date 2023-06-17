@@ -3,6 +3,9 @@
     "name": "DongNaiTravelApp",
     "slug": "DongNaiTravelApp",
     "version": "1.0.0",
+    "developer": {
+      "tool": "expo-cli"
+    },
     "orientation": "portrait",
     "icon": "./app/assets/images/icon.png",
     "userInterfaceStyle": "light",
@@ -17,6 +20,12 @@
         "expo-image-picker",
         {
           "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ],
+      [
+        "expo-screen-orientation",
+        {
+          "initialOrientation": "DEFAULT"
         }
       ],
       "expo-localization",

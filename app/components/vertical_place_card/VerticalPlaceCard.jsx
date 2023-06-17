@@ -61,7 +61,7 @@ const VerticalPlaceCard = ({
   getTextContentInHTMLTag,
   handlePressImageButton,
   handleLikeButton,
-  handleVisitButton,
+  isChatBotScreen = false,
   ...props
 }) => {
   const containerStyle = ComponentUtility.mergeStyle([styles.card, place.isRecommended ? {} : {}], props.style);
@@ -75,6 +75,7 @@ const VerticalPlaceCard = ({
   const dataBshdw = themeMode === 'light' ? 'type_1' : 'type_1_dark'
 
   let [city, province] = getTextContentInHTMLTag(place.adr_address);
+  let presentationImage = place && place.place_photos ? {uri: place.place_photos[0]} : {}
 
   return React.useMemo(() => (
     <View {...props} style={[containerStyle,{...app_shdw[dataBshdw],backgroundColor: background}]}>
@@ -86,7 +87,7 @@ const VerticalPlaceCard = ({
         overrideShape="rounded_4"
         onPress={handlePressImageButton}
       >
-        <Image source={place.place_photos.length > 0 ? {uri: place.place_photos[0]} : {}} style={[styles.card_image, { backgroundColor: themeColor.bg_tertiary }]} />
+        <Image source={presentationImage} style={[styles.card_image, { backgroundColor: themeColor.ext_primary }]} />
       </RectangleButton>
       {/* Button & Recommended tag */}
       <View style={styles.card_mid}>
@@ -109,41 +110,60 @@ const VerticalPlaceCard = ({
           </AppText>
         </View>
       </View>
-
+      
+      
       {/* Like button */}
-      <View style={styles.card_buttons_container}>
-        <RectangleButton
-          isActive={extendedPlaceInfo.isLiked}
-          isTransparent
-          typeOfButton="opacity"
-          style={styles.card_button}
-          onPress={handleLikeButton}
-        >
-          {
-            (isActive, currentLabelStyle) => (
-              <AppText font="body2" style={currentLabelStyle}>
-                <Ionicons name={isActive ? "heart" : "heart-outline"} style={currentLabelStyle} size={14} /> {langData.like[langCode]}
-              </AppText>
-            )
-          }
-        </RectangleButton>
+      {
+        isChatBotScreen ?
+        <>
+          <RectangleButton
+            // isActive={extendedPlaceInfo.isVisited}
+            // typeOfButton="highlight"
+            overrideShape="capsule"
+            onPress={handlePressImageButton}
+            style={{
+              marginTop: 5,
+            }}
+          >
+            {(isActive, currentLabelStyle) => (
+              <AppText style={currentLabelStyle} font="body2">Khám phá ngay</AppText>
+            )}
+          </RectangleButton>
+        </> : 
+        <View style={styles.card_buttons_container}>
+          <RectangleButton
+            isActive={extendedPlaceInfo.isLiked}
+            isTransparent
+            typeOfButton="opacity"
+            style={styles.card_button}
+            onPress={handleLikeButton}
+          >
+            {
+              (isActive, currentLabelStyle) => (
+                <AppText font="body2" style={currentLabelStyle}>
+                  <Ionicons name={isActive ? "heart" : "heart-outline"} style={currentLabelStyle} size={14} /> {langData.like[langCode]}
+                </AppText>
+              )
+            }
+          </RectangleButton>
 
-        <RectangleButton
-          isTransparent
-          typeOfButton="opacity"
-          style={styles.card_button}
-        >
-          {
-            (isActive, currentLabelStyle) => (
-              <AppText font="body2" style={currentLabelStyle}>
-              <Ionicons name={isActive ? "flag" : "flag-outline"} style={currentLabelStyle} size={14} /> {langData.report[langCode]}
-              </AppText>
-            )
-          }
-        </RectangleButton>
-      </View>
+          <RectangleButton
+            isTransparent
+            typeOfButton="opacity"
+            style={styles.card_button}
+          >
+            {
+              (isActive, currentLabelStyle) => (
+                <AppText font="body2" style={currentLabelStyle}>
+                <Ionicons name={isActive ? "flag" : "flag-outline"} style={currentLabelStyle} size={14} /> {langData.report[langCode]}
+                </AppText>
+              )
+            }
+          </RectangleButton>
+        </View>
+      }
     </View>
-  ), [extendedPlaceInfo.isLiked, extendedPlaceInfo.isVisited, place.rating, place.numberOfVisited, place.user_ratings_total,themeColor])
+  ), [extendedPlaceInfo.isLiked, place.rating, place.user_favorites_total, place.user_ratings_total,themeColor])
 }
 
 export default withPlaceCard(VerticalPlaceCard)

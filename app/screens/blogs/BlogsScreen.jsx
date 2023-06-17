@@ -1,22 +1,37 @@
 import {
   View,
   FlatList,
-  LayoutAnimation
+  LayoutAnimation,
+  ActivityIndicator
 } from 'react-native'
 import React from 'react'
 
 import { useNavigation } from '@react-navigation/native'
 
+import {
+  useBriefBlogs
+} from 'customHooks/useBlog'
+import useTheme from 'customHooks/useTheme'
+
+import {
+  BRIEF_BLOG_DATA_FIELDS,
+  BLOG_QUANLITIES
+} from 'utilities/constants'
+
 import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
-import { TypeScrollView, HorizontalBlogCard, HorizontalBlogCardSkeleton, BannerButton } from 'components'
+import {
+  TypeScrollView,
+  HorizontalBlogCard,
+  HorizontalBlogCardSkeleton,
+  BannerButton
+} from 'components'
 
 import styles from './BlogsScreenStyles'
 import { app_sp } from 'globals/styles'
 import { useSelector } from 'react-redux'
-import useTheme from 'customHooks/useTheme'
 
 const BlogsScreen = () => {
   //language
@@ -27,20 +42,20 @@ const BlogsScreen = () => {
 
   const blogsInfo = React.useRef({
     isFirstFetch: true,
-    briefBlogDataFields: "",
-    isEndReach: false
+    briefBlogDataFields: BRIEF_BLOG_DATA_FIELDS,
+    isEndReach: false,
+    blogsInstance: undefined
   });
   const [type, setType] = React.useState("all");
   const [isOnTop, setIsOnTop] = React.useState(true);
+
   const navigation = useNavigation();
-
-  const [blogs, setBlogs] = React.useState(undefined);
-
-  React.useEffect(() => {
-    setTimeout(() => {
-      setBlogs(blogsFek);
-    }, 3000)
-  }, [type]);
+  const {
+    blogs,
+    increaseSkip,
+    fetchBriefBlogsByType,
+    reloadBriefBlogsByType
+  } = useBriefBlogs(type);
 
   const showBannderButton = isVisible => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -52,7 +67,8 @@ const BlogsScreen = () => {
     return function(e) {
       if(blogsInfo.current.isEndReach) {
         if(blogs) {
-          
+          increaseSkip();
+          fetchBriefBlogsByType(blogsInfo.current.briefBlogDataFields);
         }
       }
       blogsInfo.current.isEndReach = false;
@@ -72,6 +88,13 @@ const BlogsScreen = () => {
   const handleEndReach = e => {
     blogsInfo.current.isEndReach = true;
   }
+
+  React.useEffect(() => {
+    if(!blogs || blogs.data.length === 0) {
+      fetchBriefBlogsByType(blogsInfo.current.briefBlogDataFields);
+    }
+    // dispatch(updateSkipBriefPlacesAmount({typeOfBriefPlaces: type, skip: 5}));
+  }, [type]);
 
   return (
     <View style={{backgroundColor: themeColor.bg_second}}>
@@ -103,7 +126,7 @@ const BlogsScreen = () => {
         )
       }
       <FlatList
-        data={blogs ? blogs : []}
+        data={blogs ? blogs.data : []}
         style={[styles.scroll_view_container,{backgroundColor: themeColor.bg_second}]}
         contentContainerStyle={{paddingBottom: 200}}
         onMomentumScrollEnd={handleExploreMomentumScrollEnd}
@@ -122,14 +145,17 @@ const BlogsScreen = () => {
         ListHeaderComponent={
           <TypeScrollView
             buttonStyle="capsule"
-            types='all;newest;favorite;most_likes;most_comments'
+            types={BLOG_QUANLITIES[langCode].values}
+            labels={BLOG_QUANLITIES[langCode].labels}
             callBack={setType}
             scrollStyle={[app_sp.ms_18, app_sp.pv_12]}
             containerStyle={{backgroundColor: themeColor.bg_second, ...app_sp.pv_10}}
           />
         }
-        renderItem={item => {console.log(item); return <View style={app_sp.ph_18}><HorizontalBlogCard blog={item.item} /></View>}}
+        renderItem={item => {console.log(item); return <View style={app_sp.ph_18}><HorizontalBlogCard blog={item.item} typeOfBriefBlog={type} /></View>}}
         keyExtractor={item => item._id}
+        onRefresh={() => reloadBriefBlogsByType(blogsInfo.current.briefBlogDataFields)}
+        refreshing={false}
       />
     </View>
   )

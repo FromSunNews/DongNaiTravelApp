@@ -8,24 +8,31 @@ import {
 
 import {
   addPlaceDetailsState,
-  inscreaseSkipBriefPlacesAmountState,
-  descreaseSkipBriefPlacesAmountState,
+  increaseSkipBriefPlacesAmountState,
+  decreaseSkipBriefPlacesAmountState,
   updateBriefPlaceState,
   clearAllBriefPlaces,
-  fetchBriefPlacesByTypeAsyncThunk,
-  fetchPlaceDetailsByIdAsyncThunk,
-  briefPlacesSeletor,
+  briefPlacesSelector,
   placeDetailsSelector,
   clearPlaceDetailsState
 } from 'redux/places/PlacesSlice'
+import {
+  fetchPlaceDetailsByIdAsyncThunk,
+  fetchBriefPlacesByTypeAsyncThunk,
+  refetchBriefPlaceByTypeAsyncThunk
+} from 'redux/places/PlacesAsyncThunks'
 
 import {
   UPDATE_USER_CASES
 } from 'utilities/constants'
+import {
+  callWithGlobalLoading
+} from 'utilities/reduxStore'
 
 import {
   PlaceDataProps,
-  PlaceDetailsDataProps
+  PlaceDetailsDataProps,
+  RequestPlaceDetailsInfoProps
 } from 'types/index.d.ts'
 
 export const {
@@ -33,59 +40,59 @@ export const {
   useBriefPlacesActions
 } = (function() {
   /**
+   * Hàm này dùng để tạo các actions cho brief place.
    * @param {Dispatch<AnyAction>} dispatch 
+   * @param {string} typeOfBriefPlaces
    * @returns 
    */
-  let createInscreaseSkipFn = (dispatch, typeOfBriefPlaces) =>
-  /**
-   * Hàm này dùng để tăng số brief places cần bỏ qua khi request về server.
-   * @returns 
-   */
-  () => dispatch(inscreaseSkipBriefPlacesAmountState(typeOfBriefPlaces));
-
-  /**
-   * @param {Dispatch<AnyAction>} dispatch 
-   * @returns 
-   */
-  let createDescreaseSkipFn = (dispatch, typeOfBriefPlaces) =>
-  /**
-   * Hàm này dùng để giảm số brief places cần bỏ qua khi request về server.
-   * @returns 
-   */
-  () => dispatch(descreaseSkipBriefPlacesAmountState(typeOfBriefPlaces));
-
-  /**
-   * @param {Dispatch<AnyAction>} dispatch 
-   * @returns 
-   */
-  let createClearAllFn = dispatch =>
-  /**
-   * Hàm này dùng để dọn hết brief places.
-   * @returns 
-   */
-  () => dispatch(clearAllBriefPlaces());
-
-  /**
-   * @param {Dispatch<AnyAction>} dispatch 
-   * @returns 
-   */
-  let createUpdateBriefPlaceFn = (dispatch, typeOfBriefPlaces) =>
-  /**
-   * Hàm này dùng để update dữ liệu của một brief place trong brief places theo type.
-   * @returns 
-   */
-  (placeId, placeIndex, updateData) => dispatch(updateBriefPlaceState({placeId, placeIndex, typeOfBriefPlaces, updateData}))
-
-  /**
-   * @param {Dispatch<AnyAction>} dispatch 
-   * @returns 
-   */
-  let createFetchBriefPlaceByTypeFn = (dispatch, typeOfBriefPlaces) =>
-  /**
-   * Hàm này dùng để yêu cầu dữ liệu của brief places từ server theo type.
-   * @returns 
-   */
-  fields => dispatch(fetchBriefPlacesByTypeAsyncThunk({type: typeOfBriefPlaces, fields}))
+  const createBriefPlacesActions = function(dispatch, typeOfBriefPlaces) {
+    return {
+      /**
+       * Hàm này dùng để tăng số brief places cần bỏ qua khi request về server.
+       * @returns 
+       */
+      increaseSkip: function() {
+        dispatch(increaseSkipBriefPlacesAmountState(typeOfBriefPlaces));
+      },
+      /**
+       * Hàm này dùng để giảm số brief places cần bỏ qua khi request về server.
+       * @returns 
+       */
+      decreaseSkip: function() {
+        dispatch(decreaseSkipBriefPlacesAmountState(typeOfBriefPlaces));
+      },
+      /**
+       * Hàm này dùng để dọn hết brief places.
+       * @returns 
+       */
+      clearAll: function() {
+        dispatch(clearAllBriefPlaces());
+      },
+      /**
+       * Hàm này dùng để update dữ liệu của một brief place trong brief places theo type.
+       * @param {string} placeId id của brief place.
+       * @param {number} placeIndex thứ tự trong mảng của brief place
+       * @param {PlaceDataProps} updateData Dữ liệu mới cần update
+       */
+      updateBriefPlace: function(placeId, placeIndex, updateData) {
+        dispatch(updateBriefPlaceState({placeId, placeIndex, typeOfBriefPlaces, updateData}));
+      },
+      /**
+       * Hàm này dùng để tải dữ liệu brief place.
+       * @param {string} fields các trường dữ liệu muốn lấy.
+       */
+      fetchBriefPlaceByType: function(fields) {
+        dispatch(fetchBriefPlacesByTypeAsyncThunk({type: typeOfBriefPlaces, fields}));
+      },
+      /**
+       * Hàm này dùng để tải lại dữ liệu brief place. Refresh luôn brief places của nó theo type (typeOfBriefPlaces).
+       * @param {string} fields các trường dữ liệu muốn lấy.
+       */
+      reloadBriefPlacesByType: function(fields) {
+        dispatch(refetchBriefPlaceByTypeAsyncThunk({type: typeOfBriefPlaces, fields}));
+      }
+    }
+  }
 
   return {
     /**
@@ -94,30 +101,14 @@ export const {
      * @returns 
      */
     useBriefPlaces: function(typeOfBriefPlaces) {
-      let places = useSelector(state => briefPlacesSeletor(state, typeOfBriefPlaces));
+      let places = useSelector(state => briefPlacesSelector(state, typeOfBriefPlaces));
       let dispatch = useDispatch();
 
-      let {
-        inscreaseSkip,
-        descreaseSkip,
-        clearAll,
-        updateBriefPlace,
-        fetchBriefPlaceByType
-      } = React.useMemo(() => ({
-        inscreaseSkip: createInscreaseSkipFn(dispatch, typeOfBriefPlaces),
-        descreaseSkip: createDescreaseSkipFn(dispatch, typeOfBriefPlaces),
-        clearAll: createClearAllFn(dispatch),
-        updateBriefPlace: createUpdateBriefPlaceFn(dispatch, typeOfBriefPlaces),
-        fetchBriefPlaceByType: createFetchBriefPlaceByTypeFn(dispatch, typeOfBriefPlaces)
-      }), [typeOfBriefPlaces]);
+      let actions = React.useMemo(() => createBriefPlacesActions(dispatch, typeOfBriefPlaces), [typeOfBriefPlaces]);
 
       return {
         places,
-        inscreaseSkip,
-        descreaseSkip,
-        clearAll,
-        updateBriefPlace,
-        fetchBriefPlaceByType
+        ...actions
       }
     },
 
@@ -129,27 +120,9 @@ export const {
     useBriefPlacesActions: function(typeOfBriefPlaces) {
       let dispatch = useDispatch();
 
-      let {
-        inscreaseSkip,
-        descreaseSkip,
-        clearAll,
-        updateBriefPlace,
-        fetchBriefPlaceByType
-      } = React.useMemo(() => ({
-        inscreaseSkip: createInscreaseSkipFn(dispatch, typeOfBriefPlaces),
-        descreaseSkip: createDescreaseSkipFn(dispatch, typeOfBriefPlaces),
-        clearAll: createClearAllFn(dispatch),
-        updateBriefPlace: createUpdateBriefPlaceFn(dispatch, typeOfBriefPlaces),
-        fetchBriefPlaceByType: createFetchBriefPlaceByTypeFn(dispatch, typeOfBriefPlaces)
-      }), [typeOfBriefPlaces]);
+      let actions = React.useMemo(() => createBriefPlacesActions(dispatch, typeOfBriefPlaces), [typeOfBriefPlaces]);
 
-      return {
-        inscreaseSkip,
-        descreaseSkip,
-        clearAll,
-        updateBriefPlace,
-        fetchBriefPlaceByType
-      }
+      return actions;
     }
   }
 })();
@@ -169,41 +142,42 @@ export const {
   usePlaceDetailsActions,
 } = (function() {
   /**
+   * Hàm này dùng để tạo ra các actions của place details.
    * @param {Dispatch<AnyAction>} dispatch 
    * @returns 
    */
-  let createAddPlaceDetailsFn = dispatch =>
-  /**
-   * Hàm này dùng để thêm một place details vào trong store.
-   * @param {PlaceDetailsDataProps} placeDetails Dữ liệu của một place, không nhất thiết phải có `content` hay `reviews`.
-   * @returns 
-   */
-  placeDetails => dispatch(addPlaceDetailsState(placeDetails));
-  
-  /**
-   * @param {Dispatch<AnyAction>} dispatch 
-   * @returns 
-   */
-  let createFetchPlaceDetailsFn = dispatch =>
-  /**
-   * Hàm này dùng để lấy dữ liệu chi tiết của một place trên server theo `place_id` và `lang`.
-   * @param {string} placeId là `place_id` của một place.
-   * @param {string} lang ngôn ngữ mong muốn của dữ liệu trả về (với các trường có hỗ trợ nhiều ngôn ngữ).
-   * @returns 
-   */
-  (placeId, lang) => dispatch(fetchPlaceDetailsByIdAsyncThunk({placeId, lang}));
-  
-  /**
-   * @param {Dispatch<AnyAction>} dispatch 
-   * @returns 
-   */
-  let createClearPlaceDetailsFn = dispatch =>
-  /**
-   * Hàm này dùng để clear details của một place nào đo theo `place_id`. 
-   * @param {string} placeId là `place_id` của một place.
-   * @returns 
-   */
-  placeId => dispatch(clearPlaceDetailsState(placeId));
+  const createPlaceDetailsActions = function(dispatch) {
+    return {
+      /**
+       * Hàm này dùng để thêm một place details vào trong store.
+       * @param {PlaceDetailsDataProps} placeDetails Dữ liệu của một place, không nhất thiết phải có `content` hay `reviews`.
+       * @returns 
+       */
+      addPlaceDetails: function(placeDetails) {
+        dispatch(addPlaceDetailsState(placeDetails));
+      },
+      /**
+       * Hàm này dùng để lấy dữ liệu chi tiết của một place trên server theo `place_id` và `lang`.
+       * @param {string} placeId là `place_id` của một place.
+       * @param {object} options Options để gọi async thunk.
+       * @param {string} options.lang ngôn ngữ mong muốn của dữ liệu trả về (với các trường có hỗ trợ nhiều ngôn ngữ).
+       * @param {boolean} options.canGetComplete Có thể lấy dữ liệu đủ dùng cho place details hay không?
+       * @param {boolean} options.canGetFull Có thể lấy toàn bộ dữ liệu cho place details hay không?
+       * @returns 
+       */
+      fetchPlaceDetails: function(placeId, options) {
+        dispatch(fetchPlaceDetailsByIdAsyncThunk({placeId, options}));
+      },
+      /**
+       * Hàm này dùng để clear details của một place nào đo theo `place_id`. 
+       * @param {string} placeId là `place_id` của một place.
+       * @returns 
+       */
+      clearPlaceDetails: function(placeId) {
+        dispatch(clearPlaceDetailsState(placeId));
+      }
+    }
+  }
 
   return {
     /**
@@ -215,22 +189,11 @@ export const {
       let placeDetails = useSelector(state => placeDetailsSelector(state, placeId));
       let dispatch = useDispatch();
       
-      let {
-        addPlaceDetails,
-        
-        fetchPlaceDetails,
-        clearPlaceDetails,
-      } = React.useMemo(() => ({
-        addPlaceDetails: createAddPlaceDetailsFn(dispatch),
-        fetchPlaceDetails: createFetchPlaceDetailsFn(dispatch),
-        clearPlaceDetails: createClearPlaceDetailsFn(dispatch)
-      }));
+      let actions = React.useMemo(() => createPlaceDetailsActions(dispatch), []);
 
       return {
         placeDetails,
-        addPlaceDetails,
-        fetchPlaceDetails,
-        clearPlaceDetails,
+        ...actions
       }
     },
     /**
@@ -240,21 +203,9 @@ export const {
     usePlaceDetailsActions: function() {
       let dispatch = useDispatch();
       
-      let {
-        addPlaceDetails,
-        fetchPlaceDetails,
-        clearPlaceDetails,
-      } = React.useMemo(() => ({
-        addPlaceDetails: createAddPlaceDetailsFn(dispatch),
-        fetchPlaceDetails: createFetchPlaceDetailsFn(dispatch),
-        clearPlaceDetails: createClearPlaceDetailsFn(dispatch)
-      }));
+      let actions = React.useMemo(() => createPlaceDetailsActions(dispatch), []);
 
-      return {
-        addPlaceDetails,
-        fetchPlaceDetails,
-        clearPlaceDetails,
-      }
+      return actions;
     },
     /**
      * Hook này dùng để subscribe vào PlaceSlice.
@@ -308,7 +259,7 @@ export function usePlaceInteractionActions(place) {
    * Hàm này sẽ tạo ra một function dùng để sử dụng Interaction Actions. Interaction Actions là các Actions dùng để
    * sử dụng tính năng tương tác với địa điểm như là thích, ghé thăm hoặc ghi review ngắn về một địa điểm.
    * Thì hàm này dùng để tạo ra các Toggle Interaction Actions, `Toggle Action` là sự tương tác chuyển đổi,
-   * chuyển đổi ở đây là chuyển đổi boolean, true và false.
+   * chuyển đổi ở đây là chuyển đổi boolean giữa true và false.
    * 
    * Ví dụ có một địa điểm A, và dựa vào kết quả trả về từ server thì người dùng này chưa thích địa điểm A, và
    * cũng chưa ghé thăm, thì khi đó state của `isLiked` và `isVisited` sẽ là `false`. Nếu như ấn like thì state
@@ -378,11 +329,6 @@ export function usePlaceInteractionActions(place) {
      * `callWhenAPIResolve` và `callWhenAPIReject`
      */
     likePlace: createToggleInteractionActionsFunc("isLiked", UPDATE_USER_CASES["addEle:savedPlaces"], UPDATE_USER_CASES["removeEle:savedPlaces"]),
-    /**
-     * Hàm này dùng dể đánh dấu hoặc bỏ đánh dấu ghé thăm một địa điểm nào đó. Nhận vào hai tham số là
-     * `callWhenAPIResolve` và `callWhenAPIReject`
-     */
-    visitPlace: createToggleInteractionActionsFunc("isVisited", UPDATE_USER_CASES["addEle:visitedPlaces"], UPDATE_USER_CASES["removeEle:visitedPlaces"])
   }), [])
 
   React.useEffect(() => {

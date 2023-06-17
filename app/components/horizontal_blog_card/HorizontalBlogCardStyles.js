@@ -89,6 +89,12 @@ const styles = StyleSheet.create({
     height: 19,
     backgroundColor: app_c.HEX.ext_primary,
     ...app_sh.rounded_4
+  },
+
+  card_user_avatar: {
+    width: 18,
+    aspectRatio: 1,
+    ...app_sh.circle
   }
 });
 

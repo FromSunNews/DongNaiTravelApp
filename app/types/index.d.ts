@@ -16,13 +16,23 @@ export interface RequestBriefPlacesInfoProps {
 
 export interface RequestPlaceDetailsInfoProps {
   placeId: string,
-  lang: string,
+  options: {
+    lang: string,
+    canGetComplete?: boolean,
+    canGetFull?: boolean
+  }
 }
 
-export interface BriefPlacesDataProps {
-  limit: number,
-  skip: number,
-  data: Array<PlaceDataProps>
+export interface RequestBriefBlogsInfoProps {
+  type: string,
+  fields: string
+}
+
+export interface RequestBlogDetailsInfoProps {
+  blogId: string,
+  options: {
+    canGetFull?: boolean
+  }
 }
 
 export interface CoordinateDataProps {
@@ -83,7 +93,7 @@ export interface PlaceDataProps {
   reviews_id?: string,
   content_id?: string,
   isRecommended?: boolean,
-  numberOfVisited?: number,
+  user_favorites_total?: number,
   permanently_closed?: boolean,
   curbside_pickup?: boolean,
   delivery?: boolean,
@@ -102,14 +112,23 @@ export interface PlaceDataProps {
   takeout?: any,
   createdAt?: number,
   updateeAt?: number,
-
+  place_photos?: Array<string>,
+  place_photo?: string,
+  reviews?: {
+    _id?: string,
+    reviews: Array<PlaceReviewsDataProps>,
+  }
+  content?: {
+    _id?: string,
+    content?: ContentDataProps
+  },
   /*
     Hai trường dữ liệu này được thêm trong quá trình lấy data trên mongo.
     Không có sẵn và mặc định là không có tồn tại ở trong place data thật.
     Cho nên khi check thì sẽ luôn là `undefined`
   */
-  isLiked: boolean,
-  isVisited: boolean
+  isLiked?: boolean,
+  isVisited?: boolean
 }
 
 export interface PlaceReviewsDataProps {
@@ -132,7 +151,7 @@ export interface PlaceContentTextDataProps<T> {
   en: T
 }
 
-export interface PlaceContentDataProps {
+export interface ContentDataProps {
   _id?: string,
   content_id?: string,
   plainText?: PlaceContentTextDataProps<string>,
@@ -145,15 +164,44 @@ export interface PlaceContentDataProps {
   }>
 }
 
-export interface PlaceDetailsDataProps extends PlaceDataProps {
+export interface BriefPlacesReduxStateProps {
+  limit: number,
+  skip: number,
+  data: Array<PlaceDataProps>
+}
+
+export interface BlogDataProps {
+  authorId?: string,
+  reviewId?: string,
+  contentId?: string,
+  name?: string,
+  avatar?: string,
+  userFavoritesTotal?: number,
+  userCommentsTotal?: number,
+  type?: string,
+  mentionedPlaces?: Array<string>,
+  isApproved?: boolean,
+  readTime?: number,
+  updatedAt?: number,
+  createdAt?: number,
   reviews?: {
     _id?: string,
     reviews: Array<PlaceReviewsDataProps>,
   }
-  content?: {
-    _id?: string,
-    content?: PlaceContentDataProps
-  }
+  content?: ContentDataProps,
+  author?: {
+    displayName?: string,
+    firstName?: string,
+    lastName?: string,
+    avatar?: string
+  },
+  isLiked?: boolean
+}
+
+export interface BriefBlogsReduxStateProps {
+  limit: number,
+  skip: number,
+  data: Array<BlogDataProps>
 }
 
 // Use for redux
@@ -181,20 +229,55 @@ export type PrepareTTSAsyncFn = (audioAsBase64: string) => boolean
 export type PrepareMP3AsyncFn = (url: string) => boolean
 
 // Use for component use HOC
-type ExtendedPlacecInfoInPlaceCard = {
+type ExtendedPlaceInfoInPlaceCard = {
   isLiked: boolean,
   isVisited: boolean
+}
+
+type ExtendedBlogInfoInPlaceCard = {
+  isLiked: boolean
 }
 
 export interface WithPlaceCardWrappedComponentProps extends ViewProps {
   place: PlaceDataProps,
   placeIndex: number,
   typeOfBriefPlace: string,
-  extendedPlaceInfo: ExtendedPlacecInfoInPlaceCard,
-  addPlaceDetails: (placeDetails: PlaceContentDataProps) => {payload: PlaceContentDataProps, type: string}
+  extendedPlaceInfo: ExtendedPlaceInfoInPlaceCard,
+  addPlaceDetails: (placeDetails: ContentDataProps) => {payload: ContentDataProps, type: string}
   updateBriefPlace: (placeId: any, placeIndex: any, updateData: any) => {payload: {placeId: any, placeIndex: any, updateData: any}, type: string },
   getTextContentInHTMLTag: (fullHtmlTag: string) => string[],
   handlePressImageButton: () => void,
-  handleLikeButton: () => void,
-  handleVisitButton: () => void
+  handleLikeButton: () => void
+}
+
+export interface WithBlogCardWrapperdComponentProps extends ViewProps {
+  blog: BlogDataProps,
+  blogIndex: number,
+  typeOfBriefBlog: string,
+  extendedBlogInfo: ExtendedBlogInfoInPlaceCard,
+  addBlogDetails: (blogDetails: ContentDataProps) => {payload: ContentDataProps, type: string}
+  updateBriefPlace: (blogId: any, blogIndex: any, updateData: any) => {payload: {blogId: any, blogIndex: any, updateData: any}, type: string },
+  handlePressImageButton: () => void,
+  handleLikeButton: () => void
+}
+
+// For Html getter (WebView)
+export interface EditorHtmlOptionsProps {
+  editorBackgroundColor: string,
+  editorToolsBarBackgroundColor: string
+}
+
+// For component
+export interface SearchResultListProps {
+  results: any,
+  resultListPosition: "normal" | "float-top" | "float-bottom",
+  renderResultItem: (item: any) => JSX.Element,
+  keyExtractor: (item: any, index: number) => string,
+  scrollEnabled: boolean
+}
+
+export interface SearchProps {
+  placeHolder: string,
+  callBack: (searchString: string, data: any) => void,
+  apis: Array<(text: string) => Promise<any>>
 }

@@ -1,13 +1,24 @@
 import {
   View,
   Text,
-  Image
+  Image,
+  ViewProps
 } from 'react-native'
 import React from 'react'
 
+import {
+  withBlogCard
+} from 'hocs/withBlogCard'
+
+import { useNavigation } from '@react-navigation/native'
+
+import useTheme from 'customHooks/useTheme'
+
+import { useSelector } from 'react-redux'
+import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
+
 import ComponentUtility from 'utilities/component'
 import DateTimeUtility from 'utilities/datetime'
-import { useNavigation } from '@react-navigation/native'
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
@@ -18,26 +29,15 @@ import CircleButton from 'components/buttons/CircleButton'
 import styles from './VerticalBlogCardStyles'
 import { app_c, app_sh, app_shdw, app_sp } from 'globals/styles'
 
-import { ViewProps } from 'types/index.d'
-import { useSelector } from 'react-redux'
-import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
-import useTheme from 'customHooks/useTheme'
-/**
- * @typedef BlogProps
- * @property {object} user Thông tin cơ bản của một user, là tác giả của blog.
- * @property {string} user.id Id của user.
- * @property {string} user.name Tên của user.
- * @property {string} user.avatar Đường dẫn ảnh đại diện của user.
- * @property {string} name Tên của blog.
- * @property {string} avatar Ảnh đại diện của blog.
- * @property {number} createdAt Thời gian blog này được tạo ra.
- * @property {number} readTime Thời gian đọc blog.
- * @property {boolean} isLiked Đây là một trường thời gian được thêm vào khi chuẩn bị dữ liệu.
- */
+
+import {
+  BlogDetailsDataProps,
+  WithBlogCardWrapperdComponentProps
+} from 'types/index.d.ts'
 
 /**
  * @typedef VerticalBlogCardProps
- * @property {BlogProps} blog Thông tin ngắn của một địa điểm.
+ * @property {BlogDetailsDataProps} blog Thông tin ngắn của một địa điểm.
  */
 
 /**
@@ -53,11 +53,22 @@ import useTheme from 'customHooks/useTheme'
  * // Margin end cho card 
  * <VerticalBlogCard blog={blog[0]} style={app_sp.me_18} />
  * ```
- * @param {ViewProps & VerticalBlogCardProps} props Props của component.
+ * @param {WithBlogCardWrapperdComponentProps} props Props của component.
  * @returns Thẻ dọc chứa các thông tin cơ bản của một blog.
  */
-const VerticalBlogCard = ({ blog, ...props }) => {
-  const containerStyle = ComponentUtility.mergeStyle([styles.card, blog.isRecommended ? {} : {}], props.style);
+const VerticalBlogCard = ({
+  blog,
+  blogIndex,
+  typeOfBriefBlog,
+  extendedBlogInfo,
+  addBlogDetails,
+  updateBriefBlog,
+  getTextContentInHTMLTag,
+  handlePressImageButton,
+  handleLikeButton,
+  ...props
+}) => {
+  const containerStyle = ComponentUtility.mergeStyle(styles.card, props.style);
   //Đức useNavagation to make when onPress Image of Blog => toScreen BlogDetailScreen
   const navigation = useNavigation() 
   //language
@@ -66,24 +77,28 @@ const VerticalBlogCard = ({ blog, ...props }) => {
   //theme
   const {themeColor, themeMode} = useTheme();
 
-  return (
+  let displayAuthorName = blog.author.lastName && blog.author.firstName
+    ? blog.author.lastName + " " + blog.author.firstName
+    : blog.author.displayName
+
+  return React.useMemo(() => (
     <View {...props} style={[containerStyle,{backgroundColor: themeMode === 'light' ? themeColor.bg_second : themeColor.bg_tertiary}]}>
       {/* Image */}
       <RectangleButton RectangleButton
         isOnlyContent
         typeOfButton="none"
         overrideShape="rounded_4"
-        onPress={()=>navigation.navigate("BlogDetailScreen")}
+        onPress={handlePressImageButton}
       >
         <Image source={{ uri: blog.avatar ? blog.avatar : undefined }} style={[styles.card_image]} />
       </RectangleButton>
       {/* Button & Recommended tag */}
       <View style={styles.card_mid}>
         {
-          blog.user.avatar === ""
-          ? (<Ionicons name="person-circle" color={themeColor.ext_second} />)
-          : (<Image source={{uri: blog.user.avatar}} />)
-        }<AppText font="body2">{" " + blog.user.name}</AppText>
+          !blog.author.avatar
+          ? (<Ionicons name="person-circle" size={14} color={themeColor.ext_second} />)
+          : (<Image source={{uri: blog.author.avatar}} style={styles.card_user_avatar} />)
+        }<AppText font="body2">{" " + displayAuthorName}</AppText>
       </View>
 
       {/* Content */}
@@ -96,7 +111,7 @@ const VerticalBlogCard = ({ blog, ...props }) => {
             {DateTimeUtility.getShortDateString(blog.createdAt)}
           </AppText>
           <AppText numberOfLines={1} font="body2">
-            {DateTimeUtility.toMinute(blog.readTime)} min read
+            {DateTimeUtility.toMinute(blog.readTime ? blog.readTime : 0)} min
           </AppText>
         </View>
       </View>
@@ -104,9 +119,11 @@ const VerticalBlogCard = ({ blog, ...props }) => {
       {/* Like button */}
       <View style={styles.card_buttons_container}>
         <RectangleButton
+          isActive={extendedBlogInfo.isLiked}
           isTransparent
           typeOfButton="opacity"
           style={styles.card_button}
+          onPress={handleLikeButton}
         >
           {
             (isActive, currentLabelStyle) => (
@@ -132,7 +149,7 @@ const VerticalBlogCard = ({ blog, ...props }) => {
         </RectangleButton>
       </View>
     </View>
-  )
+  ), [extendedBlogInfo.isLiked, blog.userCommentsTotal, blog.userFavoritesTotal]);
 }
 
-export default VerticalBlogCard
+export default withBlogCard(VerticalBlogCard)

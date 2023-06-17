@@ -18,6 +18,7 @@ import {
 
 import GroupBottomTab from 'navigations/group_bottom_tab/GroupBottomTab'
 import BlogEditorNavigator from 'navigations/blog_editor_navigator/BlogEditorNavigator'
+import GlobalNavigator from 'navigations/global_navigator/GlobalNavigator'
 import SplashScreen from 'screens/splash/SplashScreen'
 import OnboardingScreen from 'screens/onboarding/OnboardingScreen'
 import SigninScreen from 'screens/signin/SigninScreen'
@@ -33,6 +34,8 @@ import {
   AppHeader,
   AppText
 } from 'components'
+import ChatBotNavigator from 'navigations/chatbot_navigator/ChatBotNavigator'
+import OnboardingChatbot from 'screens/onaboarding_chatbot/OnboardingChatbot'
 
 /**
  * AuthNavigator sẽ chịu trách nhiệm cho việc xác thực người dùng thông qua `SplashScreen`.
@@ -116,7 +119,18 @@ const AuthNavigator = ({navigation}) => {
       <AppStack.Screen 
         name="BlogEditorNavigator" 
         component={BlogEditorNavigator} 
-        options={{ headerShown: false, presentation: 'containedModal', }} 
+        options={{ headerShown: false, presentation: 'containedModal' }} 
+      />
+      <AppStack.Screen 
+        name="GlobalNavigator" 
+        component={GlobalNavigator} 
+        options={{ headerShown: false }} 
+      />
+
+      <AppStack.Screen 
+        name="ChatBotNavigator" 
+        component={ChatBotNavigator} 
+        options={{ headerShown: false}} 
       />
     </AppStack.Navigator>
   )

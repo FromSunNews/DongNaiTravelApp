@@ -1,6 +1,14 @@
 import { View, Text, ImageBackground, Image } from 'react-native'
 import React from 'react'
 
+import {
+  withBlogCard
+} from 'hocs/withBlogCard'
+
+import {
+  useBlogDetailsActions
+} from 'customHooks/useBlog'
+
 import { useNavigation } from '@react-navigation/native'
 
 import DateTimeUtility from 'utilities/datetime'
@@ -15,17 +23,16 @@ import styles from './HorizontalBlogCardStyles'
 import { app_c, app_shdw, app_sp } from 'globals/styles'
 import useTheme from 'customHooks/useTheme'
 
+import {
+  BlogDataProps,
+  WithBlogCardWrapperdComponentProps
+} from 'types/index.d.ts'
+
 /**
- * @typedef BlogProps
- * @property {object} user Thông tin cơ bản của một user, là tác giả của blog.
- * @property {string} user.id Id của user.
- * @property {string} user.name Tên của user.
- * @property {string} user.avatar Đường dẫn ảnh đại diện của user.
- * @property {string} name Tên của blog.
- * @property {string} avatar Ảnh đại diện của blog.
- * @property {number} createdAt Thời gian blog này được tạo ra.
- * @property {number} readTime Thời gian đọc blog.
- * @property {boolean} isLiked Đây là một trường thời gian được thêm vào khi chuẩn bị dữ liệu.
+ * @typedef HorizontalBlogCardProps
+ * @property {BlogDataProps} blog Thông tin về một blog.
+ * @property {string} typeOfBriefBlog Type của brief blogs.
+ * @property {number} blogIndex Index của blog trong data của briefBlog. Cái này dùng để tìm blog cho nhanh, khỏi dùng vòng lặp.
  */
 
 /**
@@ -34,22 +41,32 @@ import useTheme from 'customHooks/useTheme'
  * Đây là card nằm ngang, hiển thị một số thông tin cơ bản của một blog nào đó. Có thể ấn vào để xem chi tiết
  * của blog đó. Một card sẽ chứa 3 cột. Cột đâu tiên là dành cho ảnh, cột thứ 2 là giành cho nội dung chính
  * và cột cuói cùng là giành cho nút share.
- * @param {object} props - Props của component.
- * @param {BlogProps} props.blog - Dữ liệu của blog, thông tin này chủ yếu là thông tin đã được làm gọn lại.
+ * @param {WithBlogCardWrapperdComponentProps} props Props của component.
  * @returns Thẻ ngang chứa các thông tin cơ bản của một blog.
  */
-const HorizontalBlogCard = ({ blog }) => {
+const HorizontalBlogCard = ({
+  blog,
+  blogIndex,
+  typeOfBriefBlog,
+  extendedBlogInfo,
+  addBlogDetails,
+  updateBriefBlog,
+  getTextContentInHTMLTag,
+  handlePressImageButton,
+  handleLikeButton,
+  handleVisitButton,
+  ...props
+}) => {
+  let displayAuthorName = blog.author.lastName && blog.author.firstName
+    ? blog.author.lastName + " " + blog.author.firstName
+    : blog.author.displayName
   //theme
   const {themeColor, themeMode} = useTheme();
   //shadow for card
   let shadw = themeMode === 'light' ? 'type_1' : 'type_1_dark'
   let bg = themeMode === 'light' ? 'bg_second' : 'bg_tertiary'
-  const navigation = useNavigation()
 
-  const handlePressImageButton = () => {
-    navigation.navigate({name: 'BlogDetailScreen'});
-  }
-  return (
+  return React.useMemo(() => (
     <View style={[styles.card,{backgroundColor: themeColor[bg], ...app_shdw[shadw]}]}>
       {/* Cột đâu tiên - Image Container */}
       <RectangleButton
@@ -68,16 +85,15 @@ const HorizontalBlogCard = ({ blog }) => {
           */}
         </ImageBackground>
       </RectangleButton>
-
       {/* Cột thứ 2 - Main Container */}
       <View style={styles.card_main_container}>
         <View style={styles.card_content_container}>
           <View style={styles.card_user_container}>
             {
-              blog.user.avatar === ""
-              ? (<Ionicons name="person-circle" color={themeColor.fourth} />)
-              : (<Image source={{uri: blog.user.avatar}} />)
-            }<AppText font="body2" style={{color: themeColor.fourth}}>{" " + blog.user.name}</AppText>
+              !blog.author.avatar
+              ? (<Ionicons name="person-circle" size={18} color={app_c.HEX.ext_second} />)
+              : (<Image source={{uri: blog.author.avatar}} style={styles.card_user_avatar} />)
+            }<AppText font="body2" style={styles.card_text_color}>{" " + displayAuthorName}</AppText>
           </View>
           <View>
             <AppText numberOfLines={2} font="h3" style={[styles.card_title,{color: themeColor.fourth}]}>{blog.name}</AppText>
@@ -89,17 +105,18 @@ const HorizontalBlogCard = ({ blog }) => {
               </AppText>
             </View>
             <View style={{...styles.card_information_col, alignItems: 'flex-end'}}>
-              <AppText font="body2" style={{color:themeColor.fourth}}>
-                <Ionicons name='time-outline' /> {DateTimeUtility.toMinute(blog.readTime)} min
+              <AppText font="body2" style={styles.card_text_color}>
+                <Ionicons name='time-outline' /> {DateTimeUtility.toMinute(blog.readTime ? blog.readTime : 0)} min
               </AppText>
             </View>
           </View>
         </View>
         <View style={styles.card_buttons_container}>
           <CircleButton
-            isActive={blog.isLiked}
+            isActive={extendedBlogInfo.isLiked}
             style={app_sp.me_8}
             typeOfButton="highlight"
+            onPress={handleLikeButton}
             setIcon={(isActive, currentLabelStyle) => (
               <Ionicons name={isActive ? 'heart' : 'heart-outline'} size={14} style={currentLabelStyle} />
             )}
@@ -124,7 +141,7 @@ const HorizontalBlogCard = ({ blog }) => {
         />
       </View>
     </View>
-  )
+  ), [extendedBlogInfo.isLiked, blog.userCommentsTotal, blog.userFavoritesTotal]);
 }
 
-export default HorizontalBlogCard
+export default withBlogCard(HorizontalBlogCard)

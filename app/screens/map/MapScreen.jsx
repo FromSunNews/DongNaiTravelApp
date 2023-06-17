@@ -11,7 +11,6 @@ import {
   LayoutAnimation, 
   Platform, 
   Pressable, 
-  ScrollView, 
   Text, 
   TouchableOpacity, 
   View,
@@ -20,8 +19,13 @@ import {
   Linking,
   ActivityIndicator,
   Image,
-  FlatList
 } from 'react-native'
+
+// https://gorhom.github.io/react-native-bottom-sheet/troubleshooting/#adding-horizontal-flatlist-or-scrollview-is-not-working-properly-on-android
+import {
+  ScrollView,
+  FlatList
+} from 'react-native-gesture-handler';
 
 // Related to react navigation
 import { NavigationContainer, useNavigation } from '@react-navigation/native'
@@ -49,7 +53,7 @@ import { cloneDeep, debounce } from 'lodash'
 
 // Related to Styles
 import { styles } from './MapScreenStyles'
-import { app_c, app_dms, app_sh, app_shdw, app_typo } from 'globals/styles'
+import { app_c, app_dms, app_sh, app_shdw, app_sp, app_typo } from 'globals/styles'
 
 // Related to components
 import { BottomSheetScroll, CheckBoxText } from 'components'
@@ -89,10 +93,16 @@ import { computeDestinationPoint } from 'geolib'
 import moment from 'moment/moment'
 import { selectCurrentMap, updateCurrentMap, updateMapDetails, updateMapTypes, updatePlaces, updateSuggestions } from 'redux/map/mapSlice'
 import BottomSheetExample from '../../components/bottom_sheet/BottomSheetExample'
+import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
 
 const Map = () => {
 // Phương: https://docs.expo.dev/versions/latest/sdk/map-view/
-// Phương: https://www.npmjs.com/package/react-native-google-places-autocomplete
+  // Phương: https://www.npmjs.com/package/react-native-google-places-autocomplete
+  //language
+  const langData = useSelector(selectCurrentLanguage).data?.mapScreen
+  const langCode = useSelector(selectCurrentLanguage).languageCode
+
+  const contentNotificationBottomSheet = langCode === 'vi' ? 'Không có bất kỳ kết quả cho tìm kiếm của bạn!' : 'Do not have any result for your search!'
 
   const Stack = createNativeStackNavigator()
   const navigation = useNavigation()
@@ -106,10 +116,12 @@ const Map = () => {
   const dispatch = useDispatch()
 
   const currentFilter = useSelector(selectCurrentFilter)
+  // console.log("🚀 ~ file: MapScreen.jsx:115 ~ currentFilter:", currentFilter)
+
   const [routesFilter, setRoutesFilter] = useState(currentFilter.routes)
+  console.log("🚀 ~ file: MapScreen.jsx:118 ~ routesFilter:", routesFilter)
 
   const currentMap = useSelector(selectCurrentMap)
-  console.log("🚀 ~ file: MapScreen.jsx:113 ~ currentMap:", currentMap)
 
   const CARD_HEIGHT = 240
   const CARD_WIDTH = app_dms.screenWidth * 0.8
@@ -286,11 +298,11 @@ const Map = () => {
     setLocationCurrent(currentMap.userLocation)
     setArrPlaceInput([
       {
-        description: 'My location',
+        description: 'Địa điểm của tôi',
         geometry: { location: { lat: currentMap.userLocation.latitude, lng: currentMap.userLocation.longitude } },
       }
     ])
-    setTextOrigin('My location')
+    setTextOrigin('Địa điểm của tôi')
     // call api mapuser
     // await getMapUserAPI({
     //   currentUserId: user?._id ? user._id : temporaryUserId,
@@ -540,7 +552,7 @@ const Map = () => {
         setLocationCurrent(position)
         setArrPlaceInput([
           {
-            description: 'My location',
+            description: 'Địa điểm của tôi',
             geometry: { location: { lat: userLocation.coords.latitude, lng: userLocation.coords.longitude } },
           }
         ])
@@ -881,7 +893,7 @@ const Map = () => {
       } else {
         dispatch(updateNotif({
           appearNotificationBottomSheet: true,
-          contentNotificationBottomSheet: 'Do not have any result for your search!'
+          contentNotificationBottomSheet: contentNotificationBottomSheet
         }))
       }
     })
@@ -959,7 +971,7 @@ const Map = () => {
         )}
 
         {
-        (origin && showDirections && (textDestination === 'My location' || textOrigin !== 'My location')) ? 
+        (origin && showDirections && (textDestination === 'Địa điểm của tôi' || textOrigin !== 'Địa điểm của tôi')) ? 
         <Marker 
           coordinate={origin}
           anchor={{
@@ -1173,13 +1185,19 @@ const Map = () => {
                 style={[styles.tagContainer, {
                   backgroundColor: tagSelected === item.id ? app_c.HEX.third : app_c.HEX.primary
                 }]}
-                onPress={() => setTagSelected(item.id)}
+                onPress={() => {
+                  setTagSelected(item.id)
+                  dispatch(updateNotif({
+                    appearNotificationBottomSheet: true,
+                    contentNotificationBottomSheet: "Xin lỗi chức năng này sẽ có trong bản cập nhật tiếp theo!"
+                  }))
+                }}
               >
                 <Text style={[styles.tagText, {
                   color: tagSelected === item.id ? app_c.HEX.primary : app_c.HEX.fourth
                 }]}
                 >
-                  {item.title}
+                  {item.title[langCode]}
                 </Text>
               </TouchableOpacity>
             ))
@@ -1281,7 +1299,7 @@ const Map = () => {
                 Keyboard.dismiss()
                 handleGetPlacesSearchText(addressText)
               }}
-              placeholder='Where do you want to go?'
+              placeholder={langData.find_placeholder[langCode]}
               isShowBackIcon={isShowBackIcon}
               isHaveRightButton={true}
               handlePressFilter={() => setIsOpenBottomSheetFilter(true)}
@@ -1337,7 +1355,7 @@ const Map = () => {
                   setTextDestination('')
 
                   setOrigin(locationCurrent)
-                  setTextOrigin('My location')
+                  setTextOrigin('Địa điểm của tôi')
 
                   setOriRouteInfo(null)
                   setDesRouteInfo(null)
@@ -1386,7 +1404,7 @@ const Map = () => {
                     setDestination(null)
                   }
                   // Đặt lại giá trị
-                  setTextOrigin('My location')
+                  setTextOrigin('Địa điểm của tôi')
                   setOrigin(locationCurrent)
                   
                 }
@@ -1401,7 +1419,7 @@ const Map = () => {
               style={styles.iconBack}
             />
           </TouchableOpacity>
-          <Text style={styles.headerRouteInfo}>Your route's infomation</Text>
+          <Text style={styles.headerRouteInfo}>{langData.your_router[langCode]}</Text>
           {
             isShowOptionRoute &&
             <TouchableOpacity 
@@ -1436,10 +1454,10 @@ const Map = () => {
                       setTextDestination(temp2)
 
                       if (!oriRouteInfo || !desRouteInfo) {
-                        if (currentOriText === 'My location') {
+                        if (currentOriText === 'Địa điểm của tôi') {
                           setOriRouteInfo(desRouteInfo)
                           setDesRouteInfo(arrPlaceInput[0])
-                        } else if (currentDesText === 'My location') {
+                        } else if (currentDesText === 'Địa điểm của tôi') {
                           setDesRouteInfo(oriRouteInfo)
                           setOriRouteInfo(arrPlaceInput[0])
                         } else {
@@ -1477,7 +1495,7 @@ const Map = () => {
                   }}>
                     <Text numberOfLines={2} style={styles.originText}>{textOrigin}</Text>
                   </TouchableOpacity>
-                  <Text style={styles.toText}>to</Text>
+                  <Text style={styles.toText}>{langData.to[langCode]}</Text>
                   <TouchableOpacity onPress={() => setIsShowOptionRoute(true)}>
                     <Text numberOfLines={2} style={styles.detinationText}>{textDestination}</Text>
                   </TouchableOpacity>
@@ -1487,24 +1505,24 @@ const Map = () => {
                     <View style={styles.routeInfoTimeContainer}>
                       <View style={styles.routeInfoUnixTime}>
                         <Text style={styles.routeInfoNumberTime}>{days === 0 ? '-' : days}</Text>
-                        <Text style={styles.routeInfoTextTime}>{days > 1 ? 'days' : 'day'}</Text>
+                        <Text style={styles.routeInfoTextTime}>{days > 1 ? langData.days[langCode]: langData.day[langCode]}</Text>
                       </View>
                       <View style={styles.routeInfoUnixTime}>
                         <Text style={styles.routeInfoNumberTime}>{hours === 0 ? '-' : hours}</Text>
-                        <Text style={styles.routeInfoTextTime}>{hours > 1 ? 'hours' : 'hour'}</Text>
+                        <Text style={styles.routeInfoTextTime}>{hours > 1 ? langData.hours[langCode] : langData.hour[langCode]}</Text>
                       </View>
                       <View style={styles.routeInfoUnixTime}>
                         <Text style={styles.routeInfoNumberTime}>{minutes === 0 ? '-' : minutes}</Text>
-                        <Text style={styles.routeInfoTextTime}>{minutes > 1 ? 'mins' : 'min'}</Text>
+                        <Text style={styles.routeInfoTextTime}>{minutes > 1 ? langData.mins[langCode] : langData.min[langCode]}</Text>
                       </View>
                     </View>
                     <View style={styles.routeInfoTranportContainer}>
-                      <Text style={styles.routeInfoTranport}>{directionModeGCP === 'DRIVE' ? 'Car' : (directionModeGCP === 'TWO_WHEELER' ? 'Motor' : (directionModeGCP === 'WALK' ? 'Walk' :  (directionModeGCP === 'BICYCLE' ? 'Bicycle' : 'Transit')))}</Text>
-                      <Text style={styles.routeInfoTextTranport}>by</Text>
+                      <Text style={styles.routeInfoTranport}>{directionModeGCP === 'DRIVE' ? 'Xe hơi' : (directionModeGCP === 'TWO_WHEELER' ? 'Mô tô' : (directionModeGCP === 'WALK' ? 'Đi bộ' :  (directionModeGCP === 'BICYCLE' ? 'Xe đạp' : 'Trung chuyển')))}</Text>
+                      <Text style={styles.routeInfoTextTranport}>{langData.by[langCode]}</Text>
                     </View>
                   </View>
                   
-                  <Text style={[styles.distanceText, {marginTop: Platform.OS === 'ios' ? 15 : 5, marginBottom: Platform.OS === 'ios' ? 10 : 5}]}>Summary: {distance}km</Text>
+                  <Text style={[styles.distanceText, {marginTop: Platform.OS === 'ios' ? 15 : 5, marginBottom: Platform.OS === 'ios' ? 10 : 5}]}>{langData.summary[langCode]}: {distance}km</Text>
 
                   <View style={styles.containerBtnOptionRoute}>
                     <TouchableOpacity 
@@ -1525,7 +1543,7 @@ const Map = () => {
                         backgroundColor: app_c.HEX.ext_second
                       }]}
                     >
-                      <Text style={styles.textStart}>Directions</Text>
+                      <Text style={styles.textStart}>{langData.direction[langCode]}</Text>
                       <FontAwesome5 
                         name='list-ul'
                         size={12} 
@@ -1534,10 +1552,16 @@ const Map = () => {
                     </TouchableOpacity>
 
                     <TouchableOpacity 
-                      onPress={handleStartTrackingUserLocation}
+                      onPress={() => {
+                        // handleStartTrackingUserLocation()
+                        dispatch(updateNotif({
+                          appearNotificationBottomSheet: true,
+                          contentNotificationBottomSheet: "Xin lỗi chức năng này sẽ có trong bản cập nhật tiếp theo!"
+                        }))
+                      }}
                       style={[styles.btnStart, {marginLeft: 12}]}
                     >
-                      <Text style={styles.textStart}>Start</Text>
+                      <Text style={styles.textStart}>{langData.start[langCode]}</Text>
                       <FontAwesome5 
                         name='location-arrow'
                         size={12} 
@@ -1584,8 +1608,8 @@ const Map = () => {
                       // Phải reset lại
                       setDirectionsPolyLine([])
                       setSelectedPolyLine(0)
-                      // TH1 nếu nó không phải là My location
-                      if (oriInputRef.current.getAddressText().trim() !== 'My location' && oriRouteInfo) {
+                      // TH1 nếu nó không phải là Địa điểm của tôi
+                      if (oriInputRef.current.getAddressText().trim() !== 'Địa điểm của tôi' && oriRouteInfo) {
                           if (oriRouteInfo.name)
                             setTextOrigin(oriRouteInfo.name)
                           else 
@@ -1601,21 +1625,21 @@ const Map = () => {
                             longitude: oriRouteInfo?.geometry.location.lng
                           }
                           typeOri = 'place_id'
-                      } else if (oriInputRef.current.getAddressText().trim() === 'My location') {
-                        console.log('TH ori banwg My location va khong co oriRouteInfo')
+                      } else if (oriInputRef.current.getAddressText().trim() === 'Địa điểm của tôi') {
+                        console.log('TH ori banwg Địa điểm của tôi va khong co oriRouteInfo')
                         start = locationCurrent
                         typeOri = 'coordinate'
                         startCoor = locationCurrent
 
-                        setTextOrigin('My location')
+                        setTextOrigin('Địa điểm của tôi')
                         setOrigin(locationCurrent)
                       } 
 
                       console.log("🚀 ~ file: MapScreen.jsx:1384 ~ Map ~ desInputRef.current.getAddressText().trim():", desInputRef.current.getAddressText().trim())
                       console.log("🚀 ~ file: MapScreen.jsx:1383 ~ Map ~ desRouteInfo:", desRouteInfo)
 
-                      if (desInputRef.current.getAddressText().trim() !== 'My location' && desRouteInfo) {
-                        console.log('TH des khong bang My location va co desRouteInfo')
+                      if (desInputRef.current.getAddressText().trim() !== 'Địa điểm của tôi' && desRouteInfo) {
+                        console.log('TH des khong bang Địa điểm của tôi va co desRouteInfo')
                           if (desRouteInfo.name)
                             setTextDestination(desRouteInfo.name)
                           else 
@@ -1631,13 +1655,13 @@ const Map = () => {
                           }
                           typeDes = 'place_id'
                       }
-                      else if (desInputRef.current.getAddressText().trim() === 'My location') {
-                        console.log('TH des la My location')
+                      else if (desInputRef.current.getAddressText().trim() === 'Địa điểm của tôi') {
+                        console.log('TH des la Địa điểm của tôi')
                         end = locationCurrent
                         typeDes = 'coordinate'
                         endCoor = locationCurrent
                         setDestination(locationCurrent)
-                        setTextDestination('My location')
+                        setTextDestination('Địa điểm của tôi')
                       } 
                       setIsShowOptionRoute(false)
                       let routeModifiers
@@ -1656,17 +1680,16 @@ const Map = () => {
                       } else if (directionModeGCP === 'BICYCLE') {
                         routeModifiers = null
                       }
-
                       handleGetDirections(start, end, typeOri, typeDes, startCoor, endCoor, directionModeGCP, directionModeORS, tagModeSelected, routeModifiers)
                     }
                   }}
                   style={styles.routeBtn}
                 >
-                  <Text style={styles.routeBtnText}>Route</Text>
+                      <Text style={styles.routeBtnText}>{langData.router_title[langCode]}</Text>
                 </TouchableOpacity>
                 <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0}}>
                   <InputAutoComplete
-                    placeholder='Choose a destination place'
+                    placeholder={langData.choose_a_des_place[langCode]}
                     onPlaceSelected={(details) => {
                       // if (!details.place_id) { 
                       //   setTextOrigin(details.description)
@@ -1692,7 +1715,7 @@ const Map = () => {
                 </View>
                 <View style={{ position: 'absolute', top: 0, left: 0, right: 0}}>
                   <InputAutoComplete
-                    placeholder='Choose an origin place'
+                    placeholder={langData.choose_an_origin_place[langCode]}
                     onPlaceSelected={(details) => {
                       // Thằng đầy đủ nó có trả về plcae_id
                       // if (!details.place_id) { 
@@ -1728,10 +1751,10 @@ const Map = () => {
                 desInputRef.current.setAddressText(currentOriText)
                 
                 if (!oriRouteInfo || !desRouteInfo) {
-                  if (currentOriText === 'My location') {
+                  if (currentOriText === 'Địa điểm của tôi') {
                     setOriRouteInfo(desRouteInfo)
                     setDesRouteInfo(arrPlaceInput[0])
-                  } else if (currentDesText === 'My location') {
+                  } else if (currentDesText === 'Địa điểm của tôi') {
                     setDesRouteInfo(oriRouteInfo)
                     setOriRouteInfo(arrPlaceInput[0])
                   } else {
@@ -1785,6 +1808,8 @@ const Map = () => {
                     backgroundColor: tagModeSelected === item.id ? app_c.HEX.fourth : app_c.HEX.primary
                   }]}
                   onPress={() => {
+                    console.log('directionModeGCP', directionModeGCP)
+
                     if (directionModeGCP !== item.modeGCP) {
                       let start, end, typeDes, typeOri
                       if (directionOriPlaceId) {
@@ -1830,7 +1855,7 @@ const Map = () => {
                     color: tagModeSelected === item.id ? app_c.HEX.primary : app_c.HEX.ext_second
                   }]}
                   >
-                    {item.title}
+                    {item.title[langCode]}
                   </Text>
                 </TouchableOpacity>
               ))
@@ -2229,7 +2254,7 @@ const Map = () => {
           haveOverlay={false}
           bottomView={{
             paddingHorizontal: 0,
-            paddingBottom: 120,
+            paddingBottom: 160,
           }}
           childView={
             <View style={{ backgroundColor: app_c.HEX.primary}}>
@@ -2620,9 +2645,9 @@ const Map = () => {
                     }}
                     style={styles.leftHeaderBtnFilter}
                   >
-                    <Text style={styles.rightHeaderBtnTextFilter}>Reset</Text>
+                    <Text style={styles.rightHeaderBtnTextFilter}>Đặt lại</Text>
                   </TouchableOpacity>
-                  <Text style={styles.headerTextFilter}>Setting</Text>
+                  <Text style={styles.headerTextFilter}>Cài đặt</Text>
                   <TouchableOpacity
                     onPress={() => {
                       dispatch(updateRoutes(routesFilter))
@@ -2630,7 +2655,7 @@ const Map = () => {
                     }}
                     style={styles.rightHeaderBtnFilter}
                   >
-                    <Text style={styles.rightHeaderBtnTextFilter}>Save</Text>
+                    <Text style={styles.rightHeaderBtnTextFilter}>Lưu</Text>
                   </TouchableOpacity>
                 </View>
                 <View style={{ marginTop: 10, paddingHorizontal: 18}}>
@@ -2713,7 +2738,7 @@ const Map = () => {
           childView={
             <View style={{ backgroundColor: app_c.HEX.primary, flex: 1}}>
               <BottomSheetView>
-                <Text style={[styles.headerTextFilter,{ marginLeft: 18}]}>Setting Map</Text>
+                <Text style={[styles.headerTextFilter, { marginLeft: 18 }]}>{langData.setting_map[langCode]}</Text>
                 <View style={{ marginTop: 15}}>
                   <Text style={[styles.titleBottomSheet, {color: app_c.HEX.ext_second, paddingHorizontal: 18}]}>Loại bản đồ</Text>
                   <View 
@@ -2835,7 +2860,7 @@ const Map = () => {
           
           setIsOpenBottomSheet(false)
         }}
-        snapPoints={['20%', '40%', '100%']}
+        snapPoints={['30%', '100%']}
         haveBtn={false}
         haveOverlay={false}
         bottomView={{
@@ -2975,7 +3000,6 @@ const Map = () => {
             </View>
             
             <ScrollView
-              nestedScrollEnabled={false}
               horizontal
               scrollEventThrottle={1}
               showsHorizontalScrollIndicator={false}
@@ -3372,15 +3396,20 @@ const Map = () => {
 
             {
               (placeDetails?.reviews) ?
-              placeDetails?.reviews.map((review, index) => {
-                return (
-                  <ReviewSectionPromise
-                    review={review}
-                    key={index}
-                    isTranformData={placeDetails?.isTranformData ? true : false}
-                  />
-                )
-              }) : null
+              <View style={app_sp.ph_18}>
+               {
+                placeDetails?.reviews.map((review, index) => {
+                  return (
+                    <ReviewSectionPromise
+                      review={review}
+                      key={index}
+                      isTranformData={placeDetails?.isTranformData ? true : false}
+                    />
+                  )
+                })
+              }
+              </View>
+              : null
             }
           </View>
         }
@@ -3392,7 +3421,7 @@ const Map = () => {
         closeTermCondition={() => {
           setIsOpenBottomSheetFilter(false)
         }}
-        snapPoints={['20%', '40%', '100%']}
+        snapPoints={['20%', '40%', '90%']}
         labelBtn='Save'
         handleLabelBtn={() => null}
         haveBtn={true}

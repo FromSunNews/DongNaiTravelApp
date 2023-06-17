@@ -60,7 +60,6 @@ const EXT_THIRD = {
   RGB: "180, 180, 180",
   HEX_DARK: "#B4B4B4",
 };
-
 // ===== COLOR BUTTON TAB =====
 const BG_GROUP_BUTTON_TAB = {
   HEX: "#112D4E",

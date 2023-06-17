@@ -47,7 +47,6 @@ const HorizontalPlaceCard = ({
   getTextContentInHTMLTag,
   handlePressImageButton,
   handleLikeButton,
-  handleVisitButton,
   ...props
 }) => {
   const langCode = useSelector(selectCurrentLanguage).languageCode 
@@ -56,6 +55,9 @@ const HorizontalPlaceCard = ({
   const {themeColor, themeMode} = useTheme();
 
   let [city, province] = getTextContentInHTMLTag(place.adr_address);
+  let presentationImage = place && place.place_photos ? {uri: place.place_photos[0]} : {}
+
+  console.log("User favorites total: ", place.user_favorites_total);
 
   //shadow for card
   let shadw = themeMode === 'light' ? 'type_1' : 'type_1_dark'
@@ -74,7 +76,7 @@ const HorizontalPlaceCard = ({
       >
         <ImageBackground
           style={styles.card_image_container}
-          source={place.place_photos.length > 0 ? {uri: place.place_photos[0]} : {}}
+          source={presentationImage}
         >
           {
             place.isRecommended &&
@@ -113,8 +115,8 @@ const HorizontalPlaceCard = ({
               </AppText>
             </View>
             <View style={styles.card_information_col}>
-              <AppText font="body2" style={themeMode === 'light' ? styles.card_text_color : { color: themeColor.fourth }}>
-                <Ionicons name='eye-outline' /> {NumberUtility.toMetricNumber(place.numberOfVisited)}
+              <AppText font="body2" style={styles.card_text_color}>
+                <Ionicons name='heart-outline' /> {NumberUtility.toMetricNumber(place.user_favorites_total)}
               </AppText>
             </View>
           </View>
@@ -140,18 +142,6 @@ const HorizontalPlaceCard = ({
               <Ionicons name={isActive ? 'map' : 'map-outline'} size={14} style={currentLabelStyle} />
             )}
           />
-          <RectangleButton
-            isActive={extendedPlaceInfo.isVisited}
-            typeOfButton="highlight"
-            onPress={handleVisitButton}
-            defaultColor={heart}
-            activeColor={activeHeart}
-            overrideShape="capsule"
-          >
-            {(isActive, currentLabelStyle) => (
-              <AppText style={currentLabelStyle} font="body2">{ isActive ?  langData.visited[langCode] : langData.visit[langCode]}</AppText>
-            )}
-          </RectangleButton>
         </View>
       </View>
 
@@ -165,7 +155,8 @@ const HorizontalPlaceCard = ({
         />
       </View>
     </View>
-  ), [extendedPlaceInfo.isLiked, extendedPlaceInfo.isVisited, place.rating, place.numberOfVisited, place.user_ratings_total,themeColor]);
+  ), [extendedPlaceInfo.isLiked, place.rating, place.user_favorites_total, place.user_ratings_total, themeColor]);
+
 }
 
 export default withPlaceCard(HorizontalPlaceCard)

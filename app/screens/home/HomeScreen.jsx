@@ -1,13 +1,41 @@
-import { View, Text, Button, TouchableOpacity, FlatList, ScrollView,TouchableNativeFeedback } from "react-native"
+import {
+  View, Text,
+  Button,
+  TouchableOpacity,
+  FlatList,
+  ScrollView,
+  TouchableNativeFeedback,
+  Platform,
+  Image,
+  ImageBackground
+} from "react-native"
 import React, { useEffect,useState } from "react"
-import { Ionicons, Entypo,Fontisto,FontAwesome5,MaterialCommunityIcons} from "react-native-vector-icons"
+import * as Location from "expo-location"
+
+import { useSelector } from "react-redux"
 
 import {
-  getPlacesAPI
+  getPlacesAPI,
+  getBlogsAPI,
+  getWeatherCurrentAPI
 } from 'request_api'
 
-import styles from "./HomeScreenStyles"
-import { app_sp, app_typo } from "globals/styles"
+import { useBriefPlaces } from "customHooks/usePlace"
+import useTheme from "customHooks/useTheme"
+
+import { selectCurrentMode } from "redux/theme/ThemeSlice"
+import { selectCurrentMap } from "redux/map/mapSlice"
+import { selectCurrentLanguage } from "redux/language/LanguageSlice"
+
+import {
+  BRIEF_PLACE_DATA_FIELDS,
+  BRIEF_BLOG_DATA_FIELDS,
+  PLACE_QUALITIES,
+  BLOG_QUANLITIES
+} from "utilities/constants"
+import { weatherImages } from "utilities/mapdata"
+import { Ionicons, Entypo,Fontisto,FontAwesome5,MaterialCommunityIcons} from "react-native-vector-icons"
+
 import { 
   AppText, 
   HorizontalPlaceCard, 
@@ -18,20 +46,15 @@ import {
   VerticalBlogCard,
   VerticalPlaceCard,
   VerticalPlaceCardSkeleton,
+  BannerButton
 } from "components"
+import CustomStatusBar from "components/custom_status_bar/CustomStatusBar"
 import TabSlideCategoryPlace from "components/tab_slide_category_place/TabSlideCategoryPlace"
 import TabSlideCategoryBlog from "components/tab_slide_category_blog/TabSlideCategoryBlog"
-
-import { getWeatherCurrentAPI } from "request_api"
-import * as Location from "expo-location"
-import { useSelector } from "react-redux"
-import { selectCurrentMap } from "redux/map/mapSlice"
-import { Platform } from "react-native"
 import HomeBannerSlider from "components/home_banner_slider/HomeBannerSlider"
-import { selectCurrentLanguage } from "redux/language/LanguageSlice"
-import { useBriefPlaces } from "customHooks/usePlace"
-import { BRIEF_PLACE_DATA_FIELDS } from "utilities/constants"
-import useTheme from "customHooks/useTheme"
+
+import styles from "./HomeScreenStyles"
+import { app_c, app_sp, app_typo } from "globals/styles"
 
 const HomeScreen = ({navigation}) => {
   const currentMap = useSelector(selectCurrentMap)
@@ -43,17 +66,23 @@ const HomeScreen = ({navigation}) => {
   const [cloud, setCloud] = useState(null)
   const [vision, setVision] = useState(null)
   const [wind, setWind] = useState(null)
+  const [iconId, setIconId] = useState(null)
   const [typePlace, setTypePlace] = React.useState("all");
-  const [typeBlog, setTypeBlog] = React.useState("");
-  const [currentBlogs, setCurrentBlogs] = React.useState(null);
+  const [typeBlog, setTypeBlog] = React.useState("all");
+  const [places, setPlaces] = React.useState(null);
+  const [blogs, setBlogs] = React.useState(null);
 
+  
   //language
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.homeScreen
   //theme
   const { themeColor, themeMode} = useTheme(); 
-  
-  const [places, setPlaces] = React.useState(null);
+
+  const previousTypes = React.useRef({
+    place: typePlace,
+    blog: typeBlog
+  })
 
   // console.log('ChoseTypeOfPlace: '+ typePlace)
   // console.log('ChoseTypeOfBlog: '+ typeBlog)
@@ -71,12 +100,13 @@ const HomeScreen = ({navigation}) => {
       setCloud(data.clouds.all)
       setVision(data.visibility / 1000)
       setDesWeather(data.weather[0].description)
+      setIconId(data.weather[0].icon)
+
     })
   }
+  console.log("🚀 ~ file: HomeScreen.jsx:105 ~ HomeScreen ~ iconId:", iconId)
 
-  const handleReloadLocation = ()=>{
-    getCurrentWeather()
-  }
+
 
   useEffect(()=>{
     if (currentMap.userLocation) {
@@ -88,22 +118,26 @@ const HomeScreen = ({navigation}) => {
   },[currentMap.userLocation])
 
   useEffect(() => {
-    let query = `limit=5&skip=0&filter=quality:${typePlace}&fields=${BRIEF_PLACE_DATA_FIELDS}`;
-    getPlacesAPI(query)
-    .then(data => {
-      setPlaces(data)
-    })
+    let placeQuery = `limit=5&skip=0&filter=quality:${typePlace}&fields=${BRIEF_PLACE_DATA_FIELDS}`;
 
-    if(!currentBlogs) {
-      setTimeout(() => {
-        setCurrentBlogs([...blogs]);
-        // setCurrentPlaces([...places]);
-      }, 2000);
-    }
+    getPlacesAPI(placeQuery)
+      .then(data => {
+        setPlaces(data)
+      })
   }, [typePlace])
 
+  React.useEffect(() => {
+    let blogQuery = `limit=5&skip=0&filter=quality:${typeBlog}&fields=${BRIEF_BLOG_DATA_FIELDS}`
+
+    getBlogsAPI(blogQuery)
+      .then(data => {
+        setBlogs(data)
+      })
+  }, [typeBlog]);
+
+  console.log("Place: ", places);
+
   return (
-    
     <ScrollView style={[styles.container,{backgroundColor: themeColor.bg_primary}]} showsVerticalScrollIndicator={false}>
       <View style={[styles.home_content,{backgroundColor: themeColor.bg_second}]}>
         <View style={[styles.home_banner, {backgroundColor: themeColor.ext_third}]}>
@@ -112,83 +146,130 @@ const HomeScreen = ({navigation}) => {
 
         {
           showPanelWeather &&
-          <View style={styles.home_temperature}>
-            <View style={[styles.temperature,{backgroundColor: themeColor.bg_tertiary}]}>
-              <View style={styles.temperature_degrees}>
-                {
-                  celsius ? (
-                    <AppText style={[styles.temperature_degrees_info,{fontSize:22,marginTop:-4,color:themeColor.sub_fourth}]}>{`${celsius}°C`}</AppText>
-                  ): <AppText style={[styles.temperature_degrees_info,{fontSize:22,marginTop:-4,color:themeColor.sub_fourth}]}><Entypo name="minus"/><Entypo name="minus"/>{`°C`}</AppText>
-                }
-                {
-                  desWeather ? (
-                    <AppText numberOfLines={2}  style={[styles.temperature_degrees_info,{fontSize:13,paddingHorizontal:4,textAlign:"center",color:themeColor.sub_fourth}]}>{capitalizeFirstLetter(desWeather)}</AppText>
-                  ) : <AppText numberOfLines={2}  style={[styles.temperature_degrees_info,{fontSize:13,paddingHorizontal:4,textAlign:"center",color:themeColor.sub_fourth}]}>{langData.desWeather[langCode]}</AppText>
-                }
-              </View>
-              <View style={styles.temperature_other_info}>
-                <View style={[styles.temperature_other_info_half]}>
-                  <View style={styles.temperature_other_info_quarter}>
-                    <Fontisto name='wind' size={14} color={themeColor.sub_fourth}/>
+            <View style={styles.home_temperature}>
+             <ImageBackground source={require('../../assets/images/weather_forcast/5564526.jpg')}
+              resizeMode="cover" 
+              style={{flex:1,marginTop:14, }}
+              borderRadius={12}
+              >
+                <View style={[styles.temperature]}>
+                  <View style={styles.temperature_degrees}>
                     {
-                      wind ?(
-                      <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.sub0,paddingHorizontal:8,color: themeColor.sub_fourth}}>{`${wind}`}<Text style={{fontSize:12}}>km/h</Text></AppText>
-                      ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.sub0,marginTop:4,color: themeColor.sub_fourth}}><Entypo name="minus"/><Entypo name="minus"/><Text style={{fontSize:12}}>km/h</Text></AppText>
-                    }
-                  </View>
-                  <View style={[styles.temperature_other_info_quarter,{ paddingLeft:12}]}>
-                        <Entypo name='water' size={15} color={themeColor.sub_fourth}/>
+                      weatherImages.map(image => {
+                        if(image.id === iconId)
                         {
-                          humidity ? (
-                            <AppText style={{...app_typo.fonts.normal.normal.sub0,paddingHorizontal:8,color: themeColor.sub_fourth}}>{`${humidity}`}<Text style={{fontSize:12}}>%</Text></AppText>
-                          ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.sub0,marginTop:4,color: themeColor.sub_fourth}}><Entypo name="minus"/><Entypo name="minus"/><Text style={{fontSize:12}}>%</Text></AppText>
+                          return  <Image source={image.image} style={styles.temperature_degrees_icon}/>
                         }
-                  </View>
-                </View>
-                <View style={styles.temperature_other_info_half}>
-                  <View style={styles.temperature_other_info_quarter}>
-                    <Entypo name='cloud' size={15} color={themeColor.sub_fourth}/>
+                        else null
+                      })
+                    }
                     {
-                      cloud ? (
-                        <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.sub0,paddingHorizontal:8,color: themeColor.sub_fourth}}>{`${cloud}`+`%`}</AppText>
-                      ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.sub0,marginTop:4,color: themeColor.sub_fourth}}><Entypo name="minus"/><Entypo name="minus"/><Text style={{fontSize:12}}>%</Text></AppText>
+                      celsius ? (
+                        <AppText style={[styles.temperature_degrees_info,{fontSize:22,marginTop:-4,color:themeColor.ext_second}]} >{`${celsius}°C`}</AppText>) 
+                        : (
+                        <AppText style={[styles.temperature_degrees_info,{fontSize:22,marginTop:-4,color:themeColor.ext_second,}]}><Entypo name="minus"/>
+                        <Entypo name="minus"/>{`°C`}</AppText>
+                        )
+                    }
+                    {
+                      desWeather ? (
+                        <AppText numberOfLines={2}  
+                        style={[styles.temperature_degrees_info,{fontSize:14,paddingHorizontal:4,textAlign:"center",color:themeColor.ext_second,}]}
+                        >
+                          {capitalizeFirstLetter(desWeather)}
+                        </AppText>
+                      ) : <AppText numberOfLines={2} style={[styles.temperature_degrees_info,{fontSize:13,paddingHorizontal:4,textAlign:"center",color:themeColor.ext_second,}]}>
+                        {langData.desWeather[langCode]}
+                        </AppText>
                     }
                   </View>
-                  <View style={[styles.temperature_other_info_quarter,{paddingLeft:12}]}>
-                      <MaterialCommunityIcons name='weather-fog' size={15} color={themeColor.sub_fourth}/>
-                      {
-                        vision ? (
-                          <AppText style={{...app_typo.fonts.normal.normal.sub0,paddingHorizontal:8,color: themeColor.sub_fourth}}>{`${vision.toFixed(1)}`}<Text style={{fontSize:12}}>km</Text></AppText>
-                        ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.sub0,marginTop:4}}><Entypo name="minus"/><Entypo name="minus" color='red
-                        
-                        '  /><Text style={{ fontSize: 12 }}>km</Text></AppText>
-                      }
+                  <View style={styles.temperature_other_info}>
+                    <View style={[styles.temperature_other_info_half]}>
+                      <View style={styles.temperature_other_info_quarter}>
+                        {/* <Fontisto name='wind' size={14} color={themeColor.ext_secon d}/> */}
+                        <AppText style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}}>Sức gió:</AppText>
+                        {
+                          wind ?(
+                          <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5,paddingHorizontal:5,color:themeColor.ext_second}}>{`${wind}`}
+                            <AppText style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second,paddingHorizontal:5}}>Km/h</AppText>
+                          </AppText>
+                          ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5,marginTop:4}}>
+                              <AppText style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}}>km/h</AppText>
+                          </AppText>
+                        }
+                      </View>
+                      <AppText style={{fontSize:22,color:themeColor.ext_second}}>-</AppText>
+                      <View style={[styles.temperature_other_info_quarter,{ marginLeft:6}]}>
+                         <AppText style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}}>Độ ẩm:</AppText>
+                            {
+                              humidity ? (
+                                <AppText style={{...app_typo.fonts.normal.normal.h5,paddingHorizontal:5,color:themeColor.ext_second}}>{`${humidity}`}
+                                  <Text style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}} >%</Text>
+                                </AppText>
+                              ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5  ,marginTop:4}}>
+                                <Text style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}}>%</Text>
+                                </AppText>
+                            }
+                      </View>
+                    </View>
+                    <View style={styles.temperature_other_info_half}>
+                      <View style={styles.temperature_other_info_quarter}>
+                        {/* <Entypo name='cloud' size={15} color={themeColor.ext_second}/> */}
+                        <AppText style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}}>Mây:</AppText>
+                        {
+                          cloud ? (
+                            <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5,paddingHorizontal:5,color:themeColor.ext_second}}>{`${cloud}`+`%`}</AppText>
+                          ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5,marginTop:4}}>
+                          <Text style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}}>%</Text>
+                          </AppText>
+                        }
+                      </View>
+                      <AppText style={{fontSize:22,color:themeColor.ext_second}}>-</AppText>
+                      <View style={[styles.temperature_other_info_quarter,{marginLeft:6}]}>
+                          {/* <MaterialCommunityIcons name='weather-fog' size={15} color={themeColor.ext_second}/> */}
+                          
+                        <AppText style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}}>Tầm nhìn:</AppText>
+                          {
+                            vision ? (
+                              <AppText style={{...app_typo.fonts.normal.normal.h5,paddingHorizontal:5,color:themeColor.ext_second}}>{`${vision.toFixed(1)}`}
+                              <Text style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}}>Km</Text>
+                              </AppText>
+                            ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5,marginTop:4}}>
+                              <Text style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}}>Km</Text>
+                              </AppText>
+                          }
+                      </View>
+                    </View>
+                    <View style={[styles.temperature_other_info_half,{width:'100%',justifyContent:'center'}]}>
+                          <AppText style={{...app_typo.fonts.normal.normal.h5,color:app_c.HEX.ext_bg_tab}}>Chi tiết dự báo thời tiết</AppText>
+                          <Image style={{width:20,height:20,marginLeft:8}} source={require('../../assets/images/weather_forcast/weather-app.png')}/>
+                    </View>
                   </View>
                 </View>
-              </View>
+             </ImageBackground>
+              {/* <TouchableOpacity style={[styles.temperature_reload,{backgroundColor: themeColor.ext_primary,}]} onPress={getCurrentWeather}>
+                <Ionicons name="reload-sharp" size={30} color={themeColor.fourth} />
+              </TouchableOpacity> */}
             </View>
-            <TouchableOpacity style={[styles.temperature_reload,{backgroundColor: themeColor.bg_tertiary}]} onPress={getCurrentWeather}>
-              <Ionicons name="reload-sharp" size={30} color={themeColor.sub_fourth} />
-            </TouchableOpacity>
-          </View>
         }
 
         {/* Place and Blog*/}
-        <View style={[styles.home_category,{backgroundColor: themeColor.bg_second}]}>
+        <View style={[{backgroundColor: themeColor.bg_second}]}>
           <TouchableOpacity style={styles.category_header} onPress={()=>navigation.navigate("ExploreNavigator")}>
             <AppText style={styles.category_name}>{langData.title_place[langCode]}</AppText>
             <AppText><Entypo name="chevron-small-right" size={40}/></AppText>
           </TouchableOpacity>
           <TypeScrollView
-            types='all;recommended;popular;most_visit;most_favorite'
+            types={PLACE_QUALITIES[langCode].values}
+            labels={PLACE_QUALITIES[langCode].labels}
             callBack={setTypePlace}
-            scrollStyle={[app_sp.ms_18, app_sp.mb_12]}
-            containerStyle={{backgroundColor: themeColor.bg_second, ...app_sp.pv_10}}
+            scrollStyle={[app_sp.mb_12, app_sp.ps_18]}
+            containerStyle={[{backgroundColor: themeColor.bg_second}, app_sp.pv_10]}
           />
           <ScrollView 
             horizontal={true}
-            style={[{backgroundColor:themeColor.bg_second}, app_sp.pb_10]}
-            contentContainerStyle={{flexGrow: 1}}
+            style={[{backgroundColor:themeColor.bg_second}]}
+            contentContainerStyle={[{flexGrow: 1}, app_sp.pb_10]}
             showsHorizontalScrollIndicator={false}
           >
             {
@@ -206,31 +287,35 @@ const HomeScreen = ({navigation}) => {
             }
           </ScrollView>
         </View>
-        <View style={[styles.home_category,{backgroundColor: themeColor.bg_second}]}>
+        <View style={[{backgroundColor: themeColor.bg_second}]}>
           <TouchableOpacity style={styles.category_header} onPress={()=>navigation.navigate("BlogsNavigator")}>
             <AppText style={styles.category_name}>{langData.title_Blog[langCode]}</AppText>
             <AppText><Entypo name="chevron-small-right" size={40}/></AppText>
           </TouchableOpacity>
           <TypeScrollView
-            types='all;recommended;popular;most_visit;high_rating'
+            types={BLOG_QUANLITIES[langCode].values}
+            labels={BLOG_QUANLITIES[langCode].labels}
             callBack={setTypeBlog}
-            scrollStyle={[{paddingLeft:16}, app_sp.pv_12]}
-            containerStyle={{backgroundColor: themeColor.bg_second}}
+            scrollStyle={[app_sp.mb_12, app_sp.ps_18]}
+            containerStyle={[{backgroundColor: themeColor.primary}, app_sp.pv_10]}
           />
-          <View style={{ ...app_sp.mb_12}}>
-            <ScrollView horizontal={true} style={{paddingBottom:10,paddingLeft:16}} showsHorizontalScrollIndicator={false}>
-              {
-                !currentBlogs
-                ? [1, 2, 3].map((value, index) => <VerticalBlogCardSkeleton key={value + index} style={{  marginLeft: index !== 0 ? 16 : 0,}} />)
-                : currentBlogs.map((blog, index) => {
-                  let actualStyle = [app_sp.me_18];
-                  if(index === 0) actualStyle.push(app_sp.ms_18);
-                  return <VerticalBlogCard blog={blog}  style={{ marginLeft: index !== 0 ? 16 : 2, marginRight : currentBlogs.length - 1 === index ? 36 : 0}}/>
-                }
-                )
+          <ScrollView
+            horizontal={true}
+            style={[{backgroundColor:themeColor.primary}]}
+            contentContainerStyle={[{flexGrow: 1}, app_sp.pb_10]}
+            showsHorizontalScrollIndicator={false}
+          >
+            {
+              !blogs
+              ? [1, 2, 3].map((value, index) => <VerticalBlogCardSkeleton key={value + index} style={{  marginLeft: index !== 0 ? 16 : 0,}} />)
+              : blogs.map((blog, index) => {
+                let actualStyle = [app_sp.me_18];
+                if(index === 0) actualStyle.push(app_sp.ms_18);
+                return <VerticalBlogCard blog={blog} blogIndex={index} typeOfBriefBlog={typeBlog} style={actualStyle} key={blog._id}  />
               }
-            </ScrollView>
-          </View>
+              )
+            }
+          </ScrollView>
         </View>
       </View>
     </ScrollView>
@@ -238,180 +323,3 @@ const HomeScreen = ({navigation}) => {
 }
 
 export default HomeScreen
-
-const places = [
-  {
-    id: '1a',
-    name: 'Pho di bo',
-    avatar: 'https://lh3.googleusercontent.com/p/AF1QipPoYDJXCAlOR3Oc0RgjhQ5WBZt9s2VkvqpbbuNN=s680-w680-h510',
-    location: {
-      province: 'Dong Nai',
-      city: 'Bien Hoa'
-    },
-    tags: [
-      {
-        title: 'Walking'
-      },
-      {
-        title: 'Exercise'
-      }
-    ],
-    ratingPoints: 4.3,
-    numberOfReviews: 300,
-    numberOfVisited: 3200,
-    isRecommended: false,
-    isVisited: false
-  },
-  {
-    id: '1b',
-    name: 'Quang truong tinh',
-    avatar: 'https://lh3.googleusercontent.com/p/AF1QipPUoQ-BfuMVqLUZog0RrNnF4HVrFLXlXLQ4wak2=s680-w680-h510',
-    location: {
-      province: 'Dong Nai',
-      city: 'Bien Hoa'
-    },
-    tags: [
-      {
-        title: 'Walking'
-      },
-      {
-        title: 'Exercise'
-      }
-    ],
-    ratingPoints: 4.6,
-    numberOfReviews: 5687,
-    numberOfVisited: 32242,
-    isRecommended: true,
-    isVisited: true
-  },
-  {
-    id: '1c',
-    name: 'Cong vien Tam Hiep',
-    avatar: 'https://lh3.googleusercontent.com/p/AF1QipOFHqO2nUTvyj0fYEvwt-9AHoQS8e5yajbKLjQE=s680-w680-h510',
-    location: {
-      province: 'Dong Nai',
-      city: 'Bien Hoa'
-    },
-    tags: [
-      {
-        title: 'Walking'
-      },
-      {
-        title: 'Exercise'
-      }
-    ],
-    ratingPoints: 3.7,
-    numberOfReviews: 1687,
-    numberOfVisited: 2242,
-    isRecommended: false,
-    isVisited: false
-  },
-  {
-    id: '1d',
-    name: 'Pho di bo',
-    avatar: 'https://lh3.googleusercontent.com/p/AF1QipPoYDJXCAlOR3Oc0RgjhQ5WBZt9s2VkvqpbbuNN=s680-w680-h510',
-    location: {
-      province: 'Dong Nai',
-      city: 'Bien Hoa'
-    },
-    tags: [
-      {
-        title: 'Walking'
-      },
-      {
-        title: 'Exercise'
-      }
-    ],
-    ratingPoints: 4.3,
-    numberOfReviews: 300,
-    numberOfVisited: 3200,
-    isRecommended: false,
-    isVisited: false
-  },
-  {
-    id: '1e',
-    name: 'Quang truong tinh',
-    avatar: 'https://lh3.googleusercontent.com/p/AF1QipPUoQ-BfuMVqLUZog0RrNnF4HVrFLXlXLQ4wak2=s680-w680-h510',
-    location: {
-      province: 'Dong Nai',
-      city: 'Bien Hoa'
-    },
-    tags: [
-      {
-        title: 'Walking'
-      },
-      {
-        title: 'Exercise'
-      }
-    ],
-    ratingPoints: 4.6,
-    numberOfReviews: 5687,
-    numberOfVisited: 32242,
-    isRecommended: true,
-    isVisited: true
-  },
-  {
-    id: '1f',
-    name: 'Cong vien Tam Hiep',
-    avatar: 'https://lh3.googleusercontent.com/p/AF1QipOFHqO2nUTvyj0fYEvwt-9AHoQS8e5yajbKLjQE=s680-w680-h510',
-    location: {
-      province: 'Dong Nai',
-      city: 'Bien Hoa'
-    },
-    tags: [
-      {
-        title: 'Walking'
-      },
-      {
-        title: 'Exercise'
-      }
-    ],
-    ratingPoints: 3.7,
-    numberOfReviews: 1687,
-    numberOfVisited: 2242,
-    isRecommended: false,
-    isVisited: false
-  }
-]
-
-const blogs = [
-  {
-    id: 'b1',
-    user: {
-      id: 'user1',
-      name: 'Lost Teach',
-      avatar: ''
-    },
-    name: 'Top 10 dia diem neu ghe qua khi du lich o Dong Nai',
-    avatar: '',
-    createdAt: 1675908513000,
-    readTime: 480,
-    isLiked: true
-  },
-  {
-    id: 'b2',
-    user: {
-      id: 'user2',
-      name: 'Du Lich Bui',
-      avatar: ''
-    },
-    name: 'Nhung con duong nhon nhip nhat o Dong Nai',
-    avatar: '',
-    createdAt: 1675217313000,
-    readTime: 300,
-    isLiked: false
-  },
-  {
-    id: 'b3',
-    user: {
-      id: 'user3',
-      name: 'Bac Thay Du Lich',
-      avatar: ''
-    },
-    name: 'Cac quan an hap dan nen thu khi den Dong Nai',
-    avatar: '',
-    createdAt: 1674353313000,
-    readTime: 300,
-    isLiked: false
-  }
-]
