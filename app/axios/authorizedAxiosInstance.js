@@ -1,4 +1,4 @@
-import { refreshTokenAPI } from 'request_api'
+import { refreshTokenAPI } from 'apis/axios'
 import axios from 'axios'
 import { updateLoading, updateNotif } from 'redux/manifold/ManifoldSlice'
 

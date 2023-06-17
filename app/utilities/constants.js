@@ -15,7 +15,7 @@ const API_PORT = '7500'
 // Phuong: This is the api web for DongNaiAppTravel
 // export const API_ROOT = 'https://dong-nai-travel-api.onrender.com'
 let useLocalServer = true;
-export const API_ROOT = useLocalServer ? `http://${ip_v4.phuong}:${API_PORT}` : 'https://dong-nai-travel-api.onrender.com';
+export const API_ROOT = useLocalServer ? `http://${ip_v4.tuan}:${API_PORT}` : 'https://dong-nai-travel-api.onrender.com';
 
 
 export const REDUX_SLICE_NAMES = {
@@ -160,5 +160,6 @@ export const USER_ROLES = {
 }
 
 export const ASYNC_STORAGE_CONSTANT_KEYS = {
-  SAVED_BLOG_CONTENT_KEY: '_sbc'
+  SAVED_BLOG_CONTENT_KEY: '_sbc',
+  SAVED_BLOG_FOR_UPLOAD_KEY: '_sbfu'
 }

@@ -33,12 +33,12 @@ import { choiceSettingImage } from "utilities/choiceSettingImage";
 import ModalShowImage from "components/modal_show_image/ModalShowImage";
 import { BottomSheetScroll } from "components";
 import { HorizontalBlogCard } from "components";
-import { updateUserAPI } from "request_api";
+import { updateUserAPI } from "apis/axios";
 import { useDispatch, useSelector } from "react-redux";
 import { selectCurrentUser, updateCurrentUser } from "redux/user/UserSlice";
 import { updateNotif } from "redux/manifold/ManifoldSlice";
 import { Buffer } from 'buffer'
-import { createNewNotifAPI } from "../../request_api";
+import { createNewNotifAPI } from "../../apis/axios";
 import { socketIoInstance } from "../../../App";
 import { useRoute } from "@react-navigation/native";
 import { cloneDeep } from 'lodash'

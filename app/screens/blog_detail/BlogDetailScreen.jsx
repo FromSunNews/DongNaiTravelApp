@@ -3,7 +3,7 @@ import React from 'react'
 
 import {
   getBlogsAPI
-} from 'request_api'
+} from 'apis/axios'
 
 import useTheme from 'customHooks/useTheme'
 import {

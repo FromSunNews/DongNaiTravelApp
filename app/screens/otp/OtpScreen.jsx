@@ -6,7 +6,7 @@ import { app_c } from 'globals/styles'
 import { Image } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useNavigation, useRoute } from '@react-navigation/native'
-import { sendOtpAPI, verifyOtpAPI } from 'request_api'
+import { sendOtpAPI, verifyOtpAPI } from 'apis/axios'
 
 const OtpScreen = () => {
 

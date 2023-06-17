@@ -7,11 +7,21 @@ import {
 } from 'react-native'
 import React from 'react'
 import * as ImagePicker from "expo-image-picker"
+import { Buffer } from 'buffer'
 
 import {
   getPlacesAPI,
   postNewBlogAPI
-} from 'request_api'
+} from 'apis/axios'
+
+import {
+  listenEvent,
+  getSocket
+} from 'apis/socket'
+
+import {
+  getCreateBlogEventHandlers
+} from 'apis/socket/blog'
 
 import {
   createSearchWithResultList
@@ -62,6 +72,10 @@ const MyPlaceSearchResultList = createSearchWithResultList([
 ]);
 
 /**
+ * Lưu ý: Hiện tại thì blog đang được upload theo dạng, chia từng phần ra upload. Cho nên nó sẽ khác với bình thường.
+ */
+
+/**
  * Hàm này dùng để mở ImagePicker của Native.
  * @param {ImagePicker.ImagePickerOptions} options 
  * @returns 
@@ -90,25 +104,48 @@ async function pickImageFromLibrary(options) {
 }
 
 const PrepareBlogPushlishScreen = (props) => {
+  /*
+    Các thông tin cơ bản của blog. Ngoài ra thì còn có content.
+  */
   const [blogInfo, setBlogInfo] = React.useState({
     presentationImage: null,
     type: null,
     mentionedPlaces: [],
     content: null
   });
+  const [blogUploadInfo, setBlogUploadInfo] = React.useState({
+    isUploading: false,
+    firstblogChunk: undefined,
+    blogAsString: "",
+    index: 0
+  });
+  const [isPending, startTransition] = React.useTransition();
 
   const { control, handleSubmit, formState: { errors } } = useForm ({
     defaultValues: {
       name: ""
     }
-  })
+  });
 
   const theme = useTheme();
-  const types = ["review", "rank", "introduct"];
+  const types = ["review", "rank", "introduce"];
+  const chunkSize = 100 * 1024;
+  /*
+    Cú pháp đặt tên cho các Socket Event Handler:
+    Tên hander (listen hoặc emit) + tên event.
+    Event handler là các function dùng
 
+    Ngoài ra thì mình còn có hàm tạo Message Object dùng để gửi đi tới server.
+  */
+  const [ listenCreateBlog, emitCreateBlog ] = React.useMemo(() => getCreateBlogEventHandlers(getSocket()), []);
+
+  /**
+   * Hàm này dùng để upload blog. Trong đó nó sẽ dùng HTTP hoặc Socket để upload.
+   * @param {any} data dữ liệu được lấy từ form.
+   * @returns 
+   */
   const handlePostBlogSubmit = data => {
     let keys = Object.keys(blogInfo)
-    console.log("Data: ", data)
     if(!data.name) {
       return;
     }
@@ -129,38 +166,135 @@ const PrepareBlogPushlishScreen = (props) => {
       type: blogInfo.type,
       mentionedPlaces: blogInfo.mentionedPlaces.map(place => place.place_id),
       isApproved: false,
-    }
-    let requestBody = {
-      blog,
-      content: blogInfo.content
-    }
+    };
 
-    let configs = {
-      onUploadProgress: function(progressEvent) {
-        // Do whatever you want with the progress event
-        const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-        console.log(`Upload Progress: ${progress}%`);
-      }
-    }
+    // Blog này dùng để upload với HTTP
+    // let requestBody = {
+    //   blog,
+    //   content: blogInfo.content
+    // };
+
+    // let configs = {
+    //   onUploadProgress: function(progressEvent) {
+    //     // Do whatever you want with the progress event
+    //     const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+    //     console.log(`Upload Progress: ${progress}%`);
+    //   }
+    // }
+    // Dùng HTTP để upload blog content.
+    // callWithGlobalLoading(async () => {
+    //   return postNewBlogAPI(requestBody, configs)
+    //   .then(result => {
+    //     console.log("Post blog result: ", result);
+    //     AsyncStorageUtility.removeItemAsync("SAVED_BLOG_CONTENT_KEY")
+    //     .then(() => {
+    //       props.navigation.replace('GroupBottomTab')
+    //     })
+    //   })
+    //   .catch(console.log)
+    // })
+    // Blog này dùng để upload với Socket
+    // AsyncStorageUtility
+    // .setItemAsync("SAVED_BLOG_FOR_UPLOAD_KEY", { blog, content: blogInfo.content })
+    // .then(() => {
+    //   props.navigation.replace('GroupBottomTab')
+    // })
+    // const buffer = Buffer.from(text.substring(0, chunkSize));
+    // const buffer = new Uint8Array(chunkSize)
+    // for(let i = 0; i < chunkSize; i++) {
+    //   buffer[i] = text.charCodeAt(i)
+    // }
+    // setBlogUploadInfo(prevState => ({
+    //   ...prevState,
+    //   firstblogChunk: buffer,
+    //   index: 0 + chunkSize,
+    //   blogAsString: text
+    // }));
     callWithGlobalLoading(async () => {
-      return postNewBlogAPI(requestBody, configs)
-      .then(result => {
-        console.log("Post blog result: ", result);
-        AsyncStorageUtility.removeItemAsync("SAVED_BLOG_CONTENT_KEY")
-        .then(() => {
-          props.navigation.replace('GroupBottomTab')
-        })
-      })
-      .catch(console.log)
-    })
+      await AsyncStorageUtility.setItemAsync("SAVED_BLOG_FOR_UPLOAD_KEY", { blog: blog, content: blogInfo.content });
+      props.navigation.navigate('GroupBottomTab',
+        {
+          screen: 'BlogsNavigator',
+          params: {
+            screen: 'BlogsScreen',
+            params: {
+              startUpload: true
+            }
+          }
+        }
+      )
+    });
   }
 
   React.useEffect(() => {
     AsyncStorageUtility.getItemAsync("SAVED_BLOG_CONTENT_KEY")
     .then(content => {
-      setBlogInfo(prevState => ({...prevState, content: JSON.stringify(content)}));
-    })
+      setBlogInfo(prevState => ({...prevState, content}));
+    });
+
+    console.log("ListenCreateBlog: ", listenCreateBlog.toString());
   }, []);
+
+  React.useEffect(() => {
+    // Nhận message từ server
+    let unlisten;
+    let blogBufferSize;
+    let index = blogUploadInfo.index;
+    let isUploadDone = false;
+    let buf;
+
+    // const sendChunk = function() {
+    //   blogBufferSize = buf.length;
+    //   let chunk = buf.subarray(index, Math.min(index + chunkSize, blogBufferSize));
+    //   emitCreateBlog(generateCreateBlogMessage({}, chunk));
+    //   index += chunkSize;
+    //   if(index >= blogBufferSize) isUploadDone = true;
+    // }
+
+    // if(blogUploadInfo.firstblogChunk) {
+    //   buf = blogUploadInfo.firstblogChunk;
+    //   blogBufferSize = blogUploadInfo.blogAsString.length;
+      
+    //   // Send lần đầu tiên
+    //   emitCreateBlog({chunk: buf});
+    //   if(index >= blogBufferSize) {
+    //     isUploadDone = true;
+    //     emitCreateBlog({status: { isUploadDone: true }});
+    //   }
+    //   console.log("Chunk size: ", chunkSize);
+    //   console.log("Buffer size: ", blogBufferSize);
+    //   console.log("Index: ", index)
+      
+    //   console.log("Start listen to Blog Create Event");
+    //   unlisten = listenCreateBlog(
+    //     function(message, generateMessage) {
+    //       console.log("[Blog create] Message from server: ", message);
+    //       // Dùng để sử lý khi upload blog.
+    //       if(message.status.canUpload && !isUploadDone) {
+    //         // buf = new Uint8Array(chunkSize)
+    //         let limit = chunkSize + index > blogBufferSize - 1 ? blogBufferSize : chunkSize + index;
+    //         buf = Buffer.from(blogUploadInfo.blogAsString.substring(index, limit));
+    //         // console.log("Char code at: ", blogUploadInfo.blogAsString.charCodeAt(index));
+    //         // for(let i = index; i < limit; i++) {
+    //         //   let actualIndex = i - index;
+    //         //   buf[actualIndex] = blogUploadInfo.blogAsString.charCodeAt(i)
+    //         // }
+    //         emitCreateBlog({chunk: buf});
+    //         index += chunkSize;
+    //         if(index >= blogBufferSize) {
+    //           isUploadDone = true;
+    //           emitCreateBlog({status: { isUploadDone: true }});
+    //         }
+    //       }
+    //     }
+    //   );
+
+    //   return function() {
+    //     unlisten();
+    //     console.log("Stop listen to Blog Create Event");
+    //   }
+    // }
+  }, [blogUploadInfo.firstblogChunk]);
 
   return (
     <KeyboardAwareScrollView
@@ -329,7 +463,11 @@ const PrepareBlogPushlishScreen = (props) => {
           defaultColor='type_4'
           typeOfButton='opacity'
           overrideShape='capsule'
-          onPress={handleSubmit(handlePostBlogSubmit)}
+          onPress={() => {
+            startTransition(() => {
+              handleSubmit(handlePostBlogSubmit)()
+            });
+          }}
           style={[app_sp.pv_16, app_sp.mh_18]}
         >
           {

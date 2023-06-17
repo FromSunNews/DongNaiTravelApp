@@ -3,7 +3,7 @@ import React from 'react'
 
 import {
   getPlacesAPI
-} from 'request_api'
+} from 'apis/axios'
 
 import {
   createSearchWithResultList

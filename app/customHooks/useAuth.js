@@ -6,7 +6,7 @@ import { selectIsAuthenticated } from 'redux/user/UserSlice'
 import {
   signInUserAPI,
   signUpUserAPI
-} from 'request_api'
+} from 'apis/axios'
 
 import {
   selectCurrentWareHouse,

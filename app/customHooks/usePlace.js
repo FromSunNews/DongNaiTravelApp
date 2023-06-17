@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import {
   updateUserByCaseAPI
-} from 'request_api'
+} from 'apis/axios'
 
 import {
   addPlaceDetailsState,

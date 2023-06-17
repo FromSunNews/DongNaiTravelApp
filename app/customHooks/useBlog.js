@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import {
   updateUserByCaseAPI
-} from 'request_api'
+} from 'apis/axios'
 
 import {
   addBlogDetailsState,

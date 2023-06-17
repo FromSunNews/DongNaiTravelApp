@@ -18,7 +18,7 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 import {
   signInUserAPI,
   signUpUserAPI
-} from 'request_api'
+} from 'apis/axios'
 
 import {
   useAuthActions

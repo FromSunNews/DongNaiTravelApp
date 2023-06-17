@@ -15,7 +15,7 @@ import {
 import {
   getPlaceDetailsWithPipelineAPI,
   getPlacesAPI
-} from 'request_api'
+} from 'apis/axios'
 
 import { useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'

@@ -4,7 +4,7 @@ import { COMPLETE_PLACE_DETAILS_DATA_FIELDS } from 'utilities/constants'
 import {
   getPlacesAPI,
   getPlaceDetailsWithPipelineAPI
-} from 'request_api'
+} from 'apis/axios'
 
 import {
   PLACE_DETAILS_DATA_FIELDS

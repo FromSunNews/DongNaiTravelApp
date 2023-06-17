@@ -92,7 +92,7 @@ const BannerButton = ({
 
   //theme
   const themeColor = useTheme();
-  console.log("🚀 ~ file: BannerButton.jsx:95 ~ themeColor:", themeColor)
+  // console.log("🚀 ~ file: BannerButton.jsx:95 ~ themeColor:", themeColor)
 
 
   if(isDisable) {
@@ -119,7 +119,7 @@ const BannerButton = ({
   let handlePressBannerButton = handlePressButton;
   let currentButtonStyle = currentButtonStyle = {...style, ...default_style, ...styles[`btn_default_${defaultColor}`]};
   let currentLabelStyle = currentLabelStyle = styles[`lbl_default_${defaultColor}`];
-  console.log("🚀 ~ file: BannerButton.jsx:122 ~ currentButtonStyle:", currentButtonStyle)
+  // console.log("🚀 ~ file: BannerButton.jsx:122 ~ currentButtonStyle:", currentButtonStyle)
 
   if(isChangeColorWhenActive) {
     currentButtonStyle = {

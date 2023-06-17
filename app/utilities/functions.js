@@ -113,11 +113,27 @@ function removeFrom(arr, selectValueToCompare, value) {
   return cpArr.filter((ele, index) => selectValueToCompare(ele, index) !== value)
 }
 
+/**
+ * Dùng hàm này với async function để delay một tác vụ nào đó.
+ * @param {() => void} callBack 
+ * @param {number} timeout 
+ * @returns 
+ */
+const wait = (callBack, timeout) => {
+  return new Promise((res) => {
+    setTimeout(() => {
+      // Promise đang `await` res() thực thi.
+      res(callBack())
+    }, timeout)
+  })
+}
+
 const FunctionsUtility = {
   getHeaderTitle,
   deepCompare,
   validateRegex,
-  removeFrom
+  removeFrom,
+  wait
 }
 
 export default FunctionsUtility;

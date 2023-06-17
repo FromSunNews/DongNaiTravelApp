@@ -16,16 +16,27 @@ import {
 
 const BlogsStack = createNativeStackNavigator();
 
-const BlogsNavigator = ({ navigation }) => {
+const BlogsNavigator = ({ route, navigation }) => {
+  console.log("Params: ", route.params);
+  const screen = route.params?.screen;
+  const params = route.params?.params;
   const langCode = useSelector(selectCurrentLanguage).languageCode
+
+  React.useEffect(() => {
+    if(screen) {
+      console.log("Navigate to ", screen);
+      navigation.navigate(screen, params);
+    }
+  }, [screen]);
+
   return (
     <BlogsStack.Navigator
-      initialRouteName="BlogScreen"
+      initialRouteName="BlogsScreen"
       screenOptions={{
         header: AppHeader
     }}>
       <BlogsStack.Screen
-        name="BlogScreen"
+        name="BlogsScreen"
         options={{
           header: props => (
             <AppHeader
