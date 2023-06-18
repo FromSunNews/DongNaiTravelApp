@@ -376,15 +376,7 @@ ReactNativeRenderer.prototype.renderNode = function(renderer) {
       };
 
       case IMAGE_TYPE: {
-        console.log("Image url: ", url)
-        ele = ftts.hasDescription ? (
-          <View key={_id}>
-            <Image source={{uri: url}} style={styles} resizeMode="contain" />
-            <AppText style={{textAlign: "center", marginTop: 8}}>{values[0]}</AppText>
-          </View>
-        ) : (
-          <Image key={_id} source={{uri: url}} style={styles} resizeMode="contain" />
-        )
+        ele = <Image key={_id} source={{uri: url}} style={styles} resizeMode="contain" />
         break;
       };
 

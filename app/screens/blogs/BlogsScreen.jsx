@@ -5,9 +5,10 @@ import {
   FlatList,
   LayoutAnimation,
   ActivityIndicator,
-  ViewProps
+  ViewProps,
+  Animated
 } from 'react-native'
-import React from 'react'
+import React, { useRef } from 'react'
 import { Buffer } from 'buffer'
 
 import { getSocket } from 'apis/socket'
@@ -58,7 +59,7 @@ import { useSelector } from 'react-redux'
  */
 const UploadBlogProgress = ({
   message,
-  progress,
+  progress = 0,
   ...props
 }) => {
   return (
@@ -91,6 +92,16 @@ const BlogsScreen = ({route}) => {
   const langData = useSelector(selectCurrentLanguage).data?.blogsScreen
   //theme
   const themeColor = useTheme();
+  // Mỗi lần upload lên 100kb
+  /*
+    Khi dữ liệu của blog được JSON.stringify() thì dữ liệu sẽ nặng hơn bình thường.
+    Khi ảnh được chuyển sang Base64, thì nó phải chuyển thành nhị phân trước (thành các octets - 8bits) và cái này
+    thì tuỳ thuộc vào thuật toán chuyển đổi thôi, mặc định là UTF-8 thì nó thành octets. Mà base64 là dạng mã hoá 6-bits, cho
+    nên cứ mỗi 3 otets thì mình sẽ có 4 dãy 6bits (cái này t không biết gọi sao :v), đáng lẽ sẽ không đổi đúng không? Tuy nhiên, khi
+    phân chia xong thì nó lại đổi 4 dãy 6bits này về kí tự, mà kí tự thì lại chiếm 8bits (theo tiêu chuẩn), đâm ra là nó sẽ nhiều dữ liệu hơn.
+
+    Cho nên nếu như tấm ảnh 200kb, thì sau khi mã hoá thành base64 thì sẽ nặng hơn (tầm 200 * 4 / 3 = 266.67kb)
+  */
   const chunkSize = 100 * 1024;
 
   const blogsInfo = React.useRef({
@@ -183,7 +194,13 @@ const BlogsScreen = ({route}) => {
       let progress = 0;
       // Send lần đầu tiên
       index += chunkSize;
-      emitCreateBlog({chunk: chunk});
+      emitCreateBlog({
+        data: {
+          chunk: chunk,
+          chunkSize: chunkSize,
+          totalSize
+        }
+      });
       if(index >= totalSize) {
         isUploadDone = true;
         emitCreateBlog({status: { isUploadDone: true }});
@@ -242,7 +259,7 @@ const BlogsScreen = ({route}) => {
           }
 
           // Hiển thị text từ server.
-          if(message.text && !message.status.isError) {
+          if(message.text || message.status.progress && !message.status.isError) {
             setUploadInfo(prevState => ({...prevState, text: message.text, progress: message.status.progress}));
           }
 
@@ -250,7 +267,12 @@ const BlogsScreen = ({route}) => {
           if(message.status.canUpload && !isUploadDone && !message.status.isError) {
             let limit = chunkSize + index > totalSize ? totalSize : chunkSize + index;
             chunk = Buffer.from(uploadInfo.blog.substring(index, limit));
-            emitCreateBlog({chunk: chunk});
+            emitCreateBlog({
+              data: {
+                chunk,
+                chunkSize: chunk.length
+              }
+            });
             index += chunkSize;
             if(index >= totalSize) {
               isUploadDone = true;

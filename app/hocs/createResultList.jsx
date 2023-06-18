@@ -50,7 +50,7 @@ export function createSearchWithResultList(apis) {
       return null;
     }
 
-    let hasResult = result.length > 1
+    let hasResult = result.length >= 1
 
     const handleClearResult = () => {
       setResult([])

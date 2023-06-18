@@ -11,7 +11,7 @@ import {
 /**
    * Tạo message cho `create:blog` event.
    * @param {BlogCreateSocketEventSendMessageStatusProps} status Object chứa trạng thái của event tạo blog.
-   * @param {any} chunk Data này có thể chứa bất kì cái gì. Nhưng khi kết thúc event thì nó sẽ trả về dữ liệu của Blog.
+   * @param {any} data Data này có thể chứa bất kì cái gì. Nhưng khi kết thúc event thì nó sẽ trả về dữ liệu của Blog.
    * @returns
    */
 export function generateMessage(message) {
@@ -20,7 +20,11 @@ export function generateMessage(message) {
       isOff: false,
       isUploadDone: false
     },
-    chunk: ""
+    data: {
+      chunk: "",
+      chunkSize: 0,
+      totalSize: 0
+    }
   }, message)
 
   return message

@@ -128,12 +128,26 @@ const wait = (callBack, timeout) => {
   })
 }
 
+/**
+ * Hàm này dùng để bind tất cả các methods trong một object với `obj` đó.
+ * @param {any} obj object cần bind tất cả các method của nó.
+ */
+function autoBind(obj) {
+  let propNames = Object.getOwnPropertyNames(obj);
+  for(let propName of propNames) {
+    if(propName !== 'constructor' && obj[propName]) {
+      obj[propName] = obj[propName].bind(obj)
+    }
+  }
+}
+
 const FunctionsUtility = {
   getHeaderTitle,
   deepCompare,
   validateRegex,
   removeFrom,
-  wait
+  wait,
+  autoBind
 }
 
 export default FunctionsUtility;

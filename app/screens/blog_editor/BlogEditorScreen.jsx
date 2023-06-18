@@ -116,11 +116,7 @@ const BlogEditorScreen = (props) => {
     if(blogInfo.content && blogInfo.isContentFromStorage && blogInfo.isWebviewLoaded) {
       let reg = /\n(.+)/
       let delta = JSON.stringify(
-        mdToDeltaConverter.convert(blogInfo.content).map(item => {
-          if(!reg.test(item.insert)) return item;
-          let newValue = item.insert.match(reg);
-          return ({...item, insert: newValue[1]})
-        })
+        mdToDeltaConverter.convert(blogInfo.content)
       );
       webViewRef.current.injectJavaScript(`
         editor.setContents(${delta})

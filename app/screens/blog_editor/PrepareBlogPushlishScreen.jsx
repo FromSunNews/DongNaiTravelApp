@@ -27,8 +27,10 @@ import {
   createSearchWithResultList
 } from 'hocs/createResultList'
 
-import useTheme from 'customHooks/useTheme'
 import { useForm, Controller } from 'react-hook-form'
+
+import useTheme from 'customHooks/useTheme'
+import { useAuthState } from 'customHooks/useAuth'
 
 import {
   callWithGlobalLoading
@@ -127,6 +129,8 @@ const PrepareBlogPushlishScreen = (props) => {
     }
   });
 
+  const { user } = useAuthState();
+
   const theme = useTheme();
   const types = ["review", "rank", "introduce"];
   const chunkSize = 100 * 1024;
@@ -165,6 +169,7 @@ const PrepareBlogPushlishScreen = (props) => {
       userCommentsTotal: 0,
       type: blogInfo.type,
       mentionedPlaces: blogInfo.mentionedPlaces.map(place => place.place_id),
+      authorId: user._id,
       isApproved: false,
     };
 
@@ -231,8 +236,6 @@ const PrepareBlogPushlishScreen = (props) => {
     .then(content => {
       setBlogInfo(prevState => ({...prevState, content}));
     });
-
-    console.log("ListenCreateBlog: ", listenCreateBlog.toString());
   }, []);
 
   React.useEffect(() => {
@@ -421,7 +424,7 @@ const PrepareBlogPushlishScreen = (props) => {
           )}
         />
           
-        <View style={[{flexDirection: 'row', flexWrap: 'wrap'}, app_sp.mt_12, app_sp.ph_18]}>
+        <View style={[{flexDirection: 'row', flexWrap: 'wrap'}, app_sp.mv_12, app_sp.ph_18]}>
           {
             blogInfo.mentionedPlaces.map(place => {
               // let isActive = type === blogInfo.type;

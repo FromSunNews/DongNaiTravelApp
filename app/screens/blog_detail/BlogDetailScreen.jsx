@@ -162,7 +162,7 @@ const BlogDetailScreen = ({route, navigation}) => {
             blogDetails.content
             && (
               <MarkFormat
-                text={blogDetails.content.plainTextMarkFormat.vi}
+                text={blogDetails.content.plainTextMarkFormat}
               />
             )
           }

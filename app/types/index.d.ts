@@ -165,6 +165,13 @@ export interface ContentDataProps {
   }>
 }
 
+export interface BlogContentDataProps {
+  _id?: string,
+  plainText?: string,
+  plainTextMarkFormat?: string,
+  speech?: string
+}
+
 export interface BriefPlacesReduxStateProps {
   limit: number,
   skip: number,
@@ -205,6 +212,31 @@ export interface BriefBlogsReduxStateProps {
   data: Array<BlogDataProps>
 }
 
+export interface UserDataProps {
+  _id?: string,
+  email?: string,
+  password?: string,
+  username?: string,
+  displayName?: string,
+  avatar?: string,
+  coverPhoto?: string,
+  role?: 'client' | 'admin',
+  savedSuggestions?: Array<string>,
+  savedPlaces?: Array<string>,
+  savedBlogs?: Array<string>,
+  followerIds?: Array<string>,
+  followingIds?: Array<string>,
+  receivePoints?: number,
+  lostPoints?: number,
+  otpToken?: string,
+  birthDay?: number,
+  notifIds?: Array<string>,
+  firstName?: string,
+  lastName?: string,
+  createdAt?: number,
+  updatedAt?: number
+}
+
 // Use for redux
 export type UserRoles = 'GUEST' | 'MEMBER'
 export interface ActionProps<T> {
@@ -217,6 +249,7 @@ export interface UserForAuthProps {
   emailName: string,
   password: string
 }
+
 export interface AuthenticateOptionsProps {
   checkConditionFirst: () => boolean
   callWhenReject: (data?: any) => void 

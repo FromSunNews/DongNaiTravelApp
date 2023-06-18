@@ -4,6 +4,7 @@ import authorizedAxiosInstance from 'axios/authorizedAxiosInstance'
 import { API_ROOT, USER_ROLES } from 'utilities/constants'
 
 import {
+  UserDataProps,
   UserRoles,
   ActionProps
 } from 'types/index.d.ts'
@@ -121,6 +122,11 @@ export const {
 // Phương: Selectors: mục đích là dành cho các components bên dưới gọi bằng useSelector() tới nó
 // Phương: để lấy dữ liệu từ trong redux store ra sử dụng
 
+/**
+ * Trả về dữ liệu hiện tại của người dùng trong App.
+ * @param state 
+ * @returns {UserDataProps}
+ */
 export const selectCurrentUser = (state) => {
   return state.user.currentUser
 }
