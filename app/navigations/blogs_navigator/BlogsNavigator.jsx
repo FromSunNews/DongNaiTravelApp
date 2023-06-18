@@ -13,11 +13,13 @@ import {
   AppHeader,
   RectangleButton
 } from 'components';
+import { selectCurrentMode } from 'redux/theme/ThemeSlice';
 
 const BlogsStack = createNativeStackNavigator();
 
 const BlogsNavigator = ({ navigation }) => {
   const langCode = useSelector(selectCurrentLanguage).languageCode
+  const themeMode = useSelector(selectCurrentMode).mode //get mode theme
   return (
     <BlogsStack.Navigator
       initialRouteName="BlogScreen"
@@ -34,7 +36,9 @@ const BlogsNavigator = ({ navigation }) => {
                 <RectangleButton
                   overrideShape='capsule'
                   typeOfButton='highlight'
-                  onPress={() => {navigation.navigate("BlogEditorNavigator", {screen: 'BlogEditorScreen'})}}
+                  onPress={() => { navigation.navigate("BlogEditorNavigator", { screen: 'BlogEditorScreen' }) }}
+                  defaultColor= {themeMode === 'light' ? 'type_3' : 'type_1_dark'}
+                  activeColor='type_2'
                 >
                   <AppText>{langCode === 'vi' ? 'Tạo bài viết' : 'Create blog'}</AppText>
                 </RectangleButton>

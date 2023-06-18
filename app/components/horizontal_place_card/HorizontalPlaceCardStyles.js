@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native"
 import { app_c, app_sh, app_shdw, app_sp } from "globals/styles";
 
 const default_card_text_color = {
-  color: app_c.HEX.ext_second
+  color: app_c.HEX.fourth
 };
 
 const styles = StyleSheet.create({
@@ -62,7 +62,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexWrap: 'wrap',
     fontWeight: 'bold',
-    ...default_card_text_color
   },
 
   car_subtitle: {

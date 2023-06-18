@@ -17,9 +17,6 @@ const styles = StyleSheet.create({
     ...app_shdw.type_1
   },
 
-  card_text_color: {
-    color: app_c.HEX.ext_second
-  },
 
   card_image_container: {
     justifyContent: "flex-end",

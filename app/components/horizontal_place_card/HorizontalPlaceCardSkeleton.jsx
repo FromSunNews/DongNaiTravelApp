@@ -6,35 +6,36 @@ import RectangleButton from 'components/buttons/RectangleButton'
 import CircleButton from 'components/buttons/CircleButton'
 
 import styles from './HorizontalPlaceCardStyles'
-import { app_sp } from 'globals/styles'
+import { app_sp,app_shdw } from 'globals/styles'
 import useTheme from 'customHooks/useTheme'
+
 
 const HorizontalPlaceCardSkeleton = () => {
   console.log("Horizontal Card Skeleton Render");
   //theme
-  const themeColor = useTheme();
-
+  const { themeColor, themeMode } = useTheme();
+  const data_shadow = themeMode === 'light' ?'type _1' : 'type_1_dark'
   return (
-    <View style={[styles.card,{backgroundColor: themeColor.primary}]}>
+    <View style={[styles.card,{backgroundColor: themeColor.bg_second,...app_shdw[data_shadow]}]}>
       {/* Cột đâu tiên - Image Container */}
-      <View style={{...styles.card_image_container, ...app_sp.me_12,backgroundColor: themeColor.ext_primary}}>
+      <View style={{...styles.card_image_container, ...app_sp.me_12,backgroundColor: themeColor.bg_tertiary}}>
       </View>
       {/* Cột thứ 2 - Main Container */}
-      <View style={[styles.card_main_container,{backgroundColor: themeColor.ext_primary}]}>
-        <View style={[styles.card_content_container,{backgroundColor: themeColor.ext_primary}]}>
-          <View style={{...styles.car_skeleton_rectangle, ...app_sp.mb_12, backgroundColor: themeColor.ext_primary, height: 7}}>
+      <View style={[styles.card_main_container,{backgroundColor: themeColor.bg_tertiary}]}>
+        <View style={[styles.card_content_container,{backgroundColor: themeColor.bg_tertiary}]}>
+          <View style={{...styles.car_skeleton_rectangle, ...app_sp.mb_12, backgroundColor: themeColor.bg_tertiary, height: 7}}>
           </View>
-          <View>
-            <View style={{...styles.car_skeleton_rectangle, height: 18, ...app_sp.mb_6, backgroundColor: themeColor.ext_primary}}></View>
-            <View style={{...styles.car_skeleton_rectangle, height: 12, ...app_sp.mb_6,backgroundColor: themeColor.ext_primary}}></View>
+          <View style={{backgroundColor: themeColor.bg_tertiary}}>
+            <View style={{...styles.car_skeleton_rectangle, height: 18, ...app_sp.mb_6, backgroundColor: themeColor.bg_tertiary}}></View>
+            <View style={{...styles.car_skeleton_rectangle, height: 12, ...app_sp.mb_6,backgroundColor: themeColor.bg_tertiary}}></View>
           </View>
-          <View style={[styles.card_information_container,{backgroundColor: themeColor.ext_primary}]}>
+          <View style={[styles.card_information_container,{backgroundColor: themeColor.bg_tertiary}]}>
             <View style={{...styles.card_information_col, ...app_sp.me_12}}>
-              <View style={{...styles.car_skeleton_rectangle, height: 12, ...app_sp.mb_6,backgroundColor: themeColor.ext_primary}}></View>
-              <View style={{...styles.car_skeleton_rectangle, height: 12, ...app_sp.mb_6,backgroundColor: themeColor.ext_primary}}></View>
+              <View style={{...styles.car_skeleton_rectangle, height: 12, ...app_sp.mb_6,backgroundColor: themeColor.bg_second}}></View>
+              <View style={{...styles.car_skeleton_rectangle, height: 12, ...app_sp.mb_6,backgroundColor: themeColor.bg_second}}></View>
             </View>
             <View style={styles.card_information_col}>
-              <View style={{...styles.car_skeleton_rectangle, height: 12, ...app_sp.mb_6, backgroundColor: themeColor.ext_primary}}></View>
+              <View style={{...styles.car_skeleton_rectangle, height: 12, ...app_sp.mb_6, backgroundColor: themeColor.bg_tertiary}}></View>
             </View>
           </View>
         </View>

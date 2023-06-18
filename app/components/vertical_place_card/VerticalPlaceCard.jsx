@@ -22,13 +22,12 @@ import AppText from 'components/app_text/AppText'
 import RectangleButton from 'components/buttons/RectangleButton'
 
 import styles from './VerticalPlaceCardStyles'
-import { app_sp } from 'globals/styles'
+import { app_shdw, app_sp } from 'globals/styles'
 
 import {
   PlaceDataProps,
   WithPlaceCardWrappedComponentProps
 } from 'types/index.d.ts'
-
 /**
  * @typedef VerticalPlaceCardProps
  * @property {PlaceDataProps} place Thông tin về một địa điểm của một nơi nào đó.
@@ -71,15 +70,18 @@ const VerticalPlaceCard = ({
   const langData = useSelector(selectCurrentLanguage).data?.homeScreen
 
   //theme
-  const themeColor = useTheme();
+  const {themeColor, themeMode} = useTheme();
+  const background = themeMode === 'light' ? themeColor.bg_second : themeColor.bg_tertiary
+  const dataBshdw = themeMode === 'light' ? 'type_1' : 'type_1_dark'
 
   let [city, province] = getTextContentInHTMLTag(place.adr_address);
   let presentationImage = place && place.place_photos ? {uri: place.place_photos[0]} : {}
 
   return React.useMemo(() => (
-    <View {...props} style={containerStyle}>
+    <View {...props} style={[containerStyle,{...app_shdw[dataBshdw],backgroundColor: background}]}>
       {/* Image */}
       <RectangleButton
+        boxShadowType={themeMode === 'light' ? 'type_1' : 'type_1_dark'}
         isOnlyContent
         typeOfButton="none"
         overrideShape="rounded_4"
@@ -161,7 +163,7 @@ const VerticalPlaceCard = ({
         </View>
       }
     </View>
-  ), [extendedPlaceInfo.isLiked, place.rating, place.user_favorites_total, place.user_ratings_total])
+  ), [extendedPlaceInfo.isLiked, place.rating, place.user_favorites_total, place.user_ratings_total,themeColor])
 }
 
 export default withPlaceCard(VerticalPlaceCard)

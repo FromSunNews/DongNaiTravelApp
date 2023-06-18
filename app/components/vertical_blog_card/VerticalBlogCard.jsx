@@ -27,7 +27,8 @@ import RectangleButton from 'components/buttons/RectangleButton'
 import CircleButton from 'components/buttons/CircleButton'
 
 import styles from './VerticalBlogCardStyles'
-import { app_c, app_sh, app_sp } from 'globals/styles'
+import { app_c, app_sh, app_shdw, app_sp } from 'globals/styles'
+
 
 import {
   BlogDetailsDataProps,
@@ -74,22 +75,22 @@ const VerticalBlogCard = ({
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.homeScreen
   //theme
-  const themeColor = useTheme();
+  const {themeColor, themeMode} = useTheme();
 
   let displayAuthorName = blog.author.lastName && blog.author.firstName
     ? blog.author.lastName + " " + blog.author.firstName
     : blog.author.displayName
 
   return React.useMemo(() => (
-    <View {...props} style={[containerStyle,{backgroundColor: themeColor.primary}]}>
+    <View {...props} style={[containerStyle,{backgroundColor: themeMode === 'light' ? themeColor.bg_second : themeColor.bg_tertiary}]}>
       {/* Image */}
-      <RectangleButton
+      <RectangleButton RectangleButton
         isOnlyContent
         typeOfButton="none"
         overrideShape="rounded_4"
         onPress={handlePressImageButton}
       >
-        <Image source={{ uri: blog.avatar ? blog.avatar : undefined }} style={[styles.card_image,{backgroundColor: themeColor.ext_primary,}]} />
+        <Image source={{ uri: blog.avatar ? blog.avatar : undefined }} style={[styles.card_image]} />
       </RectangleButton>
       {/* Button & Recommended tag */}
       <View style={styles.card_mid}>
