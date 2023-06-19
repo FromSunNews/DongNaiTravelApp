@@ -77,8 +77,7 @@ const HomeScreen = ({navigation}) => {
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.homeScreen
   //theme
-  const themeColor = useTheme();
-  const themeMode = useSelector(selectCurrentMode).mode
+  const { themeColor, themeMode} = useTheme(); 
 
   const previousTypes = React.useRef({
     place: typePlace,
@@ -107,7 +106,6 @@ const HomeScreen = ({navigation}) => {
   }
   console.log("🚀 ~ file: HomeScreen.jsx:105 ~ HomeScreen ~ iconId:", iconId)
 
-  
 
 
   useEffect(()=>{
@@ -140,9 +138,9 @@ const HomeScreen = ({navigation}) => {
   console.log("Place: ", places);
 
   return (
-    <ScrollView style={[styles.container,{backgroundColor: themeColor.primary,}]} showsVerticalScrollIndicator={false}>
-      <View style={styles.home_content}>
-        <View style={[styles.home_banner, {backgroundColor: themeColor.ext_third,}]}>
+    <ScrollView style={[styles.container,{backgroundColor: themeColor.bg_primary}]} showsVerticalScrollIndicator={false}>
+      <View style={[styles.home_content,{backgroundColor: themeColor.bg_second}]}>
+        <View style={[styles.home_banner, {backgroundColor: themeColor.ext_third}]}>
           <HomeBannerSlider/>
         </View>
 
@@ -167,8 +165,11 @@ const HomeScreen = ({navigation}) => {
                     }
                     {
                       celsius ? (
-                        <AppText style={[styles.temperature_degrees_info,{fontSize:22,marginTop:-4,color:themeColor.ext_second,}]}>{`${celsius}°C`}</AppText>
-                      ): <AppText style={[styles.temperature_degrees_info,{fontSize:22,marginTop:-4,color:themeColor.ext_second,}]}><Entypo name="minus"/><Entypo name="minus"/>{`°C`}</AppText>
+                        <AppText style={[styles.temperature_degrees_info,{fontSize:22,marginTop:-4,color:themeColor.ext_second}]} >{`${celsius}°C`}</AppText>) 
+                        : (
+                        <AppText style={[styles.temperature_degrees_info,{fontSize:22,marginTop:-4,color:themeColor.ext_second,}]}><Entypo name="minus"/>
+                        <Entypo name="minus"/>{`°C`}</AppText>
+                        )
                     }
                     {
                       desWeather ? (
@@ -250,11 +251,10 @@ const HomeScreen = ({navigation}) => {
                 <Ionicons name="reload-sharp" size={30} color={themeColor.fourth} />
               </TouchableOpacity> */}
             </View>
-        
         }
 
         {/* Place and Blog*/}
-        <View style={[{backgroundColor: themeColor.primary}]}>
+        <View style={[{backgroundColor: themeColor.bg_second}]}>
           <TouchableOpacity style={styles.category_header} onPress={()=>navigation.navigate("ExploreNavigator")}>
             <AppText style={styles.category_name}>{langData.title_place[langCode]}</AppText>
             <AppText><Entypo name="chevron-small-right" size={40}/></AppText>
@@ -264,11 +264,11 @@ const HomeScreen = ({navigation}) => {
             labels={PLACE_QUALITIES[langCode].labels}
             callBack={setTypePlace}
             scrollStyle={[app_sp.mb_12, app_sp.ps_18]}
-            containerStyle={[{backgroundColor: themeColor.primary}, app_sp.pv_10]}
+            containerStyle={[{backgroundColor: themeColor.bg_second}, app_sp.pv_10]}
           />
           <ScrollView 
             horizontal={true}
-            style={[{backgroundColor:themeColor.primary}]}
+            style={[{backgroundColor:themeColor.bg_second}]}
             contentContainerStyle={[{flexGrow: 1}, app_sp.pb_10]}
             showsHorizontalScrollIndicator={false}
           >
@@ -287,7 +287,7 @@ const HomeScreen = ({navigation}) => {
             }
           </ScrollView>
         </View>
-        <View style={[{backgroundColor: themeColor.primary}]}>
+        <View style={[{backgroundColor: themeColor.bg_second}]}>
           <TouchableOpacity style={styles.category_header} onPress={()=>navigation.navigate("BlogsNavigator")}>
             <AppText style={styles.category_name}>{langData.title_Blog[langCode]}</AppText>
             <AppText><Entypo name="chevron-small-right" size={40}/></AppText>

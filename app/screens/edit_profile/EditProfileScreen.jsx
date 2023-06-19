@@ -8,9 +8,9 @@ import styles from "./EditProfileScreenStyles";
 
 function EditProfileScreen() {
   //theme
-  const themeColor = useTheme();
+  const {themeColor} = useTheme();
   return ( 
- <SafeAreaView style={[styles.container,{backgroundColor: themeColor.primary}]}>
+ <SafeAreaView style={[styles.container,{backgroundColor: themeColor.bg_second}]}>
     <View>
       <AppText>Edit Profile</AppText>
     </View>

@@ -31,6 +31,7 @@ import {
 
 import styles from './BlogDetailScreenStyle'
 import { app_sp } from 'globals/styles'
+import useTheme from 'customHooks/useTheme'
 
 const text = `### What is Lorem Ipsum?
 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
@@ -42,9 +43,8 @@ It is a long established fact that a reader will be distracted by the readable c
 const BlogDetailScreen = ({route, navigation}) => {
   const { blogId, typeOfBriefBlog, fromSearch } = route.params;
   //theme
-  const themeColor = useTheme();
-  const themeMode = useSelector(selectCurrentMode).mode
-
+  const {themeColor,themeMode} = useTheme();
+  
   const { blogDetails, fetchBlogDetailsById, clearBlogDetails } = useBlogDetails(blogId);
 
   const [relatedBlogs, setRelatedBlogs] = React.useState([]);
@@ -77,7 +77,7 @@ const BlogDetailScreen = ({route, navigation}) => {
   return (
     <View style={{flex: 1}}>
       <ScrollView
-        style={[styles.bd_container,{backgroundColor: themeColor.primary}]}
+        style={[styles.bd_container,{backgroundColor: themeColor.bg_primary}]}
         contentContainerStyle={{paddingBottom: 120}}
       >
           {/* Author, Blog information section */}

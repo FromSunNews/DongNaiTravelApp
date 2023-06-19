@@ -10,6 +10,13 @@ const app_shdw = StyleSheet.create({
     shadowRadius: 3.4,
     elevation: 4,
   },
+  type_1_dark: {
+    shadowColor: app_c.HEX_DARK.fourth,
+    shadowOffset: { width: 2, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 3.4,
+    elevation: 4,
+  },
 
   // Phuong: https://ethercreative.github.io/react-native-shadow-generator/
   type_2: {
