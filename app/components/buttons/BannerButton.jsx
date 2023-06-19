@@ -93,12 +93,7 @@ const BannerButton = ({
     typeof setRightIcon === "function" && React.isValidElement(setRightIcon());
 
   //theme
-<<<<<<< HEAD
-  const themeColor = useTheme();
-  // console.log("🚀 ~ file: BannerButton.jsx:95 ~ themeColor:", themeColor)
-=======
   const { themeColor } = useTheme();
->>>>>>> master
 
   if (isDisable) {
     return (
@@ -148,14 +143,6 @@ const BannerButton = ({
       </TouchableOpacity>
     );
   }
-<<<<<<< HEAD
-  
-  let handlePressBannerButton = handlePressButton;
-  let currentButtonStyle = currentButtonStyle = {...style, ...default_style, ...styles[`btn_default_${defaultColor}`]};
-  let currentLabelStyle = currentLabelStyle = styles[`lbl_default_${defaultColor}`];
-  // console.log("🚀 ~ file: BannerButton.jsx:122 ~ currentButtonStyle:", currentButtonStyle)
-=======
->>>>>>> master
 
   let handlePressBannerButton = handlePressButton;
   let currentButtonStyle = (currentButtonStyle = {

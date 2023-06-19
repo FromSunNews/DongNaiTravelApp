@@ -31,6 +31,7 @@ import {
 /**
  * @typedef SpeechProps
  * @property {any} content
+ * @property {"vi" | "en"} lang
  */
 
 /**
@@ -42,15 +43,18 @@ import {
  */
 const Speech = ({
   content,
+  lang,
   ...props
 }) => {
   const [voice, setVoice] = React.useState(false);
 
-  const langCode = useSelector(selectCurrentLanguage).languageCode
+  const langCode = lang ? lang : useSelector(selectCurrentLanguage).languageCode
   // const langData = useSelector(selectCurrentLanguage).data?.placeDetailScreen
   const { playAudioAsync, stopAudioAsync, prepareMP3Async, canPlay } = useAudio();
 
   const speechMP3Url = content ? content : "";
+
+  console.log("Content: ", content)
 
   React.useEffect(() => {
     if(Boolean(speechMP3Url)) {

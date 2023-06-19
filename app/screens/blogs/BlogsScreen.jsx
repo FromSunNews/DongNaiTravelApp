@@ -43,7 +43,7 @@ import {
 } from 'components'
 
 import styles from './BlogsScreenStyles'
-import { app_sp } from 'globals/styles'
+import { app_sp, app_c } from 'globals/styles'
 import { useSelector } from 'react-redux'
 
 /**
@@ -195,19 +195,20 @@ const BlogsScreen = ({route}) => {
       let progress = 0;
       // Send lần đầu tiên
       index += chunkSize;
-      emitCreateBlog({
-        data: {
-          chunk: chunk,
-          chunkSize: chunkSize,
-          totalSize
+      setTimeout(() => {
+        emitCreateBlog({
+          data: {
+            chunk: chunk,
+            chunkSize: chunkSize,
+            totalSize
+          }
+        });
+        if(index >= totalSize) {
+          isUploadDone = true;
+          emitCreateBlog({status: { isUploadDone: true }});
         }
-      });
-      if(index >= totalSize) {
-        isUploadDone = true;
-        emitCreateBlog({status: { isUploadDone: true }});
-      }
-
-      setUploadInfo(prevState => ({...prevState, isBlogUploading: true}));
+        setUploadInfo(prevState => ({...prevState, isBlogUploading: true}));
+      }, 0)
 
       console.log("Chunk size: ", chunkSize);
       console.log("Buffer size: ", totalSize);
@@ -241,22 +242,25 @@ const BlogsScreen = ({route}) => {
 
           // Required Status: Nếu như việc trao đổi xong thì set lại một số thứ ở bên client.
           if(message.status.isDone) {
-            AsyncStorageUtility.removeItemAsync("SAVED_BLOG_FOR_UPLOAD_KEY")
+            AsyncStorageUtility.removeItemAsync("SAVED_BLOG_CONTENT_KEY")
             .then(() => {
-              setUploadInfo(prevState => ({...prevState, progress: 100}));
-              setTimeout(() => {
-                setUploadInfo(prevState => (
-                  {
-                    ...prevState,
-                    isBlogUploading: false,
-                    startUpload: false,
-                    progress: 0,
-                    text: "Uploading..."
-                  }
-                ));
-              }, 2000);
-              unlisten();
-            });
+              AsyncStorageUtility.removeItemAsync("SAVED_BLOG_FOR_UPLOAD_KEY")
+              .then(() => {
+                setUploadInfo(prevState => ({...prevState, progress: 100}));
+                setTimeout(() => {
+                  setUploadInfo(prevState => (
+                    {
+                      ...prevState,
+                      isBlogUploading: false,
+                      startUpload: false,
+                      progress: 0,
+                      text: "Uploading..."
+                    }
+                  ));
+                }, 2000);
+                unlisten();
+              });
+            })
           }
 
           // Hiển thị text từ server.

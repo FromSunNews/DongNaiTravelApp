@@ -22,7 +22,6 @@ const BlogsNavigator = ({ route, navigation }) => {
   const screen = route.params?.screen;
   const params = route.params?.params;
   const langCode = useSelector(selectCurrentLanguage).languageCode
-<<<<<<< HEAD
 
   React.useEffect(() => {
     if(screen) {
@@ -31,9 +30,8 @@ const BlogsNavigator = ({ route, navigation }) => {
     }
   }, [screen]);
 
-=======
   const themeMode = useSelector(selectCurrentMode).mode //get mode theme
->>>>>>> master
+
   return (
     <BlogsStack.Navigator
       initialRouteName="BlogsScreen"
