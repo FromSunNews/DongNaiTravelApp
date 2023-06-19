@@ -28,7 +28,7 @@ import {
 } from 'react-native-gesture-handler';
 
 // Related to react navigation
-import { NavigationContainer, useNavigation } from '@react-navigation/native'
+import { NavigationContainer, useNavigation, useRoute } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
 // Related to Expo
@@ -43,7 +43,7 @@ import { MapViewWithHeading, ArrowedPolyline } from 'libs/react-native-maps-line
 import { coordinates } from 'utilities/coordinates'
 import { typemapsearch } from 'utilities/typemapsearch'
 import { typesPlace, typeModeTransport, maneuverData, weatherIcons, mapTypes } from 'utilities/mapdata'
-import { FilterConstants } from 'utilities/constants'
+import { FilterConstants, MAP_PLACES_CARD_DATA_FIELDS } from 'utilities/constants'
 
 // Related to APis
 import { getRouteDirectionAPI, getMorePlacesTextSearchAPI, getPlaceDetailsAPI, getPlacesTextSearchAPI, getWeatherCurrentAPI, getWeatherForecastAPI, getMapUserAPI, updateMapUserAPI } from 'apis/axios'
@@ -94,11 +94,15 @@ import moment from 'moment/moment'
 import { selectCurrentMap, updateCurrentMap, updateMapDetails, updateMapTypes, updatePlaces, updateSuggestions } from 'redux/map/mapSlice'
 import BottomSheetExample from '../../components/bottom_sheet/BottomSheetExample'
 import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
+import { hasLink } from 'libs/mark-format/src/utils/linkRegex'
+import Lightbox from 'react-native-lightbox-v2'
 
-const Map = () => {
+const Map = ({navigator}) => {
 // Phương: https://docs.expo.dev/versions/latest/sdk/map-view/
   // Phương: https://www.npmjs.com/package/react-native-google-places-autocomplete
   //language
+
+  const route = useRoute()
   const langData = useSelector(selectCurrentLanguage).data?.mapScreen
   const langCode = useSelector(selectCurrentLanguage).languageCode
 
@@ -264,6 +268,90 @@ const Map = () => {
   // hàm để cập nhật vị trí
   let trackingUserLocation
   const [isTrackingUserMode, setIsTrackingUserMode] = useState(false)
+
+  useEffect(() => {
+    if (route.params?.place_id) {
+      if (Platform.OS === 'ios') {
+        handleGetPlaceDetails(route.params.place_id, false)
+      } else if (Platform.OS === 'android') {
+        handleGetPlaceDetails(route.params.place_id, true)
+      }
+    } else if (route.params?.array_place_id) {
+      setPlacesTextSearch([])
+      setPlaceDetails(null)
+      if (route.params?.array_place_id.length > 0) {
+        const data = {
+          arrayPlaceId: route.params.array_place_id,
+          fields: MAP_PLACES_CARD_DATA_FIELDS
+        }
+  
+        getPlacesByIdAPI(data).then((dataReturn) => {
+          console.log("🚀 ~ file: MapScreen.jsx:286 ~ getPlacesByIdAPI ~ dataReturn:", dataReturn)
+          if (dataReturn.nextPageToken) {
+            console.log("Có nextPageToken", dataReturn.nextPageToken)
+            setNextPageToken(dataReturn.nextPageToken)
+          }
+          else {
+            console.log("K Có nextPageToken")
+            setNextPageToken(null)
+          }
+    
+          if (dataReturn.arrPlace) {
+            // Đặt giá trị cho placesTextSearch
+            setPlacesTextSearch(dataReturn.arrPlace)
+            // Ẩn thằng bottomSheet đi
+            setIsOpenBottomSheet(false)
+            // Show thằng scroll card 
+            setIsShowScrollCardPlace(true)
+            
+            // Show thằng back icon 
+            // setIsShowBackIcon(true)
+            // Đặt kết quả tìm kiếm là addressText 
+            // setPreviousTextSearch(addressText)
+  
+            setIsModeScrollOn(true)
+  
+            // Nơi đến bằng null
+            setDestination(null)
+            // Xóa PlaceDetails nếu như trước đó có 1 điểm đã đucợ chọn trc
+            setPlaceDetails(null)
+            // Không focus vào thnagừ search bar nữa
+            inputRef.current?.blur()
+            
+            //  tổng hợp các arrPlace
+            let arrPlace = []
+            dataReturn.arrPlace.map(place => {
+              const placeObj = {
+                latitude: place.geometry.location.lat,
+                longitude: place.geometry.location.lng,
+              }
+              arrPlace.push(placeObj)
+            })
+      
+            const edgePadding = {
+              top: 130,
+              right: 70,
+              bottom: 150,
+              left: 70
+            }
+      
+            handleFitCoors(arrPlace, edgePadding, true)
+            setArrPlaceToFitCoor(arrPlace)
+          } else {
+            dispatch(updateNotif({
+              appearNotificationBottomSheet: true,
+              contentNotificationBottomSheet: contentNotificationBottomSheet
+            }))
+          }
+        })
+      } else {
+        dispatch(updateNotif({
+          appearNotificationBottomSheet: true,
+          contentNotificationBottomSheet: 'Xin lỗi địa điểm này chưa có trên bản đồ!'
+        }))
+      }
+    }
+  }, [route])
 
   useEffect(() => {
     if (currentFilter.routes)
@@ -898,6 +986,8 @@ const Map = () => {
       }
     })
   }
+
+
 
   const handleShareButton = async () => {
     if (Platform.OS === "android") {
@@ -2039,7 +2129,28 @@ const Map = () => {
               }
               arrPlace.push(placeObj)
             })
-      
+            
+            if (arrPlace.length === 1) {
+              // Mình sẽ tạo ra thêm 2 thằng nữa để phục vụ animate ngay chỗ mình
+              const freeCoor1 = computeDestinationPoint(
+                arrPlace[0],
+                10000,
+                180
+              )
+
+              const freeCoor2 = computeDestinationPoint(
+                arrPlace[0],
+                10000,
+                0
+              )
+
+              arrPlace=[
+                freeCoor1,
+                ...arrPlace,
+                freeCoor2
+              ]
+            }
+
             const edgePadding = {
               top: 130,
               right: 70,
@@ -2095,16 +2206,26 @@ const Map = () => {
           )}
         >
           {placesTextSearch.map((place, index) => {
+            
+            console.log("=======================================", place?.photos[0])
+
             return (
               <View style={styles.card} key={`${place.place_id}-place-${index}`}>
                 {
-                  place.photos ? 
-                  <ImagePromise
-                    isTranformData={true}
-                    photoReference={place?.photos[0]}
-                    styleImage={styles.cardImage}
-                    map_api_key={map_api_key}
-                  /> :
+                  place.photos ? (
+                    !hasLink(place?.photos[0]) ? 
+                    <ImagePromise
+                      isTranformData={true}
+                      photoReference={place?.photos[0]}
+                      styleImage={styles.cardImage}
+                      map_api_key={map_api_key}
+                    /> : 
+                    <Image
+                      source={{uri: place?.photos[0]}}
+                      style={styles.cardImage}
+                      resizeMode="cover"
+                    />
+                  ) :
                   <View 
                     style={styles.cardNoImage}
                   >
@@ -3020,7 +3141,10 @@ const Map = () => {
               <TouchableOpacity
                 style={styles.controlContainer}
                 onPress={() => {
-                  // navigate to blog or explore screen
+                  navigation.push('PlaceDetailScreen', {
+                    placeId: placeDetails.place_id,
+                    typeOfBriefPlace: 'all'
+                  });
                 }}
               >
                 <FontAwesome5 
@@ -3274,6 +3398,17 @@ const Map = () => {
                                         console.log("cover")
                                       }}
                                     />
+                                    {/* <Lightbox 
+                                      navigator={navigator}
+                                      underlayColor="#fff"
+                                      activeProps={{width: app_dms.screenWidth, height: 400}}
+                                      useNativeDriver={false}
+                                    >
+                                      <Image
+                                        style={styles.imgBigger}
+                                        source={{uri: placeDetails?.photos[endIndexImg-2]}}
+                                      />
+                                    </Lightbox> */}
                                 </> 
                             {
                               placeDetails?.photos[endIndexImg-1] ?
@@ -3303,6 +3438,17 @@ const Map = () => {
                                           console.log("cover")
                                         }}
                                       />
+                                    {/* <Lightbox 
+                                      navigator={navigator}
+                                      underlayColor="#fff"
+                                      activeProps={{width: '100%', height: 400}}
+                                      useNativeDriver={false}
+                                    >
+                                      <Image
+                                        style={[styles.imgSmaller, { marginBottom: 5}]}
+                                        source={{uri: placeDetails?.photos[endIndexImg-1]}}
+                                      />
+                                    </Lightbox> */}
                                   </>
                                    :
                                   <View style={styles.imgEmply}/>
@@ -3330,6 +3476,17 @@ const Map = () => {
                                         console.log("cover")
                                       }}
                                     />
+                                    {/* <Lightbox 
+                                      navigator={navigator}
+                                      underlayColor="#fff"
+                                      activeProps={{width: '100%', height: 400}}
+                                      useNativeDriver={false}
+                                    >
+                                      <Image
+                                        style={[styles.imgSmaller, { marginTop: 5}]}
+                                        source={{uri: placeDetails?.photos[endIndexImg]}}
+                                      />
+                                    </Lightbox> */}
                                 </> 
                                 :
                                   <View style={styles.imgEmplyGray}/>

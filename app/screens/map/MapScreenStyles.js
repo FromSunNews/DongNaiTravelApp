@@ -292,7 +292,7 @@ export const styles = StyleSheet.create({
   }, 
   imgSmaller: {
     width: 155,
-    height: 155,
+    aspectRatio: 1,
     ...app_sh.rounded_8
   },
   imgEmply: {

@@ -99,6 +99,13 @@ export const getPlacesTextSearchAPI = async (data) => {
   return request.data
 }
 
+export const getPlacesByIdAPI = async (data) => {
+  let request = await callWithGlobalLoading(async () => {
+    return await authorizedAxiosInstance.post(`${API_ROOT}/v1/map/places_by_id`, data)
+  })
+  return request.data
+}
+
 export const getMorePlacesTextSearchAPI = async (data) => {
   const request = await axios.post(`${API_ROOT}/v1/map/places_text_search`, data)
   return request.data

@@ -21,6 +21,7 @@ import {
   WithPlaceCardWrappedComponentProps
 } from 'types/index.d.ts'
 import useTheme from 'customHooks/useTheme'
+import { useNavigation } from '@react-navigation/native'
 /**
  * @typedef HorizontalPlaceCardProps
  * @property {PlaceDataProps} place Thông tin về một địa điểm của một nơi nào đó.
@@ -49,6 +50,7 @@ const HorizontalPlaceCard = ({
   handleLikeButton,
   ...props
 }) => {
+  const navigation = useNavigation()
   const langCode = useSelector(selectCurrentLanguage).languageCode 
   const langData = useSelector(selectCurrentLanguage).data?.exploreScreen
   //theme
@@ -58,7 +60,6 @@ const HorizontalPlaceCard = ({
   let presentationImage = place && place.place_photos ? {uri: place.place_photos[0]} : {}
 
   console.log("User favorites total: ", place.user_favorites_total);
-
   //shadow for card
   let shadw = themeMode === 'light' ? 'type_1' : 'type_1_dark'
   let bg = themeMode === 'light' ? 'bg_second' : 'bg_tertiary'
@@ -137,6 +138,7 @@ const HorizontalPlaceCard = ({
           <CircleButton
             style={app_sp.me_8}
             typeOfButton="highlight"
+            onPress={() => navigation.navigate('MapScreen', { place_id: place.place_id })}
             defaultColor={heart}
             activeColor={activeHeart}
             setIcon={(isActive, currentLabelStyle) => (

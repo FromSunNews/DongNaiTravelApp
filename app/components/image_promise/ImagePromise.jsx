@@ -10,12 +10,15 @@ import moment from 'moment/moment'
 import 'moment/locale/vi'  // without this line it didn't work
 moment.locale('vi')
 
-const ImagePromise = ({ photoReference, styleImage, map_api_key, pushArrImgBase64, isTranformData}) => {
+const ImagePromise = ({ photoReference, styleImage, map_api_key, pushArrImgBase64, isTranformData, isUrlFormat = false}) => {
+  console.log("🚀 ~ file: ImagePromise.jsx:14 ~ ImagePromise ~ photoReference:", photoReference)
+  console.log("🚀 ~ file: ImagePromise.jsx:14 ~ ImagePromise ~ isUrlFormat:", isUrlFormat)
   
   const [urlBase64, setUrlBase64] = useState(null)
   
   useEffect(() => {
-    getUrlBase64()
+    if (!isUrlFormat)
+      getUrlBase64()
   }, [photoReference])
   
   const getUrlBase64 = async () => {
@@ -32,7 +35,7 @@ const ImagePromise = ({ photoReference, styleImage, map_api_key, pushArrImgBase6
   if (urlBase64)
     return (
       <Image
-        source={{uri: `data:image/jpeg;base64,${urlBase64}`}}
+        source={{uri: isUrlFormat ? photoReference.toString() : `data:image/jpeg;base64,${urlBase64}`}}
         style={styleImage}
         resizeMode="cover"
       />
