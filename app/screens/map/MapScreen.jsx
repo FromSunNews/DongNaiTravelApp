@@ -46,7 +46,7 @@ import { typesPlace, typeModeTransport, maneuverData, weatherIcons, mapTypes } f
 import { FilterConstants } from 'utilities/constants'
 
 // Related to APis
-import { getRouteDirectionAPI, getMorePlacesTextSearchAPI, getPlaceDetailsAPI, getPlacesTextSearchAPI, getWeatherCurrentAPI, getWeatherForecastAPI, getMapUserAPI, updateMapUserAPI } from 'request_api'
+import { getRouteDirectionAPI, getMorePlacesTextSearchAPI, getPlaceDetailsAPI, getPlacesTextSearchAPI, getWeatherCurrentAPI, getWeatherForecastAPI, getMapUserAPI, updateMapUserAPI } from 'apis/axios'
 
 // Related to debounce
 import { cloneDeep, debounce } from 'lodash'

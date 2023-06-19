@@ -3,7 +3,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   getBlogAPI,
   getBlogsAPI
-} from 'request_api'
+} from 'apis/axios'
 
 import {
   REDUX_SLICE_NAMES,

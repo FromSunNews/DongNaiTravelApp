@@ -4,7 +4,7 @@ import styles from './ChatBotScreenStyles'
 import { useSelector } from 'react-redux'
 import { selectCurrentLanguage } from '../../redux/language/LanguageSlice'
 import useTheme from 'customHooks/useTheme'
-import { getTextChatBotAPI } from 'request_api'
+import { getTextChatBotAPI } from 'apis/axios'
 import { selectCurrentUser } from 'redux/user/UserSlice'
 import { selectTemporaryUserId } from 'redux/user/UserSlice'
 import { app_c, app_dms, app_shdw, app_sp, app_typo } from 'globals/styles';
@@ -14,7 +14,7 @@ import { AppText, VerticalPlaceCard, VerticalPlaceCardSkeleton } from 'component
 
 import { GiftedChat, Bubble, InputToolbar, Actions, Composer, Send, F } from 'react-native-gifted-chat'
 
-import { getPlacesAPI } from 'request_api';
+import { getPlacesAPI } from 'apis/axios';
 import { weatherIcons } from 'utilities/mapdata';
 import WeatherChart from 'libs/react-native-weather-chart';
 import { Ionicons, Entypo, Fontisto, FontAwesome5, FontAwesome, MaterialIcons, MaterialCommunityIcons} from "react-native-vector-icons"

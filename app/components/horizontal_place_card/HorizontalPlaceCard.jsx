@@ -64,6 +64,7 @@ const HorizontalPlaceCard = ({
   let bg = themeMode === 'light' ? 'bg_second' : 'bg_tertiary'
   let heart = themeMode === 'light' ? 'heart' : 'heart_dark'
   let activeHeart = themeMode === 'light' ? 'type_1' : 'type_1_dark'
+  
   return React.useMemo(() => (
     <View style={[styles.card,{backgroundColor: themeColor[bg], ...app_shdw[shadw]}]}>
       {/* Cột đâu tiên - Image Container */}

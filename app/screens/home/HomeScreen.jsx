@@ -18,7 +18,7 @@ import {
   getPlacesAPI,
   getBlogsAPI,
   getWeatherCurrentAPI
-} from 'request_api'
+} from 'apis/axios'
 
 import { useBriefPlaces } from "customHooks/usePlace"
 import useTheme from "customHooks/useTheme"

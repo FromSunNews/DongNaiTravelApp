@@ -9,7 +9,7 @@ import { FIELD_MIN_LENGTH_MESSAGE, FIELD_REQUIRED_MESSAGE, PASSWORD_RULE, PASSWO
 import { ButtonText, Input } from 'components'
 import { useDispatch } from 'react-redux'
 import { useNavigation, useRoute } from '@react-navigation/native'
-import { resetPasswordAPI } from 'request_api'
+import { resetPasswordAPI } from 'apis/axios'
 import { Image } from 'react-native'
 
 const ResetPasswordScreen = () => {

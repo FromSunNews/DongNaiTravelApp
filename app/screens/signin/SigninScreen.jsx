@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import React, { useEffect, useState } from 'react'
 
-import { signInUserAPI } from 'request_api'
+import { signInUserAPI } from 'apis/axios'
 
 import {
   useAuth,

@@ -10,7 +10,7 @@ import { EMAIL_RULE, EMAIL_RULE_MESSAGE, FIELD_REQUIRED_MESSAGE } from 'utilitie
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
 import { Image } from 'react-native'
-import { sendOtpAPI } from 'request_api'
+import { sendOtpAPI } from 'apis/axios'
 import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
 
 const ForgotPasswordScreen = () => {

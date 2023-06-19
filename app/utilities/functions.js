@@ -113,11 +113,41 @@ function removeFrom(arr, selectValueToCompare, value) {
   return cpArr.filter((ele, index) => selectValueToCompare(ele, index) !== value)
 }
 
+/**
+ * Dùng hàm này với async function để delay một tác vụ nào đó.
+ * @param {() => void} callBack 
+ * @param {number} timeout 
+ * @returns 
+ */
+const wait = (callBack, timeout) => {
+  return new Promise((res) => {
+    setTimeout(() => {
+      // Promise đang `await` res() thực thi.
+      res(callBack())
+    }, timeout)
+  })
+}
+
+/**
+ * Hàm này dùng để bind tất cả các methods trong một object với `obj` đó.
+ * @param {any} obj object cần bind tất cả các method của nó.
+ */
+function autoBind(obj) {
+  let propNames = Object.getOwnPropertyNames(obj);
+  for(let propName of propNames) {
+    if(propName !== 'constructor' && obj[propName]) {
+      obj[propName] = obj[propName].bind(obj)
+    }
+  }
+}
+
 const FunctionsUtility = {
   getHeaderTitle,
   deepCompare,
   validateRegex,
-  removeFrom
+  removeFrom,
+  wait,
+  autoBind
 }
 
 export default FunctionsUtility;

@@ -116,22 +116,14 @@ const BlogEditorScreen = (props) => {
     if(blogInfo.content && blogInfo.isContentFromStorage && blogInfo.isWebviewLoaded) {
       let reg = /\n(.+)/
       let delta = JSON.stringify(
-        mdToDeltaConverter.convert(blogInfo.content).map(item => {
-          if(!reg.test(item.insert)) return item;
-          let newValue = item.insert.match(reg);
-          console.log("New value: ", newValue)
-          return ({...item, insert: newValue[1]})
-        })
+        mdToDeltaConverter.convert(blogInfo.content)
       );
-      console.log("Delta: ", delta)
-      console.log("Markdown: ", blogInfo.content)
       webViewRef.current.injectJavaScript(`
         editor.setContents(${delta})
       `);
     }
 
     if(blogInfo.content && !blogInfo.isContentFromStorage) {
-      console.log("Blog content (Before save): ", JSON.stringify(blogInfo.content));
       callWithGlobalLoading(async () => {
         await AsyncStorageUtility.setItemAsync("SAVED_BLOG_CONTENT_KEY", blogInfo.content);
       })

@@ -14,7 +14,7 @@ import {
 
 import {
   updateUserByCaseAPI
-} from 'request_api'
+} from 'apis/axios'
 
 import StringUtility from 'utilities/string'
 import {

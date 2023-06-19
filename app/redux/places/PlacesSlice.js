@@ -5,7 +5,7 @@ import { API_ROOT, COMPLETE_PLACE_DETAILS_DATA_FIELDS } from 'utilities/constant
 import {
   getPlacesAPI,
   getPlaceDetailsWithPipelineAPI
-} from 'request_api'
+} from 'apis/axios'
 
 import {
   fetchBriefPlacesByTypeAsyncThunk,

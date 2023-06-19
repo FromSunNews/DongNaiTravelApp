@@ -206,9 +206,7 @@ export const postNewBlogAPI = async (data, configs) => {
     data.accessToken = accessToken;
     data.blog.authorId = user.currentUser._id;
     // let [ formData, headers ] = AxiosUtility.createMultipartFormData(data);
-    let response = await callWithGlobalLoading(async () => {
-      return await authorizedAxiosInstance.post(`${API_ROOT}/v1/blog/create_new`, data, configs);
-    })
+    let response = authorizedAxiosInstance.post(`${API_ROOT}/v1/blog/create_new`, data, configs);
     return response.data;
   } catch (error) {
     console.error(error.message);
