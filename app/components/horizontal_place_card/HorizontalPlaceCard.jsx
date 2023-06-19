@@ -20,6 +20,7 @@ import {
   PlaceDataProps,
   WithPlaceCardWrappedComponentProps
 } from 'types/index.d.ts'
+import { useNavigation } from '@react-navigation/native'
 
 /**
  * @typedef HorizontalPlaceCardProps
@@ -49,6 +50,7 @@ const HorizontalPlaceCard = ({
   handleLikeButton,
   ...props
 }) => {
+  const navigation = useNavigation()
   const langCode = useSelector(selectCurrentLanguage).languageCode 
   const langData = useSelector(selectCurrentLanguage).data?.exploreScreen
 
@@ -127,6 +129,7 @@ const HorizontalPlaceCard = ({
           <CircleButton
             style={app_sp.me_8}
             typeOfButton="highlight"
+            onPress={() => navigation.navigate('MapScreen', { place_id: place.place_id })}
             setIcon={(isActive, currentLabelStyle) => (
               <Ionicons name={isActive ? 'map' : 'map-outline'} size={14} style={currentLabelStyle} />
             )}

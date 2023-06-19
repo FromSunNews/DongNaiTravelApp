@@ -223,6 +223,10 @@ const BlogDetailScreen = ({route, navigation}) => {
             style={app_sp.me_6}
             defaultColor={themeMode === 'light' ? 'type_2' : 'type_3'}
             typeOfButton="highlight"
+            onPress={() => {
+              console.log("🚀 ~ file: BlogDetailScreen.jsx:228 ~ BlogDetailScreen ~ blogDetails.mentionedPlaces:", blogDetails.mentionedPlaces)
+              navigation.navigate('MapScreen', { array_place_id: blogDetails.mentionedPlaces })
+            }}
             setIcon={(isActive, currentLabelStyle) => (
               <Ionicons name={isActive ? 'map' : 'map-outline'} size={14} style={currentLabelStyle} />
             )}

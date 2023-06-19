@@ -5,7 +5,7 @@
 
 const ip_v4 = {
   tuan: '192.168.2.10',
-  phuong: '192.168.2.78',
+  phuong: '192.168.1.13',
   duc: '192.168.146.83'
 }
 
@@ -113,6 +113,7 @@ export const BRIEF_PLACE_DATA_FIELDS = "place_id;name;adr_address;types;rating;u
 export const PLACE_DETAILS_DATA_FIELDS = "rating;user_ratings_total;user_favorites_total;content;reviews"
 export const COMPLETE_PLACE_DETAILS_DATA_FIELDS = "place_id;name;adr_address;types;rating;user_ratings_total;isRecommended;user_favorites_total;formatted_address;place_photos;content;reviews"
 export const SEARCH_PLACE_DATA_FIELDS = "place_id;name;place_photo;_dataType;types";
+export const MAP_PLACES_CARD_DATA_FIELDS = "place_id;photos_id;name;rating;user_ratings_total;editorial_summary;formatted_address;geometry";
 
 export const BLOG_QUANLITIES = {
   vi: {

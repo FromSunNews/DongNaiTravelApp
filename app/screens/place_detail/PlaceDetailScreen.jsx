@@ -64,6 +64,7 @@ import { app_c, app_dms, app_sp } from 'globals/styles'
 import {
   PlaceDetailsDataProps
 } from 'types/index.d.ts'
+import Lightbox from 'react-native-lightbox-v2';
 
 /**
  * __Creator__: @NguyenAnhTuan1912
@@ -71,6 +72,8 @@ import {
  */
 const PlaceDetailScreen = ({route, navigation}) => {
   const { placeId, typeOfBriefPlace, fromSearch } = route.params;
+  console.log("🚀 ~ file: PlaceDetailScreen.jsx:75 ~ PlaceDetailScreen ~ typeOfBriefPlace:", typeOfBriefPlace)
+  console.log("🚀 ~ file: PlaceDetailScreen.jsx:75 ~ PlaceDetailScreen ~ fromSearch:", fromSearch)
 
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.placeDetailScreen
@@ -137,10 +140,10 @@ const PlaceDetailScreen = ({route, navigation}) => {
           zIndex: 999
         }}
       />
-      <Image
-        source={presentationImageUrl ? {uri: presentationImageUrl} : {}}
-        style={styles.pd_background_image}
-      />
+        <Image
+          source={presentationImageUrl ? {uri: presentationImageUrl} : {}}
+          style={styles.pd_background_image}
+        />
       <BottomSheet
         snapPoints={snapPoints}
         index={0}
@@ -192,6 +195,7 @@ const PlaceDetailScreen = ({route, navigation}) => {
               <CircleButton
                 style={app_sp.me_8}
                 typeOfButton="highlight"
+                onPress={() => navigation.navigate('MapScreen', { place_id: placeId })}
                 setIcon={(isActive, currentLabelStyle) => (
                   <Ionicons name={isActive ? 'map' : 'map-outline'} size={14} style={currentLabelStyle} />
                 )}
@@ -241,7 +245,7 @@ const PlaceDetailScreen = ({route, navigation}) => {
   )
 }
 
-const AboutSlide = ({placeId}) => {
+const AboutSlide = ({placeId, navigator}) => {
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.placeDetailScreen
 
@@ -307,10 +311,16 @@ const AboutSlide = ({placeId}) => {
                     style={actualStyle}
                     key={url}
                   >
-                    <Image
-                      source={{uri: url}}
-                      style={{width: '100%', aspectRatio: 1}}
-                    />
+                    <Lightbox 
+                      navigator={navigator}
+                      underlayColor="#fff"
+                      useNativeDriver={false}
+                    >
+                      <Image
+                        source={{uri: url}}
+                        style={{width: '100%', aspectRatio: 1}}
+                      />
+                    </Lightbox>
                   </RectangleButton>
                 )
               })
