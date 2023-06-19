@@ -20,7 +20,8 @@ import RectangleButton from 'components/buttons/RectangleButton'
 import CircleButton from 'components/buttons/CircleButton'
 
 import styles from './HorizontalBlogCardStyles'
-import { app_c, app_sp } from 'globals/styles'
+import { app_c, app_shdw, app_sp } from 'globals/styles'
+import useTheme from 'customHooks/useTheme'
 
 import {
   BlogDataProps,
@@ -59,9 +60,14 @@ const HorizontalBlogCard = ({
   let displayAuthorName = blog.author.lastName && blog.author.firstName
     ? blog.author.lastName + " " + blog.author.firstName
     : blog.author.displayName
+  //theme
+  const {themeColor, themeMode} = useTheme();
+  //shadow for card
+  let shadw = themeMode === 'light' ? 'type_1' : 'type_1_dark'
+  let bg = themeMode === 'light' ? 'bg_second' : 'bg_tertiary'
 
   return React.useMemo(() => (
-    <View style={styles.card}>
+    <View style={[styles.card,{backgroundColor: themeColor[bg], ...app_shdw[shadw]}]}>
       {/* Cột đâu tiên - Image Container */}
       <RectangleButton
         typeOfButton="highlight"
@@ -70,7 +76,7 @@ const HorizontalBlogCard = ({
         onPress={handlePressImageButton}
         style={app_sp.me_12}
       >
-        <ImageBackground style={styles.card_image_container} source={blog.avatar !== "" ? {uri: blog.avatar} : {}}>
+        <ImageBackground style={[styles.card_image_container,{backgroundColor: themeColor.bg_second,}]} source={blog.avatar !== "" ? {uri: blog.avatar} : {}}>
           {/*
             blog.isRecommended &&
             <View style={styles.card_recommended_mark_container}>
@@ -90,11 +96,11 @@ const HorizontalBlogCard = ({
             }<AppText font="body2" style={styles.card_text_color}>{" " + displayAuthorName}</AppText>
           </View>
           <View>
-            <AppText numberOfLines={2} font="h3" style={styles.card_title}>{blog.name}</AppText>
+            <AppText numberOfLines={2} font="h3" style={[styles.card_title,{color: themeColor.fourth}]}>{blog.name}</AppText>
           </View>
           <View style={styles.card_information_container}>
             <View style={styles.card_information_col}>
-              <AppText font="body2" style={styles.card_text_color}>
+              <AppText font="body2" style={{color:themeColor.fourth}}>
                 {DateTimeUtility.getShortDateString(blog.createdAt)}
               </AppText>
             </View>
@@ -130,7 +136,7 @@ const HorizontalBlogCard = ({
         <CircleButton
           isOnlyContent={true}
           setIcon={(isActive, currentLabelStyle) => (
-            <Ionicons name="share-outline" size={20} style={currentLabelStyle} />
+            <Ionicons name="share-outline" size={20} style={[currentLabelStyle,{color:themeColor.fourth}]} />
           )}
         />
       </View>

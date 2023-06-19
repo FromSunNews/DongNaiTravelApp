@@ -5,6 +5,7 @@ import {
   TextProps,
   TextStyle
 } from 'react-native'
+import { Socket } from 'socket.io-client'
 
 export type ViewStyleProps = StyleProp<ViewStyle>
 export type TextStyleProps = StyleProp<TextStyle>
@@ -164,6 +165,13 @@ export interface ContentDataProps {
   }>
 }
 
+export interface BlogContentDataProps {
+  _id?: string,
+  plainText?: string,
+  plainTextMarkFormat?: string,
+  speech?: string
+}
+
 export interface BriefPlacesReduxStateProps {
   limit: number,
   skip: number,
@@ -204,6 +212,31 @@ export interface BriefBlogsReduxStateProps {
   data: Array<BlogDataProps>
 }
 
+export interface UserDataProps {
+  _id?: string,
+  email?: string,
+  password?: string,
+  username?: string,
+  displayName?: string,
+  avatar?: string,
+  coverPhoto?: string,
+  role?: 'client' | 'admin',
+  savedSuggestions?: Array<string>,
+  savedPlaces?: Array<string>,
+  savedBlogs?: Array<string>,
+  followerIds?: Array<string>,
+  followingIds?: Array<string>,
+  receivePoints?: number,
+  lostPoints?: number,
+  otpToken?: string,
+  birthDay?: number,
+  notifIds?: Array<string>,
+  firstName?: string,
+  lastName?: string,
+  createdAt?: number,
+  updatedAt?: number
+}
+
 // Use for redux
 export type UserRoles = 'GUEST' | 'MEMBER'
 export interface ActionProps<T> {
@@ -216,6 +249,7 @@ export interface UserForAuthProps {
   emailName: string,
   password: string
 }
+
 export interface AuthenticateOptionsProps {
   checkConditionFirst: () => boolean
   callWhenReject: (data?: any) => void 
@@ -280,4 +314,39 @@ export interface SearchProps {
   placeHolder: string,
   callBack: (searchString: string, data: any) => void,
   apis: Array<(text: string) => Promise<any>>
+}
+
+// For socket
+export interface SocketEventReceiveMessageStatusProps {
+  isDone: boolean,
+  isError: boolean
+}
+
+export interface SocketEventSendMessageStatusProps {
+  isOff: boolean
+}
+
+export interface BlogCreateSocketEventReceiveMessageStatusProps extends SocketEventReceiveMessageStatusProps {
+  canUpload: boolean,
+  progress: number
+}
+
+export interface BlogCreateSocketEventSendMessageStatusProps extends SocketEventSendMessageStatusProps {
+  isUploadDone: boolean
+}
+
+export interface BlogCreateSocketEventReceiveMessageProps {
+  status: BlogCreateEventReceiveMessageStatusProps,
+  text: string,
+  data: any
+}
+
+export interface BlogCreateSocketEventSendMessageProps {
+  status: BlogCreateEventSendMessageStatusProps,
+  chunk: any
+}
+
+export interface NonGlobalSocketEventHandlerCreatorOptions {
+  forListener: {},
+  generateMessage: (status: any, data: any) => ({ status: any, data: any })
 }

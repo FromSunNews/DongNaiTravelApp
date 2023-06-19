@@ -5,6 +5,8 @@ import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { io } from 'socket.io-client'
 
+import { getSocket } from 'apis/socket'
+
 import { useFonts } from 'expo-font'
 
 import { store, persistor } from 'redux/store'
@@ -34,7 +36,7 @@ LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs();//Ignore all log notifications
 
 // Phương: này là dùng cho socket
-export const socketIoInstance = io(API_ROOT)
+export const socketIoInstance = getSocket()
 
 injectStore(store)
 

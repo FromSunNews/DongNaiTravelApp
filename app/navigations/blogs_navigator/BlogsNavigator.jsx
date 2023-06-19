@@ -13,19 +13,33 @@ import {
   AppHeader,
   RectangleButton
 } from 'components';
+import { selectCurrentMode } from 'redux/theme/ThemeSlice';
 
 const BlogsStack = createNativeStackNavigator();
 
-const BlogsNavigator = ({ navigation }) => {
+const BlogsNavigator = ({ route, navigation }) => {
+  console.log("Params: ", route.params);
+  const screen = route.params?.screen;
+  const params = route.params?.params;
   const langCode = useSelector(selectCurrentLanguage).languageCode
+
+  React.useEffect(() => {
+    if(screen) {
+      console.log("Navigate to ", screen);
+      navigation.navigate(screen, params);
+    }
+  }, [screen]);
+
+  const themeMode = useSelector(selectCurrentMode).mode //get mode theme
+
   return (
     <BlogsStack.Navigator
-      initialRouteName="BlogScreen"
+      initialRouteName="BlogsScreen"
       screenOptions={{
         header: AppHeader
     }}>
       <BlogsStack.Screen
-        name="BlogScreen"
+        name="BlogsScreen"
         options={{
           header: props => (
             <AppHeader
@@ -34,7 +48,9 @@ const BlogsNavigator = ({ navigation }) => {
                 <RectangleButton
                   overrideShape='capsule'
                   typeOfButton='highlight'
-                  onPress={() => {navigation.navigate("BlogEditorNavigator", {screen: 'BlogEditorScreen'})}}
+                  onPress={() => { navigation.navigate("BlogEditorNavigator", { screen: 'BlogEditorScreen' }) }}
+                  defaultColor= {themeMode === 'light' ? 'type_3' : 'type_1_dark'}
+                  activeColor='type_2'
                 >
                   <AppText>{langCode === 'vi' ? 'Tạo bài viết' : 'Create blog'}</AppText>
                 </RectangleButton>

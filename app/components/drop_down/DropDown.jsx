@@ -35,7 +35,7 @@ const DropDown = ({
 }) => {
   const langCode = useSelector(selectCurrentLanguage).languageCode
   //theme
-  var themeColor = useTheme();
+  var {themeColor} = useTheme();
   //current setting
   const currentSetting = useSelector(selectCurrentSetting)
   const dispatch = useDispatch()
@@ -64,7 +64,6 @@ const DropDown = ({
     let data 
     // cat nhat state
     if (idOption === 'DARK_MODE') {
-      console.log( `DARK_MODE`)
       data = !selectedOption
       dispatch(updateDarkMode(data))
       dispatch(toggleTheme()) //button thay doi theme
@@ -124,7 +123,7 @@ const DropDown = ({
     <View style={styles.dropdown}>
       <TouchableOpacity
         onPress={toggleDropdown}
-        style={{ ...styles.dropdown_btn, backgroundColor: app_c.HEX.ext_primary }}
+        style={{ ...styles.dropdown_btn, backgroundColor: themeColor.bg_tertiary }}
       >
         <View
           style={{
@@ -227,7 +226,7 @@ const DropDown = ({
           <View
             style={{
               borderBottomWidth: 1.5,
-              borderBottomColor: themeColor.ext_third,
+              borderBottomColor: themeColor.seperator,
               marginTop: 12,
             }}
           ></View>

@@ -15,7 +15,7 @@ import { notifIcon } from '../../utilities/mapdata'
 import { cloneDeep } from 'lodash'
 import moment from 'moment/moment'
 import 'moment/locale/vi'  // without this line it didn't work
-import { getInfoUserAPI, updateManyNotifsAPI, updateNotifAPI } from '../../request_api'
+import { getInfoUserAPI, updateManyNotifsAPI, updateNotifAPI } from '../../apis/axios'
 import { not } from 'react-native-reanimated'
 import useTheme from 'customHooks/useTheme'
 moment.locale('vi')

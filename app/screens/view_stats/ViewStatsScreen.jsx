@@ -7,7 +7,7 @@ const ViewStatsScreen = () => {
   //theme
   const themeColor = useTheme();
   return (
-    <View style={[styles.container,{backgroundColor: themeColor.primary}]}>
+    <View style={[styles.container,{backgroundColor: themeColor.bg_second}]}>
       <Text style={{color: themeColor.fourth}}>ViewStats</Text>
     </View>
   )

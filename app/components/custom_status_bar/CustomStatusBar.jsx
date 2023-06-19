@@ -9,14 +9,13 @@ import { selectCurrentManifold } from 'redux/manifold/ManifoldSlice';
 import { app_dms } from 'globals/styles';
 
 const CustomStatusBar = ({...props }) => {
-  const themeColor = useTheme();
-  const themeMode = useSelector(selectCurrentMode).mode
+  const {themeColor,themeMode} = useTheme();
   const hiddenStatusBar = useSelector(selectCurrentManifold).hiddenStatusBar
 
   return(
-  <View style={{ backgroundColor:themeColor.primary, height: hiddenStatusBar ? 0 : app_dms.statusBarHeight}}>
+  <View style={{ backgroundColor:themeColor.bg_second, height: hiddenStatusBar ? 0 : app_dms.statusBarHeight}}>
     <SafeAreaView>
-      <StatusBar translucent backgroundColor={themeColor.primary} barStyle = {themeMode === 'light' ? "dark-content" : "light-content"} {...props} />
+      <StatusBar translucent backgroundColor={themeColor.bg_second} barStyle = {themeMode === 'light' ? "dark-content" : "light-content"} {...props} />
     </SafeAreaView>
   </View>)
 }

@@ -7,6 +7,10 @@ import {
 import React, { useRef } from 'react'
 
 import {
+	getSocket
+} from 'apis/socket'
+
+import {
 	useAuth
 } from 'customHooks/useAuth'
 
@@ -28,7 +32,7 @@ import { app_dms } from 'globals/styles'
 import HomeNavigator from 'navigations/home_navigator/HomeNavigator'
 
 import { useEffect } from 'react'
-import { getPrivateKeysAPI } from 'request_api'
+import { getPrivateKeysAPI } from 'apis/axios'
 import { useDispatch, useSelector } from 'react-redux'
 import { updatePrivateKeys } from 'redux/manifold/ManifoldSlice'
 // Phương: Socket 
@@ -36,14 +40,13 @@ import { updatePrivateKeys } from 'redux/manifold/ManifoldSlice'
 import { selectCurrentUser, updateTemporaryUserId } from 'redux/user/UserSlice'
 import 'react-native-get-random-values'
 import { v4 as uuidv4 } from 'uuid'
-import { socketIoInstance } from '../../../App'
 import { updateUserLocation } from 'redux/map/mapSlice'
 
 // Related to Expo
 import * as Location from 'expo-location'
 import { updateCurrentUser } from '../../redux/user/UserSlice'
 import { updateCurrentNotifs, updateNewNotifs } from '../../redux/notifications/NotificationsSlice'
-import { signInUserAPI } from '../../request_api'
+import { signInUserAPI } from '../../apis/axios'
 import { selectCurrentWareHouse } from '../../redux/warehouse/WareHouseSlice'
 import FunctionsUtility from '../../utilities/functions'
 import { EMAIL_RULE } from '../../utilities/validators'
@@ -106,10 +109,10 @@ const BottomTabBar = ({
 		useNativeDriver: true
 	}).start()
 	//theme
-	const themeColor = useTheme();
+	const {themeColor} = useTheme();
 
 	return (
-		<View style={[styles.tab_bottom_container,{backgroundColor: themeColor.fourth}]}>
+		<View style={[styles.tab_bottom_container,{backgroundColor: themeColor.bg_tab}]}>
 			<View style={styles.tab_bottom_buttons_container}>
 				{state.routes.map((route, index) => {
 					const { options } = descriptors[route.key];
@@ -138,19 +141,19 @@ const BottomTabBar = ({
 							key={route.name}
 							style={styles.tab_bottom_button}
 						>
-							<View style={tabIcon[route.name].isHighlight ? [styles.tab_bottom_hl_icon_conatiner,{backgroundColor: themeColor.ext_bg_tab,
-    borderColor: themeColor.ext_border_map_tab}] : styles.tab_bottom_icon_conatiner}>
+							<View style={tabIcon[route.name].isHighlight ? [styles.tab_bottom_hl_icon_conatiner,{backgroundColor: themeColor.mid_map_tab,
+    borderColor: themeColor.border_map_tab}] : styles.tab_bottom_icon_conatiner}>
 								{
 									tabIcon[route.name].isHighlight ?
 										(<Ionicons
 											size={tabIcon[route.name].size}
 											name={isFocused ? tabIcon[route.name].active : tabIcon[route.name].inactive}
-											style={isFocused ? [styles.tab_bottom_hl_icon_active, { color: themeColor.ext_mid_map_tab }] : [styles.tab_bottom_hl_icon_inactive, { color: themeColor.ext_unactive_tab }]}
+											style={isFocused ? [styles.tab_bottom_hl_icon_active, { color: themeColor.active_tab }] : [styles.tab_bottom_hl_icon_inactive, { color: themeColor.unactive_tab }]}
 										/>) :
 										(<Ionicons
 											size={tabIcon[route.name].size}
 											name={isFocused ? tabIcon[route.name].active : tabIcon[route.name].inactive}
-											style={isFocused ? [styles.tab_bottom_icon_active, {color: themeColor.ext_active_tab}] : [styles.tab_bottom_icon_inactive,{color: themeColor.ext_unactive_tab}]}
+											style={isFocused ? [styles.tab_bottom_icon_active, {color: themeColor.active_tab}] : [styles.tab_bottom_icon_inactive,{color: themeColor.unactive_tab}]}
 									/>)
 								}
 							</View>
@@ -158,12 +161,13 @@ const BottomTabBar = ({
 					);
 				})}
 			</View>
-			<Animated.View style={{...styles.tab_bottom_dot_animated_container,backgroundColor:themeColor.ext_dot_tab, transform: [{ translateX: tabOffsetValue }]}}></Animated.View>
+			<Animated.View style={{...styles.tab_bottom_dot_animated_container,backgroundColor:themeColor.dot_tab, transform: [{ translateX: tabOffsetValue }]}}></Animated.View>
 		</View>
 	);
 }
 
 const Tab = createBottomTabNavigator()
+const socketIoInstance = getSocket();
 
 const GroupBottomTab = () => {
 	// Phuong: https://reactnavigation.org/docs/bottom-tab-navigator/
@@ -240,62 +244,66 @@ const GroupBottomTab = () => {
 			dispatch(updateCurrentUser(data.userReceived))
 			dispatch(updateNewNotifs(data.notif))
 		})
+
+		return function() {
+			socketIoInstance.disconnect();
+		}
 	}, [])
 
 	return (
 		<View style={styles.container}>
-				<Tab.Navigator
-					tabBar={props => (<BottomTabBar {...props} tabOffsetValue={tabOffsetValue} />)}
-					screenOptions={{
-						'tabBarShowLabel': false,
-						tabBarHideOnKeyboard: true
-					}}
-				>
-						<Tab.Screen
-							name={'HomeScreen'}
-							component={HomeNavigator}
-							options={{
-								headerShown: false,
-								tabBarHideOnKeyboard: true
-							}}>
-						</Tab.Screen>
-
-						<Tab.Screen
-							name={'ExploreNavigator'}
-							component={ExploreNavigator}
-							options={{
-								headerShown: false,
-								tabBarHideOnKeyboard: true
-							}}>
-						</Tab.Screen>
-
-						<Tab.Screen
-							name={'MapScreen'}
-							component={MapScreen}
-							options={{
-								headerShown: false,
-								tabBarHideOnKeyboard: true
-							}}>
-						</Tab.Screen>
-
-						<Tab.Screen
-							name={'BlogsNavigator'}
-							component={BlogsNavigator}
-							options={{
-								headerShown: false,
-								tabBarHideOnKeyboard: true
-							}}>
+			<Tab.Navigator
+				tabBar={props => (<BottomTabBar {...props} tabOffsetValue={tabOffsetValue} />)}
+				screenOptions={{
+					'tabBarShowLabel': false,
+					tabBarHideOnKeyboard: true
+				}}
+			>
+					<Tab.Screen
+						name={'HomeScreen'}
+						component={HomeNavigator}
+						options={{
+							headerShown: false,
+							tabBarHideOnKeyboard: true
+						}}>
 					</Tab.Screen>
 
-						<Tab.Screen
-							name={'SettingScreen'}
-							component={SettingNavigator}
-							options={{
-								headerShown: false,
-								tabBarHideOnKeyboard: true
-							}}>
-						</Tab.Screen>
-				</Tab.Navigator>
+					<Tab.Screen
+						name={'ExploreNavigator'}
+						component={ExploreNavigator}
+						options={{
+							headerShown: false,
+							tabBarHideOnKeyboard: true
+						}}>
+					</Tab.Screen>
+
+					<Tab.Screen
+						name={'MapScreen'}
+						component={MapScreen}
+						options={{
+							headerShown: false,
+							tabBarHideOnKeyboard: true
+						}}>
+					</Tab.Screen>
+
+					<Tab.Screen
+						name={'BlogsNavigator'}
+						component={BlogsNavigator}
+						options={{
+							headerShown: false,
+							tabBarHideOnKeyboard: true
+						}}>
+				</Tab.Screen>
+
+					<Tab.Screen
+						name={'SettingScreen'}
+						component={SettingNavigator}
+						options={{
+							headerShown: false,
+							tabBarHideOnKeyboard: true
+						}}>
+					</Tab.Screen>
+			</Tab.Navigator>
 		</View>
 	)
 }

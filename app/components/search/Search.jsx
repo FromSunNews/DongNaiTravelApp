@@ -8,7 +8,7 @@ import React, { LegacyRef } from 'react'
 
 import {
   getPlacesAPI
-} from 'request_api'
+} from 'apis/axios'
 
 import useTheme from 'customHooks/useTheme'
 
