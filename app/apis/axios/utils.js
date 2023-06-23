@@ -2,15 +2,9 @@ import axios, { AxiosInstance } from "axios";
 
 import { APIsOptions } from "./class/APIsOptions";
 
-import { APIsOptionsProps } from "./types";
+import { API_ROOT } from "utilities/constants";
 
-import {
-  API_ROOT
-} from 'utilities/constants'
-
-import {
-  injectStore
-} from 'utilities/reduxStore'
+import { APIsOptionsProps } from "./types.d.ts";
 
 /**
  * Hàm này dùng để tạo ra các hàm dùng để gọi APIs từ server. Nó sẽ nhận vào 2 tham số
@@ -47,7 +41,7 @@ export function bindSpecialtyObject(apis, specialtyInstances) {
 
     return apis;
   } catch(error) {
-    console.log(error.message)
+    console.error(error.message)
     return {}
   }
 }
@@ -69,7 +63,7 @@ export function getQueryString(query) {
     }
     return queryInString.substring(0, queryInString.length - 1);
   } catch (error) {
-    console.log(error.message)
+    console.error(error.message)
     return ""
   }
 }
@@ -87,16 +81,20 @@ export function getQueryString(query) {
  * - routeName: là tên của route như là `blog, map, user`.
  * - apiVersion: là version của api.
  * @param {APIsOptionsProps} options
- * @returns {APIsOptionsProps}
+ * @returns {APIsOptions}
  */
 export function createNewAPIsOptions(options) {
   try {
     if(!options.endpoint || !options.routeName)
       throw new Error("Route or Route's name is empty!");
 
+    options.apiRoot = options.apiRoot ? options.apiRoot : API_ROOT;
+    options.axiosInstance = options.axiosInstance ? options.axiosInstance : axios;
+
     let newOptions = new APIsOptions(options);
     return newOptions;
   } catch (error) {
+    console.error('Error (createNewAPIsOptions func): ', error.message);
     return {}
   }
 }

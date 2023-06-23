@@ -135,8 +135,6 @@ const HomeScreen = ({navigation}) => {
       })
   }, [typeBlog]);
 
-  console.log("Place: ", places);
-
   return (
     <ScrollView style={[styles.container,{backgroundColor: themeColor.bg_primary}]} showsVerticalScrollIndicator={false}>
       <View style={[styles.home_content,{backgroundColor: themeColor.bg_second}]}>

@@ -1,4 +1,4 @@
-import { APIsOptions } from 'apis/axios/class/APIsOptions';
+import { APIsOptionsProps } from "apis/axios/types.d.ts";
 
 /*
   Để có thể xoá được comment thì người dùng phải đăng nhập vào tài khoản của mình
@@ -12,7 +12,7 @@ import { APIsOptions } from 'apis/axios/class/APIsOptions';
 
 /**
  * Dùng để configure và lấy hàm gọi endpoint `delete_comment`
- * @param {APIsOptions} options 
+ * @param {APIsOptionsProps} options 
  * @returns 
  */
 export function ConfigureDeleteBlogCommentAPI(options) {

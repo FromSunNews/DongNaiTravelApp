@@ -1,4 +1,4 @@
-import { APIsOptions } from 'apis/axios/class/APIsOptions';
+import { APIsOptionsProps } from "apis/axios/types.d.ts";
 
 /*
   Để comment một blog thì người dùng phải đăng nhập từ trước. Và truyền về
@@ -22,7 +22,7 @@ import { APIsOptions } from 'apis/axios/class/APIsOptions';
 
 /**
  * Dùng để configure và lấy hàm gọi endpoint `get_comments`
- * @param {APIsOptions} options 
+ * @param {APIsOptionsProps} options 
  * @returns 
  */
 export function ConfigureCreateBlogCommentAPI(options) {

@@ -1,8 +1,9 @@
 import { AxiosInstance } from "axios"
 import { Store } from "@reduxjs/toolkit"
+
 import FunctionsUtility from "utilities/functions";
 
-import { APIsOptionsProps } from "../types";
+import { APIsOptionsProps } from "apis/axios/types.d.ts";
 
 let reg = /(?:^\/){0,1}(.+)/
 
@@ -12,7 +13,7 @@ export class APIsOptions {
    */
   axiosInstance
   /**
-   * @type {Store}
+   * @type {() => Store}
    */
   reduxStore
   /**
@@ -36,14 +37,17 @@ export class APIsOptions {
    * @param {APIsOptionsProps} options
    */
   constructor(options) {
-    this.apiRoot = options.apiRoot ? options.apiRoot : API_ROOT;
-    this.axiosInstance = options.axiosInstance ? options.axiosInstance : axios;
-    this.reduxStore = options.reduxStore ? options.reduxStore : injectStore();
+    this.apiRoot = options.apiRoot;
+    this.axiosInstance = options.axiosInstance;
     this.endpoint = (options.endpoint).match(reg)[1];
     this.routeName = (options.routeName).match(reg)[1];
     this.apiVersion = (options.apiVersion ? options.apiVersion : 'v1').match(reg)[1];
+    
+    this.reduxStore = options.reduxStore;
 
-    FunctionsUtility.autoBind(this);
+    FunctionsUtility.autoBind(this, {
+      protoProps: Object.getOwnPropertyNames(Object.getPrototypeOf(this))
+    });
   }
 
   /**
@@ -51,7 +55,7 @@ export class APIsOptions {
    * `ApiRoot/ApiVersion/RouteName/EndPoint`
    * @param {boolean} hasVersion 
    */
-  getFullRoute(hasVersion) {
+  getFullRoute(hasVersion = true) {
     let fullRoutes = [this.apiRoot, this.apiVersion, this.routeName, this.endpoint]
     if(!hasVersion) fullRoutes.splice(1, 1);
     return fullRoutes.join("/");

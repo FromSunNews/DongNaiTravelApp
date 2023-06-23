@@ -16,7 +16,15 @@ export function injectStore(_store) {
     return false;
   }
   injectedStore = _store;
-  return true;
+}
+
+/**
+ * Hàm này dùng để lấy redux store. Tất nhiên là store này sẽ là store của
+ * toàn bộ app.
+ * @returns 
+ */
+export function getInjectStore() {
+  return injectedStore;
 }
 
 function toggleLoading(state) {

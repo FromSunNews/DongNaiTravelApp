@@ -35,7 +35,13 @@ export const fetchBriefBlogsByTypeAsyncThunk = createAsyncThunk(
       const briefBlogsByType = briefBlogsSeletor(state, type);
       const limit = briefBlogsByType ? briefBlogsByType.limit : 5;
       const skip = briefBlogsByType ? briefBlogsByType.skip : 0;
-      const query = `limit=${limit}&skip=${skip}&filter=quality:${type}&fields=${fields}`;
+      const query = {
+        limit: limit,
+        skip: skip,
+        filter: `quality:${type}`,
+        fields: fields,
+        userId: state.user.currentUser._id
+      };
       const data = await getBlogsAPI(query);
       return [type, data];
     } catch (error) {
@@ -52,10 +58,10 @@ export const fetchBlogDetailsByIdAsyncThunk = createAsyncThunk(
   async (requestBlogDetailsInfo, thunkAPI) => {
     try {
       const { blogId, options } = requestBlogDetailsInfo;
-      const fields = options.canGetFull
-        ? ``
-        : `&fields=${BLOG_DETAILS_DATA_FIELDS}`;
-      const query = `blogId=${blogId}` + fields;
+      const query = {
+        blogId: blogId,
+        fields: options.canGetFull ? "" : BLOG_DETAILS_DATA_FIELDS
+      };
       const data = await getBlogAPI(query);
       return [blogId, data];
     } catch (error) {

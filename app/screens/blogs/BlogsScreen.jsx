@@ -9,6 +9,7 @@ import {
   Animated
 } from 'react-native'
 import React, { useRef } from 'react'
+import { useSelector } from 'react-redux'
 import { Buffer } from 'buffer'
 
 import { getSocket } from 'apis/socket'
@@ -44,7 +45,6 @@ import {
 
 import styles from './BlogsScreenStyles'
 import { app_sp, app_c } from 'globals/styles'
-import { useSelector } from 'react-redux'
 
 /**
  * @typedef UploadBlogProgressProps

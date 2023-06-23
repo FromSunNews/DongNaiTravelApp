@@ -1,8 +1,8 @@
-import { APIsOptions } from 'apis/axios/class/APIsOptions';
+import { APIsOptionsProps } from "apis/axios/types.d.ts";
 
 /**
  * Dùng để configure và lấy hàm gọi endpoint `get_comments`
- * @param {APIsOptions} options 
+ * @param {APIsOptionsProps} options 
  * @returns
  */
 export function ConfigureGetBlogCommentsAPI(options) {
