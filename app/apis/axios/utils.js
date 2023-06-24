@@ -1,10 +1,10 @@
 import axios, { AxiosInstance } from "axios";
 
-import { APIsOptions } from "./class/APIsOptions";
+import { APIsConfigures } from "./class/APIsOptions";
 
 import { API_ROOT } from "utilities/constants";
 
-import { APIsOptionsProps } from "./types.d.ts";
+import { APIOptionsProps } from "./types.d.ts";
 
 /**
  * Hàm này dùng để tạo ra các hàm dùng để gọi APIs từ server. Nó sẽ nhận vào 2 tham số
@@ -65,36 +65,5 @@ export function getQueryString(query) {
   } catch (error) {
     console.error(error.message)
     return ""
-  }
-}
-
-/**
- * Dùng để tạo mới một `options` cho các hàm apis. Các object trong options của apis
- * không được clone ra mà phải giữ nguyên, bởi vì các object này sẽ được dùng chung trong toàn
- * app.
- * 
- * Gồm các options như là:
- * - apiRoot: là url name của api.
- * - axiosInstance: là instance của axios, mặc định là `axios` (import từ package axios).
- * - reduxStore: là instance của store của redux (store này đã được configure).
- * - endpoint: là điểm cuối của api, cái này thì nó chỉ rõ cho mình biết là api này làm nhiệm vụ gì.
- * - routeName: là tên của route như là `blog, map, user`.
- * - apiVersion: là version của api.
- * @param {APIsOptionsProps} options
- * @returns {APIsOptions}
- */
-export function createNewAPIsOptions(options) {
-  try {
-    if(!options.endpoint || !options.routeName)
-      throw new Error("Route or Route's name is empty!");
-
-    options.apiRoot = options.apiRoot ? options.apiRoot : API_ROOT;
-    options.axiosInstance = options.axiosInstance ? options.axiosInstance : axios;
-
-    let newOptions = new APIsOptions(options);
-    return newOptions;
-  } catch (error) {
-    console.error('Error (createNewAPIsOptions func): ', error.message);
-    return {}
   }
 }

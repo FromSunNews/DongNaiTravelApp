@@ -9,7 +9,7 @@ import React from 'react'
 
 import {
   getBlogsAPI
-} from 'apis/axios/blog'
+} from 'apis/axios/blog/get'
 
 import useTheme from 'customHooks/useTheme'
 import { useAuthState } from 'customHooks/useAuth'

@@ -3,7 +3,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   getBlogAPI,
   getBlogsAPI
-} from 'apis/axios/blog'
+} from 'apis/axios/blog/get'
 
 import {
   REDUX_SLICE_NAMES,
@@ -42,8 +42,10 @@ export const fetchBriefBlogsByTypeAsyncThunk = createAsyncThunk(
         fields: fields,
         userId: state.user.currentUser._id
       };
-      const data = await getBlogsAPI(query);
-      return [type, data];
+      console.log('CALL fetchBriefBlogsByTypeAsyncThunk');
+      const response = await getBlogsAPI(query);
+      console.log('Redux Async Thunk (Get Blogs): ', response);
+      return [type, response.data];
     } catch (error) {
       console.error(error.message);
     }
@@ -62,8 +64,8 @@ export const fetchBlogDetailsByIdAsyncThunk = createAsyncThunk(
         blogId: blogId,
         fields: options.canGetFull ? "" : BLOG_DETAILS_DATA_FIELDS
       };
-      const data = await getBlogAPI(query);
-      return [blogId, data];
+      const response = await getBlogAPI(query);
+      return [blogId, response.data];
     } catch (error) {
       console.error(error.message);
     }
@@ -80,9 +82,15 @@ export const refetchBriefBlogsByTypeAsyncThunk = createAsyncThunk(
       const { type, fields } = requestBriefBlogsInfo;
       const limit = 5;
       const skip = 0;
-      const query = `limit=${limit}&skip=${skip}&filter=quality:${type}&fields=${fields}`;
-      const data = await getBlogsAPI(query);
-      return [type, data];
+      const query = {
+        limit: limit,
+        skip: skip,
+        filter: `quality:${type}`,
+        fields: fields,
+        userId: state.user.currentUser._id
+      };
+      const response = await getBlogsAPI(query);
+      return [type, response.data];
     } catch (error) {
       console.error(error.message);
     }

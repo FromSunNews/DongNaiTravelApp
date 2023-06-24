@@ -34,8 +34,9 @@ function toggleLoading(state) {
 /**
  * Hàm này dùng để hiển thị loading trong App, với điều kiện là có hỗ trợ loading,
  * và đã inject store từ trước.
- * @param {() => Promise<any>} callBackAPI 
- * @returns 
+ * @template T
+ * @param {() => Promise<T>} callBackAPI 
+ * @returns {Promise<T>}
  * 
  * @example
  * ```js

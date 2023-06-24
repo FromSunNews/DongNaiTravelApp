@@ -1,63 +1,62 @@
-import { AxiosInstance } from "axios"
-import { Store } from "@reduxjs/toolkit"
+import axios, { AxiosInstance, AxiosHeaders } from "axios"
 
 import FunctionsUtility from "utilities/functions";
 
-import { APIsOptionsProps } from "apis/axios/types.d.ts";
+import {
+  APIOptionsProps,
+  CreateAPICallersOptions,
+  CreateAPICallersCaller
+} from "apis/axios/types.d.ts";
 
 let reg = /(?:^\/){0,1}(.+)/
 
+/**
+ * Class này dùng để tạo ra các API options. Đồng thời sẽ có vài phương thức
+ * để thao tác với các thuộc tính.
+ * 
+ * Các instance của `APIsOptions` chứa các thuộc tính mặc định, còn tuỳ vào các hàm tạo api(s)
+ * thì sẽ có thêm thuộc tính khác. Các thuộc tính đấy là
+ * - `axiosInstance`
+ * - `baseUrl`
+ * - `headers`
+ * - `method`
+ */
 export class APIsOptions {
   /**
    * @type {AxiosInstance}
    */
-  axiosInstance
+  axiosInstance = axios;
   /**
-   * @type {() => Store}
+   * @type {AxiosHeaders}
    */
-  reduxStore
-  /**
-   * @type {string}
-   */
-  apiRoot
+  headers = {};
   /**
    * @type {string}
    */
-  endpoint
-  /**
-   * @type {string}
-   */
-  routeName
-  /**
-   * @type {string}
-   */
-  apiVersion
+  method = "GET";
 
   /**
-   * @param {APIsOptionsProps} options
+   * @param {APIOptionsProps} initialOptions
    */
-  constructor(options) {
-    this.apiRoot = options.apiRoot;
-    this.axiosInstance = options.axiosInstance;
-    this.endpoint = (options.endpoint).match(reg)[1];
-    this.routeName = (options.routeName).match(reg)[1];
-    this.apiVersion = (options.apiVersion ? options.apiVersion : 'v1').match(reg)[1];
+  constructor(initialOptions) {
+    for(let prop in this) {
+      if(initialOptions[prop]) {
+        this[prop] = initialOptions[prop];
+      }
+    };
     
-    this.reduxStore = options.reduxStore;
-
     FunctionsUtility.autoBind(this, {
       protoProps: Object.getOwnPropertyNames(Object.getPrototypeOf(this))
     });
   }
 
   /**
-   * Dùng để tạo ra một route hoàn chỉnh, có cấu trúc là
-   * `ApiRoot/ApiVersion/RouteName/EndPoint`
-   * @param {boolean} hasVersion 
+   * Dùng để tạo ra một URL hoàn chỉnh `baseUrl` và `path`
+   * @param {string} path
    */
-  getFullRoute(hasVersion = true) {
-    let fullRoutes = [this.apiRoot, this.apiVersion, this.routeName, this.endpoint]
-    if(!hasVersion) fullRoutes.splice(1, 1);
+  getFullURL(path) {
+    path = path.match(reg)[1];
+    let fullRoutes = [this.baseUrl, path]
     return fullRoutes.join("/");
   }
 
@@ -79,7 +78,31 @@ export class APIsOptions {
       return queryInString.substring(0, queryInString.length - 1);
     } catch (error) {
       console.log(error.message)
-      return ""
+      return "";
     }
+  }
+}
+
+export class APICallersCreatorOptions extends APIsOptions {
+  /**
+   * @type {CreateAPICallersCaller}
+   */
+  callers = {};
+  /**
+   * @type {string}
+   */
+  baseUrl = "";
+
+  /**
+   * @param {CreateAPICallersOptions} initialOptions
+   */
+  constructor(initialOptions) {
+    super(initialOptions);
+
+    for(let prop in this) {
+      if(initialOptions[prop]) {
+        this[prop] = initialOptions[prop];
+      }
+    };
   }
 }

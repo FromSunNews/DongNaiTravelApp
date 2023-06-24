@@ -252,8 +252,6 @@ ReactNativeRenderer.prototype.render = function(mf_tree) {
   let weightAndStyleMerger = this.mergeFontWeightWithItalic(this);
 
   // Trước khi render thì merge các font weight với font style lại.
-  
-  console.log("Tree: ", tree)
 
   tree.forEach((ele, index) => {
     if(ele instanceof MFNode) {
