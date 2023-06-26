@@ -6,6 +6,7 @@ import {
 } from 'components'
 import SearchScreen from "screens/search/SearchScreen";
 import PlaceDetailScreen from "screens/place_detail/PlaceDetailScreen";
+import BlogCommentScreen from "screens/blog_comment/BlogCommentScreen";
 
 const GlobalStack = createNativeStackNavigator();
 
@@ -37,6 +38,14 @@ const GlobalNavigator = () => {
         options={{
           header: AppHeader,
           headerTransparent: true,
+        }}
+      />
+
+      <GlobalStack.Screen
+        name="BlogCommentScreen"
+        component={BlogCommentScreen}
+        options={{
+          header: AppHeader
         }}
       />
     </GlobalStack.Navigator>

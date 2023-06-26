@@ -3,7 +3,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   getBlogAPI,
   getBlogsAPI
-} from 'apis/axios'
+} from 'apis/axios/blog/get'
 
 import {
   REDUX_SLICE_NAMES,
@@ -35,9 +35,15 @@ export const fetchBriefBlogsByTypeAsyncThunk = createAsyncThunk(
       const briefBlogsByType = briefBlogsSeletor(state, type);
       const limit = briefBlogsByType ? briefBlogsByType.limit : 5;
       const skip = briefBlogsByType ? briefBlogsByType.skip : 0;
-      const query = `limit=${limit}&skip=${skip}&filter=quality:${type}&fields=${fields}`;
-      const data = await getBlogsAPI(query);
-      return [type, data];
+      const query = {
+        limit: limit,
+        skip: skip,
+        filter: `quality:${type}`,
+        fields: fields,
+        userId: state.user.currentUser._id
+      };
+      const response = await getBlogsAPI(query);
+      return [type, response.data];
     } catch (error) {
       console.error(error.message);
     }
@@ -52,12 +58,12 @@ export const fetchBlogDetailsByIdAsyncThunk = createAsyncThunk(
   async (requestBlogDetailsInfo, thunkAPI) => {
     try {
       const { blogId, options } = requestBlogDetailsInfo;
-      const fields = options.canGetFull
-        ? ``
-        : `&fields=${BLOG_DETAILS_DATA_FIELDS}`;
-      const query = `blogId=${blogId}` + fields;
-      const data = await getBlogAPI(query);
-      return [blogId, data];
+      const query = {
+        blogId: blogId,
+        fields: options.canGetFull ? "" : BLOG_DETAILS_DATA_FIELDS
+      };
+      const response = await getBlogAPI(query);
+      return [blogId, response.data];
     } catch (error) {
       console.error(error.message);
     }
@@ -69,14 +75,21 @@ export const refetchBriefBlogsByTypeAsyncThunk = createAsyncThunk(
   /**
    * @param {RequestBriefBlogsInfoProps} requestBriefBlogsInfo
    */
-  async (requestBriefBlogsInfo) => {
+  async (requestBriefBlogsInfo, thunkAPI) => {
     try {
       const { type, fields } = requestBriefBlogsInfo;
+      const state = thunkAPI.getState();
       const limit = 5;
       const skip = 0;
-      const query = `limit=${limit}&skip=${skip}&filter=quality:${type}&fields=${fields}`;
-      const data = await getBlogsAPI(query);
-      return [type, data];
+      const query = {
+        limit: limit,
+        skip: skip,
+        filter: `quality:${type}`,
+        fields: fields,
+        userId: state.user.currentUser._id
+      };
+      const response = await getBlogsAPI(query);
+      return [type, response.data];
     } catch (error) {
       console.error(error.message);
     }

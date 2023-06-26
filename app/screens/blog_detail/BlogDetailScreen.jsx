@@ -1,11 +1,18 @@
-import { View, ScrollView, Image } from 'react-native'
+import {
+  View,
+  ScrollView,
+  Image,
+  Animated,
+  LayoutAnimation
+} from 'react-native'
 import React from 'react'
 
 import {
   getBlogsAPI
-} from 'apis/axios'
+} from 'apis/axios/blog/get'
 
 import useTheme from 'customHooks/useTheme'
+import { useAuthState } from 'customHooks/useAuth'
 import {
   useBlogDetails,
   useBriefBlogs
@@ -38,13 +45,37 @@ const BlogDetailScreen = ({route, navigation}) => {
   const {themeColor,themeMode} = useTheme();
   
   const { blogDetails, fetchBlogDetailsById, clearBlogDetails } = useBlogDetails(blogId);
+  const { user } = useAuthState();
 
   const [relatedBlogs, setRelatedBlogs] = React.useState([]);
+  // Dành để tranform thằng Float Buttons
+  const floatButtonTranslateYAnim = React.useRef(new Animated.Value(0)).current;
+  const offSetY = React.useRef(null);
 
   let type = blogDetails.type ? blogDetails.type : "";
   let displayAuthorName = blogDetails.author.lastName && blogDetails.author.firstName
     ? blogDetails.author.lastName + " " + blogDetails.author.firstName
     : blogDetails.author.displayName
+
+  const handleOnScroll = e => {
+    let { contentOffset } = e.nativeEvent;
+    let diff = contentOffset.y - (offSetY.current || 0);
+    if(diff > 0) {
+      toggleFloatButtonsVisible(1)
+    } else {
+      toggleFloatButtonsVisible(0)
+    }
+    offSetY.current  = contentOffset.y;
+  }
+
+  const toggleFloatButtonsVisible = (val) => {
+    Animated.spring(floatButtonTranslateYAnim,
+      {
+        toValue: val,
+        useNativeDriver: true
+      }
+    ).start();
+  }
 
   React.useEffect(() => {
     navigation.setOptions({'title': blogDetails.name});
@@ -53,16 +84,24 @@ const BlogDetailScreen = ({route, navigation}) => {
     })
 
     if(relatedBlogs.length === 0) {
-      let query = `limit=${5}&skip=${0}&quality=type:${type},except_by_placeid:${blogDetails._id}&fields=${BRIEF_BLOG_DATA_FIELDS}`;
+      let query = {
+        limit: 5,
+        skip: 0,
+        quality: `type:${type},except_by_placeid:${blogDetails._id}`,
+        fields: BRIEF_BLOG_DATA_FIELDS,
+        userId: user._id
+      };
       getBlogsAPI(query)
-      .then(data => {
+      .then(response => {
+        let data = response.data;
+        console.log('RELATED BLOGS: ', data)
         setRelatedBlogs(data);
       })
       .catch(error => console.error(error))
     }
 
     return function() {
-      clearBlogDetails(blogId);
+      // clearBlogDetails(blogId);
     }
   }, []);
 
@@ -71,6 +110,8 @@ const BlogDetailScreen = ({route, navigation}) => {
       <ScrollView
         style={[styles.bd_container,{backgroundColor: themeColor.bg_primary}]}
         contentContainerStyle={{paddingBottom: 120}}
+        onScroll={handleOnScroll}
+        scrollEventThrottle={1000}
       >
           {/* Author, Blog information section */}
         <View style={[styles.bd_header, app_sp.mt_12,{borderBottomColor: themeColor.fourth}]}>
@@ -132,7 +173,7 @@ const BlogDetailScreen = ({route, navigation}) => {
             <RectangleButton
               typeOfButton="highlight"
               overrideShape="rounded_4"
-              style={{...app_sp.ph_8, ...app_sp.pv_0, ...app_sp.me_6}}
+              style={[app_sp.ph_8, app_sp.pv_0, app_sp.me_6]}
             >
               {(isActive, currentLabelStyle) => (
                 <AppText style={currentLabelStyle} font="body3">{blogDetails.type}</AppText>
@@ -198,8 +239,25 @@ const BlogDetailScreen = ({route, navigation}) => {
       </ScrollView>
 
       {/* Float container */}
-      <View style={[styles.float_button_container,{backgroundColor: themeColor.second}]}>
-        <View style={[app_sp.me_12, { flexDirection: 'row', alignItems: 'center' }]}>
+      <Animated.View style={[
+        styles.float_button_container,
+        {
+          transform: [
+            {
+              translateY: floatButtonTranslateYAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, 100]
+              })
+            }
+          ]
+        }
+      ]}>
+        <View
+          style={[app_sp.me_6, {
+            flexDirection: 'row',
+            alignItems: 'center'
+          }]}
+        >
           <CircleButton
             style={app_sp.me_6}
             defaultColor={themeMode === 'light' ? 'type_2' : 'type_3'}
@@ -207,11 +265,16 @@ const BlogDetailScreen = ({route, navigation}) => {
             setIcon={(isActive, currentLabelStyle) => (
               <Ionicons name={isActive ? 'heart' : 'heart-outline'} size={14} style={currentLabelStyle} />
             )}
+            onPress={() => {}}
           />
           <AppText font="body3">{NumberUtility.toMetricNumber(blogDetails.userFavoritesTotal)}</AppText>
         </View>
-
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View style={[app_sp.mh_8, {
+          width: 1,
+          height: "50%",
+          backgroundColor: "#000"
+        }]}/>
+        <View style={[app_sp.me_12, { flexDirection: 'row', alignItems: 'center' }]}>
           <CircleButton
             style={app_sp.me_6}
             defaultColor={themeMode === 'light' ? 'type_2' : 'type_3'}
@@ -221,12 +284,13 @@ const BlogDetailScreen = ({route, navigation}) => {
               navigation.navigate('MapScreen', { array_place_id: blogDetails.mentionedPlaces })
             }}
             setIcon={(isActive, currentLabelStyle) => (
-              <Ionicons name={isActive ? 'map' : 'map-outline'} size={14} style={currentLabelStyle} />
+              <Ionicons name="chatbox-outline" size={14} style={currentLabelStyle} />
             )}
+            onPress={() => { navigation.navigate("GlobalNavigator", { screen: "BlogCommentScreen", params: { blogId: blogDetails._id } }) }}
           />
           <AppText font="body3">{NumberUtility.toMetricNumber(blogDetails.userCommentsTotal)}</AppText>
         </View>
-      </View>
+      </Animated.View>
     </View>
   )
 }

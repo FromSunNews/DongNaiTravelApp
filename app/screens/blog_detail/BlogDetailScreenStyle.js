@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     backgroundColor: app_c.HEX.primary,
     bottom: 125,
     ...app_sp.ph_12,
-    ...app_sp.pv_10,
+    ...app_sp.pv_6,
     ...app_shdw.type_1,
     ...app_sh.capsule
   }

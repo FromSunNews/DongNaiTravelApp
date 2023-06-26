@@ -131,11 +131,12 @@ const wait = (callBack, timeout) => {
 /**
  * Hàm này dùng để bind tất cả các methods trong một object với `obj` đó.
  * @param {any} obj object cần bind tất cả các method của nó.
+ * @param {{protoProps: string[]}} options
  */
-function autoBind(obj) {
-  let propNames = Object.getOwnPropertyNames(obj);
+function autoBind(obj, options) {
+  let propNames = options?.protoProps ? options?.protoProps : Object.getOwnPropertyNames(obj);
   for(let propName of propNames) {
-    if(propName !== 'constructor' && obj[propName]) {
+    if(propName !== 'constructor' && typeof obj[propName] === 'function') {
       obj[propName] = obj[propName].bind(obj)
     }
   }

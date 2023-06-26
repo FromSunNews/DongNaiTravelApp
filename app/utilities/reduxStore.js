@@ -16,7 +16,15 @@ export function injectStore(_store) {
     return false;
   }
   injectedStore = _store;
-  return true;
+}
+
+/**
+ * Hàm này dùng để lấy redux store. Tất nhiên là store này sẽ là store của
+ * toàn bộ app.
+ * @returns 
+ */
+export function getInjectStore() {
+  return injectedStore;
 }
 
 function toggleLoading(state) {
@@ -26,8 +34,9 @@ function toggleLoading(state) {
 /**
  * Hàm này dùng để hiển thị loading trong App, với điều kiện là có hỗ trợ loading,
  * và đã inject store từ trước.
- * @param {() => Promise<any>} callBackAPI 
- * @returns 
+ * @template T
+ * @param {() => Promise<T>} callBackAPI 
+ * @returns {Promise<T>}
  * 
  * @example
  * ```js

@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
 import { selectCurrentLanguage } from '../../redux/language/LanguageSlice';
+import { selectCurrentMode } from 'redux/theme/ThemeSlice';
 
 import BlogsScreen from 'screens/blogs/BlogsScreen';
 import BlogDetailScreen from 'screens/blog_detail/BlogDetailScreen';
@@ -13,12 +14,10 @@ import {
   AppHeader,
   RectangleButton
 } from 'components';
-import { selectCurrentMode } from 'redux/theme/ThemeSlice';
 
 const BlogsStack = createNativeStackNavigator();
 
 const BlogsNavigator = ({ route, navigation }) => {
-  console.log("Params: ", route.params);
   const screen = route.params?.screen;
   const params = route.params?.params;
   const langCode = useSelector(selectCurrentLanguage).languageCode

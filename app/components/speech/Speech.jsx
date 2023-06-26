@@ -54,8 +54,6 @@ const Speech = ({
 
   const speechMP3Url = content ? content : "";
 
-  console.log("Content: ", content)
-
   React.useEffect(() => {
     if(Boolean(speechMP3Url)) {
       let audioVoicePrefix = langCode === "vi" ? "VN" : langCode.toUpperCase();

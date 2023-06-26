@@ -103,7 +103,7 @@ const getTimeDistance = function(timeStampThen, timeStampNow = Date.now()) {
     Math.abs(timeStampNow - timeStampThen) / 1000
   );
   if (distanceInSecond >= 0 && distanceInSecond < 60) {
-    return { type: 'minute', distance: distanceInSecond };
+    return { type: 'second', distance: distanceInSecond };
   }
 
   const distanceInMinute = parseInt(distanceInSecond / 60);

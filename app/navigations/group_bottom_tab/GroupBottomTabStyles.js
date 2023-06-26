@@ -21,13 +21,14 @@ const styles = StyleSheet.create({
     width: app_dms.screenWidth - 36,
     // bottom: 18,
     // Phuong: with IpX
-    bottom: Platform.OS === 'ios' ? 30 : 16,
+    bottom: 0,
     left: 18,
     zIndex: 999,
     ...app_shdw.type_5,
     ...app_sh.rounded_8,
     ...app_sp.ph_22,
-    ...app_sp.pv_12
+    ...app_sp.pv_12,
+    ...app_sp.mb_18
   },
 
   tab_bottom_buttons_container: {
