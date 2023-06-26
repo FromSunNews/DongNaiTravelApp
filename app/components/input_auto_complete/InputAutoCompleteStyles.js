@@ -21,7 +21,7 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     marginTop: 3,
     paddingVertical: 0,
-    backgroundColor: app_c.HEX.primary,
+    backgroundColor: app_c.HEX.primary
   },
   row: {
     backgroundColor: app_c.HEX.primary,

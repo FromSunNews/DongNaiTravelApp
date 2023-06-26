@@ -48,6 +48,7 @@ const HorizontalPlaceCard = ({
   getTextContentInHTMLTag,
   handlePressImageButton,
   handleLikeButton,
+  handleShareToSocial,
   ...props
 }) => {
   const navigation = useNavigation()
@@ -155,6 +156,7 @@ const HorizontalPlaceCard = ({
           setIcon={(isActive, currentLabelStyle) => (
             <Ionicons name="share-outline" size={20} style={[currentLabelStyle,{color: themeColor.fourth}]} />
           )}
+          onPress={handleShareToSocial}
         />
       </View>
     </View>

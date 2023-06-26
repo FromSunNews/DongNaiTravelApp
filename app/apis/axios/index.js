@@ -99,6 +99,11 @@ export const getPlacesTextSearchAPI = async (data) => {
   return request.data
 }
 
+export const getPlacesTextSearchAPIWithoutLoading = async (data) => {
+  const request = await authorizedAxiosInstance.post(`${API_ROOT}/v1/map/places_text_search`, data)
+  return request.data
+}
+
 export const getPlacesByIdAPI = async (data) => {
   let request = await callWithGlobalLoading(async () => {
     return await authorizedAxiosInstance.post(`${API_ROOT}/v1/map/places_by_id`, data)
@@ -115,6 +120,11 @@ export const getRouteDirectionAPI = async (data) => {
   let request = await callWithGlobalLoading(async () => {
     return await authorizedAxiosInstance.post(`${API_ROOT}/v1/direction/route_direction`, data)
   })
+  return request.data
+}
+
+export const getRouteDirectionAPIWithoutLoading = async (data) => {
+  const request = await authorizedAxiosInstance.post(`${API_ROOT}/v1/direction/route_direction`, data)
   return request.data
 }
 
@@ -174,6 +184,11 @@ export const updateNotifAPI = async (data) => {
 
 export const updateManyNotifsAPI = async (data) => {
   const request = await axios.post(`${API_ROOT}/v1/notif/update_many`, data)
+  return request.data
+}
+
+export const suggestTitleAPI = async (data) => {
+  const request = await axios.post(`${API_ROOT}/v1/content/suggest_title`, data)
   return request.data
 }
 

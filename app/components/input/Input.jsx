@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { FloatingLabelInput } from 'react-native-floating-label-input'
 
@@ -7,8 +7,16 @@ import { FloatingLabelInput } from 'react-native-floating-label-input'
 import { app_c } from 'globals/styles'
 import { styles } from './InputStyles'
 
-const Input = ({ label, hint, isPassword, onChange, onBlur, value, error, containerStyle, rightComponent}) => {
+const Input = ({ label, hint, isPassword, onChange, onBlur, value, error, containerStyle, rightComponent, handleShowSuggestTitle, handleHideSuggestTitle}) => {
   const [isFocused, setIsFocused] = useState(false)
+  useEffect(() => {
+    if(!isFocused && value) {
+      handleShowSuggestTitle()
+    } else {
+      handleHideSuggestTitle()
+    }
+  }, [isFocused, value])
+  
   return (
     <FloatingLabelInput
       label={label}

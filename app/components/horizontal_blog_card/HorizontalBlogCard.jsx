@@ -55,6 +55,7 @@ const HorizontalBlogCard = ({
   handlePressImageButton,
   handleLikeButton,
   handleVisitButton,
+  handleShareToSocial,
   ...props
 }) => {
   let displayAuthorName = blog.author.lastName && blog.author.firstName
@@ -138,6 +139,7 @@ const HorizontalBlogCard = ({
           setIcon={(isActive, currentLabelStyle) => (
             <Ionicons name="share-outline" size={20} style={[currentLabelStyle,{color:themeColor.fourth}]} />
           )}
+          onPress={handleShareToSocial}
         />
       </View>
     </View>

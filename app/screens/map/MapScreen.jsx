@@ -94,8 +94,9 @@ import moment from 'moment/moment'
 import { selectCurrentMap, updateCurrentMap, updateMapDetails, updateMapTypes, updatePlaces, updateSuggestions } from 'redux/map/mapSlice'
 import BottomSheetExample from '../../components/bottom_sheet/BottomSheetExample'
 import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
-import { hasLink } from 'libs/mark-format/src/utils/linkRegex'
 import Lightbox from 'react-native-lightbox-v2'
+import StringUtility from 'utilities/string'
+import FunctionsUtility from 'utilities/functions'
 
 const Map = ({navigator}) => {
 // Phương: https://docs.expo.dev/versions/latest/sdk/map-view/
@@ -120,10 +121,10 @@ const Map = ({navigator}) => {
   const dispatch = useDispatch()
 
   const currentFilter = useSelector(selectCurrentFilter)
-  // console.log("🚀 ~ file: MapScreen.jsx:115 ~ currentFilter:", currentFilter)
+  console.log("🚀 ~ file: MapScreen.jsx:115 ~ currentFilter:", currentFilter)
 
   const [routesFilter, setRoutesFilter] = useState(currentFilter.routes)
-  console.log("🚀 ~ file: MapScreen.jsx:118 ~ routesFilter:", routesFilter)
+  // console.log("🚀 ~ file: MapScreen.jsx:118 ~ routesFilter:", routesFilter)
 
   const currentMap = useSelector(selectCurrentMap)
 
@@ -286,13 +287,13 @@ const Map = ({navigator}) => {
         }
   
         getPlacesByIdAPI(data).then((dataReturn) => {
-          console.log("🚀 ~ file: MapScreen.jsx:286 ~ getPlacesByIdAPI ~ dataReturn:", dataReturn)
+          // console.log("🚀 ~ file: MapScreen.jsx:286 ~ getPlacesByIdAPI ~ dataReturn:", dataReturn)
           if (dataReturn.nextPageToken) {
-            console.log("Có nextPageToken", dataReturn.nextPageToken)
+            // console.log("Có nextPageToken", dataReturn.nextPageToken)
             setNextPageToken(dataReturn.nextPageToken)
           }
           else {
-            console.log("K Có nextPageToken")
+            // console.log("K Có nextPageToken")
             setNextPageToken(null)
           }
     
@@ -350,6 +351,155 @@ const Map = ({navigator}) => {
           contentNotificationBottomSheet: 'Xin lỗi địa điểm này chưa có trên bản đồ!'
         }))
       }
+    } else if (route.params?.fromScreen === 'ChatBotScreen') {
+      if (route.params?.condition === 'VIEW_ALL_PLACES_ON_MAIN_MAP') {
+        // params = {
+        //   fromScreen: 'ChatBotScreen',
+        //   isFullScreen: boolean,
+        //   condition: 'VIEW_ALL_PLACES_ON_MAIN_MAP',
+        //   data: {
+        //     placeTextSearch: array,
+        //     nextPageToken: string,
+        //     query: string,
+        //     arrPlaceToFitCoor: array,
+        //     divertDataToChatBot: function
+        //   },
+        // }
+        setIsModeScrollOn(true)
+        Keyboard.dismiss()
+        // Đặt giá trị cho placesTextSearch
+        setPlacesTextSearch(route.params?.data?.placeTextSearch)
+        setNextPageToken(route.params?.data?.nextPageToken)
+        // Ẩn thằng bottomSheet đi
+        setIsOpenBottomSheet(false)
+        // Show thằng scroll card 
+        setIsShowScrollCardPlace(true)
+        // Show thằng back icon 
+        setIsShowBackIcon(true)
+        // Đặt kết quả tìm kiếm là addressText 
+        // setPreviousTextSearch(route.params?.data?.placeTextSearch)
+        // Nơi đến bằng null
+        setDestination(null)
+        // Xóa PlaceDetails nếu như trước đó có 1 điểm đã đucợ chọn trc
+        setPlaceDetails(null)
+        // Không focus vào thnagừ search bar nữa
+        inputRef.current?.blur()
+  
+        const edgePadding = {
+          top: 130,
+          right: 70,
+          bottom: 150,
+          left: 70
+        }
+  
+        handleFitCoors(route.params?.data?.arrPlaceToFitCoor, edgePadding, true)
+        setArrPlaceToFitCoor(route.params?.data?.arrPlaceToFitCoor)
+      } else if (route.params?.condition === 'VIEW_ALL_DIRECTIONS_ON_MAIN_MAP') {
+        // params = {
+        //   fromScreen: 'ChatBotScreen',
+        //   isFullScreen: boolean,
+        //   condition: 'VIEW_ALL_DIRECTIONS_ON_MAIN_MAP',
+        //   data: {
+        //     directionsPolyLine: array,
+        //     dataTime: {
+        //       days: number,
+        //       hours: number,
+        //       minutes: number,
+        //       seconds: number
+        //     },
+        //     distance: number,
+        //     textOrigin: string,
+        //     textDestination: string,
+        //     directionOriPlaceId: string,
+        //     directionDesPlaceId: string,
+              // oriRouteInfo: string, 
+              // desRouteInfo: string
+        //   },
+        // }
+
+
+        // setOrigin(prev => route.params?.data?.directionsPolyLine[0])
+        // setDestination(prev => route.params?.data?.directionsPolyLine[directionsPolyLine.length -1])
+        // setDirectionsPolyLine(prev => route.params?.data?.directionsPolyLine)
+
+        // setShowDirections(true)
+        // setIsShowOptionRoute(false)
+
+        // setTextOrigin(route.params?.data?.textOrigin)
+        // setTextDestination(route.params?.data?.textDestination)
+
+        // setShowDirections(true)
+        // setDestination(route.params?.data?.directionsPolyLine[directionsPolyLine.length -1])
+        // setIsModeScrollOn(false)
+
+        // setIsOpenBottomSheet(false)
+
+        // setDirectionModeGCP('DRIVE')
+        // setDirectionModeORS('driving-car')
+        // setTagModeSelected('1')
+
+        // setDirectionOriPlaceId(route.params?.data?.directionOriPlaceId)
+        // setDirectionDesPlaceId(route.params?.data?.directionDesPlaceId)
+
+        // setSelectedPolyLine(0)
+        // const edgePadding = {
+        //   top: 330,
+        //   right: 40,
+        //   bottom: 150,
+        //   left: 40
+        // }
+        // handleFitCoors(route.params?.data?.directionsPolyLine[0]?.polyline, edgePadding, true)
+        // // Hiển thị ngày giờ và khoảng cách
+        // setDistance(route.params?.data?.distance)
+        // setDays(route.params?.data?.dataTime.days)
+        // setHours(route.params?.data?.dataTime.hours)
+        // setMinutes(route.params?.data?.dataTime.minutes)
+        // setSeconds(route.params?.data?.dataTime.seconds)
+
+        let coorOri, coorDes 
+        const oriRouteInfo = route.params?.data?.oriRouteInfo
+        if (oriRouteInfo) {
+          coorOri = {
+            latitude: oriRouteInfo.geometry.location.lat,
+            longitude: oriRouteInfo.geometry.location.lng
+          }
+        }
+
+        const desRouteInfo = route.params?.data?.desRouteInfo
+        if (desRouteInfo) {
+          coorDes = {
+            latitude: desRouteInfo.geometry.location.lat,
+            longitude: desRouteInfo.geometry.location.lng
+          }
+        }
+
+        setShowDirections(true)
+
+        setOriRouteInfo(oriRouteInfo ? oriRouteInfo  : arrPlaceInput[0])
+        setDesRouteInfo(desRouteInfo ? desRouteInfo  : arrPlaceInput[0])
+
+        setOrigin(oriRouteInfo ? coorOri : locationCurrent)
+        setTextOrigin(oriRouteInfo ? oriRouteInfo.name : 'Địa Điểm của tôi')
+
+        setDestination(desRouteInfo ? coorDes : locationCurrent)
+        setTextDestination(desRouteInfo ? desRouteInfo.name : 'Địa Điểm của tôi')
+        
+        oriInputRef.current?.setAddressText(oriRouteInfo ? oriRouteInfo.name : 'Địa Điểm của tôi')
+        desInputRef.current?.setAddressText(desRouteInfo ? desRouteInfo.name : 'Địa Điểm của tôi')
+
+        handleGetDirections(
+          route.params?.data?.directionOriPlaceId, 
+          route.params?.data?.directionDesPlaceId, 
+          'place_id', 
+          'place_id',  
+          coorOri, 
+          coorDes,
+          'DRIVE', 
+          'driving-car', 
+          '1', 
+          { avoidTolls: false, avoidHighways: false, avoidFerries: false }
+        )
+      }
     }
   }, [route])
 
@@ -369,7 +519,7 @@ const Map = ({navigator}) => {
         })
       })
       setArrPlaceInputMainSearch(places)
-      console.log("🚀 ~ file: MapScreen.jsx:260 ~ useEffect ~ places:", places)
+      // console.log("🚀 ~ file: MapScreen.jsx:260 ~ useEffect ~ places:", places)
     }
   }, [currentMap.suggestions])
 
@@ -381,7 +531,7 @@ const Map = ({navigator}) => {
   }, [currentMap.userLocation])
 
   const handleGetUserLocation = async () => {
-    console.log('currentMap.userLocation', currentMap.userLocation)
+    // console.log('currentMap.userLocation', currentMap.userLocation)
     setOrigin(currentMap.userLocation)
     setLocationCurrent(currentMap.userLocation)
     setArrPlaceInput([
@@ -395,15 +545,15 @@ const Map = ({navigator}) => {
     // await getMapUserAPI({
     //   currentUserId: user?._id ? user._id : temporaryUserId,
     // }).then(res => {
-    //   console.log("🚀 ~ file: MapScreen.jsx:308 ~ res:", res)
+    //   // console.log("🚀 ~ file: MapScreen.jsx:308 ~ res:", res)
     //   const dataToUpdate = {
     //     ...currentMap,
     //     places: res.places,
     //     suggestions: res.suggestions,
     //   }
-    //   console.log("============================================================================================")
+    //   // console.log("============================================================================================")
 
-    //   console.log("🚀 ~ file: MapScreen.jsx:314 ~ dataToUpdate:", dataToUpdate)
+    //   // console.log("🚀 ~ file: MapScreen.jsx:314 ~ dataToUpdate:", dataToUpdate)
     //   dispatch(updateCurrentMap(dataToUpdate))
     // })
     // call api weather
@@ -462,7 +612,7 @@ const Map = ({navigator}) => {
   }, [])
 
   const handleGetDirections = async (start, end, typeOri, typeDes, startCoor, endCoor, modeGCP, modeORS, tagModeId, routeModifiers) => {
-    console.log("MapScreen.jsx:258 ~ getDirections ~ call api")
+    // console.log("MapScreen.jsx:258 ~ getDirections ~ call api")
     // data = {
     //   oriAddress: 'abc' || null,
     //   desAddress: 'abc' || null,
@@ -509,7 +659,7 @@ const Map = ({navigator}) => {
         // },
         languageCode: "vi"
       }).then(dataReturn => {
-        console.log("🚀 ~ file: MapScreen.jsx:357 ~ handleGetDirections ~ dataReturn:", dataReturn)
+        // console.log("🚀 ~ file: MapScreen.jsx:357 ~ handleGetDirections ~ dataReturn:", dataReturn)
         if (dataReturn?.error) {
           dispatch(updateNotif({
             appearNotificationBottomSheet: true,
@@ -519,7 +669,7 @@ const Map = ({navigator}) => {
           setDirectionModeGCP(modeGCP)
           setDirectionModeORS(modeORS)
           setTagModeSelected(tagModeId)
-          console.log("🚀 ~ file: MapScreen.jsx:314 ~ handleGetDirections ~ dataReturn:", dataReturn.callFrom)
+          // console.log("🚀 ~ file: MapScreen.jsx:314 ~ handleGetDirections ~ dataReturn:", dataReturn.callFrom)
           
           if (dataReturn.callFrom === 'GCP') {
             
@@ -598,11 +748,11 @@ const Map = ({navigator}) => {
   }
 
   // const handleAnimationPolyline = (coordinates) => {
-  //   console.log("🚀 ~ file: MapScreen.jsx:328 ~ handleAnimationPolyline ~ coordinates:", coordinates.length)
+  //   // console.log("🚀 ~ file: MapScreen.jsx:328 ~ handleAnimationPolyline ~ coordinates:", coordinates.length)
   //   let counter = 0
   //   setIsAnimating(true)
   //   const steps = Math.floor(coordinates.length / 30)
-  //   console.log("🚀 ~ file: MapScreen.jsx:332 ~ handleAnimationPolyline ~ steps:", steps)
+  //   // console.log("🚀 ~ file: MapScreen.jsx:332 ~ handleAnimationPolyline ~ steps:", steps)
   //   const intervalId = setInterval(() => {
   //     if (counter < coordinates.length) {
   //       const coordinatesToAdd = []
@@ -631,7 +781,7 @@ const Map = ({navigator}) => {
         timeInterval: UPDATE_INTERVAL * 1000,
         distanceInterval: DISTANCE_THRESHOLD,
       }, (userLocation) => {
-        console.log("🚀 ~ file: MapScreen.jsx:294 ~ handleStartTrackingUserLocation ~ userLocation:", userLocation)
+        // console.log("🚀 ~ file: MapScreen.jsx:294 ~ handleStartTrackingUserLocation ~ userLocation:", userLocation)
         const position = {
           latitude: userLocation.coords.latitude || 0,
           longitude: userLocation.coords.longitude || 0
@@ -676,43 +826,50 @@ const Map = ({navigator}) => {
   let mapAnimation = new Animated.Value(-27.3333)
 
   const handleLoadingMoreCard = () => {
-    console.log("Loading more")
+    // console.log("Loading more")
     if (nextPageToken && !loadingRefreshCard) {
       loadingRefreshCard = true
-      let data = {
-        query: inputRef.current.getAddressText(),
-        sortBy: currentFilter.sortBy,
-        radius: currentFilter.radius,
-        location: currentFilter.location || locationCurrent,
-        pagetoken: nextPageToken
-      }
-  
-      if (currentFilter.priceLevels[0] !== 0 || currentFilter.priceLevels[1] !== 5) {
+      let data
+      if (route.params?.fromScreen === 'ChatBotScreen' && route.params?.condition === 'VIEW_ALL_PLACES_ON_MAIN_MAP') {
         data = {
-          ...data,
-          minprice: currentFilter.priceLevels[0].toString(),
-          maxprice: currentFilter.priceLevels[1].toString()
+          query: route.params?.data?.query,
+          sortBy: 'DEFAULT',
+          radius: '5000',
+          location: currentFilter.location || locationCurrent,
+        }
+      } else {
+        data = {
+          query: inputRef.current.getAddressText(),
+          sortBy: currentFilter.sortBy,
+          radius: currentFilter.radius,
+          location: currentFilter.location || locationCurrent,
+          pagetoken: nextPageToken
+        }
+    
+        if (currentFilter.priceLevels[0] !== 0 || currentFilter.priceLevels[1] !== 5) {
+          data = {
+            ...data,
+            minprice: currentFilter.priceLevels[0].toString(),
+            maxprice: currentFilter.priceLevels[1].toString()
+          }
+        }
+    
+        if (currentFilter.category !== FilterConstants.categories.ALL_CATEGORIES) {
+          data = {
+            ...data,
+            type: currentFilter.category
+          }
         }
       }
-  
-      if (currentFilter.category !== FilterConstants.categories.ALL_CATEGORIES) {
-        data = {
-          ...data,
-          type: currentFilter.category
-        }
-      }
-      console.log("callapi")
-      console.log("🚀 ~ file: MapScreen.jsx:240 ~ handleLoadingMoreCard ~ data:", data)
 
-      
       getMorePlacesTextSearchAPI(data).then((dataReturn) => {
-        console.log("duwx lieeuj trar về")
+        // console.log("duwx lieeuj trar về")
   
         if (dataReturn.nextPageToken){
-          console.log("Có nextPageToken")
+          // console.log("Có nextPageToken")
           setNextPageToken(dataReturn.nextPageToken)
         } else {
-          console.log(" k Có nextPageToken")
+          // console.log(" k Có nextPageToken")
           setNextPageToken(null)
         }
 
@@ -721,13 +878,20 @@ const Map = ({navigator}) => {
             ...placesTextSearch,
             ...dataReturn.arrPlace
           ])
-          console.log("Có dataReturn.arrPlace")
+          // console.log("Có dataReturn.arrPlace")
         } else {
-          console.log("K Có dataReturn.arrPlace")
+          // console.log("K Có dataReturn.arrPlace")
 
         }
         setIsShowRefreshCard(false)
         loadingRefreshCard = false
+
+        if (route.params?.fromScreen === 'ChatBotScreen' && route.params?.condition === 'VIEW_ALL_PLACES_ON_MAIN_MAP') {
+          route.params?.data?.divertDataToChatBot({
+            nextPageToken: dataReturn.nextPageToken ? dataReturn.nextPageToken : null,
+            placeTextSearchMore: dataReturn.arrPlace ? dataReturn.arrPlace : []
+          })
+        }
       }).catch(err => {
         setIsShowRefreshCard(false)
         loadingRefreshCard = false
@@ -744,7 +908,7 @@ const Map = ({navigator}) => {
   useEffect(() => {
     if (placesTextSearch) {
       mapAnimation.addListener(({ value }) => {
-        // console.log("🚀 ~ file: MapScreen.jsx:279 ~ mapAnimation.addListener ~ value:", value)
+        // // console.log("🚀 ~ file: MapScreen.jsx:279 ~ mapAnimation.addListener ~ value:", value)
         // animate 30% away from landing on the next item
         let index = Math.floor((value / (CARD_WIDTH + 20)) + 0.3)
   
@@ -821,6 +985,7 @@ const Map = ({navigator}) => {
     setIsShowBackIcon(true)
     setIsOpenBottomSheet(true)
     setArrImgBase64([])
+    setIsShowScrollCardPlace(false)
     setPlaceDetails(details)
     inputRef.current?.setAddressText(details?.name)
     
@@ -848,10 +1013,10 @@ const Map = ({navigator}) => {
   }
 
   const handleMarkerPress = (mapEventData) => {
-    // console.log('mapEventData', mapEventData)
+    // // console.log('mapEventData', mapEventData)
     // eslint-disable-next-line no-underscore-dangle
     const markerID = mapEventData._targetInst.return.key
-    console.log("🚀 ~ file: MapScreen.jsx:340 ~ handleMarkerPress ~ markerID:", markerID)
+    // console.log("🚀 ~ file: MapScreen.jsx:340 ~ handleMarkerPress ~ markerID:", markerID)
 
     let x = (markerID * CARD_WIDTH) + (markerID * 20)
     if (Platform.OS === 'ios') {
@@ -894,14 +1059,14 @@ const Map = ({navigator}) => {
   }
 
   const handleGetPlaceDetails = (placeId, androidPoiClick) => {
-    // console.log("🚀 ~ file: MapScreen.jsx:273 ~ handleGetPlaceDetails ~ e", e.nativeEvent.placeId)
+    // // console.log("🚀 ~ file: MapScreen.jsx:273 ~ handleGetPlaceDetails ~ e", e.nativeEvent.placeId)
     const data = {
         placeId: placeId,
         androidPoiClick: androidPoiClick
       }
-    // console.log("🚀 ~ file: MapScreen.jsx:277 ~ handleGetPlaceDetails ~ data", data)
+    // // console.log("🚀 ~ file: MapScreen.jsx:277 ~ handleGetPlaceDetails ~ data", data)
     getPlaceDetailsAPI(data).then((placeDetails) => {
-      // console.log("🚀 ~ file: MapScreen.jsx:279 ~ getPlaceDetailsAPI ~ placeDetails", placeDetails)
+      // // console.log("🚀 ~ file: MapScreen.jsx:279 ~ getPlaceDetailsAPI ~ placeDetails", placeDetails)
       placeDetails.isTranformData = true
       onPlaceSelected(placeDetails, 'destination')
     })
@@ -929,15 +1094,14 @@ const Map = ({navigator}) => {
         type: currentFilter.category
       }
     }
-    console.log("🚀 ~ file: MapScreen.jsx:397 ~ getPlacesTextSearchAPI ~ data:", data)
 
     getPlacesTextSearchAPI(data).then((dataReturn) => {
       if (dataReturn.nextPageToken) {
-        console.log("Có nextPageToken", dataReturn.nextPageToken)
+        // console.log("Có nextPageToken", dataReturn.nextPageToken)
         setNextPageToken(dataReturn.nextPageToken)
       }
       else {
-        console.log("K Có nextPageToken")
+        // console.log("K Có nextPageToken")
         setNextPageToken(null)
       }
 
@@ -987,29 +1151,11 @@ const Map = ({navigator}) => {
     })
   }
 
-
-
-  const handleShareButton = async () => {
-    if (Platform.OS === "android") {
-      Share.share({
-        message: `Hãy khám phá ${placeDetails?.name} cùng mình nha!`, // supporting android
-        url: arrImgBase64[0], // not supporting
-        title: 'DongNaiTravelApp',
-      })
-        .then((result) => console.log(result))
-        .catch((errorMsg) => console.log(errorMsg))
-      return
-    } else if (Platform.OS === "ios") {
-      Share.share({
-         message:`Hãy khám phá ${placeDetails?.name} cùng mình nha!`,
-         url: arrImgBase64[0],
-         title: 'DongNaiTravelApp', // not supporting
-       })
-      
-       .then((result) => console.log(result))
-        .catch((errorMsg) => console.log(errorMsg))
-      return
-    }
+  const handleShareButton = (urlPhoto) => {
+    const message = `Hãy khám phá ${placeDetails?.name} cùng mình nha!`
+    const url = urlPhoto
+    const title = 'DongNaiTravelApp'
+    FunctionsUtility.shareImageToSocial(message, url, title)
   }
 
   return (
@@ -1032,7 +1178,7 @@ const Map = ({navigator}) => {
         showsMyLocationButton={false}
         onPoiClick={e => {
           if (!showDirections) {
-            console.log("🚀 ~ file: MapScreen.jsx:930 ~ e.nativeEvent.placeId:", e.nativeEvent.placeId)
+            // console.log("🚀 ~ file: MapScreen.jsx:930 ~ e.nativeEvent.placeId:", e.nativeEvent.placeId)
             if (Platform.OS === 'ios') {
               handleGetPlaceDetails(e.nativeEvent.placeId, false)
             } else if (Platform.OS === 'android') {
@@ -1164,17 +1310,6 @@ const Map = ({navigator}) => {
                 />
               )
             }) : null
-        }
-
-        {/* Polyline cho việc hiển thị step */}
-        {
-          // stepPolyLine.length > 0 &&
-          // <Polyline
-          //   coordinates={stepPolyLine}
-          //   strokeWidth={10}
-          //   strokeColor='#1da1f2'
-          //   style={{ zIndex: 3}}
-          // />
         }
 
         {/* Polyline cho việc hiển thị arrow*/}
@@ -1320,53 +1455,7 @@ const Map = ({navigator}) => {
         </TouchableOpacity>
       }
 
-      {/* Weather */}
-      {
-        (weather && !isShowWeatherBottomSheet && !isShowScrollCardPlace && !isOpenBottomSheet && !isShowDirectionsBottomSheet && !showDirections) &&
-        <TouchableOpacity 
-        onPress={() => {
-          // Call API
-          getWeatherForecastAPI(locationCurrent).then((weatherData) => {
-            setWeatherData(weatherData)
-            setIsShowWeatherBottomSheet(true)
-          })
-        }}
-        style={{
-          position: 'absolute',
-          bottom: 250,
-          right: 18,
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
-          <Image 
-            source={weatherIcons[weather.weather[0].icon]}
-            style={{
-              height: 50,
-              width: 50,
-              marginLeft: 0,
-              ...app_shdw.type_4
-            }}
-          />
-          <View style={{
-            backgroundColor: app_c.HEX.third,
-            borderRadius: 8,
-            ...app_shdw.type_2,
-            justifyContent: 'center',
-            alignItems: 'center',
-            paddingHorizontal: 2,
-            marginTop: -5
-          }}>
-            <Text
-              style={{
-                color: app_c.HEX.primary,
-                ...app_typo.fonts.normal.normal.body2,
-                padding: 2
-              }}
-            >{weather.main.temp.toFixed(1)}°C</Text>
-          </View>
-        </TouchableOpacity>
-      }
+      
 
       {/* Phuong: Search bar */}
       {
@@ -1375,7 +1464,7 @@ const Map = ({navigator}) => {
           <View style={styles.searchContainer}>
             <InputAutoComplete
               onPlaceSelected={(details) => {
-                console.log("🚀 ~ file: MapScreen.jsx:1261 ~ details:", details?.place_id)
+                // console.log("🚀 ~ file: MapScreen.jsx:1261 ~ details:", details?.place_id)
                 Keyboard.dismiss()
                 handleGetPlaceDetails(details.place_id, false)
                 // onPlaceSelected(details, 'destination')
@@ -1581,7 +1670,7 @@ const Map = ({navigator}) => {
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => {
                     setIsShowOptionRoute(true)
-                    console.log(placeDetails?.name)
+                    // console.log(placeDetails?.name)
                   }}>
                     <Text numberOfLines={2} style={styles.originText}>{textOrigin}</Text>
                   </TouchableOpacity>
@@ -1685,8 +1774,8 @@ const Map = ({navigator}) => {
               <View style={styles.oriDesContainer}>
                 <TouchableOpacity 
                   onPress={() => {
-                    console.log("🚀 ~ file: MapScreen.jsx:1066 ~ Map ~ textOrigin:", textOrigin)
-                    console.log("🚀 ~ file: MapScreen.jsx:887 ~ Map ~ oriRouteInfo:", oriRouteInfo)
+                    // console.log("🚀 ~ file: MapScreen.jsx:1066 ~ Map ~ textOrigin:", textOrigin)
+                    // console.log("🚀 ~ file: MapScreen.jsx:887 ~ Map ~ oriRouteInfo:", oriRouteInfo)
 
                     let start, end, startCoor, endCoor, typeOri, typeDes
                     
@@ -1716,7 +1805,7 @@ const Map = ({navigator}) => {
                           }
                           typeOri = 'place_id'
                       } else if (oriInputRef.current.getAddressText().trim() === 'Địa điểm của tôi') {
-                        console.log('TH ori banwg Địa điểm của tôi va khong co oriRouteInfo')
+                        // console.log('TH ori banwg Địa điểm của tôi va khong co oriRouteInfo')
                         start = locationCurrent
                         typeOri = 'coordinate'
                         startCoor = locationCurrent
@@ -1725,11 +1814,11 @@ const Map = ({navigator}) => {
                         setOrigin(locationCurrent)
                       } 
 
-                      console.log("🚀 ~ file: MapScreen.jsx:1384 ~ Map ~ desInputRef.current.getAddressText().trim():", desInputRef.current.getAddressText().trim())
-                      console.log("🚀 ~ file: MapScreen.jsx:1383 ~ Map ~ desRouteInfo:", desRouteInfo)
+                      // console.log("🚀 ~ file: MapScreen.jsx:1384 ~ Map ~ desInputRef.current.getAddressText().trim():", desInputRef.current.getAddressText().trim())
+                      // console.log("🚀 ~ file: MapScreen.jsx:1383 ~ Map ~ desRouteInfo:", desRouteInfo)
 
                       if (desInputRef.current.getAddressText().trim() !== 'Địa điểm của tôi' && desRouteInfo) {
-                        console.log('TH des khong bang Địa điểm của tôi va co desRouteInfo')
+                        // console.log('TH des khong bang Địa điểm của tôi va co desRouteInfo')
                           if (desRouteInfo.name)
                             setTextDestination(desRouteInfo.name)
                           else 
@@ -1746,7 +1835,7 @@ const Map = ({navigator}) => {
                           typeDes = 'place_id'
                       }
                       else if (desInputRef.current.getAddressText().trim() === 'Địa điểm của tôi') {
-                        console.log('TH des la Địa điểm của tôi')
+                        // console.log('TH des la Địa điểm của tôi')
                         end = locationCurrent
                         typeDes = 'coordinate'
                         endCoor = locationCurrent
@@ -1755,14 +1844,14 @@ const Map = ({navigator}) => {
                       } 
                       setIsShowOptionRoute(false)
                       let routeModifiers
-                      console.log("🚀 ~ file: MapScreen.jsx:1542 ~ Map ~ tagModeSelected:", tagModeSelected)
+                      // console.log("🚀 ~ file: MapScreen.jsx:1542 ~ Map ~ tagModeSelected:", tagModeSelected)
                       if (directionModeGCP === 'DRIVE' || directionModeGCP === 'TWO_WHEELER') {
                         routeModifiers = {
                           avoidTolls: (routesFilter.find(item => item.id === 'avoidTolls')).value,
                           avoidHighways: (routesFilter.find(item => item.id === 'avoidHighways')).value,
                           avoidFerries: (routesFilter.find(item => item.id === 'avoidFerries')).value
                         }
-                        console.log("🚀 ~ file: MapScreen.jsx:1556 ~ Map ~ routeModifiers:", routeModifiers)
+                        // console.log("🚀 ~ file: MapScreen.jsx:1556 ~ Map ~ routeModifiers:", routeModifiers)
                       } else if (directionModeGCP === 'WALK') {
                         routeModifiers = {
                           avoidIndoor: routesFilter.find(item => item.id === 'avoidIndoor').value
@@ -1898,7 +1987,7 @@ const Map = ({navigator}) => {
                     backgroundColor: tagModeSelected === item.id ? app_c.HEX.fourth : app_c.HEX.primary
                   }]}
                   onPress={() => {
-                    console.log('directionModeGCP', directionModeGCP)
+                    // console.log('directionModeGCP', directionModeGCP)
 
                     if (directionModeGCP !== item.modeGCP) {
                       let start, end, typeDes, typeOri
@@ -1959,8 +2048,57 @@ const Map = ({navigator}) => {
       {
         (!isShowWeatherBottomSheet && !isShowScrollCardPlace && !isOpenBottomSheet && !isShowDirectionsBottomSheet && !showDirections) ?
         <View
-          style={styles.besideBtn}
+          style={[styles.besideBtn, {
+            bottom: route.params?.isFullScreen ? 30 : 120
+          }]}
         >
+           {/* Weather */}
+           {
+            (weather && !isShowWeatherBottomSheet && !isShowScrollCardPlace && !isOpenBottomSheet && !isShowDirectionsBottomSheet && !showDirections) &&
+              <TouchableOpacity
+              onPress={() => {
+                // Call API
+                getWeatherForecastAPI(locationCurrent).then((weatherData) => {
+                  setWeatherData(weatherData)
+                  setIsShowWeatherBottomSheet(true)
+                })
+              }}
+              style={{
+                marginRight: 18,
+                marginBottom: 15,
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
+                <Image 
+                  source={weatherIcons[weather.weather[0].icon]}
+                  style={{
+                    height: 50,
+                    width: 50,
+                    marginLeft: 0,
+                    ...app_shdw.type_4
+                  }}
+                />
+                <View style={{
+                  backgroundColor: app_c.HEX.third,
+                  borderRadius: 8,
+                  ...app_shdw.type_2,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  paddingHorizontal: 2,
+                  marginTop: -5
+                }}>
+                  <Text
+                    style={{
+                      color: app_c.HEX.primary,
+                      ...app_typo.fonts.normal.normal.body2,
+                      padding: 2
+                    }}
+                  >{weather.main.temp.toFixed(1)}°C</Text>
+                </View>
+              </TouchableOpacity>
+            }
+          
           {
             locationCurrent &&
             <TouchableOpacity
@@ -1996,7 +2134,6 @@ const Map = ({navigator}) => {
               />
             </TouchableOpacity>
           }
-          
         </View> : null
       }
 
@@ -2026,7 +2163,7 @@ const Map = ({navigator}) => {
                   left: 70
                 }
 
-                console.log("🚀 ~ file: MapScreen.jsx:1631 ~ Map ~ stepPolyLineSelected:", stepPolyLineSelected)
+                // console.log("🚀 ~ file: MapScreen.jsx:1631 ~ Map ~ stepPolyLineSelected:", stepPolyLineSelected)
                 const step = directionsPolyLine[selectedPolyLine]?.legs[0]?.steps[stepPolyLineSelected-2]
                 handleFitCoors([step?.startLocation?.latLng, step?.endLocation?.latLng], edgePadding, true)
                 // Sau đó đặt thanh màu khác để biết đó là thằng step
@@ -2055,7 +2192,7 @@ const Map = ({navigator}) => {
                   0
                 )
 
-                console.log("🚀 ~ file: MapScreen.jsx:1661 ~ Map ~ stepPolyLineSelected:", stepPolyLineSelected)
+                // console.log("🚀 ~ file: MapScreen.jsx:1661 ~ Map ~ stepPolyLineSelected:", stepPolyLineSelected)
 
                 handleFitCoors([freeCoor1, origin, freeCoor2], edgePadding, true)
                 // Kéo bottomSheet xuống dưới để nhìn
@@ -2088,7 +2225,7 @@ const Map = ({navigator}) => {
                 left: 70
               }
               const index = stepPolyLineSelected
-              console.log("🚀 ~ file: MapScreen.jsx:1692 ~ Map ~ stepPolyLineSelected:", stepPolyLineSelected)
+              // console.log("🚀 ~ file: MapScreen.jsx:1692 ~ Map ~ stepPolyLineSelected:", stepPolyLineSelected)
               const step = directionsPolyLine[selectedPolyLine]?.legs[0]?.steps[index]
 
               handleFitCoors([step?.startLocation?.latLng, step?.endLocation?.latLng], edgePadding, true)
@@ -2116,7 +2253,7 @@ const Map = ({navigator}) => {
           style={[styles.circleBtn, {
             backgroundColor: app_c.HEX.primary,
             position: 'absolute',
-            bottom: CARD_HEIGHT + 130 + 10,
+            bottom: route.params?.isFullScreen ? CARD_HEIGHT + 50 : CARD_HEIGHT + 130 + 10,
             right: 0
           }]}
           onPress={() => {
@@ -2182,7 +2319,7 @@ const Map = ({navigator}) => {
           showsHorizontalScrollIndicator={false}
           snapToInterval={CARD_WIDTH + 20}
           snapToAlignment="center"
-          style={[styles.cardScrollView, { opacity: (isOpenBottomSheet || showDirections) ? 0 : 1, bottom: (isOpenBottomSheet || showDirections) ? -400 : 110}]}
+          style={[styles.cardScrollView, { opacity: (isOpenBottomSheet || showDirections) ? 0 : 1, bottom: route.params?.isFullScreen ? 20 : ((isOpenBottomSheet || showDirections) ? -400 : 110)}]}
           contentInset={{
             top: 0,   
             left:SPACING_FOR_CARD_INSET,
@@ -2207,13 +2344,13 @@ const Map = ({navigator}) => {
         >
           {placesTextSearch.map((place, index) => {
             
-            console.log("=======================================", place?.photos[0])
+            // console.log("=======================================", place?.photos[0])
 
             return (
               <View style={styles.card} key={`${place.place_id}-place-${index}`}>
                 {
                   place.photos ? (
-                    !hasLink(place?.photos[0]) ? 
+                    !StringUtility.hasLink(place?.photos[0]) ? 
                     <ImagePromise
                       isTranformData={true}
                       photoReference={place?.photos[0]}
@@ -2644,7 +2781,7 @@ const Map = ({navigator}) => {
                     width: '100%'
                   }}
                   renderItem={({item, index}) => {
-                    console.log('index', index)
+                    // console.log('index', index)
                     let dateTimeData
                     // if (index === 0) {
                     //   dateTimeData = weatherData.weatherCurrent
@@ -2879,7 +3016,7 @@ const Map = ({navigator}) => {
                         marginBottom: 10
                       }}
                       renderItem={({item, index}) => {
-                        console.log("🚀 ~ file: MapScreen.jsx:2711 ~ currentMap.mapTypes:", currentMap.mapTypes)
+                        // console.log("🚀 ~ file: MapScreen.jsx:2711 ~ currentMap.mapTypes:", currentMap.mapTypes)
                         if (index !== mapTypes.length -1)
                         return (
                           <TouchableOpacity
@@ -2969,7 +3106,7 @@ const Map = ({navigator}) => {
             setPlaceDetails(null)
             setDestination(null)
             inputRef.current?.setAddressText(previousTextSearch)
-
+            setIsShowScrollCardPlace(true)
             // const edgePadding = {
             //   top: 70,
             //   right: 70,
@@ -3240,7 +3377,7 @@ const Map = ({navigator}) => {
                   }]}
                   onPress={async () => {
                     const exsitPlace = currentMap.places.find(place => place.place_id === placeDetails.place_id)
-                    console.log("🚀 ~ file: MapScreen.jsx:2951 ~ onPress={ ~ exsitPlace:", exsitPlace)
+                    // console.log("🚀 ~ file: MapScreen.jsx:2951 ~ onPress={ ~ exsitPlace:", exsitPlace)
                     if (exsitPlace) {
                       const placeToUpdate = currentMap.places.filter(place => place.place_id !== placeDetails.place_id)
                       dispatch(updatePlaces(placeToUpdate))
@@ -3261,7 +3398,7 @@ const Map = ({navigator}) => {
                         },
                         ...currentMap.places
                       ]
-                      console.log("🚀 ~ file: MapScreen.jsx:2977 ~ onPress={ ~ dataToUpdate:", dataToUpdate)
+                      // console.log("🚀 ~ file: MapScreen.jsx:2977 ~ onPress={ ~ dataToUpdate:", dataToUpdate)
                       dispatch(updatePlaces(dataToUpdate))
                       await updateMapUserAPI({
                         currentUserId: user ? user._id : temporaryUserId,
@@ -3292,7 +3429,7 @@ const Map = ({navigator}) => {
                     const exsitPlace = currentMap.suggestions.find(place => place.place_id === placeDetails.place_id)
                     if (exsitPlace) {
                       const placeToUpdate = currentMap.suggestions.filter(place => place.place_id !== placeDetails.place_id)
-                      console.log("🚀 ~ file: MapScreen.jsx:2980 ~ Map ~ placeToUpdate:", placeToUpdate)
+                      // console.log("🚀 ~ file: MapScreen.jsx:2980 ~ Map ~ placeToUpdate:", placeToUpdate)
                       dispatch(updateSuggestions(placeToUpdate))
                       await updateMapUserAPI({
                         currentUserId: user ? user._id : temporaryUserId,
@@ -3329,7 +3466,7 @@ const Map = ({navigator}) => {
 
               <TouchableOpacity
                 style={styles.controlContainer}
-                onPress={() => handleShareButton()}
+                onPress={() => handleShareButton(placeDetails?.photos[0])}
               >
                 <FontAwesome5 
                   name='share' 
@@ -3391,11 +3528,11 @@ const Map = ({navigator}) => {
                                       source={{uri: placeDetails?.photos[endIndexImg-2]}}
                                       onOpen={() => {
                                         setIsResizeMode("contain")
-                                        console.log("contain")
+                                        // console.log("contain")
                                       }}
                                       willClose={() => {
                                         setIsResizeMode("cover")
-                                        console.log("cover")
+                                        // console.log("cover")
                                       }}
                                     />
                                     {/* <Lightbox 
@@ -3431,11 +3568,11 @@ const Map = ({navigator}) => {
                                         source={{uri: placeDetails?.photos[endIndexImg-1]}}
                                         onOpen={() => {
                                           setIsResizeMode("contain")
-                                          console.log("contain")
+                                          // console.log("contain")
                                         }}
                                         willClose={() => {
                                           setIsResizeMode("cover")
-                                          console.log("cover")
+                                          // console.log("cover")
                                         }}
                                       />
                                     {/* <Lightbox 
@@ -3469,11 +3606,11 @@ const Map = ({navigator}) => {
                                       source={{uri: placeDetails?.photos[endIndexImg]}}
                                       onOpen={() => {
                                         setIsResizeMode("contain")
-                                        console.log("contain")
+                                        // console.log("contain")
                                       }}
                                       willClose={() => {
                                         setIsResizeMode("cover")
-                                        console.log("cover")
+                                        // console.log("cover")
                                       }}
                                     />
                                     {/* <Lightbox 

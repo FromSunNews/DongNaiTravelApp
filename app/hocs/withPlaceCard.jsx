@@ -24,6 +24,7 @@ import {
 import { 
   WithPlaceCardWrappedComponentProps
 } from 'types/index.d.ts'
+import FunctionsUtility from 'utilities/functions'
 
 /**
  * @typedef PlaceCardProps
@@ -81,7 +82,8 @@ export function withPlaceCard(WrappedComponent) {
       addPlaceDetails(place);
       navigation.push('PlaceDetailScreen', {
         placeId: place.place_id,
-        typeOfBriefPlace: typeOfBriefPlace
+        typeOfBriefPlace: typeOfBriefPlace,
+        handleShareToSocial: handleShareToSocial
       });
     }
   
@@ -92,6 +94,17 @@ export function withPlaceCard(WrappedComponent) {
       (data, state) => updateBriefPlace(place.place_id, placeIndex, { isLiked: state }),
       (state) => updateBriefPlace(place.place_id, placeIndex, { isLiked: state })
     )
+
+    // Hàm này dùng để cho việc share ảnh 
+    const handleShareToSocial = () => {
+      console.log('place', place)
+      const message = `Hãy cùng khám phá ${place.name} với mình nhé!`
+      const url = place.place_photos[0]
+      console.log("🚀 ~ file: withPlaceCard.jsx:102 ~ handleShareToSocial ~ url:", url)
+      const title = 'DongNaiTravelApp'
+
+      FunctionsUtility.shareImageToSocial(message, url, title)
+    }
 
     return (
       <WrappedComponent
@@ -105,6 +118,7 @@ export function withPlaceCard(WrappedComponent) {
         getTextContentInHTMLTag={getTextContentInHTMLTag}
         handlePressImageButton={handlePressImageButton}
         handleLikeButton={handleLikeButton}
+        handleShareToSocial={handleShareToSocial}
       />
     )
   }

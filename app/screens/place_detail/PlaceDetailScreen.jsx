@@ -71,7 +71,7 @@ import Lightbox from 'react-native-lightbox-v2';
  * @returns 
  */
 const PlaceDetailScreen = ({route, navigation}) => {
-  const { placeId, typeOfBriefPlace, fromSearch } = route.params;
+  const { placeId, typeOfBriefPlace, fromSearch, handleShareToSocial } = route.params;
   console.log("🚀 ~ file: PlaceDetailScreen.jsx:75 ~ PlaceDetailScreen ~ typeOfBriefPlace:", typeOfBriefPlace)
   console.log("🚀 ~ file: PlaceDetailScreen.jsx:75 ~ PlaceDetailScreen ~ fromSearch:", fromSearch)
 
@@ -199,6 +199,14 @@ const PlaceDetailScreen = ({route, navigation}) => {
                 setIcon={(isActive, currentLabelStyle) => (
                   <Ionicons name={isActive ? 'map' : 'map-outline'} size={14} style={currentLabelStyle} />
                 )}
+              />
+              <CircleButton
+                style={app_sp.me_8}
+                typeOfButton="highlight"
+                setIcon={(isActive, currentLabelStyle) => (
+                  <Ionicons name='share-outline' size={14} />
+                )}
+                onPress={handleShareToSocial}
               />
             </View>
 

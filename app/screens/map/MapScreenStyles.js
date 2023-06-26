@@ -165,8 +165,7 @@ export const styles = StyleSheet.create({
   },
   besideBtn: {
     position: 'absolute',
-    right: 0,
-    bottom: 120
+    right: 0
   },
   circleBtn: {
     width: 50,
