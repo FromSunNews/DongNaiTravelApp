@@ -42,9 +42,7 @@ export const fetchBriefBlogsByTypeAsyncThunk = createAsyncThunk(
         fields: fields,
         userId: state.user.currentUser._id
       };
-      console.log('CALL fetchBriefBlogsByTypeAsyncThunk');
       const response = await getBlogsAPI(query);
-      console.log('Redux Async Thunk (Get Blogs): ', response);
       return [type, response.data];
     } catch (error) {
       console.error(error.message);

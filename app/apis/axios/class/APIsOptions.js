@@ -51,16 +51,6 @@ export class APIsOptions {
   }
 
   /**
-   * Dùng để tạo ra một URL hoàn chỉnh `baseUrl` và `path`
-   * @param {string} path
-   */
-  getFullURL(path) {
-    path = path.match(reg)[1];
-    let fullRoutes = [this.baseUrl, path]
-    return fullRoutes.join("/");
-  }
-
-  /**
    * Dùng để tạo query ở dạng options từ object query.
    * @param {{[key: string]: any}} query 
    * @returns 
@@ -104,5 +94,15 @@ export class APICallersCreatorOptions extends APIsOptions {
         this[prop] = initialOptions[prop];
       }
     };
+  }
+
+  /**
+   * Dùng để tạo ra một URL hoàn chỉnh `baseUrl` và `path`
+   * @param {string} path
+   */
+  getFullURL(path) {
+    path = path.match(reg)[1];
+    let fullRoutes = [this.baseUrl, path]
+    return fullRoutes.join("/");
   }
 }

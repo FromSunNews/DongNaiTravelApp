@@ -92,7 +92,9 @@ const BlogDetailScreen = ({route, navigation}) => {
         userId: user._id
       };
       getBlogsAPI(query)
-      .then(data => {
+      .then(response => {
+        let data = response.data;
+        console.log('RELATED BLOGS: ', data)
         setRelatedBlogs(data);
       })
       .catch(error => console.error(error))

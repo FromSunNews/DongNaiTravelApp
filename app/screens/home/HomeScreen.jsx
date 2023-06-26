@@ -16,9 +16,10 @@ import { useSelector } from "react-redux"
 
 import {
   getPlacesAPI,
-  getBlogsAPI,
   getWeatherCurrentAPI
 } from 'apis/axios'
+
+import { getBlogsAPI } from "apis/axios/blog/get"
 
 import { useBriefPlaces } from "customHooks/usePlace"
 import useTheme from "customHooks/useTheme"

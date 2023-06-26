@@ -40,16 +40,32 @@ function validateOptions(options) {
  *   - `call`: chính là hàm gọi api.
  * @param {string} url 
  * @param {APIOptionsProps} options options cho apis.
- * @param {(data: any, call: (data: any) => Promise<AxiosResponse>) => Promise<any>} callBack hàm này dùng để ghi đè api.
+ * @param {(data: any, call: (data: any) => Promise<AxiosResponse>) => Promise<AxiosResponse | any>} callBack hàm này dùng để ghi đè api.
+ * 
+ * @example
+ * ```js
+  let baseUrl = `${API_ROOT}/v1/blog`
+  export const getBlogAPI = createAPICaller(baseUrl + "/get_one");
+  export const getBlogsAPI = createAPICaller(
+    baseUrl + "/get_multiple",
+    undefined,
+    async function(data, call) {
+      try {
+        let response = await callWithGlobalLoading(async () => call(data));
+        return response;
+      } catch (error) {
+        console.error(error.message);
+      }
+    }
+  );
+  export const getBlogCommentsAPI = createAPICaller(baseUrl + "/get_comments");
+ * ```
  */
 export function createAPICaller(url, options, callBack) {
   try {
     if(!url) throw new Error("URL is required.");
 
     options = validateOptions(options);
-
-    console.log("OPTIONS: ", options);
-    console.log("URL: ", url);
 
     let call = function(data, headers) {
       try {
@@ -69,7 +85,7 @@ export function createAPICaller(url, options, callBack) {
     if(options.method !== "GET") {
       call = function(data, headers) {
         headers = headers ? Object.assign(options.headers, headers) : options.headers;
-        return options.axiosInstance[options.method](
+        return options.axiosInstance[options.method.toLowerCase()](
           url,
           data,
           {
@@ -78,6 +94,9 @@ export function createAPICaller(url, options, callBack) {
         )
       }
     }
+
+    console.log("OPTIONS: ", options);
+    console.log("CALLER: ", call);
 
     /**
      * Request dữ liệu từ server. Khi tạo api caller với

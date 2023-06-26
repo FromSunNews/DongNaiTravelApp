@@ -12,23 +12,9 @@ export const {
 } = createAPICallers({
   baseUrl: `${API_ROOT}/v1/blog`,
   callers: {
-    getBlogsAPI: {
-      path: "/get_multiple",
-      fn: async function(data, call) {
-        try {
-          console.log("CALLER: ", call)
-          let response = await callWithGlobalLoading(async () => call(data));
-          return response;
-        } catch (error) {
-          console.error(error.message);
-        }
-      }
-    },
+    getBlogsAPI: "/get_multiple",
     getBlogAPI: "/get_one",
-    getBlogCommentsAPI: {
-      path: "/get_comments",
-      method: "POST"
-    }
+    getBlogCommentsAPI: "/get_comments"
   }
 });
 

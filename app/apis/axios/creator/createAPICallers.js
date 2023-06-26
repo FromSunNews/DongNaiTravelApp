@@ -25,6 +25,36 @@ let NotInOverrideOptions = ["callers", "baseUrl", "fn", "path"];
  * @template CallerOptions
  * @param {CreateAPICallersOptions<CallerOptions>} options các options này sẽ được setup chung cho toàn bộ các apis.
  * @returns {APICallers<CallerOptions>}
+ * 
+ * @example
+ * ```js
+  export const {
+    getBlogAPI,
+    getBlogsAPI,
+    getBlogCommentsAPI
+  } = createAPICallers({
+    baseUrl: `${API_ROOT}/v1/blog`,
+    callers: {
+      getBlogsAPI: {
+        path: "/get_multiple",
+        fn: async function(data, call) {
+          try {
+            let response = await callWithGlobalLoading(async () => call(data));
+            return response;
+          } catch (error) {
+            console.error(error.message);
+          }
+        }
+      },
+      getBlogAPI: "/get_one",
+      getBlogCommentsAPI: "/get_comments",
+      delelteBlog: {
+        path: "/delete_one",
+        method: "DELETE"
+      }
+    }
+  });
+ * ```
  */
 export function createAPICallers(options) {
   try {
