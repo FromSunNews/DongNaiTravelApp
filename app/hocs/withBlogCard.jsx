@@ -15,6 +15,7 @@ import {
 import { 
   WithBlogCardWrappedComponentProps
 } from 'types/index.d.ts'
+import FunctionsUtility from 'utilities/functions'
 
 /**
  * @typedef BlogCardProps
@@ -65,7 +66,8 @@ export function withBlogCard(WrappedComponent) {
       addBlogDetails(blog);
       navigation.push('BlogDetailScreen', {
         blogId: blog._id,
-        typeOfBriefBlog: typeOfBriefBlog
+        typeOfBriefBlog: typeOfBriefBlog,
+        handleShareToSocial: handleShareToSocial
       });
     }
   
@@ -76,6 +78,15 @@ export function withBlogCard(WrappedComponent) {
       (data, state) => updateBriefBlog(blog.blog_id, blogIndex, { isLiked: state }),
       (state) => updateBriefBlog(blog.blog_id, blogIndex, { isLiked: state })
     )
+
+    // Hàm này dùng để cho việc share ảnh 
+    const handleShareToSocial = () => {
+      const message = `Hãy cùng khám phá blog "${blog.name}" với mình nhé!`
+      const url = blog.avatar
+      const title = 'DongNaiTravelApp'
+
+      FunctionsUtility.shareImageToSocial(message, url, title)
+    }
 
     return (
       <WrappedComponent
@@ -88,6 +99,7 @@ export function withBlogCard(WrappedComponent) {
         updateBriefBlog={updateBriefBlog}
         handlePressImageButton={handlePressImageButton}
         handleLikeButton={handleLikeButton}
+        handleShareToSocial={handleShareToSocial}
       />
     )
   }

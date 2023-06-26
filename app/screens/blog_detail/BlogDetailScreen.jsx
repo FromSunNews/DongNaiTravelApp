@@ -40,7 +40,7 @@ import styles from './BlogDetailScreenStyle'
 import { app_sp } from 'globals/styles'
 
 const BlogDetailScreen = ({route, navigation}) => {
-  const { blogId, typeOfBriefBlog, fromSearch } = route.params;
+  const { blogId, typeOfBriefBlog, fromSearch, handleShareToSocial } = route.params;
   //theme
   const {themeColor,themeMode} = useTheme();
   
@@ -106,9 +106,9 @@ const BlogDetailScreen = ({route, navigation}) => {
   }, []);
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{flex: 1, backgroundColor: themeColor.bg_primary}}>
       <ScrollView
-        style={[styles.bd_container,{backgroundColor: themeColor.bg_primary}]}
+        style={[styles.bd_container,{backgroundColor: themeColor.bg_second}]}
         contentContainerStyle={{paddingBottom: 120}}
         onScroll={handleOnScroll}
         scrollEventThrottle={1000}
@@ -155,6 +155,7 @@ const BlogDetailScreen = ({route, navigation}) => {
             setIcon={(isActive, currentLabelStyle) => (
               <Ionicons name='share-outline' size={14} />
             )}
+            onPress={handleShareToSocial}
           />
           <CircleButton
             style={app_sp.me_8}

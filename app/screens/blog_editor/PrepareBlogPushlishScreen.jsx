@@ -3,15 +3,20 @@ import {
   Text,
   View,
   Image,
-  Platform
+  Platform,
+  TouchableOpacity,
+  ScrollView,
+  Pressable,
+  ActivityIndicator
 } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import * as ImagePicker from "expo-image-picker"
 import { Buffer } from 'buffer'
 
 import {
   getPlacesAPI,
-  postNewBlogAPI
+  postNewBlogAPI,
+  suggestTitleAPI
 } from 'apis/axios'
 
 import {
@@ -57,13 +62,18 @@ import {
 
 import {
   app_c,
+  app_dms,
   app_sh,
-  app_sp
+  app_shdw,
+  app_sp,
+  app_typo
 } from 'globals/styles'
 
 import {
   BlogDataProps
 } from 'types/index.d.ts'
+
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 const MyPlaceSearchResultList = createSearchWithResultList([
   async (text) => {
@@ -123,7 +133,7 @@ const PrepareBlogPushlishScreen = (props) => {
   });
   const [isPending, startTransition] = React.useTransition();
 
-  const { control, handleSubmit, formState: { errors } } = useForm ({
+  const { control, handleSubmit, formState: { errors }, setValue, getValues} = useForm ({
     defaultValues: {
       name: ""
     }
@@ -143,6 +153,12 @@ const PrepareBlogPushlishScreen = (props) => {
   */
   const [ listenCreateBlog, emitCreateBlog ] = React.useMemo(() => getCreateBlogEventHandlers(getSocket()), []);
 
+  const [isShowSuggestTitle, setIsShowSuggestTitle] = useState(false)
+  const [isShowSuggestTitlePanel, setIsShowSuggestTitlePanel] = useState(false)
+  const [indexSuggestTitle, setIndexSuggestTitle] = useState(null)
+  const [titleArray, setTitleArray] = useState([])
+  const [isShowLoadingTitleArray, setIsShowLoadingTitleArray] = useState(false)
+  const [isPendingCallApi, setIsPendingCallApi] = useState(false)
   /**
    * Hàm này dùng để upload blog. Trong đó nó sẽ dùng HTTP hoặc Socket để upload.
    * @param {any} data dữ liệu được lấy từ form.
@@ -299,37 +315,86 @@ const PrepareBlogPushlishScreen = (props) => {
     // }
   }, [blogUploadInfo.firstblogChunk]);
 
+
   return (
     <KeyboardAwareScrollView
       nestedScrollEnabled
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      contentContainerStyle={[app_sp.pt_12]}
+      contentContainerStyle={[app_sp.pt_12, {paddingBottom: 80, paddingTop: 20}]}
       style={{flex: 1, backgroundColor: app_c.HEX.primary}}
     >
       <View style={[styles.container, app_sp.mb_12, {position: 'relative'}]}>
-        <View style={app_sp.ph_18}>
+        <View style={[app_sp.ph_18, {paddingBottom: 10}]}>
           {/* TextInput để nhập name cho blog */}
           <AppText font='h4'>Blog's name</AppText>
-          <Controller
-            control={control}
-            rules={{
-              required: {
-                value: true,
-                message: "You need to let we know your blog's name"
-              },
-            }}
-            name="name"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <Input
-                label="Enter blog's name here"
-                isPassword={false}
-                onChange={onChange}
-                onBlur={onBlur}
-                value={value}
-                error={errors.name}
-              />
-            )}
-          />
+          <View style={{
+            display:'flex',
+            flexDirection:"row",
+            alignItems: 'center',
+            marginTop: 15
+          }}>
+            <View style={{flex: 1}}>
+              <Controller
+                control={control}
+                rules={{
+                  required: {
+                    value: true,
+                    message: "You need to let we know your blog's name"
+                  },
+                }}
+                name="name"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input
+                    label="Enter blog's name here"
+                    isPassword={false}
+                    onChange={onChange}
+                    onBlur={onBlur}
+                    value={value}
+                    error={errors.name}
+                    containerStyle={{marginTop: 0}}
+                    handleShowSuggestTitle={() => setIsShowSuggestTitle(true)}
+                    handleHideSuggestTitle={() => setIsShowSuggestTitle(false)}
+                  />
+                )}
+                />
+                {errors.name && <Text style={styles.textError}>{errors.name?.message}</Text>}
+            </View>
+            {
+              isShowSuggestTitle &&
+              <TouchableOpacity
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  height: 40,
+                  width: 40,
+                  borderRadius: 20,
+                  marginLeft: 10,
+                  backgroundColor: app_c.HEX.primary,
+                  ...app_shdw.type_2
+                }}
+                onPress={() => {
+                  setIsShowSuggestTitlePanel(true)
+                  if (titleArray.length === 0 && !isPendingCallApi) {
+                    setIsPendingCallApi(true)
+                    suggestTitleAPI({
+                      title: getValues('name'),
+                      numberOfTitle: 10
+                    }).then(data => {
+                      setTitleArray(data.titleArray)
+                      setIsShowLoadingTitleArray(true)
+                      setIsPendingCallApi(false)
+                    })
+                  }
+                }}
+              >
+                <FontAwesome5 
+                  name='lightbulb' 
+                  size={20} 
+                  color={app_c.HEX.third}
+                />
+              </TouchableOpacity>
+            }
+          </View>
         </View>
 
         {/* Button mở ImagePicker trong Native */}
@@ -482,6 +547,81 @@ const PrepareBlogPushlishScreen = (props) => {
           }
         </RectangleButton>
       </View>
+
+      {/* Suggess title blog */}
+      {
+        isShowSuggestTitlePanel &&
+        <Pressable
+          onPress={() => setIsShowSuggestTitlePanel(false)}
+          style={{
+            position: 'absolute',
+            width: app_dms.screenWidth,
+            height: app_dms.screenHeight,
+          }}
+        >
+          <View style={{
+            ...app_shdw.type_3
+          }}>
+            {
+              !isShowLoadingTitleArray ? 
+              <View style={styles.refreshContainer}>
+                <ActivityIndicator size="small" color={app_c.HEX.fourth}/>
+              </View> :
+              <ScrollView
+                nestedScrollEnabled={true}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  ...app_sp.ph_18,
+                  height: 300,
+                  marginHorizontal: 18,
+                  elevation: 4,
+                  zIndex: 4,
+                  backgroundColor: app_c.HEX.primary,
+                  borderRadius: 12,
+                  paddingVertical: 20,
+                  ...app_shdw.type_3,
+                  marginTop: 110,
+                }}
+                showsHorizontalScrollIndicator={false}
+              >
+                {
+                  titleArray.map((title, index) => {
+                    return (
+                      <TouchableOpacity 
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          marginTop: index === 0 ? 0 : 10,
+                          paddingHorizontal: 8,
+                          paddingVertical: 6,
+                          marginBottom: index === titleArray.length - 1 ? 40 : 0,
+                        }}
+                        onPress={() => {
+                          setValue('name', title)
+                          setIndexSuggestTitle(index)
+                        }}
+                      >
+                        <FontAwesome5 
+                          name='lightbulb' 
+                          size={20} 
+                          color={app_c.HEX.third}
+                        />
+                        <Text style={{
+                          marginLeft: 10,
+                          ...app_typo.fonts.normal.normal.body1,
+                          color: app_c.HEX.ext_second
+                        }}>{title}</Text>
+                      </TouchableOpacity>
+                    )
+                  })
+                }
+              </ScrollView>
+            }
+          </View>
+        </Pressable>
+      }
     </KeyboardAwareScrollView>
   )
 }
@@ -499,5 +639,27 @@ const styles = StyleSheet.create({
     ...app_sh.rounded_8,
     ...app_sp.p_18,
     ...app_sp.mt_12
-  }
+  },
+  textError: {
+    flex: 1,
+    color: '#F32424',
+    marginTop: 5,
+    ...app_typo.fonts.normal.normal.body1,
+    alignSelf: 'flex-start',
+  },
+  refreshContainer: {
+    ...app_sp.ph_18,
+    height: 150,
+    marginHorizontal: 18,
+    elevation: 4,
+    zIndex: 4,
+    backgroundColor: app_c.HEX.primary,
+    borderRadius: 12,
+    paddingVertical: 20,
+    ...app_shdw.type_3,
+    marginTop: 110,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 })

@@ -39,6 +39,8 @@ function mergeStyle(baseStyle, ...otherStyles) {
   return completeStyle
 }
 
+
+
 const ComponentUtility = {
   getTouchable,
   mergeStyle

@@ -3,6 +3,10 @@ import {
   RouteProp,
   ParamListBase
 } from "@react-navigation/native";
+import { Platform, Share } from "react-native";
+import StringUtility from "./string";
+import * as FileSystem from 'expo-file-system';
+import { callWithGlobalLoading } from "./reduxStore";
 
 /*
   File này chủ yếu là các function linh tinh.
@@ -96,6 +100,13 @@ function deepCompare(a, b) {
   return check;
 }
 
+/**
+ * @author FSN
+ * @description Hàm này để kiểm tra xem text có đúng với regex đã cung cấp hay chưa
+ * @param {string} text đoạn văn bản được cung cấp
+ * @param {RegExp} regex regex được cung cấp
+ * @returns {boolean}
+ */
 function validateRegex(text, regex) {
   return regex.test(text)
 }
@@ -142,13 +153,66 @@ function autoBind(obj, options) {
   }
 }
 
+/**
+ * @author FSN
+ * @description Đây là hàm dùng để chia sẻ hình ảnh của bài viết lên các nền tảng mạng xả hội
+ * @param {string} message lời nhắn khi chia sẻ
+ * @param {string} url đường dẫn hoặc dạng base64 của hình ảnh muốn chia sẻ
+ * @param {string} title tiêu đề của bài chia sẻ
+ * @returns {void}
+ */
+const shareImageToSocial = async (message, url, title) => {
+  let base64Data
+  await callWithGlobalLoading(async () => {
+    // Kiểm tra xem url này có phải là một đường dẫn hay không 
+    if (StringUtility.hasLink(url)) {
+      base64Data = 'data:image/jpeg;base64,'
+      try {
+        const { uri } = await FileSystem.downloadAsync(
+          url,
+          FileSystem.documentDirectory + 'bufferimg.png'
+        );
+    
+        base64Data += await FileSystem.readAsStringAsync(uri, {
+          encoding: 'base64',
+        });
+  
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      base64Data = url
+    }
+  })
+
+  if (Platform.OS === "android") {
+    Share.share({
+      message: message, // supporting android
+      url: base64Data, // not supporting
+      title: title,
+    })
+      .then((result) => console.log(result))
+      .catch((errorMsg) => console.log(errorMsg))
+  } else if (Platform.OS === "ios") {
+    Share.share({
+      message: message, // supporting android
+      url: base64Data, // not supporting
+      title: title,
+     })
+    
+     .then((result) => console.log(result))
+      .catch((errorMsg) => console.log(errorMsg))
+  }
+}
+
 const FunctionsUtility = {
   getHeaderTitle,
   deepCompare,
   validateRegex,
   removeFrom,
   wait,
-  autoBind
+  autoBind,
+  shareImageToSocial
 }
 
 export default FunctionsUtility;

@@ -128,6 +128,18 @@ const createTextContentInHTMLTagGetter = function (openTagWithReg, closeTagWithR
   }
 }
 
+const link = /(http|https):\/\/[\w\d_\-\.]+\.[\w\d]{2,}([:\d]+)?(\/[\w\d\-\._\?\,\'\/\\\+&%\$#\=~]*)?/;
+
+/**
+ * Đây là function dùng để test xem `text` có phải là link hay không?
+ * Nếu như `text` là link thì trả về `true`, ngược lại là `false`.
+ * @param {string} text Text cần kiểm tra.
+ * @returns {true | false}
+ */
+function hasLink(text) {
+  return link.test(text);
+}
+
 const StringUtility = {
   splitLineBySeperator,
   removeSeparatorFromLine,
@@ -136,6 +148,7 @@ const StringUtility = {
   toSnakeCase,
   toTitleCase,
   createTextContentInHTMLTagGetter,
+  hasLink
 };
 
 export default StringUtility;

@@ -214,7 +214,7 @@ const ChatBotScreen = () => {
         marginLeft: 18,
         marginRight: 8,
         minHeight: 40,
-        marginBottom: Platform.OS === 'ios' ? 40 :10 ,
+        marginBottom: Platform.OS === 'ios' ? 20 :10 ,
         marginTop: Platform.OS === 'ios' ? 0 : 5 ,
       }}
     />
@@ -230,7 +230,7 @@ const ChatBotScreen = () => {
         alignItems: 'center',
         justifyContent: 'center',
         marginRight: 8,
-        marginBottom: Platform.OS === 'ios' ? 40 :10 ,
+        marginBottom: Platform.OS === 'ios' ? 20 :10 ,
         marginTop: Platform.OS === 'ios' ? 0 : 5 ,
       }}
     >
