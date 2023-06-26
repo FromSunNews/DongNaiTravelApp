@@ -82,7 +82,21 @@ export function createAPICaller(url, options, callBack) {
       }
     };
     
-    if(options.method !== "GET") {
+    if(options.method === "DELETE") {
+      call = function(data, headers) {
+        headers = headers ? Object.assign(options.headers, headers) : options.headers;
+        return options.axiosInstance[options.method.toLowerCase()](
+          url,
+          {
+            headers: headers,
+            data
+          }
+        )
+      }
+    }
+
+    if(options.method !== "GET" && options.method !== "DELETE") {
+      console.log(`API Caller with method ${options.method.toLowerCase()} is created.`);
       call = function(data, headers) {
         headers = headers ? Object.assign(options.headers, headers) : options.headers;
         return options.axiosInstance[options.method.toLowerCase()](
@@ -95,8 +109,7 @@ export function createAPICaller(url, options, callBack) {
       }
     }
 
-    console.log("OPTIONS: ", options);
-    console.log("CALLER: ", call);
+    console.log(`OPTIONS [${url}]: `, options);
 
     /**
      * Request dữ liệu từ server. Khi tạo api caller với

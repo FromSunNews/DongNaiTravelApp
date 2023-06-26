@@ -75,9 +75,10 @@ export const refetchBriefBlogsByTypeAsyncThunk = createAsyncThunk(
   /**
    * @param {RequestBriefBlogsInfoProps} requestBriefBlogsInfo
    */
-  async (requestBriefBlogsInfo) => {
+  async (requestBriefBlogsInfo, thunkAPI) => {
     try {
       const { type, fields } = requestBriefBlogsInfo;
+      const state = thunkAPI.getState();
       const limit = 5;
       const skip = 0;
       const query = {

@@ -123,8 +123,6 @@ const BlogCommentScreen = ({route}) => {
     .then(response => {
       let data = response.data;
       if(Boolean(data[0])) {
-        console.log('Has comments: ', Boolean(data[0]));
-        console.log('Comments: ', data);
         setComments(data);
       }
     })

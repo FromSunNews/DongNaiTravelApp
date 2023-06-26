@@ -6,9 +6,12 @@ import {
   ViewProps,
   ViewStyle,
   Alert,
-  Animated
+  Animated,
+  Pressable
 } from 'react-native'
 import React from 'react'
+
+import { deleteBlogCommentAPI } from 'apis/axios/blog/delete'
 
 import DateTimeUtility from 'utilities/datetime'
 
@@ -17,7 +20,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import AppText from '../app_text/AppText'
 import CircleButton from '../buttons/CircleButton'
 import RectangleButton from '../buttons/RectangleButton'
-import { app_c, app_sp, app_sh } from 'globals/styles'
+import { app_c, app_sp } from 'globals/styles'
 
 /**
  * @typedef CommentAuthorDataProps
@@ -62,21 +65,58 @@ const Comment = ({
 
   let { type, distance } = DateTimeUtility.getTimeDistance(comment.createdAt);
 
-  const [actionsVisible, setActionsVisible] = React.useState(false);
+  const [commentInfo, setCommentInfo] = React.useState({
+    isDeleted: false,
+    isActionsVisible: false
+  });
   const floatActionsScaleAnim = React.useRef(new Animated.Value(0)).current;
 
   const handleToggleFloatActionsPress = React.useCallback((function() {
     let actionsVisible = false;
     return function() {
+      console.log("Toggle: ", actionsVisible);
       Animated.spring(floatActionsScaleAnim, {
         toValue: actionsVisible ? 0 : 1,
         useNativeDriver: true
-      }).start(() => {actionsVisible = !actionsVisible});
+      }).start();
+      actionsVisible = !actionsVisible
+      setCommentInfo(prevState => ({...prevState, isActionsVisible: actionsVisible}));
     }
-  })());
+  })(), []);
+
+  const handleDeleteCommentPress = () => {
+    let data = {
+      blogId: comment.blogId,
+      blogCommentId: comment._id,
+      exactKey: comment.exactKey
+    }
+
+    deleteBlogCommentAPI(data)
+    .then((response) => {
+      console.log("Delete response: ", response.data);
+      setCommentInfo(prevState => ({...prevState, isDeleted: true}))
+    })
+    .catch(console.error)
+  }
+
+  if(commentInfo.isDeleted) return null;
 
   return (
     <View {...props} style={[{borderBottomColor: 'rgba(38, 38, 38, .125)', borderBottomWidth: 1}, app_sp.pb_12, props.style]}>
+      {
+        commentInfo.isActionsVisible && (
+          <Pressable
+            style={{
+              position: 'absolute',
+              width: '100%',
+              height: '100%',
+              top: 0,
+              left: 0
+            }}
+            onPress={handleToggleFloatActionsPress}
+          />
+        )
+      }
       {/* Information and Actions Container */}
       <View style={styles.comment_info_n_actions_container}>
         {/* Basic user info container */}
@@ -125,7 +165,7 @@ const Comment = ({
                 <>
                   <RectangleButton
                     typeOfButton="opacity"
-                    onPress={() => {}}
+                    onPress={() => {Alert.alert("Tính năng này đang được phát triển!")}}
                   >
                     {
                     (isActive, currentLabelStyle) => (<AppText style={currentLabelStyle}>Edit</AppText>)
@@ -133,7 +173,7 @@ const Comment = ({
                   </RectangleButton>
                   <RectangleButton
                     typeOfButton="opacity"
-                    onPress={() => {}}
+                    onPress={handleDeleteCommentPress}
                   >
                     {
                       (isActive, currentLabelStyle) => (<AppText style={[currentLabelStyle, { color: 'red' }]}>Delete</AppText>)
@@ -152,43 +192,6 @@ const Comment = ({
               )
             }
           </Animated.View>
-          {/* {
-            actionsVisible && (
-              <View style={[styles.comment_float_action_buttons_container]}>
-                {
-                  isOwnedCurrentUser ? (
-                    <>
-                      <RectangleButton
-                        typeOfButton="opacity"
-                        onPress={() => {}}
-                      >
-                        {
-                        (isActive, currentLabelStyle) => (<AppText style={currentLabelStyle}>Edit</AppText>)
-                        }
-                      </RectangleButton>
-                      <RectangleButton
-                        typeOfButton="opacity"
-                        onPress={() => {}}
-                      >
-                        {
-                          (isActive, currentLabelStyle) => (<AppText style={[currentLabelStyle, { color: 'red' }]}>Delete</AppText>)
-                        }
-                      </RectangleButton>
-                    </>
-                  ) : (
-                    <RectangleButton
-                      typeOfButton="opacity"
-                      onPress={() => {Alert.alert("Tính năng này đang được phát triển!")}}
-                    >
-                      {
-                        (isActive, currentLabelStyle) => (<AppText style={[currentLabelStyle, { color: 'red' }]}>Report</AppText>)
-                      }
-                    </RectangleButton>
-                  )
-                }
-              </View>
-            )
-          } */}
         </View>
       </View>
 
