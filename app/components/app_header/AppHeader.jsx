@@ -9,7 +9,7 @@ import {
   NativeStackNavigationOptions
 } from '@react-navigation/native-stack'
 
-import useTheme from 'customHooks/useTheme';
+import { useTheme } from 'customHooks/useTheme';
 
 import { selectCurrentNotifs } from '../../redux/notifications/NotificationsSlice';
 import { selectCurrentLanguage } from '../../redux/language/LanguageSlice';
@@ -70,7 +70,7 @@ const AppHeader = ({
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.appHeader
   //theme
-  const {themeColor} = useTheme()
+  const { theme, themeMode } = useTheme()
 
   const currentNotif = useSelector(selectCurrentNotifs)
   const [numberOfVisited, setNumberOfVisited] = useState(0)
@@ -97,7 +97,7 @@ const AppHeader = ({
   const headerStyle = {
     ...styles.container,
     ...app_shdw[boxShadow],
-    backgroundColor: themeColor.bg_second,
+    backgroundColor: theme.background,
     ...(transparent ?  { backgroundColor: `rgba(${255, 255, 255}, 0)` } : {} )
   }
 
@@ -105,7 +105,7 @@ const AppHeader = ({
     if (currentNotif.length > 0) {
       setNumberOfVisited(currentNotif.filter(notif => notif._isVisited === false).length)
     }
-  }, [currentNotif,themeColor])
+  }, [currentNotif, themeMode])
 
   return (
     <View style={[headerStyle]}>
@@ -190,8 +190,6 @@ const AppHeader = ({
                   top: 0,
                 }}>
                   <AppText style={{
-                    color: themeColor.primary,
-                    ...app_typo.fonts.normal.bolder.body2,
                     fontSize: 10
                   }}>{numberOfVisited}</AppText>
                 </View>

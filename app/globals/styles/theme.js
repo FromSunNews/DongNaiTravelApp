@@ -1,3 +1,20 @@
+export const ColorAlias = {
+  primary: "primary",
+  onPrimary: "onPrimary",
+  secondary: "secondary",
+  onSecondary: "onSecondary",
+  tertiary: "tertiary",
+  onTertiary: "onTertiary",
+  background: "background",
+  onBackground: "onBackground",
+  subBackground: "subBackground",
+  onSubBackground: "onSubBackground",
+  outline: "outline",
+  onOutline: "onOutline",
+  subOutline: "subOutline",
+  onSubOutline: "onSubOutline"
+}
+
 export const themes = {
   light: {
     primary: '#112D4E',
@@ -6,7 +23,7 @@ export const themes = {
     onSecondary: '#FFFFFF',
     tertiary: '#769FCD',
     onTertiary: '#F6F6F6',
-    background: '#E4E9EF',
+    background: '#ECF0F5',
     onBackground: '#0B1015',
     subBackground: '#FAFAFA',
     onSubBackground: '#1A2229',

@@ -1,4 +1,11 @@
+import { themes } from "globals/styles/theme";
 import { useTheme } from "customHooks/useTheme"
+
+/**
+ * @typedef WithThemeWrappedComponentProps
+ * @property {themes[keyof themes]} theme
+ * @property {() => ({ type: "theme/toggleThemeState", payload: undefined })} toggleTheme
+ */
 
 /**
  * HOC này dùng để sử dụng theme của app. Khi dùng hoc này thì component sẽ nhận thêm
@@ -32,13 +39,13 @@ import { useTheme } from "customHooks/useTheme"
  * ```
  */
 export function withTheme(WrappedComponent) {
-  const { theme, toggleTheme } = useTheme();
   /**
-   * @pấm
-   */
-  return function (props) {
+   * @param {any} props
+  */
+ return function(props) {
+    const { theme, toggleTheme } = useTheme();
     props.theme = theme;
     props.toggleTheme = toggleTheme;
-    return <WrappedComponent {...props} />
+    return <WrappedComponent {...props} theme={theme} toggleTheme={toggleTheme} />
   }
 }

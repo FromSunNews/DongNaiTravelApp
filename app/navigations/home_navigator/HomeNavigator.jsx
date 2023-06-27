@@ -1,25 +1,21 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { AppHeader, CircleButton } from "components";
+import { useDispatch, useSelector } from "react-redux";
+import { selectCurrentLanguage } from "redux/language/LanguageSlice";
+import { updateStatusBar } from "redux/manifold/ManifoldSlice";
+
 import HomeScreen from "screens/home/HomeScreen";
 import NotificationsScreen from "screens/notifications/NotificationsScreen";
 import PlaceDetailScreen from "screens/place_detail/PlaceDetailScreen";
 import BlogDetailScreen from "screens/blog_detail/BlogDetailScreen";
-import ExploreScreen from "screens/explore/ExploreScreen";
-import BlogsScreen from "screens/blogs/BlogsScreen";
 import ProfileScreen from "../../screens/profile_screen/ProfileScreen";
-import { useDispatch, useSelector } from "react-redux";
-import { selectCurrentLanguage } from "redux/language/LanguageSlice";
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { updateStatusBar } from "redux/manifold/ManifoldSlice";
-import OnboardingChatbot from "screens/onaboarding_chatbot/OnboardingChatbot";
-import ChatBotScreen from "screens/chat_bot/ChatBotScreen";
 import WeatherScreen from "screens/weather/WeatherScreen";
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import { AppHeader, CircleButton } from "components";
 
 const HomeStack=createNativeStackNavigator()
 
 const HomeNavigator=({ navigation })=>{
-
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.appHeader
   const dispatch = useDispatch()

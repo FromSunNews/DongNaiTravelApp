@@ -287,7 +287,6 @@ const BlogDetailScreen = ({route, navigation}) => {
             setIcon={(isActive, currentLabelStyle) => (
               <Ionicons name="chatbox-outline" size={14} style={currentLabelStyle} />
             )}
-            onPress={() => { navigation.navigate("GlobalNavigator", { screen: "BlogCommentScreen", params: { blogId: blogDetails._id } }) }}
           />
           <AppText font="body3">{NumberUtility.toMetricNumber(blogDetails.userCommentsTotal)}</AppText>
         </View>

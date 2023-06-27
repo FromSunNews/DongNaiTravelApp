@@ -35,6 +35,7 @@ import { useEffect } from 'react'
 import { getPrivateKeysAPI } from 'apis/axios'
 import { useDispatch, useSelector } from 'react-redux'
 import { updatePrivateKeys } from 'redux/manifold/ManifoldSlice'
+import { useTheme } from 'customHooks/useTheme'
 // Phương: Socket 
 
 import { selectCurrentUser, updateTemporaryUserId } from 'redux/user/UserSlice'
@@ -50,7 +51,6 @@ import { signInUserAPI } from '../../apis/axios'
 import { selectCurrentWareHouse } from '../../redux/warehouse/WareHouseSlice'
 import FunctionsUtility from '../../utilities/functions'
 import { EMAIL_RULE } from '../../utilities/validators'
-import useTheme from 'customHooks/useTheme'
 
 const tabIcon = {
 	'HomeScreen': {
@@ -109,10 +109,10 @@ const BottomTabBar = ({
 		useNativeDriver: true
 	}).start()
 	//theme
-	const {themeColor} = useTheme();
+	const { theme } = useTheme();
 
 	return (
-		<View style={[styles.tab_bottom_container,{backgroundColor: themeColor.bg_tab}]}>
+		<View style={[styles.tab_bottom_container,{backgroundColor: theme.primary}]}>
 			<View style={styles.tab_bottom_buttons_container}>
 				{state.routes.map((route, index) => {
 					const { options } = descriptors[route.key];
@@ -141,19 +141,19 @@ const BottomTabBar = ({
 							key={route.name}
 							style={styles.tab_bottom_button}
 						>
-							<View style={tabIcon[route.name].isHighlight ? [styles.tab_bottom_hl_icon_conatiner,{backgroundColor: themeColor.mid_map_tab,
-    borderColor: themeColor.border_map_tab}] : styles.tab_bottom_icon_conatiner}>
+							<View style={tabIcon[route.name].isHighlight ? [styles.tab_bottom_hl_icon_conatiner, {backgroundColor: theme.primary,
+    borderColor: theme.onPrimary}] : styles.tab_bottom_icon_conatiner}>
 								{
 									tabIcon[route.name].isHighlight ?
 										(<Ionicons
 											size={tabIcon[route.name].size}
 											name={isFocused ? tabIcon[route.name].active : tabIcon[route.name].inactive}
-											style={isFocused ? [styles.tab_bottom_hl_icon_active, { color: themeColor.active_tab }] : [styles.tab_bottom_hl_icon_inactive, { color: themeColor.unactive_tab }]}
+											style={isFocused ? [styles.tab_bottom_hl_icon_active, { color: theme.onPrimary }] : [styles.tab_bottom_hl_icon_inactive, {color: theme.outline}]}
 										/>) :
 										(<Ionicons
 											size={tabIcon[route.name].size}
 											name={isFocused ? tabIcon[route.name].active : tabIcon[route.name].inactive}
-											style={isFocused ? [styles.tab_bottom_icon_active, {color: themeColor.active_tab}] : [styles.tab_bottom_icon_inactive,{color: themeColor.unactive_tab}]}
+											style={isFocused ? [styles.tab_bottom_icon_active, { color: theme.onPrimary }] : [styles.tab_bottom_icon_inactive,{color: theme.outline}]}
 									/>)
 								}
 							</View>
@@ -161,7 +161,7 @@ const BottomTabBar = ({
 					);
 				})}
 			</View>
-			<Animated.View style={{...styles.tab_bottom_dot_animated_container,backgroundColor:themeColor.dot_tab, transform: [{ translateX: tabOffsetValue }]}}></Animated.View>
+			<Animated.View style={{...styles.tab_bottom_dot_animated_container, backgroundColor: theme.onPrimary, transform: [{ translateX: tabOffsetValue }]}}></Animated.View>
 		</View>
 	);
 }

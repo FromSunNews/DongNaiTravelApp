@@ -22,7 +22,7 @@ import {
 import { getBlogsAPI } from "apis/axios/blog/get"
 
 import { useBriefPlaces } from "customHooks/usePlace"
-import useTheme from "customHooks/useTheme"
+import { useTheme } from "customHooks/useTheme"
 
 import { selectCurrentMode } from "redux/theme/ThemeSlice"
 import { selectCurrentMap } from "redux/map/mapSlice"
@@ -36,6 +36,8 @@ import {
 } from "utilities/constants"
 import { weatherImages } from "utilities/mapdata"
 import { Ionicons, Entypo,Fontisto,FontAwesome5,MaterialCommunityIcons} from "react-native-vector-icons"
+
+import { withTheme } from "hocs/withTheme"
 
 import { 
   AppText, 
@@ -57,7 +59,18 @@ import HomeBannerSlider from "components/home_banner_slider/HomeBannerSlider"
 import styles from "./HomeScreenStyles"
 import { app_c, app_sp, app_typo } from "globals/styles"
 
-const HomeScreen = ({navigation}) => {
+import { WithThemeWrappedComponentProps } from "hocs/withTheme"
+
+/**
+ * 
+ * @param {WithThemeWrappedComponentProps} props 
+ * @returns 
+ */
+const HomeScreen = ({
+  navigation,
+  theme,
+  toggleTheme
+}) => {
   const currentMap = useSelector(selectCurrentMap)
   const [showPanelWeather, setShowPanelWeather] = useState(false)
   //template
@@ -78,7 +91,7 @@ const HomeScreen = ({navigation}) => {
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.homeScreen
   //theme
-  const { themeColor, themeMode} = useTheme(); 
+  // const { theme, toggleTheme } = useTheme(); 
 
   const previousTypes = React.useRef({
     place: typePlace,
@@ -105,9 +118,8 @@ const HomeScreen = ({navigation}) => {
 
     })
   }
-  console.log("🚀 ~ file: HomeScreen.jsx:105 ~ HomeScreen ~ iconId:", iconId)
 
-
+  console.log('Theme: ', theme)
 
   useEffect(()=>{
     if (currentMap.userLocation) {
@@ -119,11 +131,15 @@ const HomeScreen = ({navigation}) => {
   },[currentMap.userLocation])
 
   useEffect(() => {
-    let placeQuery = `limit=5&skip=0&filter=quality:${typePlace}&fields=${BRIEF_PLACE_DATA_FIELDS}`;
-
-    getPlacesAPI(placeQuery)
-      .then(data => {
-        setPlaces(data)
+    let query = {
+      limit: 5,
+      skip: 0,
+      filter: `quality:${typePlace}`,
+      fields: BRIEF_PLACE_DATA_FIELDS
+    };
+    getPlacesAPI(query)
+      .then(response => {
+        setPlaces(response.data)
       })
   }, [typePlace])
 
@@ -137,12 +153,11 @@ const HomeScreen = ({navigation}) => {
   }, [typeBlog]);
 
   return (
-    <ScrollView style={[styles.container,{backgroundColor: themeColor.bg_primary}]} showsVerticalScrollIndicator={false}>
-      <View style={[styles.home_content,{backgroundColor: themeColor.bg_second}]}>
-        <View style={[styles.home_banner, {backgroundColor: themeColor.ext_third}]}>
+    <ScrollView style={[styles.container,{backgroundColor: theme.background}]} showsVerticalScrollIndicator={false}>
+      <View style={[styles.home_content,{}]}>
+        <View style={[styles.home_banner, {}]}>
           <HomeBannerSlider/>
         </View>
-
         {
           showPanelWeather &&
             <View style={styles.home_temperature}>
@@ -164,20 +179,20 @@ const HomeScreen = ({navigation}) => {
                     }
                     {
                       celsius ? (
-                        <AppText style={[styles.temperature_degrees_info,{fontSize:22,marginTop:-4,color:themeColor.ext_second}]} >{`${celsius}°C`}</AppText>) 
+                        <AppText style={[styles.temperature_degrees_info,{fontSize:22,marginTop:-4}]} >{`${celsius}°C`}</AppText>) 
                         : (
-                        <AppText style={[styles.temperature_degrees_info,{fontSize:22,marginTop:-4,color:themeColor.ext_second,}]}><Entypo name="minus"/>
+                        <AppText style={[styles.temperature_degrees_info,{fontSize:22,marginTop:-4,}]}><Entypo name="minus"/>
                         <Entypo name="minus"/>{`°C`}</AppText>
                         )
                     }
                     {
                       desWeather ? (
                         <AppText numberOfLines={2}  
-                        style={[styles.temperature_degrees_info,{fontSize:14,paddingHorizontal:4,textAlign:"center",color:themeColor.ext_second,}]}
+                        style={[styles.temperature_degrees_info,{fontSize:14,paddingHorizontal:4,textAlign:"center",}]}
                         >
                           {capitalizeFirstLetter(desWeather)}
                         </AppText>
-                      ) : <AppText numberOfLines={2} style={[styles.temperature_degrees_info,{fontSize:13,paddingHorizontal:4,textAlign:"center",color:themeColor.ext_second,}]}>
+                      ) : <AppText numberOfLines={2} style={[styles.temperature_degrees_info,{fontSize:13,paddingHorizontal:4,textAlign:"center",}]}>
                         {langData.desWeather[langCode]}
                         </AppText>
                     }
@@ -185,56 +200,56 @@ const HomeScreen = ({navigation}) => {
                   <View style={styles.temperature_other_info}>
                     <View style={[styles.temperature_other_info_half]}>
                       <View style={styles.temperature_other_info_quarter}>
-                        {/* <Fontisto name='wind' size={14} color={themeColor.ext_secon d}/> */}
-                        <AppText style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}}>Sức gió:</AppText>
+                        {/* <Fontisto name='wind' size={14} color={theme.ext_secon d}/> */}
+                        <AppText style={{...app_typo.fonts.normal.normal.h5}}>Sức gió:</AppText>
                         {
                           wind ?(
-                          <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5,paddingHorizontal:5,color:themeColor.ext_second}}>{`${wind}`}
-                            <AppText style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second,paddingHorizontal:5}}>Km/h</AppText>
+                          <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5,paddingHorizontal:5}}>{`${wind}`}
+                            <AppText style={{...app_typo.fonts.normal.normal.h5,paddingHorizontal:5}}>Km/h</AppText>
                           </AppText>
                           ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5,marginTop:4}}>
-                              <AppText style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}}>km/h</AppText>
+                              <AppText style={{...app_typo.fonts.normal.normal.h5}}>km/h</AppText>
                           </AppText>
                         }
                       </View>
-                      <AppText style={{fontSize:22,color:themeColor.ext_second}}>-</AppText>
+                      <AppText style={{fontSize:22}}>-</AppText>
                       <View style={[styles.temperature_other_info_quarter,{ marginLeft:6}]}>
-                         <AppText style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}}>Độ ẩm:</AppText>
+                         <AppText style={{...app_typo.fonts.normal.normal.h5}}>Độ ẩm:</AppText>
                             {
                               humidity ? (
-                                <AppText style={{...app_typo.fonts.normal.normal.h5,paddingHorizontal:5,color:themeColor.ext_second}}>{`${humidity}`}
-                                  <Text style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}} >%</Text>
+                                <AppText style={{...app_typo.fonts.normal.normal.h5,paddingHorizontal:5}}>{`${humidity}`}
+                                  <Text style={{...app_typo.fonts.normal.normal.h5}} >%</Text>
                                 </AppText>
                               ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5  ,marginTop:4}}>
-                                <Text style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}}>%</Text>
+                                <Text style={{...app_typo.fonts.normal.normal.h5}}>%</Text>
                                 </AppText>
                             }
                       </View>
                     </View>
                     <View style={styles.temperature_other_info_half}>
                       <View style={styles.temperature_other_info_quarter}>
-                        {/* <Entypo name='cloud' size={15} color={themeColor.ext_second}/> */}
-                        <AppText style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}}>Mây:</AppText>
+                        {/* <Entypo name='cloud' size={15} color={theme.ext_second}/> */}
+                        <AppText style={{...app_typo.fonts.normal.normal.h5}}>Mây:</AppText>
                         {
                           cloud ? (
-                            <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5,paddingHorizontal:5,color:themeColor.ext_second}}>{`${cloud}`+`%`}</AppText>
+                            <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5,paddingHorizontal:5}}>{`${cloud}`+`%`}</AppText>
                           ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5,marginTop:4}}>
-                          <Text style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}}>%</Text>
+                          <Text style={{...app_typo.fonts.normal.normal.h5}}>%</Text>
                           </AppText>
                         }
                       </View>
-                      <AppText style={{fontSize:22,color:themeColor.ext_second}}>-</AppText>
+                      <AppText style={{fontSize:22}}>-</AppText>
                       <View style={[styles.temperature_other_info_quarter,{marginLeft:6}]}>
-                          {/* <MaterialCommunityIcons name='weather-fog' size={15} color={themeColor.ext_second}/> */}
+                          {/* <MaterialCommunityIcons name='weather-fog' size={15} color={theme.ext_second}/> */}
                           
-                        <AppText style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}}>Tầm nhìn:</AppText>
+                        <AppText style={{...app_typo.fonts.normal.normal.h5}}>Tầm nhìn:</AppText>
                           {
                             vision ? (
-                              <AppText style={{...app_typo.fonts.normal.normal.h5,paddingHorizontal:5,color:themeColor.ext_second}}>{`${vision.toFixed(1)}`}
-                              <Text style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}}>Km</Text>
+                              <AppText style={{...app_typo.fonts.normal.normal.h5,paddingHorizontal:5}}>{`${vision.toFixed(1)}`}
+                              <Text style={{...app_typo.fonts.normal.normal.h5}}>Km</Text>
                               </AppText>
                             ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5,marginTop:4}}>
-                              <Text style={{...app_typo.fonts.normal.normal.h5,color:themeColor.ext_second}}>Km</Text>
+                              <Text style={{...app_typo.fonts.normal.normal.h5}}>Km</Text>
                               </AppText>
                           }
                       </View>
@@ -246,14 +261,14 @@ const HomeScreen = ({navigation}) => {
                   </View>
                 </View>
              </ImageBackground>
-              {/* <TouchableOpacity style={[styles.temperature_reload,{backgroundColor: themeColor.ext_primary,}]} onPress={getCurrentWeather}>
-                <Ionicons name="reload-sharp" size={30} color={themeColor.fourth} />
+              {/* <TouchableOpacity style={[styles.temperature_reload,{backgroundColor: theme.ext_primary,}]} onPress={getCurrentWeather}>
+                <Ionicons name="reload-sharp" size={30} color={theme.fourth} />
               </TouchableOpacity> */}
             </View>
         }
 
         {/* Place and Blog*/}
-        <View style={[{backgroundColor: themeColor.bg_second}]}>
+        <View style={[{backgroundColor: theme.bg_second}]}>
           <TouchableOpacity style={styles.category_header} onPress={()=>navigation.navigate("ExploreNavigator")}>
             <AppText style={styles.category_name}>{langData.title_place[langCode]}</AppText>
             <AppText><Entypo name="chevron-small-right" size={40}/></AppText>
@@ -263,11 +278,11 @@ const HomeScreen = ({navigation}) => {
             labels={PLACE_QUALITIES[langCode].labels}
             callBack={setTypePlace}
             scrollStyle={[app_sp.mb_12, app_sp.ps_18]}
-            containerStyle={[{backgroundColor: themeColor.bg_second}, app_sp.pv_10]}
+            containerStyle={[{backgroundColor: theme.bg_second}, app_sp.pv_10]}
           />
           <ScrollView 
             horizontal={true}
-            style={[{backgroundColor:themeColor.bg_second}]}
+            style={[{backgroundColor:theme.bg_second}]}
             contentContainerStyle={[{flexGrow: 1}, app_sp.pb_10]}
             showsHorizontalScrollIndicator={false}
           >
@@ -286,7 +301,7 @@ const HomeScreen = ({navigation}) => {
             }
           </ScrollView>
         </View>
-        <View style={[{backgroundColor: themeColor.bg_second}]}>
+        <View style={{}}>
           <TouchableOpacity style={styles.category_header} onPress={()=>navigation.navigate("BlogsNavigator")}>
             <AppText style={styles.category_name}>{langData.title_Blog[langCode]}</AppText>
             <AppText><Entypo name="chevron-small-right" size={40}/></AppText>
@@ -296,11 +311,10 @@ const HomeScreen = ({navigation}) => {
             labels={BLOG_QUANLITIES[langCode].labels}
             callBack={setTypeBlog}
             scrollStyle={[app_sp.mb_12, app_sp.ps_18]}
-            containerStyle={[{backgroundColor: themeColor.primary}, app_sp.pv_10]}
+            containerStyle={app_sp.pv_10}
           />
           <ScrollView
             horizontal={true}
-            style={[{backgroundColor:themeColor.primary}]}
             contentContainerStyle={[{flexGrow: 1}, app_sp.pb_10]}
             showsHorizontalScrollIndicator={false}
           >
@@ -321,4 +335,4 @@ const HomeScreen = ({navigation}) => {
   )
 }
 
-export default HomeScreen
+export default withTheme(HomeScreen)

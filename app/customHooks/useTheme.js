@@ -12,12 +12,12 @@ import {
  */
 export function useTheme() {
   const theme = useSelector(currentThemeSelector);
+  const themeMode = useSelector(themeNameSelector);
   const dispatch = useDispatch();
 
   return {
     theme,
+    themeMode,
     toggleTheme: function() { return dispatch(toggleThemeState()) }
   }
 }
-
-const { theme } = useTheme();
