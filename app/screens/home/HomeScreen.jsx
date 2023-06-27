@@ -128,11 +128,15 @@ const HomeScreen = ({navigation}) => {
   }, [typePlace])
 
   React.useEffect(() => {
-    let blogQuery = `limit=5&skip=0&filter=quality:${typeBlog}&fields=${BRIEF_BLOG_DATA_FIELDS}`
-
-    getBlogsAPI(blogQuery)
-      .then(data => {
-        setBlogs(data)
+    let query = {
+      limit: 5,
+      skip: 0,
+      filter: `quality:${typeBlog}`,
+      fields: BRIEF_BLOG_DATA_FIELDS
+    }
+    getBlogsAPI(query)
+      .then(response => {
+        setBlogs(response.data)
       })
   }, [typeBlog]);
 

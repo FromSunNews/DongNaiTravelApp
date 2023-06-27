@@ -1058,7 +1058,6 @@ const handleMarkerPress = (mapEventData) => {
       </View>
     );
   } else if (action ==='input.direction-a-to-b') {
-    
     return (
       <View style={{
         height: 400,
