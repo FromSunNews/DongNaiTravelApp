@@ -1,20 +1,23 @@
-import { useSelector } from "react-redux";
-import { selectCurrentMode } from "redux/theme/ThemeSlice";
+import { useSelector, useDispatch } from "react-redux";
+import {
+	themeNameSelector,
+  themeSelector,
+  currentThemeSelector,
+  toggleThemeState
+} from "redux/theme/ThemeSlice";
 
+/**
+ * Hook này trả về `theme` và `toggleTheme`
+ * @returns 
+ */
+export function useTheme() {
+  const theme = useSelector(currentThemeSelector);
+  const dispatch = useDispatch();
 
-const useTheme = () => {
-	 //lay ra mode hien tai :{mode: light || dark}
-	const mode = useSelector(selectCurrentMode).mode 	
-	//lay css tra ve tu store
-	const styles = useSelector((state) => state.theme.styles)
-	const getStyle = () => {
-		return {
-			themeColor: styles[mode],
-			themeMode: mode
-		} //tra ve css: styles[light || dark]
-	}
-	
-	return getStyle();
+  return {
+    theme,
+    toggleTheme: function() { return dispatch(toggleThemeState()) }
+  }
 }
 
-export default useTheme;
+const { theme } = useTheme();
