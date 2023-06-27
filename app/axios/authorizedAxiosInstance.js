@@ -21,7 +21,7 @@ authorizedAxiosInstance.defaults.timeout = 1000 * 60
 // Phuong: Can thiệp vào giữa request gửi đi
 authorizedAxiosInstance.interceptors.request.use(function (config) {
   // Phuong: Do something before request is sent
-  console.log("Access token: ", injectedStore.getState().user.currentUser.accessToken);
+  // console.log("Access token: ", injectedStore.getState().user.currentUser.accessToken);
   // config.data.accessToken = injectedStore.getState().user.currentUser.accessToken;
   return config
 }, function (error) {
