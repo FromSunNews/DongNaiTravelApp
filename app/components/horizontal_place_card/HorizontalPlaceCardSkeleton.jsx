@@ -22,15 +22,15 @@ const HorizontalPlaceCardSkeleton = () => {
       <View style={{...styles.card_image_container, ...app_sp.me_12,backgroundColor: theme.subOutline}}>
       </View>
       {/* Cột thứ 2 - Main Container */}
-      <View style={[styles.card_main_container,{backgroundColor: theme.subOutline}]}>
-        <View style={[styles.card_content_container,{backgroundColor: theme.subOutline}]}>
+      <View style={styles.card_main_container}>
+        <View style={styles.card_content_container}>
           <View style={{...styles.car_skeleton_rectangle, ...app_sp.mb_12, backgroundColor: theme.subOutline, height: 7}}>
           </View>
-          <View style={{backgroundColor: theme.subOutline}}>
+          <View>
             <View style={{...styles.car_skeleton_rectangle, height: 18, ...app_sp.mb_6, backgroundColor: theme.subOutline}}></View>
             <View style={{...styles.car_skeleton_rectangle, height: 12, ...app_sp.mb_6,backgroundColor: theme.subOutline}}></View>
           </View>
-          <View style={[styles.card_information_container,{backgroundColor: theme.subOutline}]}>
+          <View style={styles.card_information_container}>
             <View style={{...styles.card_information_col, ...app_sp.me_12}}>
               <View style={{...styles.car_skeleton_rectangle, height: 12, ...app_sp.mb_6,backgroundColor: theme.subOutline}}></View>
               <View style={{...styles.car_skeleton_rectangle, height: 12, ...app_sp.mb_6,backgroundColor: theme.subOutline}}></View>
@@ -42,18 +42,13 @@ const HorizontalPlaceCardSkeleton = () => {
         </View>
         <View style={styles.card_buttons_container}>
           <CircleButton
-            style={app_sp.me_8}
+            style={[app_sp.me_8, { backgroundColor: theme.subOutline }]}
             typeOfButton="highlight"
           />
           <CircleButton
-            style={app_sp.me_8}
+            style={[app_sp.me_8, { backgroundColor: theme.subOutline }]}
             typeOfButton="highlight"
           />
-          <RectangleButton
-            typeOfButton="highlight"
-            overrideShape="capsule"
-          >
-          </RectangleButton>
         </View>
       </View>
 

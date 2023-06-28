@@ -34,8 +34,8 @@ const default_style = {
  * @property {boolean} [isOnlyContent=false] Nút có padding hay background hay không? Và chỉ có content hay không?
  * @property {number} border Viền cho nút.
  * @property {'none' | 'opacity' | 'highlight'} [typeOfButton=none] Loại nút.
- * @property {'type_1' | 'type_2' | 'type_3' | 'type_4'} [defaultColor=type_1] Màu nút bình thường (mặc định).
- * @property {'type_1' | 'type_2' | 'type_3' | 'type_4'} [activeColor=type_1] Màu nút khi khi được focus (active).
+ * @property {'type_1' | 'type_2' | 'type_3' | 'type_4' | 'type_5' | 'type_6' | 'type_7'} [defaultColor=type_1] Màu nút bình thường (mặc định).
+ * @property {'type_1' | 'type_2' | 'type_3' | 'type_4' | 'type_5' | 'type_6' | 'type_7'} activeColor Màu nút khi khi được focus (active).
  * @property {'type_1' | 'type_2' | 'type_3'} [boxShadowType=] Đổ bóng cho button theo loại, xem thêm trong `box-shadow.js`.
  */
 
@@ -56,6 +56,7 @@ const CircleButton = ({
   activeColor,
   boxShadowType = "",
   setIcon,
+  border,
   ...props
 }) => {
   const isSetIconFunction = typeof setIcon === 'function' && React.isValidElement(setIcon());
@@ -71,7 +72,11 @@ const CircleButton = ({
   }
   let contentContainerStyle = {
     ...default_style,
-    ...btnColorStyle
+    ...btnColorStyle,
+    ...(border && {
+      borderWidth: border,
+      borderColor: isActive ? colors.active[activeColor].lbl : colors.inactive[defaultColor].lbl
+    })
   };
   
   let currentLabelStyle = lblColorStyle;

@@ -169,6 +169,8 @@ const TypeScrollView = ({
                   buttonStyle !== "underline"
                   ? (
                     <RectangleButton
+                      defaultColor='type_5'
+                      activeColor='type_1'
                       isActive={currenttypeIndex === index}
                       overrideShape={buttonStyle}
                       key={slideName + 'button'}

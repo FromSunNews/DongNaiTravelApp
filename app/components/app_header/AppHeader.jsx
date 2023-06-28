@@ -96,7 +96,7 @@ const AppHeader = ({
   )
   const headerStyle = {
     ...styles.container,
-    ...app_shdw[boxShadow],
+    ...app_shdw.type_1,
     backgroundColor: theme.background,
     ...(transparent ?  { backgroundColor: `rgba(${255, 255, 255}, 0)` } : {} )
   }
@@ -165,13 +165,10 @@ const AppHeader = ({
           title === langData.home[langCode] && (
             <View style={{paddingLeft:10}}>
               <CircleButton
-                defaultColor="type_2"
-                boxShadowType="type_1"
+                defaultColor='type_4'
                 typeOfButton="opacity"
                 onPress={() => navigation.navigate('Notification')}
-                setIcon={(isActive, currentLabelStyle) => (
-                  <Ionicons name="notifications-sharp" size={18} style={[currentLabelStyle, {color: numberOfVisited !== 0 ? '#FFC72C' : null}]} />
-                )}
+                setIcon={<Ionicons name="notifications-sharp" size={18} style={{color: numberOfVisited !== 0 ? '#FFC72C' : null}} />}
               />
               {
                 numberOfVisited > 0 &&

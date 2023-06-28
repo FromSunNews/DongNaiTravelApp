@@ -45,8 +45,6 @@ const styles = StyleSheet.create({
   card_buttons_container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    borderTopColor: app_c.HEX.ext_primary,
-    borderTopWidth: 1,
     ...app_sp.mt_12
   },
 

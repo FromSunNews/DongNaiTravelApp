@@ -21,29 +21,29 @@ const HorizontalBlogCardSkeleton = () => {
       </View>
 
       {/* Cột thứ 2 - Main Container */}
-      <View style={[styles.card_main_container,{backgroundColor: theme.subOutline}]}>
+      <View style={styles.card_main_container}>
         <View style={styles.card_content_container}>
-          <View style={{...styles.car_skeleton_rectangle, ...app_sp.mb_12, height: 7}}></View>
+          <View style={{...styles.car_skeleton_rectangle, ...app_sp.mb_12, height: 7, backgroundColor: theme.subOutline}}></View>
           <View>
             <View style={{...styles.car_skeleton_rectangle, height: 18, ...app_sp.mb_6, backgroundColor: theme.subOutline}}></View>
             <View style={{...styles.car_skeleton_rectangle, height: 18, ...app_sp.mb_6, backgroundColor: theme.subOutline}}></View>
           </View>
-          <View style={[styles.card_information_container,{backgroundColor: theme.subOutline}]}>
+          <View style={styles.card_information_container}>
             <View style={{...styles.card_information_col, ...app_sp.me_12}}>
-              <View style={{...styles.car_skeleton_rectangle, height: 12, ...app_sp.mb_6}}></View>
+              <View style={{...styles.car_skeleton_rectangle, height: 12, ...app_sp.mb_6, backgroundColor: theme.subOutline}}></View>
             </View>
             <View style={styles.card_information_col}>
-              <View style={{...styles.car_skeleton_rectangle, height: 12, ...app_sp.mb_6}}></View>
+              <View style={{...styles.car_skeleton_rectangle, height: 12, ...app_sp.mb_6, backgroundColor: theme.subOutline}}></View>
             </View>
           </View>
         </View>
         <View style={styles.card_buttons_container}>
           <CircleButton
-            style={app_sp.me_8}
+            style={[app_sp.me_8, { backgroundColor: theme.subOutline }]}
             isDisable={true}
           />
           <CircleButton
-            style={app_sp.me_8}
+            style={[app_sp.me_8, { backgroundColor: theme.subOutline }]}
             isDisable={true}
           />
         </View>

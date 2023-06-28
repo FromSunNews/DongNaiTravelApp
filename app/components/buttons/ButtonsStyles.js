@@ -40,6 +40,18 @@ export function getButtonColors(themeMode) {
       type_4: {
         lbl: themes[themeMode].background,
         btn: themes[themeMode].onBackground
+      },
+      type_5: {
+        lbl: themes[themeMode].subBackground,
+        btn: themes[themeMode].onSubBackground
+      },
+      type_6: {
+        lbl: themes[themeMode].outline,
+        btn: themes[themeMode].onOutline
+      },
+      type_7: {
+        lbl: themes[themeMode].subOutline,
+        btn: themes[themeMode].onSubOutline
       }
     },
     inactive: {
@@ -58,6 +70,18 @@ export function getButtonColors(themeMode) {
       type_4: {
         lbl: themes[themeMode].onBackground,
         btn: themes[themeMode].background
+      },
+      type_5: {
+        lbl: themes[themeMode].onSubBackground,
+        btn: themes[themeMode].subBackground
+      },
+      type_6: {
+        lbl: themes[themeMode].onOutline,
+        btn: themes[themeMode].outline
+      },
+      type_7: {
+        lbl: themes[themeMode].onSubOutline,
+        btn: themes[themeMode].subOutline
       }
     }
   }

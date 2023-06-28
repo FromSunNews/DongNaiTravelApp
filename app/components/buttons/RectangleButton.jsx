@@ -37,8 +37,8 @@ const default_style = {
  * @property {'none' | 'opacity' | 'highlight'} [typeOfButton=none] Loại nút.
  * @property {number} border Viền cho nút.
  * @property {'none' | 'capsule' | 'rounded_3' | 'rounded_4' | 'rounded_6' | 'rounded_8' | 'rounded_12' | 'rounded_16'} [overrideShape=none] Hình dáng của nút, shape mặc định là hình chữ nhật.
- * @property {'type_1' | 'type_2' | 'type_3' | 'type_4'} [defaultColor=type_1] Màu nút bình thường (mặc định).
- * @property {'type_1' | 'type_2' | 'type_3' | 'type_4'} [activeColor=type_1] Màu nút khi khi được focus (active).
+ * @property {'type_1' | 'type_2' | 'type_3' | 'type_4' | 'type_5' | 'type_6' | 'type_7'} [defaultColor=type_1] Màu nút bình thường (mặc định).
+ * @property {'type_1' | 'type_2' | 'type_3' | 'type_4' | 'type_5' | 'type_6' | 'type_7'} activeColor Màu nút khi khi được focus (active).
  * @property {'type_1' | 'type_2' | 'type_3'} [boxShadowType=] Đổ bóng cho button theo loại, xem thêm trong `box-shadow.js`.
  */
 
@@ -79,9 +79,12 @@ const RectangleButton = ({
   let contentContainerStyle = {
     ...default_style,
     ...shape,
-    ...btnColorStyle
+    ...btnColorStyle,
+    ...(border && {
+      borderWidth: border,
+      borderColor: isActive ? colors.active[activeColor].lbl : colors.inactive[defaultColor].lbl
+    })
   };
-
   let currentLabelStyle = lblColorStyle;
 
   if(isOnlyContent) {

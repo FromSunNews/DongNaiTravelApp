@@ -61,8 +61,6 @@ export function withTheme(WrappedComponent) {
   */
  return function(props) {
     const { theme, toggleTheme } = useTheme();
-    props.theme = theme;
-    props.toggleTheme = toggleTheme;
     return <WrappedComponent {...props} theme={theme} toggleTheme={toggleTheme} />
   }
 }

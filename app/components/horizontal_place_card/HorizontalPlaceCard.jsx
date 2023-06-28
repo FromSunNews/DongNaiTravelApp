@@ -120,20 +120,22 @@ const HorizontalPlaceCard = ({
         <View style={styles.card_buttons_container}>
           <CircleButton
             isActive={extendedPlaceInfo.isLiked}
+            border={1}
+            defaultColor='type_5'
+            activeColor='type_1'
             style={app_sp.me_8}
             typeOfButton="highlight"
             onPress={handleLikeButton}
-            setIcon={(isActive, currentLabelStyle) => (
-              <Ionicons name={isActive ? 'heart' : 'heart-outline'} size={14} style={currentLabelStyle} />
-            )}
+            setIcon={<Ionicons name={extendedPlaceInfo.isLiked ? 'heart' : 'heart-outline'} size={14} />}
           />
           <CircleButton
+            border={1}
+            defaultColor='type_5'
+            activeColor='type_1'
             style={app_sp.me_8}
             typeOfButton="highlight"
             onPress={() => navigation.navigate('MapScreen', { place_id: place.place_id })}
-            setIcon={(isActive, currentLabelStyle) => (
-              <Ionicons name={isActive ? 'map' : 'map-outline'} size={14} style={currentLabelStyle} />
-            )}
+            setIcon={<Ionicons name='map' size={14} />}
           />
         </View>
       </View>
@@ -142,9 +144,7 @@ const HorizontalPlaceCard = ({
       <View style={styles.card_share_container}>
         <CircleButton
           isOnlyContent={true}
-          setIcon={(isActive, currentLabelStyle) => (
-            <Ionicons name="share-outline" size={20} style={currentLabelStyle} />
-          )}
+          setIcon={<Ionicons name="share-outline" size={20} />}
           onPress={handleShareToSocial}
         />
       </View>

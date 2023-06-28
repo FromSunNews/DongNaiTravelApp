@@ -112,19 +112,21 @@ const HorizontalBlogCard = ({
         <View style={styles.card_buttons_container}>
           <CircleButton
             isActive={extendedBlogInfo.isLiked}
+            border={1}
+            defaultColor='type_5'
+            activeColor='type_1'
             style={app_sp.me_8}
             typeOfButton="highlight"
             onPress={handleLikeButton}
-            setIcon={(isActive, currentLabelStyle) => (
-              <Ionicons name={isActive ? 'heart' : 'heart-outline'} size={14} style={currentLabelStyle} />
-            )}
+            setIcon={<Ionicons name={extendedBlogInfo.isLiked ? 'heart' : 'heart-outline'} size={14} />}
           />
           <CircleButton
+            border={1}
+            defaultColor='type_5'
+            activeColor='type_1'
             style={app_sp.me_8}
             typeOfButton="highlight"
-            setIcon={(isActive, currentLabelStyle) => (
-              <Ionicons name={isActive ? 'flag' : 'flag-outline'} size={14} style={currentLabelStyle} />
-            )}
+            setIcon={<Ionicons name='flag' size={14} />}
           />
         </View>
       </View>
@@ -133,9 +135,7 @@ const HorizontalBlogCard = ({
       <View style={styles.card_share_container}>
         <CircleButton
           isOnlyContent={true}
-          setIcon={(isActive, currentLabelStyle) => (
-            <Ionicons name="share-outline" size={20} style={currentLabelStyle} />
-          )}
+          setIcon={<Ionicons name="share-outline" size={20} />}
           onPress={handleShareToSocial}
         />
       </View>

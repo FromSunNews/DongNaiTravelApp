@@ -1,4 +1,4 @@
-import { View } from 'react-native'
+import { View, ScrollView } from 'react-native'
 import React from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
@@ -8,7 +8,12 @@ import { withTheme } from 'hocs/withTheme'
 import {
   AppText,
   AppHeader,
-  RectangleButton
+  RectangleButton,
+  CircleButton,
+  HorizontalBlogCardSkeleton,
+  HorizontalPlaceCardSkeleton,
+  VerticalBlogCardSkeleton,
+  VerticalPlaceCardSkeleton
 } from 'components'
 
 const TestStack = createNativeStackNavigator()
@@ -20,12 +25,16 @@ const TestScreen = withTheme(({
   toggleTheme
 }) => {
   return (
-    <View style={{
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: theme.background,
-    }}>
+    <ScrollView
+      style={{
+        flex: 1,
+        backgroundColor: theme.background,
+      }}
+      contentContainerStyle={{
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
       <View style={{width: '100%'}}>
         <AppText>Đây là text gốc</AppText>
         <AppText color='primary'>Đây là một màu khác nữa.</AppText>
@@ -48,7 +57,13 @@ const TestScreen = withTheme(({
       >
         <Ionicons name='heart' /> Change theme
       </RectangleButton>
-    </View>
+      <CircleButton
+        border={1}
+        defaultColor='type_4'
+        activeColor='type_1'
+        setIcon={<Ionicons name='heart' />}
+      />
+    </ScrollView>
   )
 })
 
