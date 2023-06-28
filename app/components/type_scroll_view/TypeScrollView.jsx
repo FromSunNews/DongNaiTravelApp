@@ -11,15 +11,15 @@ import RectangleButton from '../buttons/RectangleButton'
 import styles from './TypeScrollViewStyle'
 import { app_sp ,app_shdw } from 'globals/styles'
 
-import { ViewStyles } from 'types/index.d'
+import { ViewStyleProps } from 'types/index.d.ts'
 import { useSelector } from 'react-redux'
 
 /**
  * @typedef TypeScrollViewProps
  * @property {number} lineIndexTranslateXStart (Only use with `buttonStyle="underline"`) vị trí bắt đầu của underline để translate.
  * @property {string} types Là một chuỗi bao gồm các loại của một data nào đó mà các loại này đươc ngăn cách bởi dấu `;`.
- * @property {ViewStyles} scrollStyle Là style của scroll view.
- * @property {ViewStyles} containerStyle Là style của scroll view container.
+ * @property {ViewStyleProps} scrollStyle Là style của scroll view.
+ * @property {ViewStyleProps} containerStyle Là style của scroll view container.
  * @property {"capsule" | "rounded_3" | "rounded_4" | "rounded_6" | "rounded_8" | "rounded_12" | "rounded_16" | "underline"} buttonStyle Là style cho các button.
  * @property {(type: string, typeIndex: number) => void} callBack Là một callBack nhận vào 2 tham số là `type` vừa ấn và index của type đó `typeIndex`.
  */

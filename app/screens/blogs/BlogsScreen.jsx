@@ -23,7 +23,6 @@ import { useNavigation } from '@react-navigation/native'
 import {
   useBriefBlogs
 } from 'customHooks/useBlog'
-import useTheme from 'customHooks/useTheme'
 
 import {
   BRIEF_BLOG_DATA_FIELDS,
@@ -35,6 +34,7 @@ import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
+import { withTheme } from 'hocs/withTheme'
 import {
   TypeScrollView,
   HorizontalBlogCard,
@@ -86,12 +86,13 @@ const UploadBlogProgress = ({
   )
 }
 
-const BlogsScreen = ({route}) => {
+const BlogsScreen = withTheme(({
+  route,
+  theme
+}) => {
   //language
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.blogsScreen
-  //theme
-  const { themeColor, themeMode } = useTheme();
 
   // Mỗi lần upload lên 100kb
   /*
@@ -294,7 +295,7 @@ const BlogsScreen = ({route}) => {
   }, [uploadInfo.startUpload, route.params]);
 
   return (
-    <View style={{backgroundColor: themeColor.bg_second}}>
+    <View style={{backgroundColor: theme.background}}>
       {
         uploadInfo.isBlogUploading && (
           <UploadBlogProgress
@@ -311,19 +312,18 @@ const BlogsScreen = ({route}) => {
               app_sp.ph_18,
               app_sp.mt_12,
               {
-                backgroundColor: themeColor.bg_second,
+                backgroundColor: theme.background,
                 position: 'relative',
                 zIndex: 2,
               }
             ]}
           >
             <BannerButton
-              defaultColor ={ themeMode === 'light' ? 'type_3' : 'type_1_dark'}
               typeOfButton="highlight"
-              style={[app_sp.mt_12, {backgroundColor: themeColor.bg_second}]}
+              style={app_sp.mt_12}
               toScreen={{screenName: "MapScreen"}}
               setRightIcon={(isActive, currentLabelStyle) =>
-                <Ionicons name="chevron-forward-outline" style={currentLabelStyle} size={25}color={themeColor.ext_third} />
+                <Ionicons name="chevron-forward-outline" style={currentLabelStyle} size={25} />
               }
             >
               {langData.banner_button[langCode]}
@@ -333,7 +333,7 @@ const BlogsScreen = ({route}) => {
       }
       <FlatList
         data={blogs ? blogs.data : []}
-        style={[styles.scroll_view_container,{backgroundColor: themeColor.bg_second}]}
+        style={[styles.scroll_view_container,{backgroundColor: theme.background}]}
         contentContainerStyle={{paddingBottom: 200}}
         onMomentumScrollEnd={handleExploreMomentumScrollEnd}
         onEndReached={handleEndReach}
@@ -355,7 +355,7 @@ const BlogsScreen = ({route}) => {
             labels={BLOG_QUANLITIES[langCode].labels}
             callBack={setType}
             scrollStyle={[app_sp.ms_18, app_sp.pv_12]}
-            containerStyle={{backgroundColor: themeColor.bg_second, ...app_sp.pv_10}}
+            containerStyle={{backgroundColor: theme.background, ...app_sp.pv_10}}
           />
         }
         renderItem={item => {return <View style={app_sp.ph_18}><HorizontalBlogCard blog={item.item} typeOfBriefBlog={type} /></View>}}
@@ -365,6 +365,6 @@ const BlogsScreen = ({route}) => {
       />
     </View>
   )
-}
+})
 
 export default BlogsScreen

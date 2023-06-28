@@ -59,14 +59,10 @@ import HomeBannerSlider from "components/home_banner_slider/HomeBannerSlider"
 import styles from "./HomeScreenStyles"
 import { app_c, app_sp, app_typo } from "globals/styles"
 
-import { WithThemeWrappedComponentProps } from "hocs/withTheme"
-
 /**
- * 
- * @param {WithThemeWrappedComponentProps} props 
  * @returns 
  */
-const HomeScreen = ({
+const HomeScreen = withTheme(({
   navigation,
   theme,
   toggleTheme
@@ -131,24 +127,23 @@ const HomeScreen = ({
   },[currentMap.userLocation])
 
   useEffect(() => {
-    let query = {
-      limit: 5,
-      skip: 0,
-      filter: `quality:${typePlace}`,
-      fields: BRIEF_PLACE_DATA_FIELDS
-    };
+    let query = `limit=5&skip=0&filter=quality:${typePlace}&fields=${BRIEF_PLACE_DATA_FIELDS}`;
     getPlacesAPI(query)
-      .then(response => {
-        setPlaces(response.data)
+      .then(data => {
+        setPlaces(data)
       })
   }, [typePlace])
 
   React.useEffect(() => {
-    let blogQuery = `limit=5&skip=0&filter=quality:${typeBlog}&fields=${BRIEF_BLOG_DATA_FIELDS}`
-
-    getBlogsAPI(blogQuery)
-      .then(data => {
-        setBlogs(data)
+    let query = {
+      limit: 5,
+      skip: 0,
+      filter: `quality:${typeBlog}`,
+      fields: BRIEF_BLOG_DATA_FIELDS
+    };
+    getBlogsAPI(query)
+      .then(response => {
+        setBlogs(response.data)
       })
   }, [typeBlog]);
 
@@ -333,6 +328,6 @@ const HomeScreen = ({
       </View>
     </ScrollView>
   )
-}
+})
 
-export default withTheme(HomeScreen)
+export default HomeScreen

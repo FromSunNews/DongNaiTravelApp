@@ -75,7 +75,7 @@ const VerticalBlogCard = ({
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.homeScreen
   //theme
-  const { theme } = useTheme();
+  const { theme, themeMode } = useTheme();
 
   let displayAuthorName = blog.author.lastName && blog.author.firstName
     ? blog.author.lastName + " " + blog.author.firstName
@@ -90,7 +90,7 @@ const VerticalBlogCard = ({
         overrideShape="rounded_4"
         onPress={handlePressImageButton}
       >
-        <Image source={{ uri: blog.avatar ? blog.avatar : undefined }} style={[styles.card_image]} />
+        <Image source={{ uri: blog.avatar ? blog.avatar : undefined }} style={[styles.card_image, { backgroundColor: theme.subOutline }]} />
       </RectangleButton>
       {/* Button & Recommended tag */}
       <View style={styles.card_mid}>
@@ -149,7 +149,7 @@ const VerticalBlogCard = ({
         </RectangleButton>
       </View>
     </View>
-  ), [extendedBlogInfo.isLiked, blog.userCommentsTotal, blog.userFavoritesTotal]);
+  ), [extendedBlogInfo.isLiked, blog.userCommentsTotal, blog.userFavoritesTotal, themeMode]);
 }
 
 export default withBlogCard(VerticalBlogCard)

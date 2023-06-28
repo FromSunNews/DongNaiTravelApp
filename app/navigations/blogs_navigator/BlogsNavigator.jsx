@@ -29,8 +29,6 @@ const BlogsNavigator = ({ route, navigation }) => {
     }
   }, [screen]);
 
-  const themeMode = useSelector(selectCurrentMode).mode //get mode theme
-
   return (
     <BlogsStack.Navigator
       initialRouteName="BlogsScreen"
@@ -48,8 +46,6 @@ const BlogsNavigator = ({ route, navigation }) => {
                   overrideShape='capsule'
                   typeOfButton='highlight'
                   onPress={() => { navigation.navigate("BlogEditorNavigator", { screen: 'BlogEditorScreen' }) }}
-                  defaultColor= {themeMode === 'light' ? 'type_3' : 'type_1_dark'}
-                  activeColor='type_2'
                 >
                   <AppText>{langCode === 'vi' ? 'Tạo bài viết' : 'Create blog'}</AppText>
                 </RectangleButton>

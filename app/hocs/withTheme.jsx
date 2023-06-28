@@ -12,7 +12,7 @@ import { useTheme } from "customHooks/useTheme"
  * 2 props ở trong `props`:
  * - `theme`: là object chứa màu của app.
  * - `toggleTheme`: là object chuyển theme.
- * @param {() => JSX.Element} WrappedComponent 
+ * @param {(props: WithThemeWrappedComponentProps) => JSX.Element} WrappedComponent 
  * @returns 
  * 
  * @examples
@@ -36,6 +36,23 @@ import { useTheme } from "customHooks/useTheme"
  * // Dùng withTheme và export như này mới dùng được theme và toggleTheme
  * // được truyền từ withTheme
  * export default withTheme(MyComponent)
+ * 
+ * // OR
+ * // Recommend cách này hơn
+ * const MyScreen = withTheme(({
+ *   route,
+ *   theme,
+ *   toggleTheme
+ * }) => {
+ *   return (
+ *      <View style={{backgroundColor: props.theme.subBackground}}>
+ *        <Text style={{backgroundColor: props.theme.onSubBackground}}>Test theme</Text>
+ *        <Button title="Toggle Theme" onPress={() => { props.toggleTheme() }} />
+ *      </View>
+ *    )
+ * })
+ * 
+ * export default MyScreen
  * ```
  */
 export function withTheme(WrappedComponent) {

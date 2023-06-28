@@ -8,14 +8,14 @@ import {
   StyleSheet,
 } from "react-native";
 import React from "react";
-
 import { useNavigation } from "@react-navigation/native";
+
+import { useTheme } from "customHooks/useTheme";
 
 import AppText from "../app_text/AppText";
 
 import styles from "./ButtonsStyles";
 import { app_sp, app_sh, app_c } from "globals/styles";
-import useTheme from "customHooks/useTheme";
 
 const default_style = {
   width: "100%",
@@ -93,7 +93,7 @@ const BannerButton = ({
     typeof setRightIcon === "function" && React.isValidElement(setRightIcon());
 
   //theme
-  const { themeColor } = useTheme();
+  const { theme } = useTheme();
 
   if (isDisable) {
     return (
@@ -109,15 +109,13 @@ const BannerButton = ({
           <View style={banner_button_styles.lbl_container}>
             {canLoadLeftIcon &&
               setLeftIcon((isActive = false), [
-                styles.lbl_disable,
-                { color: themeColor.ext_third },
+                styles.lbl_disable
               ])}
             {canLoadLeftIcon ? (
               <AppText
                 font={fontOfText}
                 style={{
                   ...styles.lbl_disable,
-                  color: themeColor.ext_third,
                   ...app_sp.ms_8,
                 }}
                 numberOfLines={2}
@@ -127,7 +125,7 @@ const BannerButton = ({
             ) : (
               <AppText
                 font={fontOfText}
-                style={[styles.lbl_disable, { color: themeColor.ext_third }]}
+                style={[styles.lbl_disable]}
                 numberOfLines={2}
               >
                 {children}
@@ -136,8 +134,7 @@ const BannerButton = ({
           </View>
           {canLoadRightIcon &&
             setRightIcon((isActive = false), [
-              styles.lbl_disable,
-              { color: themeColor.ext_third },
+              styles.lbl_disable
             ])}
         </ImageBackground>
       </TouchableOpacity>
@@ -152,10 +149,10 @@ const BannerButton = ({
   });
   let currentLabelStyle = (currentLabelStyle =
     styles[`lbl_default_${defaultColor}`]);
-  console.log(
-    "🚀 ~ file: BannerButton.jsx:122 ~ currentButtonStyle:",
-    currentButtonStyle
-  );
+  // console.log(
+  //   "🚀 ~ file: BannerButton.jsx:122 ~ currentButtonStyle:",
+  //   currentButtonStyle
+  // );
 
   if (isChangeColorWhenActive) {
     currentButtonStyle = {
@@ -204,7 +201,7 @@ const BannerButton = ({
   if (typeOfButton === "highlight") {
     ButtonComponent = TouchableHighlight;
     ButtonComponentProps = {
-      underlayColor: themeColor.ext_third,
+      // underlayColor: themeColor.ext_third,
       style: currentButtonStyle,
     };
   }

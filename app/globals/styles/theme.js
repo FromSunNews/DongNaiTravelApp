@@ -23,7 +23,7 @@ export const themes = {
     onSecondary: '#FFFFFF',
     tertiary: '#769FCD',
     onTertiary: '#F6F6F6',
-    background: '#ECF0F5',
+    background: '#ECF1F6',
     onBackground: '#0B1015',
     subBackground: '#FAFAFA',
     onSubBackground: '#1A2229',
