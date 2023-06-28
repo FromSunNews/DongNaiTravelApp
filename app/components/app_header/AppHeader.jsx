@@ -137,7 +137,7 @@ const AppHeader = ({
           canSetCenterPart
           ? setCenterPart()
           : (
-              <AppText weight="lighter" font="h5" style={{textAlign: 'center'}} color = 'fourth' >{title}</AppText>
+              <AppText weight="lighter" font="h5" style={{textAlign: 'center'}}>{title}</AppText>
             )
         }
       </View>
@@ -151,12 +151,9 @@ const AppHeader = ({
           (
             <>
               <CircleButton
-                defaultColor="type_2"
-                boxShadowType="type_1"
+                defaultColor='type_4'
                 typeOfButton="opacity"
-                setIcon={(isActive, currentLabelStyle) => (
-                  <Ionicons name="search-outline" size={18} style={currentLabelStyle} />
-                )}
+                setIcon={<Ionicons name="search-outline" size={18} />}
                 onPress={() => {
                   navigation.push("GlobalNavigator", { screen: "SearchScreen" });
                 }}

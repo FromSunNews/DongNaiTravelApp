@@ -9,10 +9,13 @@ import {
 } from 'react-native'
 import React from 'react'
 
+import { useTheme } from 'customHooks/useTheme'
+
 import ComponentUtility from 'utilities/component'
 
-import styles from './ButtonsStyles'
+import styles, { getButtonColors } from './ButtonsStyles'
 import { app_shdw, app_sh, app_sp, app_c } from 'globals/styles'
+import AppText from 'components/app_text/AppText'
 
 const default_style = {
   justifyContent: 'center',
@@ -29,10 +32,11 @@ const default_style = {
  * @property {boolean} [isActive=false] Nút có được ấn hay chưa?
  * @property {boolean} [isTransparent=false] Nút có background color hay không?
  * @property {boolean} [isOnlyContent=false] Nút có padding hay background hay không? Và chỉ có content hay không?
+ * @property {number} border Viền cho nút.
  * @property {'none' | 'opacity' | 'highlight'} [typeOfButton=none] Loại nút.
- * @property {'type_1' | 'type_2' | 'type_3' | 'type_4' | 'type_5'} [defaultColor=type_1] Màu nút bình thường (mặc định).
- * @property {'type_1' | 'type_2'} [activeColor=type_1] Màu nút khi khi được focus (active).
- * @property {'type_1' | 'type_2' | 'type_3' | 'type_4' | 'type_5'} [boxShadowType=] Đổ bóng cho button theo loại, xem thêm trong `box-shadow.js`.
+ * @property {'type_1' | 'type_2' | 'type_3' | 'type_4'} [defaultColor=type_1] Màu nút bình thường (mặc định).
+ * @property {'type_1' | 'type_2' | 'type_3' | 'type_4'} [activeColor=type_1] Màu nút khi khi được focus (active).
+ * @property {'type_1' | 'type_2' | 'type_3'} [boxShadowType=] Đổ bóng cho button theo loại, xem thêm trong `box-shadow.js`.
  */
 
 /**
@@ -49,24 +53,28 @@ const CircleButton = ({
   isOnlyContent = false,
   typeOfButton = "none",
   defaultColor = "type_1",
-  activeColor = "type_1",
+  activeColor,
   boxShadowType = "",
   setIcon,
   ...props
 }) => {
-  let canSetIcon = typeof setIcon === 'function' && React.isValidElement(setIcon());
+  const isSetIconFunction = typeof setIcon === 'function' && React.isValidElement(setIcon());
+  const isSetIconElement = React.isValidElement(setIcon);
+  const { theme, themeMode } = useTheme();
+  const Button = ComponentUtility.getTouchable(typeOfButton);
 
-  let Button = ComponentUtility.getTouchable(typeOfButton);
-  
+  let colors = React.useMemo(() => getButtonColors(themeMode), [themeMode]);
+  activeColor = activeColor ? activeColor : defaultColor;
+  let { btnColorStyle, lblColorStyle } = {
+    btnColorStyle: { backgroundColor: isActive ? colors.active[activeColor].btn : colors.inactive[defaultColor].btn },
+    lblColorStyle: { color: isActive ? colors.active[activeColor].lbl : colors.inactive[defaultColor].lbl }
+  }
   let contentContainerStyle = {
     ...default_style,
-    ...(
-      isActive
-      ? styles[`btn_active_${activeColor}`]
-      : styles[`btn_default_${defaultColor}`]
-  )};
-
-  let currentLabelStyle = isActive ? styles[`lbl_active_${activeColor}`] : styles[`lbl_default_${defaultColor}`];
+    ...btnColorStyle
+  };
+  
+  let currentLabelStyle = lblColorStyle;
 
   if(isOnlyContent) {
     contentContainerStyle = {};
@@ -96,7 +104,11 @@ const CircleButton = ({
       style={typeOfButton === "none" ? {} : contentContainerStyle}
     >
       <View style={typeOfButton === "none" ? contentContainerStyle : {}}>
-        {canSetIcon && setIcon(isActive, currentLabelStyle)}
+        {
+          isSetIconFunction
+            ? setIcon(isActive, currentLabelStyle)
+            : isSetIconElement && <AppText style={currentLabelStyle}>{setIcon}</AppText>
+        }
       </View>
     </Button>
   )

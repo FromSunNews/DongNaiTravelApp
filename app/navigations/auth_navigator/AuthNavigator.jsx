@@ -37,6 +37,7 @@ import {
 import ChatBotNavigator from 'navigations/chatbot_navigator/ChatBotNavigator'
 import OnboardingChatbot from 'screens/onaboarding_chatbot/OnboardingChatbot'
 import MapScreen from 'screens/map/MapScreen'
+import TestNavigator from 'navigations/test_navigator/TestNavigator'
 
 /**
  * AuthNavigator sẽ chịu trách nhiệm cho việc xác thực người dùng thông qua `SplashScreen`.
@@ -68,6 +69,11 @@ const AuthNavigator = ({navigation}) => {
       <AppStack.Screen 
         name="SplashScreen" 
         component={SplashScreen} 
+        options={{ headerShown: false }}
+      />
+      <AppStack.Screen
+        name="TestNavigator"
+        component={TestNavigator}
         options={{ headerShown: false }}
       />
 

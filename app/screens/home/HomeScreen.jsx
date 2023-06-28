@@ -140,13 +140,12 @@ const HomeScreen = withTheme(({
       skip: 0,
       filter: `quality:${typeBlog}`,
       fields: BRIEF_BLOG_DATA_FIELDS
-    };
+    }
     getBlogsAPI(query)
       .then(response => {
         setBlogs(response.data)
       })
   }, [typeBlog]);
-
   return (
     <ScrollView style={[styles.container,{backgroundColor: theme.background}]} showsVerticalScrollIndicator={false}>
       <View style={[styles.home_content,{}]}>

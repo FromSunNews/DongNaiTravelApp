@@ -63,17 +63,18 @@ const SplashScreen = () => {
 
   useEffect(() => {
     if (loaded) {
-      if (isFirstTimeLaunch)
-        navigation.replace('OnboardingScreen')
-      else {
-        if (isAuthenticated) {
-          navigation.replace('GroupBottomTab', {
-            isGetFullUserInfo: true
-          })
-        }
-        else 
-          navigation.replace('SigninScreen')
-      }
+      // if (isFirstTimeLaunch)
+      //   navigation.replace('OnboardingScreen')
+      // else {
+      //   if (isAuthenticated) {
+      //     navigation.replace('GroupBottomTab', {
+      //       isGetFullUserInfo: true
+      //     })
+      //   }
+      //   else 
+      //     navigation.replace('SigninScreen')
+      // }
+      navigation.replace('TestNavigator');
     }
   }, [loaded])
 
