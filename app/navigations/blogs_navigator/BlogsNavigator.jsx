@@ -43,6 +43,7 @@ const BlogsNavigator = ({ route, navigation }) => {
               {...props}
               setRightPart={() => (
                 <RectangleButton
+                  defaultColor="type_5"
                   overrideShape='capsule'
                   typeOfButton='highlight'
                   onPress={() => { navigation.navigate("BlogEditorNavigator", { screen: 'BlogEditorScreen' }) }}

@@ -111,7 +111,7 @@ const HorizontalPlaceCard = ({
               </AppText>
             </View>
             <View style={styles.card_information_col}>
-              <AppText font="body2" style={styles.card_text_color}>
+              <AppText font="body2">
                 <Ionicons name='heart-outline' /> {NumberUtility.toMetricNumber(place.user_favorites_total)}
               </AppText>
             </View>

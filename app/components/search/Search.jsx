@@ -10,7 +10,7 @@ import {
   getPlacesAPI
 } from 'apis/axios'
 
-import useTheme from 'customHooks/useTheme'
+import { useTheme } from 'customHooks/useTheme'
 
 import { useForm, Controller } from 'react-hook-form'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -21,7 +21,7 @@ import {
 } from 'components'
 
 import {
-  app_c, app_sh, app_sp
+  app_sh, app_sp
 } from 'globals/styles'
 
 import {
@@ -66,7 +66,7 @@ const Search = (props) => {
     apis: []
   }, props);
 
-  const theme = useTheme();
+  const { theme } = useTheme();
 
   const textInputRef = React.useRef(null);
 
@@ -83,7 +83,7 @@ const Search = (props) => {
       app_sp.pv_18,
       {
         position: 'relative',
-        borderColor: app_c.HEX.ext_third,
+        borderColor: theme.outline,
         borderWidth: 1,
         flex: 1,
         zIndex: 10
@@ -92,7 +92,7 @@ const Search = (props) => {
       <Ionicons
         name='search-outline'
         style={app_sp.me_12}
-        color={app_c.HEX.ext_third}
+        color={theme.outline}
         size={20}
       />
       <TextInput

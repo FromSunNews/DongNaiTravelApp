@@ -48,7 +48,6 @@ import { app_typo } from '../../globals/styles';
  * @param {object} props.navigation - Object navigation.
  * @param {object} props.route - Thông tin về Route.
  * @param {ExtendedOptions & NativeStackNavigationOptions} props.options - [Extend NativeStackNavigationOptions] Options của screen.
- * @param {'type_1' | 'type_2' | 'type_3' | 'type_4' | 'type_5'} props.options.boxShadowType - [Extend Property] Thông số chỉnh boxShadow cho header's background.
  * @param {() => JSX.Element} props.setLeftPart - Function cho phép custom phần bên trái của Header.
  * @param {() => JSX.Element} props.setCenterPart - Function cho phép custom phần giữa của Header.
  * @param {() => JSX.Element} props.setRightPart - Function cho phép custom phần phải trái của Header.
@@ -119,8 +118,7 @@ const AppHeader = ({
             canSetBackButton
             && (
               <CircleButton
-                defaultColor="type_2"
-                boxShadowType="type_1"
+                defaultColor='type_4'
                 typeOfButton="opacity"
                 onPress={() => navigation.goBack()}
                 setIcon={(isActive, currentLabelStyle) => (

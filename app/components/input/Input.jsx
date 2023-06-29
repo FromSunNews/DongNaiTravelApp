@@ -3,12 +3,29 @@ import React, { useEffect, useState } from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { FloatingLabelInput } from 'react-native-floating-label-input'
 
+import { useTheme } from 'customHooks/useTheme'
 
 import { app_c } from 'globals/styles'
 import { styles } from './InputStyles'
 
-const Input = ({ label, hint, isPassword, onChange, onBlur, value, error, containerStyle, rightComponent, handleShowSuggestTitle, handleHideSuggestTitle, isFromChatBot = false}) => {
+const Input = ({
+  label,
+  hint,
+  isPassword,
+  onChange,
+  onBlur,
+  value,
+  error,
+  containerStyle,
+  rightComponent,
+  handleShowSuggestTitle,
+  handleHideSuggestTitle,
+  isFromChatBot = false
+}) => {
   const [isFocused, setIsFocused] = useState(false)
+
+  const { theme } = useTheme();
+
   useEffect(() => {
     if (isFromChatBot) {
       if(!isFocused && value) {
@@ -32,20 +49,20 @@ const Input = ({ label, hint, isPassword, onChange, onBlur, value, error, contai
       onFocus={() => {
         setIsFocused(true)
       }}
-      labelStyles={styles.label}
+      labelStyles={[styles.label, { backgroundColor: theme.background }]}
       customLabelStyles={{
         topFocused: -25,
         fontSizeFocused: 12,
         leftBlurred: -2,
-        colorBlurred: error ? '#F32424' : (isFocused ? app_c.HEX.fourth : app_c.HEX.ext_third),
-        colorFocused: error ? '#F32424' : (isFocused ? app_c.HEX.fourth : app_c.HEX.ext_third)
+        colorBlurred: error ? '#F32424' : (isFocused ? theme.primary : theme.outline),
+        colorFocused: error ? '#F32424' : (isFocused ? theme.primary : theme.outline)
       }}
       containerStyles={[styles.container, {
-        borderColor: error ? '#F32424' : (isFocused ? app_c.HEX.fourth : app_c.HEX.ext_third),
+        borderColor: error ? '#F32424' : (isFocused ? theme.primary : theme.outline),
         borderWidth: isFocused ? 1.5 : 1,
         ...containerStyle
       }]}
-      inputStyles={styles.input}
+      inputStyles={[styles.input, { backgroundColor: theme.background, color: theme.onBackground }]}
       togglePassword={false}
       value={value}
       onChangeText={onChange}
@@ -53,7 +70,7 @@ const Input = ({ label, hint, isPassword, onChange, onBlur, value, error, contai
         <Icon 
           name='eye-slash' 
           size={16} 
-          color={isFocused ? app_c.HEX.fourth : app_c.HEX.ext_third}
+          color={isFocused ? theme.background : theme.outline}
           style={styles.icon}
         />
       }
@@ -61,7 +78,7 @@ const Input = ({ label, hint, isPassword, onChange, onBlur, value, error, contai
         <Icon 
           name='eye' 
           size={16} 
-          color={isFocused ? app_c.HEX.fourth : app_c.HEX.ext_third}
+          color={isFocused ? theme.background : theme.outline}
           style={styles.icon}
         />
       }

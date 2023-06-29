@@ -71,10 +71,11 @@ const Speech = ({
         <AppText font="h3" style={app_sp.mb_6}>Đọc/Dừng</AppText>
         <View style={{flex: 1, flexDirection: 'row'}}>
           <RectangleButton
+            isActive
             disabled={!canPlay}
             typeOfButton='opacity'
             onPress={playAudioAsync}
-            defaultColor='type_4'
+            defaultColor='type_1'
             style={[app_sp.me_6]}
             overrideShape='capsule'
           >
@@ -91,6 +92,7 @@ const Speech = ({
           <RectangleButton
             disabled={!canPlay}
             typeOfButton='opacity'
+            defaultColor='type_5'
             onPress={stopAudioAsync}
             overrideShape='capsule'
           >
@@ -122,6 +124,7 @@ const Speech = ({
             isActive={voice}
             disabled={!canPlay}
             typeOfButton='opacity'
+            defaultColor='type_5'
             onPress={() => setVoice(true)}
             overrideShape='capsule'
           >

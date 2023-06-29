@@ -13,6 +13,8 @@ import React from 'react'
 
 import { deleteBlogCommentAPI } from 'apis/axios/blog/delete'
 
+import { useTheme } from 'customHooks/useTheme'
+
 import DateTimeUtility from 'utilities/datetime'
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -20,7 +22,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import AppText from '../app_text/AppText'
 import CircleButton from '../buttons/CircleButton'
 import RectangleButton from '../buttons/RectangleButton'
-import { app_c, app_sp } from 'globals/styles'
+import { app_c, app_sp, app_shdw } from 'globals/styles'
 
 /**
  * @typedef CommentAuthorDataProps
@@ -65,6 +67,8 @@ const Comment = ({
 
   let { type, distance } = DateTimeUtility.getTimeDistance(comment.createdAt);
 
+  const { theme } = useTheme();
+
   const [commentInfo, setCommentInfo] = React.useState({
     isDeleted: false,
     isActionsVisible: false
@@ -102,7 +106,7 @@ const Comment = ({
   if(commentInfo.isDeleted) return null;
 
   return (
-    <View {...props} style={[{borderBottomColor: 'rgba(38, 38, 38, .125)', borderBottomWidth: 1}, app_sp.pb_12, props.style]}>
+    <View {...props} style={[{borderBottomColor: theme.outline, borderBottomWidth: 1}, app_sp.pb_12, props.style]}>
       {
         commentInfo.isActionsVisible && (
           <Pressable
@@ -121,14 +125,14 @@ const Comment = ({
       <View style={styles.comment_info_n_actions_container}>
         {/* Basic user info container */}
         <View style={styles.comment_author_info_container}>
-          <View>
+          <View style={app_sp.me_12}>
             {
               comment.author.avatar
               ? (
-                <Image source={{uri: comment.author.avatar}} />
+                <Image style={{width: 42, aspectRatio: 1, borderRadius: 9999}} source={{uri: comment.author.avatar}} />
               )
               : (
-                <Ionicons size={48} name="person-circle-outline" />
+                <Ionicons style={{margin: -6}} size={48} name="person-circle-outline" />
               )
             }
           </View>
@@ -151,6 +155,7 @@ const Comment = ({
           <Animated.View
             style={[
               styles.comment_float_action_buttons_container,
+              app_shdw.type_1,
               {
                 transform: [
                   {
@@ -164,14 +169,12 @@ const Comment = ({
               isOwnedCurrentUser ? (
                 <>
                   <RectangleButton
+                    defaultColor="type_4"
                     typeOfButton="opacity"
                     onPress={() => {Alert.alert("Tính năng này đang được phát triển!")}}
-                  >
-                    {
-                    (isActive, currentLabelStyle) => (<AppText style={currentLabelStyle}>Edit</AppText>)
-                    }
-                  </RectangleButton>
+                  >Edit</RectangleButton>
                   <RectangleButton
+                    defaultColor="type_4"
                     typeOfButton="opacity"
                     onPress={handleDeleteCommentPress}
                   >
@@ -182,6 +185,7 @@ const Comment = ({
                 </>
               ) : (
                 <RectangleButton
+                  defaultColor="type_4"
                   typeOfButton="opacity"
                   onPress={() => {Alert.alert("Tính năng này đang được phát triển!")}}
                 >

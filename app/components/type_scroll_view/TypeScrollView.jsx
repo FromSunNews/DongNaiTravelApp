@@ -197,7 +197,7 @@ const TypeScrollView = ({
                       <Animated.View
                         key={slideName + 'line'}
                         style={{
-                          ...(index === currenttypeIndex ? styles.line_index : {}),
+                          ...(index === currenttypeIndex ? {...styles.line_index, backgroundColor: theme.outline } : {}),
                           transform: [
                             { translateX: lineTranslateAmin }
                           ],

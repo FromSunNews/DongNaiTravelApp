@@ -13,6 +13,8 @@ import React from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { useForm, Controller } from 'react-hook-form'
 
+import { withTheme } from 'hocs/withTheme'
+
 import { getBlogCommentsAPI } from 'apis/axios/blog/get'
 import { createBlogCommentAPI } from 'apis/axios/blog/post'
 
@@ -54,7 +56,10 @@ import {
  * @param {*} param0 
  * @returns 
  */
-const BlogCommentScreen = ({route}) => {
+const BlogCommentScreen = withTheme(({
+  route,
+  theme
+}) => {
   const { isAuthenticated, user } = useAuthState();
   const navigation = useNavigation();
 
@@ -75,7 +80,7 @@ const BlogCommentScreen = ({route}) => {
         text: commentText
       }
     }
-    console.log("Blog: ", blog);
+
     createBlogCommentAPI(blog)
     .then(response => {
       let data = response.data;
@@ -137,7 +142,7 @@ const BlogCommentScreen = ({route}) => {
       style={[
         {
           flex: 1,
-          backgroundColor: app_c.HEX.primary
+          backgroundColor: theme.background
         }
       ]}
     >
@@ -194,8 +199,8 @@ const BlogCommentScreen = ({route}) => {
             alignItems: 'flex-end',
             width: '100%',
             bottom: 0,
-            backgroundColor: app_c.HEX.primary,
-            borderTopColor: 'rgba(38, 38, 38, .125)',
+            backgroundColor: theme.background,
+            borderTopColor: theme.outline,
             borderTopWidth: 1,
             zIndex: 2
           }
@@ -212,7 +217,7 @@ const BlogCommentScreen = ({route}) => {
         />
         <CircleButton
           disabled={!Boolean(commentText)}
-          style={[app_sp.ms_6, app_sp.mb_6, {backgroundColor: app_c.HEX.primary}]}
+          style={[app_sp.ms_6, app_sp.mb_6, {backgroundColor: theme.background}]}
           typeOfButton="highlight"
           setIcon={(isActive, currentLabelStyle) => (
             <Feather name='send' size={16} style={currentLabelStyle} />
@@ -222,6 +227,6 @@ const BlogCommentScreen = ({route}) => {
       </View>
     </KeyboardAwareScrollView>
   )
-}
+});
 
 export default BlogCommentScreen

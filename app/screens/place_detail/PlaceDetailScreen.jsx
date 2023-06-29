@@ -29,9 +29,6 @@ import {
   usePlaceInteractionActions,
   useBriefPlacesActions
 } from 'customHooks/usePlace'
-import {
-  useAudio
-} from 'customHooks/useAudio'
 
 import StringUtility from 'utilities/string'
 import {
@@ -43,6 +40,7 @@ import {
 import BottomSheet, { BottomSheetView, BottomSheetScrollView, useBottomSheetSpringConfigs } from '@gorhom/bottom-sheet'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
+import { withTheme } from 'hocs/withTheme';
 import {
   AppText,
   MyFadeAnimatedView,
@@ -59,7 +57,7 @@ import {
 } from 'components'
 
 import styles from './PlaceDetailScreenStyles'
-import { app_c, app_dms, app_sp } from 'globals/styles'
+import { app_c, app_dms, app_shdw, app_sp } from 'globals/styles'
 
 import {
   PlaceDetailsDataProps
@@ -70,7 +68,11 @@ import Lightbox from 'react-native-lightbox-v2';
  * __Creator__: @NguyenAnhTuan1912
  * @returns 
  */
-const PlaceDetailScreen = ({route, navigation}) => {
+const PlaceDetailScreen = withTheme(({
+  route,
+  navigation,
+  theme
+}) => {
   const { placeId, typeOfBriefPlace, fromSearch, handleShareToSocial } = route.params;
   console.log("🚀 ~ file: PlaceDetailScreen.jsx:75 ~ PlaceDetailScreen ~ typeOfBriefPlace:", typeOfBriefPlace)
   console.log("🚀 ~ file: PlaceDetailScreen.jsx:75 ~ PlaceDetailScreen ~ fromSearch:", fromSearch)
@@ -78,8 +80,6 @@ const PlaceDetailScreen = ({route, navigation}) => {
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.placeDetailScreen
   const langVisit = useSelector(selectCurrentLanguage).data?.exploreScreen
-  //theme
-  const themeColor = useTheme();
 
   const { placeDetails, fetchPlaceDetails, clearPlaceDetails } = usePlaceDetails(placeId);
   const { updateBriefPlace } = useBriefPlacesActions(typeOfBriefPlace);
@@ -117,12 +117,12 @@ const PlaceDetailScreen = ({route, navigation}) => {
      * Hàm này dùng để yêu thích / bỏ yêu thích một place, nó sẽ gửi id của place về server và tự server nó sẽ xử lý.
      */
   const handleLikeButton = () => likePlace(
-    (data, state) => updateBriefPlace(placeDetails.place_id, 0, { isLiked: state }),
-    (state) => updateBriefPlace(placeDetails.place_id, 0, { isLiked: state })
+    (data, state) => updateBriefPlace(placeDetails.place_id, { isLiked: state }),
+    (state) => updateBriefPlace(placeDetails.place_id, { isLiked: state })
   )
   
   React.useEffect(() => {
-    navigation.setOptions({'title': placeDetails.name})
+    navigation.setOptions({'title': placeDetails.name});
     fetchPlaceDetails(placeId, {
       canGetComplete: fromSearch,
       lang: langCode
@@ -131,36 +131,44 @@ const PlaceDetailScreen = ({route, navigation}) => {
   }, [langCode]);
 
   return (
-    <View style={{backgroundColor: themeColor.ext_third, flex: 1}}>
+    <View style={{backgroundColor: theme.background, flex: 1}}>
       <Animated.View
         style={{
           opacity: opacityValue,
-          backgroundColor: themeColor.primary,
+          backgroundColor: theme.background,
           height: HEADER_HEIGHT,
           zIndex: 999
         }}
       />
-        <Image
-          source={presentationImageUrl ? {uri: presentationImageUrl} : {}}
-          style={styles.pd_background_image}
-        />
+      <Image
+        source={presentationImageUrl ? {uri: presentationImageUrl} : {}}
+        style={styles.pd_background_image}
+      />
       <BottomSheet
         snapPoints={snapPoints}
         index={0}
         ref={bottomSheetRef}
-        style={styles.pd_bottom_sheet}
+        style={[styles.pd_bottom_sheet, app_shdw.type_4]}
         onChange={handleChangeBottomSheet}
         backgroundStyle={{
           flex: 1,
-          backgroundColor: themeColor.primary
+          backgroundColor: theme.background
         }}
       >
         <BottomSheetScrollView
-          style={[styles.pd_bottom_sheet_view, { backgroundColor: themeColor.primary }]}
+          style={[styles.pd_bottom_sheet_view, { backgroundColor: theme.background }]}
           showsVerticalScrollIndicator={false}
         >
-          <View style={[styles.pd_header, app_sp.ph_18, { borderBottomColor: themeColor.fourth }]}>
-
+          <View
+            style={[
+              styles.pd_header,
+              app_sp.ph_18,
+              {
+                borderBottomColor: theme.outline,
+                borderBottomWidth: 0.75
+              }
+            ]}
+          >
             {/* Information row */}
             <View style={{...styles.pd_row, ...app_sp.mb_12}}>
 
@@ -173,11 +181,11 @@ const PlaceDetailScreen = ({route, navigation}) => {
               {/* Ratings, number of visits column */}
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <AppText font="body2" style={app_sp.me_12}>
-                  <Ionicons name='star-outline' color={themeColor.fourth} /> {placeDetails.rating}
+                  <Ionicons name='star-outline' color={theme.primary} /> {placeDetails.rating}
                 </AppText>
-                <AppText font="body2" style={{}}>
-                  <Ionicons name='eye-outline' color={themeColor.fourth} /> {placeDetails.numberOfVisited}
-                </AppText>
+                {/* <AppText font="body2" style={{}}>
+                  <Ionicons name='heart-outline' color={theme.primary} /> {placeDetails.userFavoritesTotal}
+                </AppText> */}
               </View>
             </View>
 
@@ -186,26 +194,23 @@ const PlaceDetailScreen = ({route, navigation}) => {
               <CircleButton
                 isActive={extendedPlaceInfo.isLiked}
                 style={app_sp.me_8}
+                defaultColor='type_5'
                 typeOfButton="highlight"
-                setIcon={(isActive, currentLabelStyle) => (
-                  <Ionicons name={isActive ? 'heart' : 'heart-outline'} size={14} style={currentLabelStyle} />
-                )}
+                setIcon={<Ionicons name={extendedPlaceInfo.isLiked ? 'heart' : 'heart-outline'} size={14} />}
                 onPress={handleLikeButton}
               />
               <CircleButton
                 style={app_sp.me_8}
+                defaultColor='type_5'
                 typeOfButton="highlight"
                 onPress={() => navigation.navigate('MapScreen', { place_id: placeId })}
-                setIcon={(isActive, currentLabelStyle) => (
-                  <Ionicons name={isActive ? 'map' : 'map-outline'} size={14} style={currentLabelStyle} />
-                )}
+                setIcon={<Ionicons name='map' size={14} />}
               />
               <CircleButton
                 style={app_sp.me_8}
+                defaultColor='type_5'
                 typeOfButton="highlight"
-                setIcon={(isActive, currentLabelStyle) => (
-                  <Ionicons name='share-outline' size={14} />
-                )}
+                setIcon={<Ionicons name='share-outline' size={14} />}
                 onPress={handleShareToSocial}
               />
             </View>
@@ -221,12 +226,14 @@ const PlaceDetailScreen = ({route, navigation}) => {
                     <RectangleButton
                       key={type}
                       typeOfButton="highlight"
+                      defaultColor='type_5'
                       overrideShape="rounded_4"
                       style={[app_sp.ph_8, app_sp.pv_0, app_sp.me_6, app_sp.mb_6]}
                     >
-                      {(isActive, currentLabelStyle) => (
+                      {/* {(isActive, currentLabelStyle) => (
                         <AppText style={currentLabelStyle} font="body3">{StringUtility.toTitleCase(type)}</AppText>
-                      )}
+                      )} */}
+                      {StringUtility.toTitleCase(type)}
                     </RectangleButton>
                   )
                 )
@@ -251,7 +258,7 @@ const PlaceDetailScreen = ({route, navigation}) => {
       </BottomSheet>
     </View>
   )
-}
+});
 
 const AboutSlide = ({placeId, navigator}) => {
   const langCode = useSelector(selectCurrentLanguage).languageCode
@@ -287,15 +294,13 @@ const AboutSlide = ({placeId, navigator}) => {
       {/* Description */}
       <View style={[styles.pd_content_article, app_sp.ph_18]}>
         <AppText font="h3" numberOfLines={1} style={app_sp.mb_6}>{langData.description[langCode]}</AppText>
-        <AppText color="ext_second">
-          {
-            placeDetails.content
-            ? (
-              <MarkFormat text={placeDetails.content.plainTextMarkFormat[langCode]} />
-            )
-            : langData.descriptionMessage[langCode]
-          }
-        </AppText>
+        {
+          placeDetails.content
+          ? (
+            <MarkFormat text={placeDetails.content.plainTextMarkFormat[langCode]} />
+          )
+          : <AppText>{langData.descriptionMessage[langCode]}</AppText>
+        }
       </View>
 
       {/* Images */}
@@ -350,9 +355,7 @@ const AboutSlide = ({placeId, navigator}) => {
         <CircleButton
           isTransparent
           typeOfButton="highlight"
-          setIcon={(isActive, currentLabelStyle) => (
-            <Ionicons style={currentLabelStyle} name="chevron-forward-outline" size={18} />
-          )}
+          setIcon={<Ionicons name="chevron-forward-outline" size={18} />}
         />
       </View>
       <View style={[app_sp.ph_18]}>

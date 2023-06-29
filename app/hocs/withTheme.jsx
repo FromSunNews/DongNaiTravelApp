@@ -3,8 +3,9 @@ import { useTheme } from "customHooks/useTheme"
 
 /**
  * @typedef WithThemeWrappedComponentProps
- * @property {themes[keyof themes]} theme
- * @property {() => ({ type: "theme/toggleThemeState", payload: undefined })} toggleTheme
+ * @property {themes[keyof themes]} theme Chủ đề màu sắc của app, bao gồm `light` (sáng) và `dark` (tối).
+ * @property {"light" | "dark"} themeMode Mode chủ đề, có 2 loại chính `light` (sáng) và `dark` (tối)
+ * @property {() => ({ type: "theme/toggleThemeState", payload: undefined })} toggleTheme Hàm dùng để switch từ chủ đề này sang chủ đề khác.
  */
 
 /**
@@ -12,6 +13,7 @@ import { useTheme } from "customHooks/useTheme"
  * 2 props ở trong `props`:
  * - `theme`: là object chứa màu của app.
  * - `toggleTheme`: là object chuyển theme.
+ * @template T
  * @param {(props: WithThemeWrappedComponentProps) => JSX.Element} WrappedComponent 
  * @returns 
  * 
@@ -57,10 +59,17 @@ import { useTheme } from "customHooks/useTheme"
  */
 export function withTheme(WrappedComponent) {
   /**
-   * @param {any} props
+   * @param {T} props
   */
  return function(props) {
-    const { theme, toggleTheme } = useTheme();
-    return <WrappedComponent {...props} theme={theme} toggleTheme={toggleTheme} />
+    const { theme, themeMode, toggleTheme } = useTheme();
+    return (
+      <WrappedComponent
+        {...props}
+        theme={theme}
+        toggleTheme={toggleTheme}
+        themeMode={themeMode}
+      />
+    )
   }
 }

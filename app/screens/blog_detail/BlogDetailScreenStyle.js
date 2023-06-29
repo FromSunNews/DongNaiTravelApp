@@ -43,7 +43,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
     position: 'absolute',
-    backgroundColor: app_c.HEX.primary,
     bottom: 125,
     ...app_sp.ph_12,
     ...app_sp.pv_6,
