@@ -4,6 +4,18 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
 import { useForm, Controller } from 'react-hook-form'
 
+import {
+  signInUserAPI,
+  signUpUserAPI
+} from 'apis/axios'
+
+import { withTheme } from 'hocs/withTheme'
+
+import {
+  useAuthActions
+} from 'customHooks/useAuth'
+
+
 import { 
   View, 
   Text, 
@@ -14,15 +26,6 @@ import {
   ScrollView
 } from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
-
-import {
-  signInUserAPI,
-  signUpUserAPI
-} from 'apis/axios'
-
-import {
-  useAuthActions
-} from 'customHooks/useAuth'
 
 import { updateCurrentUser } from 'redux/user/UserSlice'
 import { updateNotif } from 'redux/manifold/ManifoldSlice'
@@ -48,6 +51,7 @@ import DateTimePicker from '@react-native-community/datetimepicker'
 import RNDateTimePicker from '@react-native-community/datetimepicker'
 
 import {
+  AppText,
   ButtonText,
   CheckBoxText,
   Input,
@@ -57,7 +61,9 @@ import {
 import { styles } from './SignupScreenStyles'
 import { app_c, app_sh, app_shdw } from 'globals/styles'
 
-const SignupScreen = () => {
+const SignupScreen = withTheme(({
+  theme
+}) => {
 
   // Phuong: https://github.com/Cnilton/react-native-floating-label-input
   // Phuong: https://react-hook-form.com/get-started#ReactNative
@@ -117,15 +123,15 @@ const SignupScreen = () => {
     <>
       <KeyboardAwareScrollView
         extraScrollHeight={40}
-        style={styles.containerScrollView}
+        style={[styles.containerScrollView, { backgroundColor: theme.background }]}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         showsVerticalScrollIndicator={false}
       >
         {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         </TouchableWithoutFeedback> */}
-          <View style={styles.container}>
+          <View style={[styles.container, { backgroundColor: theme.background }]}>
             <View style={styles.content}>
-            <Text style={styles.textHeader}>{langData?.text_header[langCode]}</Text>
+            <AppText font="h3" color="primary" style={app_sp.mb_18} >{langData?.text_header[langCode]}</AppText>
 
             <Text style={[styles.smallLabel,{ marginTop: 0}]}>{langData?.intro_youself[langCode]}</Text>
 
@@ -466,6 +472,6 @@ const SignupScreen = () => {
       {/* </Modal> */}
     </>
   )
-}
+});
 
 export default SignupScreen

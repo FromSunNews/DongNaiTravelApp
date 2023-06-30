@@ -5,12 +5,10 @@ import Constants from 'expo-constants'
 
 export const styles = StyleSheet.create({
   containerScrollView: {
-    paddingTop: 0,
-    backgroundColor: app_c.HEX.primary
+    paddingTop: 0
   },
   container: {
     flex: 1,
-    backgroundColor: app_c.HEX.primary,
     paddingBottom: 60
   },
   content: {
@@ -30,8 +28,6 @@ export const styles = StyleSheet.create({
   textError: {
     flex: 1,
     color: '#F32424',
-    marginTop: 5,
-    ...app_typo.fonts.normal.normal.body1,
     alignSelf: 'flex-start',
   },
   containerReFor:{

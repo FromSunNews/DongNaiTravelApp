@@ -12,6 +12,8 @@ import React, { useEffect, useState } from 'react'
 
 import { signInUserAPI } from 'apis/axios'
 
+import { withTheme } from 'hocs/withTheme'
+
 import {
   useAuth,
   useAuthActions
@@ -41,7 +43,9 @@ import {
 import { styles } from './SigninScreenStyles'
 import { app_sp } from 'globals/styles'
 
-const SigninScreen = () => {
+const SigninScreen = withTheme(({
+  theme
+}) => {
   // Phuong: https://github.com/Cnilton/react-native-floating-label-input
   // Phuong: https://react-hook-form.com/get-started#ReactNative
   const navigation = useNavigation()
@@ -100,13 +104,13 @@ const SigninScreen = () => {
     <KeyboardAwareScrollView
       extraScrollHeight={40}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}
+      style={[styles.container, { backgroundColor: theme.background }]}
       showsVerticalScrollIndicator={false}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={{flex: 1}}>
           <View style={styles.content}>
-          <Text style={styles.textHeader}>{langData?.text_header[langCode]}</Text>
+            <AppText font="h3" color="primary" style={app_sp.mb_18} >{langData?.text_header[langCode]}</AppText>
             <Image
               style={styles.image}
               source={require('assets/images/illutration1.png')}
@@ -133,7 +137,7 @@ const SigninScreen = () => {
                 />
               )}
             />
-            {errors.emailName && <Text style={styles.textError}>{errors.emailName?.message}</Text>}
+            {errors.emailName && <AppText font="body1" style={[styles.textError, app_sp.mt_6]}>{errors.emailName?.message}</AppText>}
 
             <Controller
               control={control}
@@ -164,7 +168,7 @@ const SigninScreen = () => {
                 />
               )}
             />
-            {errors.password && <Text style={styles.textError}>{errors.password?.message}</Text>}
+            {errors.password && <AppText font="body1" style={[styles.textError, app_sp.mt_6]}>{errors.password?.message}</AppText>}
 
             <View style={styles.containerReFor}>
               <CheckBoxText
@@ -242,6 +246,6 @@ const SigninScreen = () => {
       </View>
     </KeyboardAwareScrollView>
   )
-}
+});
 
 export default SigninScreen

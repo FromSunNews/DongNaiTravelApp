@@ -5,7 +5,6 @@ import Constants from 'expo-constants'
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: app_c.HEX.primary,
     paddingTop: 0
   },
   content: {
@@ -23,9 +22,7 @@ export const styles = StyleSheet.create({
     marginBottom: 10,
   },
   textError: {
-    color: '#F32424',
-    marginTop: 5,
-    ...app_typo.fonts.normal.normal.body1
+    color: '#F32424'
   },
   containerReFor:{
     display: 'flex',
