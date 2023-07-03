@@ -127,7 +127,7 @@ const SearchScreen = withTheme(({
                   }}
                   style={[{justifyContent: 'flex-start'}, app_sp.pv_18, app_sp.ph_0]}
                 >
-                  <Foundation name="mountains" size={18} style={[app_sp.me_12, app_sp.ph_12]} />
+                  <Foundation name="mountains" color={theme.onBackground} size={18} style={[app_sp.me_12, app_sp.ph_12]} />
                   <AppText>{item.name}</AppText>
                 </RectangleButton>
               )

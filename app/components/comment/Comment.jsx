@@ -132,7 +132,7 @@ const Comment = ({
                 <Image style={{width: 42, aspectRatio: 1, borderRadius: 9999}} source={{uri: comment.author.avatar}} />
               )
               : (
-                <Ionicons style={{margin: -6}} size={48} name="person-circle-outline" />
+                <Ionicons style={{margin: -6}} color={theme.onBackground} size={48} name="person-circle-outline" />
               )
             }
           </View>

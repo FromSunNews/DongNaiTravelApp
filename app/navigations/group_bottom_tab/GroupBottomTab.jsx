@@ -148,12 +148,12 @@ const BottomTabBar = ({
 										(<Ionicons
 											size={tabIcon[route.name].size}
 											name={isFocused ? tabIcon[route.name].active : tabIcon[route.name].inactive}
-											style={isFocused ? [styles.tab_bottom_hl_icon_active, { color: theme.onPrimary }] : [styles.tab_bottom_hl_icon_inactive, {color: theme.outline}]}
+											style={isFocused ? [styles.tab_bottom_hl_icon_active, { color: theme.onPrimary }] : [styles.tab_bottom_hl_icon_inactive, {color: theme.onSubOutline}]}
 										/>) :
 										(<Ionicons
 											size={tabIcon[route.name].size}
 											name={isFocused ? tabIcon[route.name].active : tabIcon[route.name].inactive}
-											style={isFocused ? [styles.tab_bottom_icon_active, { color: theme.onPrimary }] : [styles.tab_bottom_icon_inactive,{color: theme.outline}]}
+											style={isFocused ? [styles.tab_bottom_icon_active, { color: theme.onPrimary }] : [styles.tab_bottom_icon_inactive, {color: theme.onSubOutline}]}
 									/>)
 								}
 							</View>

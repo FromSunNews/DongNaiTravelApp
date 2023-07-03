@@ -212,8 +212,9 @@ const BlogCommentScreen = withTheme(({
           onBlur={() => setKeyboardVisible(false)}
           value={commentText}
           onChangeText={setCommentText}
-          style={[app_sp.pb_16, app_sp.pt_16, {flex: 1, maxHeight: 120}]}
+          style={[app_sp.pb_16, app_sp.pt_16, {flex: 1, maxHeight: 120, color: theme.onBackground}]}
           placeholder='Write your comment here...'
+          placeholderTextColor={theme.outline}
         />
         <CircleButton
           disabled={!Boolean(commentText)}

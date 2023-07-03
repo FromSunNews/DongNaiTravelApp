@@ -14,7 +14,7 @@ import { useTheme } from "customHooks/useTheme";
 
 import AppText from "../app_text/AppText";
 
-import styles from "./ButtonsStyles";
+import styles, { getButtonColors } from "./ButtonsStyles";
 import { app_sp, app_sh, app_c } from "globals/styles";
 
 const default_style = {
@@ -54,8 +54,8 @@ const banner_button_styles = StyleSheet.create({
  * @param {boolean} [props.isOnlyContent=false] - Nút có container bọc ở ngoài hay là không?
  * @param {boolean} [props.isChangeColorWhenActive=false] - Khi được active (focus) thì nút có đổi màu không hay không? Mặc định là không.
  * @param {'none' | 'opacity' | 'highlight'} [props.typeOfButton=none] - Loại nút.
- * @param {'type_1' | 'type_2' | 'type_3' | 'type_4' | 'type_5'} [props.defaultColor=type_1] - Màu nút bình thường (mặc định).
- * @param {'type_1' | 'type_2'} [props.activeColor=type_1] - Màu nút khi khi được focus (active).
+ * @property {'type_1' | 'type_2' | 'type_3' | 'type_4' | 'type_5' | 'type_6' | 'type_7'} [defaultColor=type_1] Màu nút bình thường (mặc định).
+ * @property {'type_1' | 'type_2' | 'type_3' | 'type_4' | 'type_5' | 'type_6' | 'type_7'} activeColor Màu nút khi khi được focus (active).
  * @param {string} [props.imageUrl=] - đường dẫn ảnh làm background cho button.
  * @param {string} [props.fontOfText=body3] - Font chữ, xem thêm trong `typography.js`.
  * @param {string}  props.hyperLink - Function xử lý việc navigate sang app khác.
@@ -93,13 +93,17 @@ const BannerButton = ({
     typeof setRightIcon === "function" && React.isValidElement(setRightIcon());
 
   //theme
-  const { theme } = useTheme();
-
+  const { theme, themeMode } = useTheme();
+  let colors = React.useMemo(() => getButtonColors(themeMode), [themeMode]);
+  let { btnColorStyle, lblColorStyle } = {
+    btnColorStyle: { backgroundColor: isActive ? colors.active[activeColor].btn : colors.inactive[defaultColor].btn },
+    lblColorStyle: { color: isActive ? colors.active[activeColor].lbl : colors.inactive[defaultColor].lbl }
+  }
   if (isDisable) {
     return (
       <TouchableOpacity
         disabled={isDisable}
-        style={{ ...style, ...default_style, ...styles.btn_disable }}
+        style={[style, default_style, btnColorStyle]}
       >
         <ImageBackground
           source={{ url: `${imageUrl}` }}
@@ -114,10 +118,10 @@ const BannerButton = ({
             {canLoadLeftIcon ? (
               <AppText
                 font={fontOfText}
-                style={{
-                  ...styles.lbl_disable,
-                  ...app_sp.ms_8,
-                }}
+                style={[
+                  lblColorStyle,
+                  app_sp.ms_8,
+                ]}
                 numberOfLines={2}
               >
                 {children}
@@ -125,7 +129,7 @@ const BannerButton = ({
             ) : (
               <AppText
                 font={fontOfText}
-                style={[styles.lbl_disable]}
+                style={lblColorStyle}
                 numberOfLines={2}
               >
                 {children}
@@ -134,7 +138,7 @@ const BannerButton = ({
           </View>
           {canLoadRightIcon &&
             setRightIcon((isActive = false), [
-              styles.lbl_disable
+              lblColorStyle
             ])}
         </ImageBackground>
       </TouchableOpacity>
@@ -142,30 +146,29 @@ const BannerButton = ({
   }
 
   let handlePressBannerButton = handlePressButton;
-  let currentButtonStyle = (currentButtonStyle = {
+  let currentButtonStyle = {
     ...style,
     ...default_style,
-    ...styles[`btn_default_${defaultColor}`],
-  });
-  let currentLabelStyle = (currentLabelStyle =
-    styles[`lbl_default_${defaultColor}`]);
+    ...btnColorStyle,
+  };
+  let currentLabelStyle = lblColorStyle;
   // console.log(
   //   "🚀 ~ file: BannerButton.jsx:122 ~ currentButtonStyle:",
   //   currentButtonStyle
   // );
 
-  if (isChangeColorWhenActive) {
-    currentButtonStyle = {
-      ...style,
-      ...default_style,
-      ...(isActive
-        ? styles[`btn_active_${activeColor}`]
-        : styles[`btn_default_${defaultColor}`]),
-    };
-    currentLabelStyle = isActive
-      ? styles[`lbl_active_${activeColor}`]
-      : styles[`lbl_default_${defaultColor}`];
-  }
+  // if (isChangeColorWhenActive) {
+  //   currentButtonStyle = {
+  //     ...style,
+  //     ...default_style,
+  //     ...(isActive
+  //       ? styles[`btn_active_${activeColor}`]
+  //       : styles[`btn_default_${defaultColor}`]),
+  //   };
+  //   currentLabelStyle = isActive
+  //     ? styles[`lbl_active_${activeColor}`]
+  //     : styles[`lbl_default_${defaultColor}`];
+  // }
 
   if (isOnlyContent) {
     currentButtonStyle = style;
@@ -229,7 +232,7 @@ const BannerButton = ({
             {canLoadLeftIcon ? (
               <AppText
                 font={fontOfText}
-                style={{ ...currentLabelStyle, ...app_sp.ms_8 }}
+                style={[currentLabelStyle, app_sp.ms_8 ]}
                 numberOfLines={2}
               >
                 {children}

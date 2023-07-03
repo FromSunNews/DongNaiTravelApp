@@ -59,7 +59,7 @@ const SettingScreen = withTheme(({ route, navigation , theme, toggleTheme}) => {
             <View style={[styles.genre_content, { ...styles.flexDirection }]}>
               <RectangleButton
                 overrideShape="rounded_8"
-                style={[styles.option_setting,{backgroundColor: theme.primary}]}
+                style={[styles.option_setting,{backgroundColor: theme.subBackground}]}
                 handlePressButton={() => navigation.navigate("Places")}
               >
                 <AppText>
@@ -67,16 +67,16 @@ const SettingScreen = withTheme(({ route, navigation , theme, toggleTheme}) => {
                     <Foundation
                       name="mountains"
                       style={styles.avatar}
-                      color={theme.onPrimary}
+                      color={theme.onSubBackground}
                       size={35}
                     />
-                    <Text style={[styles.option_setting_name,{color:theme.onPrimary}]}>{langData.archive_place[langCode]}</Text>
+                    <Text style={[styles.option_setting_name,{color: theme.onSubBackground}]}>{langData.archive_place[langCode]}</Text>
                   </View>
                 </AppText>
               </RectangleButton>
               <RectangleButton
                 overrideShape="rounded_8"
-                style={[styles.option_setting,{backgroundColor: theme.primary}]}
+                style={[styles.option_setting,{backgroundColor: theme.subBackground}]}
                 handlePressButton={() => navigation.navigate("Blogs")}
               >
                 <AppText>
@@ -84,10 +84,10 @@ const SettingScreen = withTheme(({ route, navigation , theme, toggleTheme}) => {
                     <Entypo
                       name="text-document"
                       style={styles.avatar}
-                      color={theme.onPrimary}
+                      color={theme.onSubBackground}
                       size={35}
                     />
-                    <Text style={[styles.option_setting_name,{color:theme.onPrimary}]}>{langData.archive_blog[langCode]}</Text>
+                    <Text style={[styles.option_setting_name,{color:theme.onSubBackground}]}>{langData.archive_blog[langCode]}</Text>
                   </View>
                 </AppText>
               </RectangleButton>

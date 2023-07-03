@@ -310,7 +310,6 @@ const BlogsScreen = withTheme(({
           <View
             style={[
               app_sp.ph_18,
-              app_sp.mt_12,
               {
                 backgroundColor: theme.background,
                 position: 'relative',
@@ -319,6 +318,8 @@ const BlogsScreen = withTheme(({
             ]}
           >
             <BannerButton
+              defaultColor='type_5'
+              activeColor='type_1'
               typeOfButton="highlight"
               style={app_sp.mt_12}
               toScreen={{screenName: "MapScreen"}}
@@ -333,7 +334,7 @@ const BlogsScreen = withTheme(({
       }
       <FlatList
         data={blogs ? blogs.data : []}
-        style={[styles.scroll_view_container,{backgroundColor: theme.background}]}
+        style={[styles.scroll_view_container, { backgroundColor: theme.background }]}
         contentContainerStyle={{paddingBottom: 200}}
         onMomentumScrollEnd={handleExploreMomentumScrollEnd}
         onEndReached={handleEndReach}

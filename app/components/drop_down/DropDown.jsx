@@ -125,7 +125,7 @@ const DropDown = withTheme( ({
     <View style={styles.dropdown}>
       <TouchableOpacity
         onPress={toggleDropdown}
-        style={{ ...styles.dropdown_btn, backgroundColor: theme.primary }}
+        style={{ ...styles.dropdown_btn, backgroundColor: theme.subBackground }}
       >
         <View
           style={{
@@ -134,13 +134,13 @@ const DropDown = withTheme( ({
             width: "90%",
           }}
         >
-          <Text style={{ ...styles.dropdown_label,color:theme.onPrimary}}>
+          <Text style={{ ...styles.dropdown_label, color: theme.onSubBackground}}>
             {icon}
             <View style={{ alignItems: "center", paddingLeft: 12 }}>
               <Text
                 style={{
                   fontSize: 16,
-                  color: theme.onPrimary,
+                  color: theme.onSubBackground,
                   fontWeight: "500",
                 }}
               >
@@ -157,17 +157,17 @@ const DropDown = withTheme( ({
               }}
             >
               {selectedOption ? (
-                <AppText style={{...styles.dropdown_label,...styles.dropdown_label_mode,color:theme.onPrimary}}>{langCode === 'vi' ? 'Bật' : 'On'}</AppText>
+                <AppText style={{...styles.dropdown_label,...styles.dropdown_label_mode, color: theme.onSubBackground}}>{langCode === 'vi' ? 'Bật' : 'On'}</AppText>
               ) : (
-                <AppText style={{...styles.dropdown_label,...styles.dropdown_label_mode,color:theme.onPrimary}}>{langCode === 'vi' ? 'Tắt' : 'Off'}</AppText>
+                <AppText style={{...styles.dropdown_label,...styles.dropdown_label_mode, color: theme.onSubBackground}}>{langCode === 'vi' ? 'Tắt' : 'Off'}</AppText>
               )}
             </View>
           )}
         </View>
         {isOpen && isDrop ? (
-          <AntDesign name="down" size={22} color={theme.onPrimary} />
+          <AntDesign name="down" size={22} color={theme.onSubBackground} />
         ) : (
-          <AntDesign name="right" size={22} color={theme.onPrimary} />
+          <AntDesign name="right" size={22} color={theme.onSubBackground} />
         )}
       </TouchableOpacity>
       {isOpen && isDrop && (
@@ -181,10 +181,10 @@ const DropDown = withTheme( ({
                 }}
               >
                 <View style={styles.dropdown_content}>
-                <View style={[styles.circle_outline, { borderColor: theme.onBackground }]}>
-                  {selectedOption && <View style={[styles.circle, { backgroundColor: theme.onBackground }]}></View> }
+                  <View style={[styles.circle_outline, { borderColor: theme.onSubBackground }]}>
+                    {selectedOption && <View style={[styles.circle, { backgroundColor: theme.onSubBackground }]}></View> }
                   </View>
-                  <Text style={[styles.option_name,{color:theme.onBackground}]}>{langCode === 'vi' ? 'Bật' : 'On'}</Text>
+                  <Text style={[styles.option_name,{color: theme.onSubBackground}]}>{langCode === 'vi' ? 'Bật' : 'On'}</Text>
                 </View>
               </TouchableOpacity>
 
@@ -195,10 +195,10 @@ const DropDown = withTheme( ({
                 }}
               >
                 <View style={styles.dropdown_content}>
-                  <View style={[styles.circle_outline,{borderColor: theme.onBackground}]}>
-                    {!selectedOption && <View style={[styles.circle, {backgroundColor: theme.onBackground}]}></View> }
+                  <View style={[styles.circle_outline,{borderColor: theme.onSubBackground}]}>
+                    {!selectedOption && <View style={[styles.circle, {backgroundColor: theme.onSubBackground}]}></View> }
                   </View>
-                  <Text style={[styles.option_name,{color:theme.onBackground}]}>{langCode === 'vi' ? 'Tắt' : 'Off'}</Text>
+                  <Text style={[styles.option_name,{color:theme.onSubBackground}]}>{langCode === 'vi' ? 'Tắt' : 'Off'}</Text>
                 </View>
               </TouchableOpacity>
             </>
@@ -209,7 +209,7 @@ const DropDown = withTheme( ({
                 numberOfLines={2}
                 style={{
                   ...app_typo.fonts.normal.bolder.h5,
-                  color: theme.onBackground,
+                  color: theme.onSubBackground,
                   paddingBottom: 4,
                 }}
               >
@@ -218,7 +218,7 @@ const DropDown = withTheme( ({
               <Text
                 style={{
                   ...app_typo.fonts.normal.normal.sub0,
-                  color: theme.onBackground
+                  color: theme.onSubBackground
                 }}
               >
                 {children}
@@ -228,7 +228,7 @@ const DropDown = withTheme( ({
           <View
             style={{
               borderBottomWidth: 1.5,
-              borderBottomColor: theme.tertiary,
+              borderBottomColor: theme.outline,
               marginTop: 12,
             }}
           ></View>

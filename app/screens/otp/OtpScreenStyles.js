@@ -5,22 +5,18 @@ import Constants from 'expo-constants'
 
 export const styles = StyleSheet.create({
   container: {
-    backgroundColor: app_c.HEX.primary,
     flex: 1,
     paddingHorizontal: 18
   },  
   containerAvoidView: {
     flex: 1,
-    backgroundColor: app_c.HEX.primary,
     alignItems: 'center',
   },
   content: {
     paddingHorizontal: 18
   },
   textHeader: {
-    color: app_c.HEX.fourth,
     marginBottom: 0,
-    ...app_typo.fonts.normal.bolder.h1,
     marginTop: Constants.statusBarHeight,
     alignSelf: 'flex-start'
   },
@@ -30,10 +26,7 @@ export const styles = StyleSheet.create({
     resizeMode: 'contain'
   },
   label: {
-    color: app_c.HEX.fourth,
-    ...app_typo.fonts.normal.normal.body0,
-    marginBottom: 30,
-    alignSelf: 'center'
+    marginBottom: 30
   },
   textInput: {
     width: 0, 
@@ -53,9 +46,7 @@ export const styles = StyleSheet.create({
     borderBottomWidth: 2,
   },
   cellText: {
-    textAlign: 'center',
-    color: app_c.HEX.fourth,
-    ...app_typo.fonts.normal.bolder.h2
+    textAlign: 'center'
   },
   bottomView: {
     flexDirection: 'row',
@@ -70,9 +61,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   textChange: {
-    alignItems: 'center', 
-    color: app_c.HEX.third,
-    ...app_typo.fonts.normal.bolder.h5
+    alignItems: 'center',
   }, 
   btnChangeResend: {
     width: 150,
@@ -82,7 +71,6 @@ export const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   textResend: {
-    alignItems: 'center',
-    ...app_typo.fonts.normal.bolder.h5
+    alignItems: 'center'
   }
 })

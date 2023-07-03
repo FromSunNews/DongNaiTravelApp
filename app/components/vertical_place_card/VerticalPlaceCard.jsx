@@ -127,7 +127,7 @@ const VerticalPlaceCard = ({
             )}
           </RectangleButton>
         </> : 
-        <View style={styles.card_buttons_container}>
+        <View style={[styles.card_buttons_container, { borderTopColor: theme.outline, borderTopWidth: 1 }]}>
           <RectangleButton
             isActive={extendedPlaceInfo.isLiked}
             isTransparent

@@ -80,7 +80,7 @@ const Search = (props) => {
       styles.container,
       app_sh.rounded_8,
       app_sp.ph_12,
-      app_sp.pv_18,
+      app_sp.pv_12,
       {
         position: 'relative',
         borderColor: theme.outline,
@@ -97,11 +97,13 @@ const Search = (props) => {
       />
       <TextInput
         ref={textInputRef}
-        style={{flex: 1}}
+        style={{flex: 1, color: theme.onBackground, backgroundColor: theme.background}}
+        placeholderTextColor={theme.outline}
         placeholder={props.placeHolder}
         onChangeText={text => {
           search(text, () => {
             Promise.all(
+              // Lây ra tất cả các request promises trong props.apis để request nhiều resource khác nhau
               props.apis.reduce(
                 (acc, curr) => {
                   acc.push(curr(text));
@@ -116,7 +118,9 @@ const Search = (props) => {
           });
           if(!text) props.callBack(text, []);
         }}
+        contextMenuHidden
         clearButtonMode='while-editing'
+        inputMode='search'
       />
     </View>
   )

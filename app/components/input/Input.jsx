@@ -54,11 +54,11 @@ const Input = ({
         topFocused: -25,
         fontSizeFocused: 12,
         leftBlurred: -2,
-        colorBlurred: error ? '#F32424' : (isFocused ? theme.primary : theme.outline),
-        colorFocused: error ? '#F32424' : (isFocused ? theme.primary : theme.outline)
+        colorBlurred: error ? '#F32424' : (isFocused ? theme.primary : theme.onOutline),
+        colorFocused: error ? '#F32424' : (isFocused ? theme.onBackground : theme.onOutline)
       }}
       containerStyles={[styles.container, {
-        borderColor: error ? '#F32424' : (isFocused ? theme.primary : theme.outline),
+        borderColor: error ? '#F32424' : (isFocused ? theme.primary : theme.onOutline),
         borderWidth: isFocused ? 1.5 : 1,
         ...containerStyle
       }]}
@@ -70,7 +70,7 @@ const Input = ({
         <Icon 
           name='eye-slash' 
           size={16} 
-          color={isFocused ? theme.background : theme.outline}
+          color={isFocused ? theme.background : theme.onOutline}
           style={styles.icon}
         />
       }
@@ -78,7 +78,7 @@ const Input = ({
         <Icon 
           name='eye' 
           size={16} 
-          color={isFocused ? theme.background : theme.outline}
+          color={isFocused ? theme.background : theme.onOutline}
           style={styles.icon}
         />
       }

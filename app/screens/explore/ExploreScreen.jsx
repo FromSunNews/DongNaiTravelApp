@@ -124,6 +124,8 @@ const ExploreScreen = withTheme(({
             ]}
           >
             <BannerButton
+              defaultColor='type_5'
+              activeColor='type_1'
               typeOfButton="highlight"
               style={app_sp.mt_12}
               toScreen={{ screenName: "MapScreen" }}
@@ -139,7 +141,7 @@ const ExploreScreen = withTheme(({
       <FlatList
         data={places ? places.data : []}
         key={exploreInfo.current.placesInstance}
-        style={styles.scroll_view_container}
+        style={[styles.scroll_view_container, { backgroundColor: theme.background }]}
         contentContainerStyle={{paddingBottom: 200, backgroundColor: theme.background}}
         onMomentumScrollEnd={handleExploreMomentumScrollEnd}
         onEndReached={handleEndReach}

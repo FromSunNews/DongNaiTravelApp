@@ -1,24 +1,30 @@
-import { View, Text, Pressable } from 'react-native'
 import React from 'react'
-import { app_c } from 'globals/styles'
+import { View, Text, Pressable, Platform } from 'react-native'
 import AnimatedCheckbox from 'react-native-checkbox-reanimated'
+
+import { useTheme } from 'customHooks/useTheme'
+
+import AppText from 'components/app_text/AppText'
+
 import { styles } from './CheckBoxTextStyles'
-import { Platform } from 'react-native'
+import { app_c } from 'globals/styles'
 
 const CheckBoxText = ({ label, onPress, isChecked}) => {
+  const { theme } = useTheme();
+
   return (
     <Pressable onPress={onPress} style={styles.container}>
       <View style={styles.checkbox}>
         <AnimatedCheckbox
           checked={isChecked}
-          highlightColor={isChecked ? app_c.HEX.fourth : app_c.HEX.primary}
-          checkmarkColor={Platform.OS === 'ios' ? '#ffffff' : 'transparent'}
-          boxOutlineColor={isChecked ? app_c.HEX.fourth : '#808080'}
+          highlightColor={isChecked ? theme.onBackground : theme.background}
+          checkmarkColor={Platform.OS === 'ios' ? theme.background : 'transparent'}
+          boxOutlineColor={isChecked ? theme.outline : '#808080'}
         />
       </View>
-      <Text style={[styles.label, {
-        color: isChecked ? app_c.HEX.fourth : '#808080'
-      }]}>{label}</Text>
+      <AppText style={[styles.label, {
+        color: isChecked ? theme.onBackground : theme.outline
+      }]}>{label}</AppText>
     </Pressable>
   )
 }
