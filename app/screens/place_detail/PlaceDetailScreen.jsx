@@ -106,6 +106,7 @@ const PlaceDetailScreen = ({route, navigation}) => {
   }, [opacityValue]);
 
   const handleChangeBottomSheet = index => {
+    console.log("TO VALUE: ", index);
     if(index === 1) {
       animFade(1);
     } else {
@@ -114,8 +115,8 @@ const PlaceDetailScreen = ({route, navigation}) => {
   }
 
   /**
-     * Hàm này dùng để yêu thích / bỏ yêu thích một place, nó sẽ gửi id của place về server và tự server nó sẽ xử lý.
-     */
+   * Hàm này dùng để yêu thích / bỏ yêu thích một place, nó sẽ gửi id của place về server và tự server nó sẽ xử lý.
+   */
   const handleLikeButton = () => likePlace(
     (data, state) => updateBriefPlace(placeDetails.place_id, 0, { isLiked: state }),
     (state) => updateBriefPlace(placeDetails.place_id, 0, { isLiked: state })
@@ -140,10 +141,10 @@ const PlaceDetailScreen = ({route, navigation}) => {
           zIndex: 999
         }}
       />
-        <Image
-          source={presentationImageUrl ? {uri: presentationImageUrl} : {}}
-          style={styles.pd_background_image}
-        />
+      <Image
+        source={presentationImageUrl ? {uri: presentationImageUrl} : {}}
+        style={styles.pd_background_image}
+      />
       <BottomSheet
         snapPoints={snapPoints}
         index={0}

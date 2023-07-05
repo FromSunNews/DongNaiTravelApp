@@ -15,7 +15,9 @@ import useTheme from 'customHooks/useTheme'
 import { useAuthState } from 'customHooks/useAuth'
 import {
   useBlogDetails,
-  useBriefBlogs
+  useBlogInteractionActions,
+  useBriefBlogs,
+  useBriefBlogsActions
 } from 'customHooks/useBlog'
 
 import { useSelector } from 'react-redux'
@@ -45,6 +47,8 @@ const BlogDetailScreen = ({route, navigation}) => {
   const {themeColor,themeMode} = useTheme();
   
   const { blogDetails, fetchBlogDetailsById, clearBlogDetails } = useBlogDetails(blogId);
+  const { extendedBlogInfo, likeBlog } = useBlogInteractionActions(blogDetails);
+  const { updateBriefBlog } = useBriefBlogsActions();
   const { user } = useAuthState();
 
   const [relatedBlogs, setRelatedBlogs] = React.useState([]);
@@ -55,7 +59,7 @@ const BlogDetailScreen = ({route, navigation}) => {
   let type = blogDetails.type ? blogDetails.type : "";
   let displayAuthorName = blogDetails.author.lastName && blogDetails.author.firstName
     ? blogDetails.author.lastName + " " + blogDetails.author.firstName
-    : blogDetails.author.displayName
+    : blogDetails.author.displayName;
 
   const handleOnScroll = e => {
     let { contentOffset } = e.nativeEvent;
@@ -66,7 +70,12 @@ const BlogDetailScreen = ({route, navigation}) => {
       toggleFloatButtonsVisible(0)
     }
     offSetY.current  = contentOffset.y;
-  }
+  };
+
+  const handleLikeButton = () => likePlace(
+    (data, state) => updateBriefBlog(blogDetails._id, 0, { isLiked: state }),
+    (state) => updateBriefBlog(blogDetails._id, 0, { isLiked: state })
+  )
 
   const toggleFloatButtonsVisible = (val) => {
     Animated.spring(floatButtonTranslateYAnim,
@@ -75,7 +84,7 @@ const BlogDetailScreen = ({route, navigation}) => {
         useNativeDriver: true
       }
     ).start();
-  }
+  };
 
   React.useEffect(() => {
     navigation.setOptions({'title': blogDetails.name});
@@ -97,13 +106,15 @@ const BlogDetailScreen = ({route, navigation}) => {
         console.log('RELATED BLOGS: ', data)
         setRelatedBlogs(data);
       })
-      .catch(error => console.error(error))
+      .catch(console.error)
     }
 
     return function() {
       // clearBlogDetails(blogId);
     }
   }, []);
+
+  console.log("PLAIN TEXT: ", blogDetails.content?.plainText);
 
   return (
     <View style={{flex: 1, backgroundColor: themeColor.bg_primary}}>
@@ -184,7 +195,8 @@ const BlogDetailScreen = ({route, navigation}) => {
 
           {/* Speech, tạm thời vẫn chưa có, cho nên là chờ ở đây thôi */}
           <Speech
-            content={blogDetails.content?.speech}
+            text={blogDetails.content?.plainText}
+            // content={blogDetails.content?.speech}
             lang='vi'
             style={app_sp.mt_12}
           />
@@ -260,13 +272,14 @@ const BlogDetailScreen = ({route, navigation}) => {
           }]}
         >
           <CircleButton
+            isActive={extendedBlogInfo.isLiked}
             style={app_sp.me_6}
             defaultColor={themeMode === 'light' ? 'type_2' : 'type_3'}
             typeOfButton="highlight"
             setIcon={(isActive, currentLabelStyle) => (
               <Ionicons name={isActive ? 'heart' : 'heart-outline'} size={14} style={currentLabelStyle} />
             )}
-            onPress={() => {}}
+            onPress={handleLikeButton}
           />
           <AppText font="body3">{NumberUtility.toMetricNumber(blogDetails.userFavoritesTotal)}</AppText>
         </View>
@@ -280,10 +293,6 @@ const BlogDetailScreen = ({route, navigation}) => {
             style={app_sp.me_6}
             defaultColor={themeMode === 'light' ? 'type_2' : 'type_3'}
             typeOfButton="highlight"
-            onPress={() => {
-              console.log("🚀 ~ file: BlogDetailScreen.jsx:228 ~ BlogDetailScreen ~ blogDetails.mentionedPlaces:", blogDetails.mentionedPlaces)
-              navigation.navigate('MapScreen', { array_place_id: blogDetails.mentionedPlaces })
-            }}
             setIcon={(isActive, currentLabelStyle) => (
               <Ionicons name="chatbox-outline" size={14} style={currentLabelStyle} />
             )}
