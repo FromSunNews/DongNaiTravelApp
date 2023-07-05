@@ -82,12 +82,10 @@ const HomeScreen = withTheme(({
   const [places, setPlaces] = React.useState(null);
   const [blogs, setBlogs] = React.useState(null);
 
-  
+
   //language
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.homeScreen
-  //theme
-  // const { theme, toggleTheme } = useTheme(); 
 
   const previousTypes = React.useRef({
     place: typePlace,
@@ -262,7 +260,7 @@ const HomeScreen = withTheme(({
         }
 
         {/* Place and Blog*/}
-        <View style={[{backgroundColor: theme.bg_second}]}>
+        <View>
           <TouchableOpacity style={styles.category_header} onPress={()=>navigation.navigate("ExploreNavigator")}>
             <AppText style={styles.category_name}>{langData.title_place[langCode]}</AppText>
             <AppText><Entypo name="chevron-small-right" size={40}/></AppText>
@@ -272,11 +270,10 @@ const HomeScreen = withTheme(({
             labels={PLACE_QUALITIES[langCode].labels}
             callBack={setTypePlace}
             scrollStyle={[app_sp.mb_12, app_sp.ps_18]}
-            containerStyle={[{backgroundColor: theme.bg_second}, app_sp.pv_10]}
+            containerStyle={app_sp.pv_10}
           />
           <ScrollView 
             horizontal={true}
-            style={[{backgroundColor:theme.bg_second}]}
             contentContainerStyle={[{flexGrow: 1}, app_sp.pb_10]}
             showsHorizontalScrollIndicator={false}
           >
@@ -295,7 +292,7 @@ const HomeScreen = withTheme(({
             }
           </ScrollView>
         </View>
-        <View style={{}}>
+        <View>
           <TouchableOpacity style={styles.category_header} onPress={()=>navigation.navigate("BlogsNavigator")}>
             <AppText style={styles.category_name}>{langData.title_Blog[langCode]}</AppText>
             <AppText><Entypo name="chevron-small-right" size={40}/></AppText>
@@ -314,7 +311,7 @@ const HomeScreen = withTheme(({
           >
             {
               !blogs
-              ? [1, 2, 3].map((value, index) => <VerticalBlogCardSkeleton key={value + index} style={{  marginLeft: index !== 0 ? 16 : 0,}} />)
+              ? [1, 2, 3].map((value, index) => <VerticalBlogCardSkeleton key={value + index} style={{  marginLeft: 16}} />)
               : blogs.map((blog, index) => {
                 let actualStyle = [app_sp.me_18];
                 if(index === 0) actualStyle.push(app_sp.ms_18);

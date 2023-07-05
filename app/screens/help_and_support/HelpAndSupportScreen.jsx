@@ -6,17 +6,16 @@ import styles from "./HelpAndSupportScreenStyles";
 import DropDown from "components/drop_down/DropDown";
 import { useSelector } from "react-redux";
 import { selectCurrentLanguage } from "../../redux/language/LanguageSlice";
-import useTheme from "customHooks/useTheme";
+import { withTheme } from "hocs/withTheme";
 
-const HelpAndSupportScreen = () => {
+const HelpAndSupportScreen = withTheme(({theme}) => {
   //language
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.settingHelpAndSupport
-  //theme
-  const {themeColor} = useTheme();
+  
 
   return (
-    <View style={[styles.container,{backgroundColor: themeColor.bg_primary}]}>
+    <View style={[styles.container,{backgroundColor: theme.background}]}>
       <View style={{ ...styles.dropdown_container }}>
         <DropDown
           name={langData.send_email[langCode]}
@@ -42,6 +41,6 @@ const HelpAndSupportScreen = () => {
         </View>
     </View>
   );
-};
+});
 
 export default HelpAndSupportScreen;
