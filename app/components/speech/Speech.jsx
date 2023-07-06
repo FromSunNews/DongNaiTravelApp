@@ -66,7 +66,8 @@ const Speech = ({
     base64Audios: {
       f: "",
       m: ""
-    }
+    },
+    isPreparingVoice: false
   });
   /**
    * (Not renderable)
@@ -97,7 +98,8 @@ const Speech = ({
   const {
     setVoice,
     setBase64Audio,
-    addBase64Audio
+    addBase64Audio,
+    setPreparingStatus
   } = React.useMemo(function() {
     return {
       /**
@@ -108,7 +110,9 @@ const Speech = ({
         nrSpeechInfo.current.previousSoundRef = null;
         setSpeechInfo(prevState => {
           nrSpeechInfo.current.previousGender = prevState.gender;
-          return {...prevState, gender};
+          let newState = { ...prevState, gender };
+          if(Boolean(text)) newState.isPreparingVoice = true;
+          return newState;
         });
       },
       /**
@@ -137,6 +141,14 @@ const Speech = ({
           return { ...prevState, base64Audios }
         });
       },
+
+      /**
+       * Dùng để set lại trạng thái chuẩn bị của voice
+       * @param {boolean} preparingStatus 
+       */
+      setPreparingStatus: function(preparingStatus) {
+        if(Boolean(text)) setSpeechInfo(prevState => ({...prevState, isPreparingVoice: preparingStatus}));
+      }
     }
   }, []);
 
@@ -147,7 +159,8 @@ const Speech = ({
     // Trường hợp có URI.
     if(Boolean(speechMP3UriObj)) {
       let uri = speechInfo.gender ? speechMP3UriObj[`${audioVoicePrefix}_MALE_1`] : speechMP3UriObj[`${audioVoicePrefix}_FEMALE_1`];
-      prepareMP3Async(uri);
+      prepareMP3Async(uri)
+      .then(() => setPreparingStatus(false));
     }
 
     // Trường hợp có text.
@@ -171,14 +184,21 @@ const Speech = ({
         });
       } else {
         if(!sound || isVoiceGenderChange) {
-          console.log("Prepare audio...");
+          console.log("Preparing audio...");
           console.log("Gender change: ", isVoiceGenderChange);
           console.log("Sound doesn't init: ", !sound);
-          prepareTTSAsync(speechInfo.base64Audios[gender]);
+          prepareTTSAsync(speechInfo.base64Audios[gender])
+          .then(() => {
+            console.log("Prepare audio done!");
+            setPreparingStatus(false);
+          });
         }
         else {
           console.log("Loading audio...");
-          loadTTSAsync(speechInfo.base64Audios[gender]);
+          loadTTSAsync(speechInfo.base64Audios[gender])
+          .then(() => {
+            console.log("Load audio done!");
+          });
         };
       };
     }
@@ -206,7 +226,7 @@ const Speech = ({
      * và check cái biến đó còn giữ ref không, nếu không thì không thực thi code trong if (set callBack), ngược lại thì có
     */
    if(canSetOnPlaybackStatusUpdateCallBack) {
-     let isResquesting = false;
+     let isRequesting = false;
      let gender = speechInfo.gender ? "m" : "f";
      console.log("Set New OnPlaybackStatusUpdate CallBack");
      if(nrSpeechInfo.current.previousGender !== speechInfo.gender) nrSpeechInfo.current.previousGender = speechInfo.gender;
@@ -221,7 +241,7 @@ const Speech = ({
           // ĐK 2: Vẫn còn Part Of Text để request.
           && (nrSpeechInfo.current.currentPart[gender] < nrSpeechInfo.current.textParts.length - 1)
           // ĐK 3: Không trong quá trình Request.
-          && !isResquesting
+          && !isRequesting
         ) {
           console.log("Need more audio!!!");
           nrSpeechInfo.current.currentPart[gender]++;
@@ -231,19 +251,22 @@ const Speech = ({
             lang: speechInfo.gender ? `${audioVoicePrefix}_MALE_1` : `${audioVoicePrefix}_FEMALE_1`
           };
           // Bắt đầu request thì cho thằng này là true, lúc đó thì không phải chạy lại code trong if nữa.
-          isResquesting = true;
+          isRequesting = true;
           createTTSAsync(data)
           .then(response => {
             let base64Audio = response.data;
             console.log("[Load more] Create TTS Done!");
             console.log("[Load more] Voice Gender: ", gender);
             addBase64Audio(base64Audio, gender);
-            isResquesting = false;
+            isRequesting = false;
           });
         }
       });
     };
   }, [sound, speechInfo.gender]);
+
+  let isButtonDisable = !canPlay || speechInfo.isPreparingVoice !== false;
+  console.log("Is button disable: ", isButtonDisable);
 
   return (
     <View
@@ -254,7 +277,7 @@ const Speech = ({
         <AppText font="h3" style={app_sp.mb_6}>Đọc/Dừng</AppText>
         <View style={{flex: 1, flexDirection: 'row'}}>
           <RectangleButton
-            disabled={!canPlay}
+            disabled={isButtonDisable}
             typeOfButton='opacity'
             onPress={playAudioAsync}
             defaultColor='type_4'
@@ -272,7 +295,7 @@ const Speech = ({
             }
           </RectangleButton>
           <RectangleButton
-            disabled={!canPlay}
+            disabled={isButtonDisable}
             typeOfButton='opacity'
             onPress={stopAudioAsync}
             overrideShape='capsule'
@@ -291,7 +314,7 @@ const Speech = ({
         <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
           <RectangleButton
             isActive={!speechInfo.gender}
-            disabled={!canPlay}
+            disabled={isButtonDisable}
             typeOfButton='opacity'
             onPress={() => setVoice(false)}
             style={[app_sp.me_6]}
@@ -303,7 +326,7 @@ const Speech = ({
           </RectangleButton>
           <RectangleButton
             isActive={speechInfo.gender}
-            disabled={!canPlay}
+            disabled={isButtonDisable}
             typeOfButton='opacity'
             onPress={() => setVoice(true)}
             overrideShape='capsule'

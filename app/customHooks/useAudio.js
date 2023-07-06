@@ -150,8 +150,8 @@ export function useAudio(fileName = "myspeech") {
           let info = await soundInfo.sound.getStatusAsync();
           nrSoundInfo.current.previousPosition = info.positionMillis;
           nrSoundInfo.current.isAppendedNewAudio = true;
-          this.stopAudioAsync();
-          this.prepareTTSAsync(audioAsBase64);
+          await this.stopAudioAsync();
+          await this.prepareTTSAsync(audioAsBase64);
           return true;
         } catch (error) {
           console.error(error.message)

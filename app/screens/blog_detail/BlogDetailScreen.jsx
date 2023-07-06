@@ -114,8 +114,6 @@ const BlogDetailScreen = ({route, navigation}) => {
     }
   }, []);
 
-  console.log("PLAIN TEXT: ", blogDetails.content?.plainText);
-
   return (
     <View style={{flex: 1, backgroundColor: themeColor.bg_primary}}>
       <ScrollView
