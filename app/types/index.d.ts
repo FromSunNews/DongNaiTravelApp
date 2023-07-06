@@ -260,6 +260,7 @@ export interface AuthenticateOptionsProps {
 export type PlayAudioAsyncFn = () => void
 export type StopAudioAsyncFn = () => void
 export type PrepareTTSAsyncFn = (audioAsBase64: string) => boolean
+export type loadTTSAsync = (audioAsBase64: string) => boolean
 export type PrepareMP3AsyncFn = (url: string) => boolean
 
 // Use for component use HOC
