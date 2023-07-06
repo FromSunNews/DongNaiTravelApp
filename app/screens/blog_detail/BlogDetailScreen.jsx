@@ -74,7 +74,12 @@ const BlogDetailScreen = withTheme(({
       toggleFloatButtonsVisible(0)
     }
     offSetY.current  = contentOffset.y;
-  }
+  };
+
+  const handleLikeButton = () => likeBlog(
+    (data, state) => updateBriefBlog(blogDetails._id, 0, { isLiked: state }),
+    (state) => updateBriefBlog(blogDetails._id, 0, { isLiked: state })
+  )
 
   const toggleFloatButtonsVisible = (val) => {
     Animated.spring(floatButtonTranslateYAnim,
@@ -83,12 +88,7 @@ const BlogDetailScreen = withTheme(({
         useNativeDriver: true
       }
     ).start();
-  }
-
-  const handleLikeButton = () => likeBlog(
-    (data, state) => updateBriefBlog(blogDetails._id, { isLiked: state }),
-    (state) => updateBriefBlog(blogDetails._id, { isLiked: state })
-  )
+  };
 
   React.useEffect(() => {
     navigation.setOptions({'title': blogDetails.name});
@@ -110,7 +110,7 @@ const BlogDetailScreen = withTheme(({
         console.log('RELATED BLOGS: ', data)
         setRelatedBlogs(data);
       })
-      .catch(error => console.error(error))
+      .catch(console.error)
     }
 
     return function() {
@@ -201,7 +201,8 @@ const BlogDetailScreen = withTheme(({
 
           {/* Speech, tạm thời vẫn chưa có, cho nên là chờ ở đây thôi */}
           <Speech
-            content={blogDetails.content?.speech}
+            text={blogDetails.content?.plainText}
+            // content={blogDetails.content?.speech}
             lang='vi'
             style={app_sp.mt_12}
           />

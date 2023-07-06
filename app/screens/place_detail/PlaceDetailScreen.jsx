@@ -106,6 +106,7 @@ const PlaceDetailScreen = withTheme(({
   }, [opacityValue]);
 
   const handleChangeBottomSheet = index => {
+    console.log("TO VALUE: ", index);
     if(index === 1) {
       animFade(1);
     } else {
@@ -114,8 +115,8 @@ const PlaceDetailScreen = withTheme(({
   }
 
   /**
-     * Hàm này dùng để yêu thích / bỏ yêu thích một place, nó sẽ gửi id của place về server và tự server nó sẽ xử lý.
-     */
+   * Hàm này dùng để yêu thích / bỏ yêu thích một place, nó sẽ gửi id của place về server và tự server nó sẽ xử lý.
+   */
   const handleLikeButton = () => likePlace(
     (data, state) => updateBriefPlace(placeDetails.place_id, { isLiked: state }),
     (state) => updateBriefPlace(placeDetails.place_id, { isLiked: state })
