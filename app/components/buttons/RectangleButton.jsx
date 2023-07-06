@@ -101,8 +101,8 @@ const RectangleButton = ({
   }
 
   if(props.disabled) {
-    contentContainerStyle = Object.assign({}, contentContainerStyle, styles.btn_disable);
-    currentLabelStyle = colors.disable.type_1;
+    contentContainerStyle = Object.assign({}, contentContainerStyle, { backgroundColor: colors.disable.type_1.btn });
+    currentLabelStyle = { color: colors.disable.type_1.lbl };
   }
 
   contentContainerStyle = ComponentUtility.mergeStyle(contentContainerStyle, props.style);
