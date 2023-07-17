@@ -1,16 +1,20 @@
 import { View, Text } from 'react-native'
 import React from 'react'
-import styles from './ViewStatsScreenStyles'
-import useTheme from 'customHooks/useTheme'
 
-const ViewStatsScreen = () => {
-  //theme
-  const themeColor = useTheme();
+import { withTheme } from 'hocs/withTheme'
+
+import { AppText } from 'components'
+
+import styles from './ViewStatsScreenStyles'
+
+const ViewStatsScreen = withTheme(({
+  theme
+}) => {
   return (
-    <View style={[styles.container,{backgroundColor: themeColor.bg_second}]}>
-      <Text style={{color: themeColor.fourth}}>ViewStats</Text>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <AppText>ViewStats</AppText>
     </View>
   )
-}
+});
 
 export default ViewStatsScreen
