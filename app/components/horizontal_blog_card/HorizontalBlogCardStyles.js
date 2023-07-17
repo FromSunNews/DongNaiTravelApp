@@ -57,12 +57,10 @@ const styles = StyleSheet.create({
   card_title: {
     flex: 1,
     flexWrap: 'wrap',
-    fontWeight: 'bold',
-    ...default_card_text_color
+    fontWeight: 'bold'
   },
 
   car_subtitle: {
-    ...default_card_text_color
   },
 
   card_information_container: {

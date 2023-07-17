@@ -4,20 +4,16 @@ import { app_c, app_dms, app_sh, app_sp } from "globals/styles"
 
 const styles = StyleSheet.create({
   pd_bottom_sheet: {
-    backgroundColor: app_c.HEX.primary,
     ...app_sh.ronuded_top_right_16,
     ...app_sh.ronuded_top_left_16
   },
 
   pd_bottom_sheet_view: {
-    backgroundColor: app_c.HEX.primary,
     flex: 1
   },
 
   pd_header: {
     justifyContent: 'space-between',
-    borderBottomColor: app_c.HEX.fourth,
-    borderBottomWidth: .75,
     ...app_sp.pb_12
   },
 
@@ -33,7 +29,6 @@ const styles = StyleSheet.create({
   },
 
   pd_tab_button_active: {
-    borderBottomColor: app_c.HEX.fourth,
     borderBottomWidth: .75,
   },
 
@@ -65,7 +60,6 @@ const styles = StyleSheet.create({
 
   pd_content_rr_stats_container: {
     flexDirection: 'row',
-    borderBottomColor: app_c.HEX.fourth,
     borderBottomWidth: .75,
     ...app_sp.pb_12,
   },

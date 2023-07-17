@@ -10,7 +10,7 @@ import {
   getPlacesAPI
 } from 'apis/axios'
 
-import useTheme from 'customHooks/useTheme'
+import { useTheme } from 'customHooks/useTheme'
 
 import { useForm, Controller } from 'react-hook-form'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -21,7 +21,7 @@ import {
 } from 'components'
 
 import {
-  app_c, app_sh, app_sp
+  app_sh, app_sp
 } from 'globals/styles'
 
 import {
@@ -66,7 +66,7 @@ const Search = (props) => {
     apis: []
   }, props);
 
-  const theme = useTheme();
+  const { theme } = useTheme();
 
   const textInputRef = React.useRef(null);
 
@@ -80,10 +80,10 @@ const Search = (props) => {
       styles.container,
       app_sh.rounded_8,
       app_sp.ph_12,
-      app_sp.pv_18,
+      app_sp.pv_12,
       {
         position: 'relative',
-        borderColor: app_c.HEX.ext_third,
+        borderColor: theme.outline,
         borderWidth: 1,
         flex: 1,
         zIndex: 10
@@ -92,16 +92,18 @@ const Search = (props) => {
       <Ionicons
         name='search-outline'
         style={app_sp.me_12}
-        color={app_c.HEX.ext_third}
+        color={theme.outline}
         size={20}
       />
       <TextInput
         ref={textInputRef}
-        style={{flex: 1}}
+        style={{flex: 1, color: theme.onBackground, backgroundColor: theme.background}}
+        placeholderTextColor={theme.outline}
         placeholder={props.placeHolder}
         onChangeText={text => {
           search(text, () => {
             Promise.all(
+              // Lây ra tất cả các request promises trong props.apis để request nhiều resource khác nhau
               props.apis.reduce(
                 (acc, curr) => {
                   acc.push(curr(text));
@@ -116,7 +118,9 @@ const Search = (props) => {
           });
           if(!text) props.callBack(text, []);
         }}
+        contextMenuHidden
         clearButtonMode='while-editing'
+        inputMode='search'
       />
     </View>
   )

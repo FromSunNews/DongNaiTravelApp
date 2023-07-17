@@ -12,7 +12,7 @@ import {
 
 import { useNavigation } from '@react-navigation/native'
 
-import useTheme from 'customHooks/useTheme'
+import { useTheme } from 'customHooks/useTheme'
 
 import { useSelector } from 'react-redux'
 import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
@@ -75,14 +75,14 @@ const VerticalBlogCard = ({
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.homeScreen
   //theme
-  const {themeColor, themeMode} = useTheme();
+  const { theme, themeMode } = useTheme();
 
   let displayAuthorName = blog.author.lastName && blog.author.firstName
     ? blog.author.lastName + " " + blog.author.firstName
     : blog.author.displayName
 
   return React.useMemo(() => (
-    <View {...props} style={[containerStyle,{backgroundColor: themeMode === 'light' ? themeColor.bg_second : themeColor.bg_tertiary}]}>
+    <View {...props} style={[containerStyle,{backgroundColor: theme.subBackground}]}>
       {/* Image */}
       <RectangleButton RectangleButton
         isOnlyContent
@@ -90,13 +90,13 @@ const VerticalBlogCard = ({
         overrideShape="rounded_4"
         onPress={handlePressImageButton}
       >
-        <Image source={{ uri: blog.avatar ? blog.avatar : undefined }} style={[styles.card_image]} />
+        <Image source={{ uri: blog.avatar ? blog.avatar : undefined }} style={[styles.card_image, { backgroundColor: theme.subOutline }]} />
       </RectangleButton>
       {/* Button & Recommended tag */}
       <View style={styles.card_mid}>
         {
           !blog.author.avatar
-          ? (<Ionicons name="person-circle" size={14} color={themeColor.ext_second} />)
+          ? (<Ionicons name="person-circle" size={14} color={theme.outline} />)
           : (<Image source={{uri: blog.author.avatar}} style={styles.card_user_avatar} />)
         }<AppText font="body2">{" " + displayAuthorName}</AppText>
       </View>
@@ -117,7 +117,7 @@ const VerticalBlogCard = ({
       </View>
 
       {/* Like button */}
-      <View style={styles.card_buttons_container}>
+      <View style={[styles.card_buttons_container, { borderTopColor: theme.outline, borderTopWidth: 1 }]}>
         <RectangleButton
           isActive={extendedBlogInfo.isLiked}
           isTransparent
@@ -149,7 +149,7 @@ const VerticalBlogCard = ({
         </RectangleButton>
       </View>
     </View>
-  ), [extendedBlogInfo.isLiked, blog.userCommentsTotal, blog.userFavoritesTotal]);
+  ), [extendedBlogInfo.isLiked, blog.userCommentsTotal, blog.userFavoritesTotal, themeMode]);
 }
 
 export default withBlogCard(VerticalBlogCard)

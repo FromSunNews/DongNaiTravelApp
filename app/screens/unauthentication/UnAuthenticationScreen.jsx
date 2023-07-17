@@ -1,6 +1,8 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
+import { withTheme } from 'hocs/withTheme'
+
 import {
   AppText,
   RectangleButton
@@ -13,9 +15,12 @@ import {
 } from 'globals/styles'
 import { Image } from 'react-native'
 
-const UnAuthenticationScreen = ({navigation}) => {
+const UnAuthenticationScreen = withTheme(({
+  navigation,
+  theme
+}) => {
   return (
-    <View style={{flex: 1, backgroundColor: app_c.HEX.primary, justifyContent: 'center', alignItems: 'center'}}>
+    <View style={{flex: 1, backgroundColor: theme.background, justifyContent: 'center', alignItems: 'center'}}>
       <Image
         source={require('../../assets/images/un_authen.png')}
         style={{
@@ -40,6 +45,6 @@ const UnAuthenticationScreen = ({navigation}) => {
       </RectangleButton>
     </View>
   )
-}
+});
 
 export default UnAuthenticationScreen

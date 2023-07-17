@@ -8,7 +8,7 @@ import React from 'react'
 
 import { useSelector } from 'react-redux'
 
-import useTheme from 'customHooks/useTheme'
+import { useTheme } from 'customHooks/useTheme'
 
 import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
 
@@ -70,24 +70,21 @@ const VerticalPlaceCard = ({
   const langData = useSelector(selectCurrentLanguage).data?.homeScreen
 
   //theme
-  const {themeColor, themeMode} = useTheme();
-  const background = themeMode === 'light' ? themeColor.bg_second : themeColor.bg_tertiary
-  const dataBshdw = themeMode === 'light' ? 'type_1' : 'type_1_dark'
+  const { theme, themeMode } = useTheme();
 
   let [city, province] = getTextContentInHTMLTag(place.adr_address);
   let presentationImage = place && place.place_photos ? {uri: place.place_photos[0]} : {}
 
   return React.useMemo(() => (
-    <View {...props} style={[containerStyle,{...app_shdw[dataBshdw],backgroundColor: background}]}>
+    <View {...props} style={[containerStyle,{ backgroundColor: theme.subBackground }]}>
       {/* Image */}
       <RectangleButton
-        boxShadowType={themeMode === 'light' ? 'type_1' : 'type_1_dark'}
         isOnlyContent
         typeOfButton="none"
         overrideShape="rounded_4"
         onPress={handlePressImageButton}
       >
-        <Image source={presentationImage} style={[styles.card_image, { backgroundColor: themeColor.ext_primary }]} />
+        <Image source={presentationImage} style={[styles.card_image, { backgroundColor: theme.subOutline }]} />
       </RectangleButton>
       {/* Button & Recommended tag */}
       <View style={styles.card_mid}>
@@ -130,7 +127,7 @@ const VerticalPlaceCard = ({
             )}
           </RectangleButton>
         </> : 
-        <View style={styles.card_buttons_container}>
+        <View style={[styles.card_buttons_container, { borderTopColor: theme.outline, borderTopWidth: 1 }]}>
           <RectangleButton
             isActive={extendedPlaceInfo.isLiked}
             isTransparent
@@ -163,7 +160,7 @@ const VerticalPlaceCard = ({
         </View>
       }
     </View>
-  ), [extendedPlaceInfo.isLiked, place.rating, place.user_favorites_total, place.user_ratings_total,themeColor])
+  ), [extendedPlaceInfo.isLiked, place.rating, place.user_favorites_total, place.user_ratings_total, themeMode])
 }
 
 export default withPlaceCard(VerticalPlaceCard)

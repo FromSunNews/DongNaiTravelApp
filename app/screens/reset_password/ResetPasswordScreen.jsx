@@ -1,18 +1,38 @@
-import { View, Text, ScrollView, TouchableWithoutFeedback, Keyboard } from 'react-native'
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Image
+} from 'react-native'
 import React from 'react'
 
-import { styles } from './ResetPasswordScreenStyles'
-import { app_c } from 'globals/styles'
+import { resetPasswordAPI } from 'apis/axios'
+
+import { withTheme } from 'hocs/withTheme'
+
+import { useNavigation, useRoute } from '@react-navigation/native'
+import { useDispatch } from 'react-redux'
+
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { Controller, useForm } from 'react-hook-form'
-import { FIELD_MIN_LENGTH_MESSAGE, FIELD_REQUIRED_MESSAGE, PASSWORD_RULE, PASSWORD_RULE_MESSAGE } from 'utilities/validators'
-import { ButtonText, Input } from 'components'
-import { useDispatch } from 'react-redux'
-import { useNavigation, useRoute } from '@react-navigation/native'
-import { resetPasswordAPI } from 'apis/axios'
-import { Image } from 'react-native'
 
-const ResetPasswordScreen = () => {
+import { FIELD_MIN_LENGTH_MESSAGE, FIELD_REQUIRED_MESSAGE, PASSWORD_RULE, PASSWORD_RULE_MESSAGE } from 'utilities/validators'
+
+import {
+  ButtonText,
+  Input,
+  AppText,
+  RectangleButton
+} from 'components'
+
+import { styles } from './ResetPasswordScreenStyles'
+import { app_sp } from 'globals/styles'
+
+const ResetPasswordScreen = withTheme(({
+  theme
+}) => {
 
   const dispatch = useDispatch()
   const navigation = useNavigation()
@@ -45,23 +65,21 @@ const ResetPasswordScreen = () => {
   return (
     <>
       <ScrollView
-        style={{backgroundColor: app_c.HEX.primary, flex: 1}}
+        style={{backgroundColor: theme.background, flex: 1}}
       >
         <KeyboardAwareScrollView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}   
         >
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.container}>
               <View style={styles.content}>
-              <Text style={styles.textHeader}>Reset password</Text>
-
+              <AppText font="h0" color="primary" style={app_sp.mb_18}>Reset password</AppText>
               <Image
                 style={styles.image}
                 source={require('assets/images/illutration4.png')}
               />
 
-              <Text style={styles.smallLabel}>Your new password must be different from previous used passwords</Text>
+              <AppText font="body2">Your new password must be different from previous used passwords</AppText>
 
               <Controller
                 control={control}
@@ -92,7 +110,7 @@ const ResetPasswordScreen = () => {
                   />
                 )}
               />
-              {errors.password && <Text style={styles.textError}>{errors.password?.message}</Text>}
+              {errors.password && <AppText font="body1" style={[styles.textError, app_sp.mt_6]}>{errors.password?.message}</AppText>}
 
               <Controller
                 control={control}
@@ -123,12 +141,16 @@ const ResetPasswordScreen = () => {
                   />
                 )}
               />
-              {errors.confirmPassword && <Text style={styles.textError}>{errors.confirmPassword?.message}</Text>}
-
-                <ButtonText
-                  label='Reset password'
+              {errors.confirmPassword && <AppText font="body1" style={[styles.textError, app_sp.mt_6]}>{errors.confirmPassword?.message}</AppText>}
+                <RectangleButton
+                  isActive
+                  overrideShape="rounded_8"
+                  typeOfButton="opacity"
+                  style={{...app_sp.mt_12, ...app_sp.pv_16}}
                   onPress={handleSubmit(onSubmit)}
-                />
+                >
+                  Reset password
+                </RectangleButton>
                 
               </View>
             </View>
@@ -138,6 +160,6 @@ const ResetPasswordScreen = () => {
         </ScrollView>
     </>
   )
-}
+});
 
 export default ResetPasswordScreen

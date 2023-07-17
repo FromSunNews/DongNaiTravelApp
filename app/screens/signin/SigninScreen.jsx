@@ -12,6 +12,8 @@ import React, { useEffect, useState } from 'react'
 
 import { signInUserAPI } from 'apis/axios'
 
+import { withTheme } from 'hocs/withTheme'
+
 import {
   useAuth,
   useAuthActions
@@ -41,7 +43,10 @@ import {
 import { styles } from './SigninScreenStyles'
 import { app_sp } from 'globals/styles'
 
-const SigninScreen = () => {
+const SigninScreen = withTheme(({
+  theme,
+  toggleTheme
+}) => {
   // Phuong: https://github.com/Cnilton/react-native-floating-label-input
   // Phuong: https://react-hook-form.com/get-started#ReactNative
   const navigation = useNavigation()
@@ -100,18 +105,17 @@ const SigninScreen = () => {
     <KeyboardAwareScrollView
       extraScrollHeight={40}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}
+      style={[styles.container, { backgroundColor: theme.background }]}
       showsVerticalScrollIndicator={false}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={{flex: 1}}>
           <View style={styles.content}>
-          <Text style={styles.textHeader}>{langData?.text_header[langCode]}</Text>
+            <AppText font="h0" color="primary" style={app_sp.mb_18}>{langData?.text_header[langCode]}</AppText>
             <Image
               style={styles.image}
               source={require('assets/images/illutration1.png')}
             />
-            
             <Controller
               control={control}
               rules={{
@@ -133,7 +137,7 @@ const SigninScreen = () => {
                 />
               )}
             />
-            {errors.emailName && <Text style={styles.textError}>{errors.emailName?.message}</Text>}
+            {errors.emailName && <AppText font="body1" style={[styles.textError, app_sp.mt_6]}>{errors.emailName?.message}</AppText>}
 
             <Controller
               control={control}
@@ -164,7 +168,7 @@ const SigninScreen = () => {
                 />
               )}
             />
-            {errors.password && <Text style={styles.textError}>{errors.password?.message}</Text>}
+            {errors.password && <AppText font="body1" style={[styles.textError, app_sp.mt_6]}>{errors.password?.message}</AppText>}
 
             <View style={styles.containerReFor}>
               <CheckBoxText
@@ -176,39 +180,38 @@ const SigninScreen = () => {
               // Phuong: vi user goback() dc
                 onPress={() => navigation.push('ForgotPasswordScreen')}
               >
-                <Text style={styles.textFor}>{langData?.forgot_password[langCode]}</Text>
+                <AppText font="h5" color="secondary" style={styles.textFor}>{langData?.forgot_password[langCode]}</AppText>
               </TouchableOpacity>
             </View>
 
-            <ButtonText
+            {/* <ButtonText
               label={langData?.text_header[langCode]}
               onPress={handleSubmit(onSubmit)}
-            />
+            /> */}
 
-             {/* <RectangleButton
+            <RectangleButton
+              isActive
               overrideShape="rounded_8"
               typeOfButton="opacity"
-              defaultColor="type_4"
               style={{...app_sp.mt_12, ...app_sp.pv_16}}
-              onPress={() => handleSubmit(onSubmit)}
+              onPress={handleSubmit(onSubmit)}
             >
-              {(isActive, currentLabelStyle) => (
-                <AppText font="h4" style={currentLabelStyle}>Sign In</AppText>
-              )}
-            </RectangleButton> */}
+              {langData?.text_header[langCode]}
+            </RectangleButton>
           </View>
           
           <View style={{ flex: 1}}></View>
         </View>
       </TouchableWithoutFeedback>
       <View style={styles.containerFooter}>
+        {/* <RectangleButton onPress={toggleTheme}>Change theme</RectangleButton> */}
         <TouchableOpacity
           style={{alignSelf: 'center'}}
           onPress={() => navigation.replace('GroupBottomTab')}
         >
-          <Text style={styles.signInAsGuest}>{langData?.sign_in_as_gest[langCode]}</Text>
+          <AppText font="h5" color="secondary" style={styles.signInAsGuest}>{langData?.sign_in_as_gest[langCode]}</AppText>
         </TouchableOpacity>
-          <Text style={styles.labelSocial}>{langData?.or_signin_with[langCode]}</Text>
+          <AppText style={styles.labelSocial}>{langData?.or_signin_with[langCode]}</AppText>
           <View style={styles.containerSocialBtn}>
             <TouchableOpacity>
               <Image
@@ -232,16 +235,12 @@ const SigninScreen = () => {
             </TouchableOpacity>
           </View>
         <View style={styles.containerSignup}>
-          <Text style={styles.labelNoAccount}>{langData?.no_account[langCode]}</Text>
-          <TouchableOpacity
-            onPress={() => navigation.push('SignupScreen')}
-          >
-            <Text style={styles.labelSignup}>{langData?.sign_up[langCode]}</Text>
-          </TouchableOpacity>
+          <AppText style={styles.labelNoAccount}>{langData?.no_account[langCode]}</AppText>
+          <AppText toScreen={{screenName: "SignupScreen"}} color="secondary" font="h5" style={styles.labelSignup}>{langData?.sign_up[langCode]}</AppText>
         </View>
       </View>
     </KeyboardAwareScrollView>
   )
-}
+});
 
 export default SigninScreen

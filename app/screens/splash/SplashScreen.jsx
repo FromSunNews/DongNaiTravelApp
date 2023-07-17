@@ -2,6 +2,8 @@ import { View, Text, Animated } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import * as Localization from 'expo-localization';
 
+import { withTheme } from 'hocs/withTheme';
+
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
 
@@ -21,7 +23,9 @@ import { Easing } from 'react-native-reanimated'
 import { styles } from './SplashScreenStyles'
 import { app_c } from 'globals/styles'
 
-const SplashScreen = () => {
+const SplashScreen = withTheme(({
+  theme
+}) => {
   // Phuong: https://github.com/lottie-react-native/lottie-react-native#usage
   
   const navigation = useNavigation()
@@ -74,13 +78,14 @@ const SplashScreen = () => {
         else 
           navigation.replace('SigninScreen')
       }
+      // navigation.replace('TestNavigator');
     }
   }, [loaded])
 
   const lottieViewRef = useRef(null)
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       <Animated.Text
         style={[styles.label, {opacity: opacity}]}
       >DongNaiTravelApp</Animated.Text>
@@ -93,13 +98,13 @@ const SplashScreen = () => {
           style={{
             width: 200,
             height: 200,
-            backgroundColor: app_c.HEX.primary,
+            backgroundColor: theme.background,
           }}
           source={require('../../assets/animations/loading1.json')}
         />
       </View>
     </View>
   )
-}
+});
 
 export default SplashScreen

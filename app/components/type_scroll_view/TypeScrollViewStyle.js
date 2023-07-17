@@ -16,8 +16,7 @@ const styles = StyleSheet.create({
 
   line_index: {
     width: '100%',
-    height: 1,
-    backgroundColor: app_c.HEX.fourth
+    height: 1
   },
 
   slide_container: {

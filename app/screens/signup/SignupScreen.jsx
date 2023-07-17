@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { Button } from 'react-native'
-import { useDispatch, useSelector } from 'react-redux'
-import { useNavigation } from '@react-navigation/native'
-import { useForm, Controller } from 'react-hook-form'
-
-import { 
+import {
+  Button,
   View, 
   Text, 
   Image, 
@@ -13,22 +9,27 @@ import {
   TouchableOpacity,
   ScrollView
 } from 'react-native'
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigation } from '@react-navigation/native'
+import { useForm, Controller } from 'react-hook-form'
+import moment from 'moment'
+
+import { updateCurrentUser } from 'redux/user/UserSlice'
+import { updateNotif } from 'redux/manifold/ManifoldSlice'
+import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
 
 import {
   signInUserAPI,
   signUpUserAPI
 } from 'apis/axios'
 
+import { withTheme } from 'hocs/withTheme'
+
 import {
   useAuthActions
 } from 'customHooks/useAuth'
 
-import { updateCurrentUser } from 'redux/user/UserSlice'
-import { updateNotif } from 'redux/manifold/ManifoldSlice'
-import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
-
-import moment from 'moment'
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 
 import {
   BIRTHDAY_RULE,
@@ -48,16 +49,20 @@ import DateTimePicker from '@react-native-community/datetimepicker'
 import RNDateTimePicker from '@react-native-community/datetimepicker'
 
 import {
+  AppText,
   ButtonText,
   CheckBoxText,
   Input,
-  BottomSheetScroll
+  BottomSheetScroll,
+  RectangleButton
 } from 'components'
 
 import { styles } from './SignupScreenStyles'
-import { app_c, app_sh, app_shdw } from 'globals/styles'
+import { app_c, app_sh, app_shdw, app_sp } from 'globals/styles'
 
-const SignupScreen = () => {
+const SignupScreen = withTheme(({
+  theme
+}) => {
 
   // Phuong: https://github.com/Cnilton/react-native-floating-label-input
   // Phuong: https://react-hook-form.com/get-started#ReactNative
@@ -79,16 +84,16 @@ const SignupScreen = () => {
   const [openTermCondition, setOpenTermCondition] = useState(false) 
 
   const { control, handleSubmit, formState: { errors }, setValue } = useForm ({
-      defaultValues: {
-        email: '',
-        firstName: '',
-        lastName: '',
-        birthday: '',
-        username: '',
-        password: '',
-        confirmPassword: ''
-      }
-    })
+    defaultValues: {
+      email: '',
+      firstName: '',
+      lastName: '',
+      birthday: '',
+      username: '',
+      password: '',
+      confirmPassword: ''
+    }
+  });
 
   const onSubmit = async (data) => {
     await signup(data, {
@@ -117,17 +122,17 @@ const SignupScreen = () => {
     <>
       <KeyboardAwareScrollView
         extraScrollHeight={40}
-        style={styles.containerScrollView}
+        style={[styles.containerScrollView, { backgroundColor: theme.background }]}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         showsVerticalScrollIndicator={false}
       >
         {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         </TouchableWithoutFeedback> */}
-          <View style={styles.container}>
+          <View style={[styles.container, { backgroundColor: theme.background }]}>
             <View style={styles.content}>
-            <Text style={styles.textHeader}>{langData?.text_header[langCode]}</Text>
+            <AppText font="h0" color="primary" style={app_sp.mb_18}>{langData?.text_header[langCode]}</AppText>
 
-            <Text style={[styles.smallLabel,{ marginTop: 0}]}>{langData?.intro_youself[langCode]}</Text>
+            <AppText font="h5" style={app_sp.mb_12}>{langData?.intro_youself[langCode]}</AppText>
 
             <Controller
               control={control}
@@ -153,7 +158,7 @@ const SignupScreen = () => {
                 />
               )}
             />
-            {errors.email && <Text style={styles.textError}>{errors.email?.message}</Text>}
+            {errors.email && <AppText style={styles.textError}>{errors.email?.message}</AppText>}
       
             <View style={styles.fullname}>
               <View style={styles.containerError}>
@@ -182,7 +187,7 @@ const SignupScreen = () => {
                     />
                   )}
                 />
-                {errors.firstName && <Text style={styles.textError}>{errors.firstName?.message}</Text>}
+                {errors.firstName && <AppText style={styles.textError}>{errors.firstName?.message}</AppText>}
               </View>
               <View style={styles.fillView}/>
               <View style={styles.containerError}>
@@ -211,7 +216,7 @@ const SignupScreen = () => {
                     />
                   )}
                 />
-                {errors.lastName && <Text style={styles.textError}>{errors.lastName?.message}</Text>}
+                {errors.lastName && <AppText style={styles.textError}>{errors.lastName?.message}</AppText>}
               </View>
             </View>
 
@@ -240,9 +245,9 @@ const SignupScreen = () => {
                 />
               )}
             />
-            {errors.birthday && <Text style={styles.textError}>{errors.birthday?.message}</Text>}
+            {errors.birthday && <AppText style={styles.textError}>{errors.birthday?.message}</AppText>}
 
-            <Text style={styles.smallLabel}>{langData?.fill_info[langCode]}</Text>
+            <AppText font="h5" style={[app_sp.mb_12, app_sp.mt_18]}>{langData?.fill_info[langCode]}</AppText>
               
             <Controller
               control={control}
@@ -272,7 +277,7 @@ const SignupScreen = () => {
                 />
               )}
             />
-            {errors.username && <Text style={styles.textError}>{errors.username?.message}</Text>}
+            {errors.username && <AppText style={styles.textError}>{errors.username?.message}</AppText>}
                 
             <Controller
               control={control}
@@ -303,7 +308,7 @@ const SignupScreen = () => {
                 />
               )}
             />
-            {errors.password && <Text style={styles.textError}>{errors.password?.message}</Text>}
+            {errors.password && <AppText style={styles.textError}>{errors.password?.message}</AppText>}
 
             <Controller
               control={control}
@@ -334,50 +339,58 @@ const SignupScreen = () => {
                 />
               )}
             />
-            {errors.confirmPassword && <Text style={styles.textError}>{errors.confirmPassword?.message}</Text>}
+            {errors.confirmPassword && <AppText style={styles.textError}>{errors.confirmPassword?.message}</AppText>}
 
-            <View style={styles.terms}>
-              <Text style={styles.textRead}>{langData?.read_our[langCode]}</Text>
-              <TouchableOpacity
+            <View style={[styles.terms, app_sp.mv_12]}>
+              <AppText style={styles.textRead}>{langData?.read_our[langCode]}</AppText>
+              {/* <RectangleButton
                 onPress={() => setOpenTermCondition(true)}
               >
-                <Text style={styles.textTerms}>{langData?.term_condition[langCode]}</Text>
-              </TouchableOpacity>
+                {langData?.term_condition[langCode]}
+              </RectangleButton> */}
+              <AppText
+                color="secondary"
+                onPress={() => setOpenTermCondition(true)}
+                style={app_sp.mh_6}
+              >{langData?.term_condition[langCode]}</AppText>
               { 
                 langCode === 'vi' &&
-                <Text style={styles.textRead}>của chúng tôi</Text>
+                <AppText style={styles.textRead}>của chúng tôi</AppText>
               }
             </View>
-
               {
                 isShowCheckBox &&
                 <View style={styles.containerReFor}>
                   <CheckBoxText
+                    isChecked={isChecked}
                     label={langData?.agree[langCode]}
                     onPress={() => setIsChecked(!isChecked)}
-                    isChecked={isChecked}
                   />
                 </View>
               }
-
-              <ButtonText
-                label={langData?.text_header[langCode]}
+              <RectangleButton
+                isActive
+                overrideShape="rounded_8"
                 onPress={handleSubmit(onSubmit)}
-              />
+                style={app_sp.mt_12}
+              >
+                {langData?.text_header[langCode]}
+              </RectangleButton>
               
             </View>
             
               <View style={styles.containerSignup}>
-                <Text style={styles.labelNoAccount}>{langData?.have_account[langCode]}</Text>
+                <AppText style={styles.labelNoAccount}>{langData?.have_account[langCode]}</AppText>
                 <TouchableOpacity
                   onPress={() => navigation.pop()}
                 >
-                  <Text style={styles.labelSignup}>{langData?.sign_in[langCode]}</Text>
+                  <AppText font="h5" color="secondary" style={[styles.labelSignup, app_sp.ms_6]}>{langData?.sign_in[langCode]}</AppText>
                 </TouchableOpacity>
               </View>
           </View>
       </KeyboardAwareScrollView>
-      <BottomSheetScroll 
+      <BottomSheetScroll
+        bottomView={{backgroundColor: theme.background}}
         openTermCondition={openTermCondition} 
         closeTermCondition={() => {
           setOpenTermCondition(false)
@@ -393,11 +406,11 @@ const SignupScreen = () => {
         childView={
           termsConditions[langCode].map((item) => (
             <View key={`term-${item.id}`}>
-              <Text style={styles.headerText}>{item.headerText}</Text>
+              <AppText font="h4" style={[styles.headerText, app_sp.mt_18]}>{item.headerText}</AppText>
               {
                 item.paragraphs.map((paragraph, index) => (
                   <View key={`paragraph-${index}`}>
-                    <Text style={styles.paragraph}>{paragraph.content}</Text>
+                    <AppText style={styles.paragraph}>{paragraph.content}</AppText>
                     {
                       paragraph.childContent &&
                       paragraph.childContent.map((child, index) => (
@@ -408,9 +421,9 @@ const SignupScreen = () => {
                             <Octicons 
                               name='dot-fill' 
                               size={14} 
-                              color={app_c.HEX.fourth}
+                              color={theme.onBackground}
                             />
-                            <Text style={styles.childContent}>{child}</Text>
+                            <AppText style={styles.childContent}>{child}</AppText>
                           </View>
                         </View>
                       ))
@@ -466,6 +479,6 @@ const SignupScreen = () => {
       {/* </Modal> */}
     </>
   )
-}
+});
 
 export default SignupScreen

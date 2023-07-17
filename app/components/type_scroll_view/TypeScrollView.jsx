@@ -1,6 +1,8 @@
 import { ScrollView, Text, View, Animated } from 'react-native'
 import React from 'react'
 
+import { useTheme } from 'customHooks/useTheme'
+
 import StringUtility from 'utilities/string'
 
 import AppText from '../app_text/AppText'
@@ -9,16 +11,15 @@ import RectangleButton from '../buttons/RectangleButton'
 import styles from './TypeScrollViewStyle'
 import { app_sp ,app_shdw } from 'globals/styles'
 
-import { ViewStyles } from 'types/index.d'
-import useTheme from 'customHooks/useTheme'
+import { ViewStyleProps } from 'types/index.d.ts'
 import { useSelector } from 'react-redux'
 
 /**
  * @typedef TypeScrollViewProps
  * @property {number} lineIndexTranslateXStart (Only use with `buttonStyle="underline"`) vị trí bắt đầu của underline để translate.
  * @property {string} types Là một chuỗi bao gồm các loại của một data nào đó mà các loại này đươc ngăn cách bởi dấu `;`.
- * @property {ViewStyles} scrollStyle Là style của scroll view.
- * @property {ViewStyles} containerStyle Là style của scroll view container.
+ * @property {ViewStyleProps} scrollStyle Là style của scroll view.
+ * @property {ViewStyleProps} containerStyle Là style của scroll view container.
  * @property {"capsule" | "rounded_3" | "rounded_4" | "rounded_6" | "rounded_8" | "rounded_12" | "rounded_16" | "underline"} buttonStyle Là style cho các button.
  * @property {(type: string, typeIndex: number) => void} callBack Là một callBack nhận vào 2 tham số là `type` vừa ấn và index của type đó `typeIndex`.
  */
@@ -83,7 +84,7 @@ const TypeScrollView = ({
     isButtonPress: false,
   });
   //theme
-  const {themeColor,themeMode} = useTheme();
+  const { theme } = useTheme();
 
   const direction = currenttypeIndex > buttonInfoRef.current.prevButtonIndex ? 1 : (-1);
   const lineTranslateAmin = new Animated.Value(lineIndexTranslateXStart * direction * -1);
@@ -168,13 +169,13 @@ const TypeScrollView = ({
                   buttonStyle !== "underline"
                   ? (
                     <RectangleButton
+                      defaultColor='type_5'
+                      activeColor='type_1'
                       isActive={currenttypeIndex === index}
                       overrideShape={buttonStyle}
                       key={slideName + 'button'}
                       onPress={handlePressTabSlider(index)}
                       style={app_sp.me_12}
-                      defaultColor={themeMode === 'light' ? 'type_2' : 'type_1_dark'}
-                      activeColor={themeMode === 'light' ? 'type_1' : 'type_1_dark'}
                     >
                       {(isActive, currentLabelStyle) => (
                         <AppText style={currentLabelStyle} font="body1">{labelsArrInTitleCase[index]}</AppText>
@@ -196,7 +197,7 @@ const TypeScrollView = ({
                       <Animated.View
                         key={slideName + 'line'}
                         style={{
-                          ...(index === currenttypeIndex ? styles.line_index : {}),
+                          ...(index === currenttypeIndex ? {...styles.line_index, backgroundColor: theme.outline } : {}),
                           transform: [
                             { translateX: lineTranslateAmin }
                           ],

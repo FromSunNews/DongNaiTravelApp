@@ -8,6 +8,7 @@ import {
 import {
   useBlogDetailsActions
 } from 'customHooks/useBlog'
+import { useTheme } from 'customHooks/useTheme'
 
 import { useNavigation } from '@react-navigation/native'
 
@@ -21,7 +22,6 @@ import CircleButton from 'components/buttons/CircleButton'
 
 import styles from './HorizontalBlogCardStyles'
 import { app_c, app_shdw, app_sp } from 'globals/styles'
-import useTheme from 'customHooks/useTheme'
 
 import {
   BlogDataProps,
@@ -62,13 +62,10 @@ const HorizontalBlogCard = ({
     ? blog.author.lastName + " " + blog.author.firstName
     : blog.author.displayName
   //theme
-  const {themeColor, themeMode} = useTheme();
-  //shadow for card
-  let shadw = themeMode === 'light' ? 'type_1' : 'type_1_dark'
-  let bg = themeMode === 'light' ? 'bg_second' : 'bg_tertiary'
+  const { theme, themeMode } = useTheme();
 
   return React.useMemo(() => (
-    <View style={[styles.card,{backgroundColor: themeColor[bg], ...app_shdw[shadw]}]}>
+    <View style={[styles.card,{backgroundColor: theme.subBackground, ...app_shdw.type_1}]}>
       {/* Cột đâu tiên - Image Container */}
       <RectangleButton
         typeOfButton="highlight"
@@ -77,7 +74,7 @@ const HorizontalBlogCard = ({
         onPress={handlePressImageButton}
         style={app_sp.me_12}
       >
-        <ImageBackground style={[styles.card_image_container,{backgroundColor: themeColor.bg_second,}]} source={blog.avatar !== "" ? {uri: blog.avatar} : {}}>
+        <ImageBackground style={[styles.card_image_container, { backgroundColor: theme.subBackground }]} source={blog.avatar !== "" ? {uri: blog.avatar} : {}}>
           {/*
             blog.isRecommended &&
             <View style={styles.card_recommended_mark_container}>
@@ -97,11 +94,11 @@ const HorizontalBlogCard = ({
             }<AppText font="body2" style={styles.card_text_color}>{" " + displayAuthorName}</AppText>
           </View>
           <View>
-            <AppText numberOfLines={2} font="h3" style={[styles.card_title,{color: themeColor.fourth}]}>{blog.name}</AppText>
+            <AppText numberOfLines={2} font="h3" style={styles.card_title}>{blog.name}</AppText>
           </View>
           <View style={styles.card_information_container}>
             <View style={styles.card_information_col}>
-              <AppText font="body2" style={{color:themeColor.fourth}}>
+              <AppText font="body2">
                 {DateTimeUtility.getShortDateString(blog.createdAt)}
               </AppText>
             </View>
@@ -115,19 +112,21 @@ const HorizontalBlogCard = ({
         <View style={styles.card_buttons_container}>
           <CircleButton
             isActive={extendedBlogInfo.isLiked}
+            border={1}
+            defaultColor='type_5'
+            activeColor='type_1'
             style={app_sp.me_8}
             typeOfButton="highlight"
             onPress={handleLikeButton}
-            setIcon={(isActive, currentLabelStyle) => (
-              <Ionicons name={isActive ? 'heart' : 'heart-outline'} size={14} style={currentLabelStyle} />
-            )}
+            setIcon={<Ionicons name={extendedBlogInfo.isLiked ? 'heart' : 'heart-outline'} size={14} />}
           />
           <CircleButton
+            border={1}
+            defaultColor='type_5'
+            activeColor='type_1'
             style={app_sp.me_8}
             typeOfButton="highlight"
-            setIcon={(isActive, currentLabelStyle) => (
-              <Ionicons name={isActive ? 'flag' : 'flag-outline'} size={14} style={currentLabelStyle} />
-            )}
+            setIcon={<Ionicons name='flag' size={14} />}
           />
         </View>
       </View>
@@ -136,14 +135,12 @@ const HorizontalBlogCard = ({
       <View style={styles.card_share_container}>
         <CircleButton
           isOnlyContent={true}
-          setIcon={(isActive, currentLabelStyle) => (
-            <Ionicons name="share-outline" size={20} style={[currentLabelStyle,{color:themeColor.fourth}]} />
-          )}
+          setIcon={<Ionicons name="share-outline" size={20} />}
           onPress={handleShareToSocial}
         />
       </View>
     </View>
-  ), [extendedBlogInfo.isLiked, blog.userCommentsTotal, blog.userFavoritesTotal]);
+  ), [extendedBlogInfo.isLiked, blog.userCommentsTotal, blog.userFavoritesTotal, themeMode]);
 }
 
 export default withBlogCard(HorizontalBlogCard)

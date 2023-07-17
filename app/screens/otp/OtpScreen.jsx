@@ -1,14 +1,32 @@
-import { View, Text, KeyboardAvoidingView, ScrollView, TouchableWithoutFeedback, Keyboard, TextInput, TouchableOpacity, Pressable } from 'react-native'
+import {
+  View,
+  Text,
+  KeyboardAvoidingView,
+  ScrollView,
+  TouchableWithoutFeedback,
+  Keyboard,
+  TextInput,
+  TouchableOpacity,
+  Pressable,
+  Image
+} from 'react-native'
 import React, { useRef, useEffect, useState } from 'react'
+import { useNavigation, useRoute } from '@react-navigation/native'
+
+import { sendOtpAPI, verifyOtpAPI } from 'apis/axios'
+
+import { withTheme } from 'hocs/withTheme'
+
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+
+import { AppText } from 'components'
 
 import { styles } from './OtpScreenStyles'
 import { app_c } from 'globals/styles'
-import { Image } from 'react-native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { useNavigation, useRoute } from '@react-navigation/native'
-import { sendOtpAPI, verifyOtpAPI } from 'apis/axios'
 
-const OtpScreen = () => {
+const OtpScreen = withTheme(({
+  theme
+}) => {
 
   const navigation = useNavigation()
   const route = useRoute()
@@ -76,19 +94,19 @@ const OtpScreen = () => {
   return (
     <>
       <View
-        style={styles.container}
+        style={[styles.container, { backgroundColor: theme.background }]}
       >
         <KeyboardAwareScrollView
           extraScrollHeight={80}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          contentContainerStyle={styles.containerAvoidView}
+          contentContainerStyle={[styles.containerAvoidView, { backgroundColor: theme.background }]}
         >
-          <Text style={styles.textHeader}>OTP</Text>
+          <AppText font="h0" color="primary" style={styles.textHeader}>OTP</AppText>
           <Image
             style={styles.image}
             source={require('assets/images/illutration3.png')}
           />
-          <Text style={styles.label}>Input your OTP code sent via your email</Text>
+          <AppText font="body0" style={styles.label}>Input your OTP code sent via your email</AppText>
           <View>
             <TextInput
               ref={(input) => textInputRef = input}
@@ -106,20 +124,22 @@ const OtpScreen = () => {
                     key={index}
                     onPress={() => textInputRef.focus()}
                   >
-                  <View 
-                    style={[
-                      styles.cellView,
-                      {
-                        borderBottomColor: index === otpValue. length ? 'red' : app_c.HEX.fourth 
-                      }
-                    ]} 
-                  >
-                    <Text 
-                      style={styles.cellText}
+                    <View 
+                      style={[
+                        styles.cellView,
+                        {
+                          borderBottomColor: index === otpValue. length ? 'red' : theme.onBackground
+                        }
+                      ]} 
                     >
-                      {otpValue && otpValue.length > 0 ? otpValue[index] : ''}
-                    </Text>
-                  </View>
+                      <AppText
+                        font="h2"
+                        color="primary"
+                        style={styles.cellText}
+                      >
+                        {otpValue && otpValue.length > 0 ? otpValue[index] : ''}
+                      </AppText>
+                    </View>
                   </Pressable>
                 ))
               }
@@ -130,20 +150,21 @@ const OtpScreen = () => {
               onPress={() => navigation.replace('ForgotPasswordScreen')}
             >
               <View style={styles.btnChangeEmail}>
-                <Text style={styles.textChange}>Change your email</Text>
+                <AppText font="h5" color="secondary" style={styles.textChange}>Change your email</AppText>
               </View>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => handleResendOtp()}
             >
               <View style={styles.btnChangeResend}>
-                <Text 
+                <AppText
+                  font="h5"
                   style={[styles.textResend,
                   {
-                    color: enableResend ? app_c.HEX.third : 'gray'
+                    color: enableResend ? theme.secondary : theme.outline
                   }
                   ]}
-                >Resend OTP {countdown !== 0 ? `(${countdown})` : ''}</Text>
+                >Resend OTP {countdown !== 0 ? `(${countdown})` : ''}</AppText>
               </View>
             </TouchableOpacity>
           </View>
@@ -151,6 +172,6 @@ const OtpScreen = () => {
         </View>
     </>
   )
-}
+});
 
 export default OtpScreen

@@ -40,17 +40,12 @@ export const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    width: app_dms.screenWidth - 32,
     paddingVertical: 14,
-    backgroundColor: app_c.HEX.fourth,
-    marginTop: 20,
     marginBottom: 30,
     borderRadius: 8,
+    ...app_sp.mt_22
   },
   btnText: {
-    ...app_typo.fonts.normal.bolder.h4,
-    color: app_c.HEX.primary,
-    fontWeight: '600'
   },
   headerText: {
     ...app_typo.fonts.normal.bolder.h4,

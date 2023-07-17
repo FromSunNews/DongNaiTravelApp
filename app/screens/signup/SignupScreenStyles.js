@@ -5,12 +5,10 @@ import Constants from 'expo-constants'
 
 export const styles = StyleSheet.create({
   containerScrollView: {
-    paddingTop: 0,
-    backgroundColor: app_c.HEX.primary
+    paddingTop: 0
   },
   container: {
     flex: 1,
-    backgroundColor: app_c.HEX.primary,
     paddingBottom: 60
   },
   content: {
@@ -30,8 +28,6 @@ export const styles = StyleSheet.create({
   textError: {
     flex: 1,
     color: '#F32424',
-    marginTop: 5,
-    ...app_typo.fonts.normal.normal.body1,
     alignSelf: 'flex-start',
   },
   containerReFor:{
@@ -77,13 +73,8 @@ export const styles = StyleSheet.create({
     marginTop: 16
   },
   labelNoAccount: {
-    color: app_c.HEX.fourth,
-    ...app_typo.fonts.normal.normal.body1
   },
   labelSignup: {
-    padding: 5,
-    color: app_c.HEX.third,
-    ...app_typo.fonts.normal.bolder.h5
   },
   smallLabel: {
     ...app_typo.fonts.normal.bolder.h5,
@@ -108,12 +99,9 @@ export const styles = StyleSheet.create({
   terms: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 15,
+    alignItems: 'center'
   },
   textRead: {
-    ...app_typo.fonts.normal.normal.body1,
-    color: app_c.HEX.fourth
   },
   textTerms: {
     ...app_typo.fonts.normal.bolder.h5,
@@ -122,9 +110,6 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 3,
   },
   headerText: {
-    ...app_typo.fonts.normal.bolder.h4,
-    color: app_c.HEX.fourth,
-    marginTop: 20,
   },
   paragraph: { 
     marginTop: 10, 

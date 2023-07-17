@@ -4,8 +4,7 @@ import { app_sp, app_dms, app_c } from "globals/styles";
 
 const styles = StyleSheet.create({
   scroll_view_container: {
-    height: app_dms.screenHeight,
-    backgroundColor: app_c.HEX.primary
+    height: app_dms.screenHeight
   },
 
   place_cards_container: {

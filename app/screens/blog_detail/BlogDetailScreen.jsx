@@ -15,8 +15,8 @@ import useTheme from 'customHooks/useTheme'
 import { useAuthState } from 'customHooks/useAuth'
 import {
   useBlogDetails,
-  useBlogInteractionActions,
   useBriefBlogs,
+  useBlogInteractionActions,
   useBriefBlogsActions
 } from 'customHooks/useBlog'
 
@@ -29,6 +29,7 @@ import DateTimeUtility from 'utilities/datetime'
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
+import { withTheme } from 'hocs/withTheme'
 import {
   AppText,
   CircleButton,
@@ -41,15 +42,18 @@ import {
 import styles from './BlogDetailScreenStyle'
 import { app_sp } from 'globals/styles'
 
-const BlogDetailScreen = ({route, navigation}) => {
+const BlogDetailScreen = withTheme(({
+  route,
+  navigation,
+  theme,
+  themeMode
+}) => {
   const { blogId, typeOfBriefBlog, fromSearch, handleShareToSocial } = route.params;
-  //theme
-  const {themeColor,themeMode} = useTheme();
   
-  const { blogDetails, fetchBlogDetailsById, clearBlogDetails } = useBlogDetails(blogId);
-  const { extendedBlogInfo, likeBlog } = useBlogInteractionActions(blogDetails);
-  const { updateBriefBlog } = useBriefBlogsActions();
   const { user } = useAuthState();
+  const { blogDetails, fetchBlogDetailsById, clearBlogDetails } = useBlogDetails(blogId);
+  const { updateBriefBlog } = useBriefBlogsActions();
+  const { extendedBlogInfo, likeBlog } = useBlogInteractionActions(blogDetails);
 
   const [relatedBlogs, setRelatedBlogs] = React.useState([]);
   // Dành để tranform thằng Float Buttons
@@ -72,7 +76,7 @@ const BlogDetailScreen = ({route, navigation}) => {
     offSetY.current  = contentOffset.y;
   };
 
-  const handleLikeButton = () => likePlace(
+  const handleLikeButton = () => likeBlog(
     (data, state) => updateBriefBlog(blogDetails._id, 0, { isLiked: state }),
     (state) => updateBriefBlog(blogDetails._id, 0, { isLiked: state })
   )
@@ -115,22 +119,28 @@ const BlogDetailScreen = ({route, navigation}) => {
   }, []);
 
   return (
-    <View style={{flex: 1, backgroundColor: themeColor.bg_primary}}>
+    <View style={{flex: 1, backgroundColor: theme.background}}>
       <ScrollView
-        style={[styles.bd_container,{backgroundColor: themeColor.bg_second}]}
+        style={[styles.bd_container, {backgroundColor: theme.background}]}
         contentContainerStyle={{paddingBottom: 120}}
         onScroll={handleOnScroll}
         scrollEventThrottle={1000}
       >
           {/* Author, Blog information section */}
-        <View style={[styles.bd_header, app_sp.mt_12,{borderBottomColor: themeColor.fourth}]}>
+        <View style={[styles.bd_header, app_sp.mt_12,{ borderBottomColor: theme.outline }]}>
           <View style={[styles.bd_row, app_sp.mb_12, { justifyContent: 'space-between' }]}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <CircleButton
                 isOnlyContent
-                setIcon={() => (
-                  <Ionicons name="person-circle-outline" size={42} color={themeColor.ext_second} />
-                )}
+                defaultColor='type_6'
+                setIcon={
+                  blogDetails.author.avatar
+                  ? (
+                    <Image style={{width: 42, aspectRatio: 1, borderRadius: 9999}} source={{uri: blogDetails.author.avatar}} />
+                  )
+                  : (
+                    <Ionicons style={{margin: -6}} size={48} name="person-circle-outline" />
+                  )}
               />
 
               {/* Author name and other information  */}
@@ -142,14 +152,12 @@ const BlogDetailScreen = ({route, navigation}) => {
 
             {/* Follow button */}
             <RectangleButton
+              defaultColor="type_5"
               overrideShape="capsule"
               style={app_sp.pv_0}
             >
-              {
-                (isActive, currentLabelStyle) => (
-                  <AppText font="body3" style={currentLabelStyle}>{isActive ? 'Following' : 'Follow'}</AppText>
-                )
-              }
+              {/* {extendedBlogInfo.isLiked ? 'Following' : 'Follow'} */}
+              Follow
             </RectangleButton>
           </View>
           
@@ -159,19 +167,17 @@ const BlogDetailScreen = ({route, navigation}) => {
 
           <View style={[styles.bd_row, app_sp.mb_12]}>
           <CircleButton
+            defaultColor="type_5"
             style={app_sp.me_8}
             typeOfButton="highlight"
-            setIcon={(isActive, currentLabelStyle) => (
-              <Ionicons name='share-outline' size={14} />
-            )}
+            setIcon={<Ionicons name='share-outline' size={14} />}
             onPress={handleShareToSocial}
           />
           <CircleButton
+            defaultColor="type_5"
             style={app_sp.me_8}
             typeOfButton="highlight"
-            setIcon={(isActive, currentLabelStyle) => (
-              <Ionicons name={isActive ? 'flag' : 'flag-outline'} size={14} />
-            )}
+            setIcon={<Ionicons name='flag' size={14} />}
           />
           </View>
 
@@ -181,13 +187,15 @@ const BlogDetailScreen = ({route, navigation}) => {
               <Ionicons name='pricetag-outline' /> Thể loại:
             </AppText>
             <RectangleButton
+              defaultColor="type_5"
               typeOfButton="highlight"
               overrideShape="rounded_4"
               style={[app_sp.ph_8, app_sp.pv_0, app_sp.me_6]}
             >
-              {(isActive, currentLabelStyle) => (
-                <AppText style={currentLabelStyle} font="body3">{blogDetails.type}</AppText>
-              )}
+              {blogDetails.type}
+              {/* {
+                (isActive, currentLabelStyle) => (<AppText font="body3" style={currentLabelStyle}>{blogDetails.type}</AppText>)
+              } */}
             </RectangleButton>
           </View>
 
@@ -218,9 +226,7 @@ const BlogDetailScreen = ({route, navigation}) => {
           <CircleButton
             isTransparent
             typeOfButton="highlight"
-            setIcon={(isActive, currentLabelStyle) => (
-              <Ionicons style={currentLabelStyle} name="chevron-forward-outline" size={18} color={themeColor.fourth} />
-            )}
+            setIcon={<Ionicons name="chevron-forward-outline" size={18} />}
           />
         </View>
         <View>
@@ -253,6 +259,7 @@ const BlogDetailScreen = ({route, navigation}) => {
       <Animated.View style={[
         styles.float_button_container,
         {
+          backgroundColor: theme.subBackground,
           transform: [
             {
               translateY: floatButtonTranslateYAnim.interpolate({
@@ -271,12 +278,11 @@ const BlogDetailScreen = ({route, navigation}) => {
         >
           <CircleButton
             isActive={extendedBlogInfo.isLiked}
+            defaultColor="type_5"
+            activeColor="type_1"
             style={app_sp.me_6}
-            defaultColor={themeMode === 'light' ? 'type_2' : 'type_3'}
             typeOfButton="highlight"
-            setIcon={(isActive, currentLabelStyle) => (
-              <Ionicons name={isActive ? 'heart' : 'heart-outline'} size={14} style={currentLabelStyle} />
-            )}
+            setIcon={<Ionicons name={extendedBlogInfo.isLiked ? 'heart' : 'heart-outline'} size={14} />}
             onPress={handleLikeButton}
           />
           <AppText font="body3">{NumberUtility.toMetricNumber(blogDetails.userFavoritesTotal)}</AppText>
@@ -288,19 +294,17 @@ const BlogDetailScreen = ({route, navigation}) => {
         }]}/>
         <View style={[app_sp.me_12, { flexDirection: 'row', alignItems: 'center' }]}>
           <CircleButton
+            defaultColor="type_5"
             style={app_sp.me_6}
-            defaultColor={themeMode === 'light' ? 'type_2' : 'type_3'}
             typeOfButton="highlight"
-            setIcon={(isActive, currentLabelStyle) => (
-              <Ionicons name="chatbox-outline" size={14} style={currentLabelStyle} />
-            )}
             onPress={() => { navigation.navigate("GlobalNavigator", { screen: "BlogCommentScreen", params: { blogId: blogDetails._id } }) }}
+            setIcon={<Ionicons name="chatbox-outline" size={14} />}
           />
           <AppText font="body3">{NumberUtility.toMetricNumber(blogDetails.userCommentsTotal)}</AppText>
         </View>
       </Animated.View>
     </View>
   )
-}
+});
 
 export default BlogDetailScreen

@@ -71,10 +71,10 @@ export const {
       /**
        * Hàm này dùng để update dữ liệu của một brief place trong brief places theo type.
        * @param {string} placeId id của brief place.
-       * @param {number} placeIndex thứ tự trong mảng của brief place
        * @param {PlaceDataProps} updateData Dữ liệu mới cần update
+       * @param {number | undefined} placeIndex thứ tự trong mảng của brief place
        */
-      updateBriefPlace: function(placeId, placeIndex, updateData) {
+      updateBriefPlace: function(placeId, updateData, placeIndex) {
         dispatch(updateBriefPlaceState({placeId, placeIndex, typeOfBriefPlaces, updateData}));
       },
       /**

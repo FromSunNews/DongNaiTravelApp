@@ -1,33 +1,44 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
-import {AntDesign} from 'react-native-vector-icons'
-import styles from './NotificationsScreenStyle'
-import { AppText } from 'components'
-import { app_typo } from 'globals/styles'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
-import { app_c, app_shdw } from '../../globals/styles'
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity
+} from 'react-native'
+
+import { getInfoUserAPI, updateManyNotifsAPI, updateNotifAPI } from 'apis/axios'
+
+import { withTheme } from 'hocs/withTheme'
+
 import { useDispatch, useSelector } from 'react-redux'
-import { selectCurrentNotifs, updateCurrentNotifs } from '../../redux/notifications/NotificationsSlice'
-import { selectCurrentUser } from '../../redux/user/UserSlice'
-import { selectCurrentLanguage } from '../../redux/language/LanguageSlice'
-import { notifIcon } from '../../utilities/mapdata'
+
 import { cloneDeep } from 'lodash'
 import moment from 'moment/moment'
 import 'moment/locale/vi'  // without this line it didn't work
-import { getInfoUserAPI, updateManyNotifsAPI, updateNotifAPI } from '../../apis/axios'
-import { not } from 'react-native-reanimated'
-import useTheme from 'customHooks/useTheme'
+
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+
+import { selectCurrentNotifs, updateCurrentNotifs } from 'redux/notifications/NotificationsSlice'
+import { selectCurrentUser } from 'redux/user/UserSlice'
+import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
+
+import { notifIcon } from 'utilities/mapdata'
+
+import { AppText } from 'components'
+
+import styles from './NotificationsScreenStyle'
+import { app_typo, app_c, app_shdw  } from 'globals/styles'
+
 moment.locale('vi')
 
-const NotificationsScreen = ({navigation}) => {
+const NotificationsScreen = withTheme(({ navigation, theme }) => {
   const currentNotif = useSelector(selectCurrentNotifs)
   const currentUser = useSelector(selectCurrentUser)
   const dispatch = useDispatch()
   //language
   const langCode = useSelector(selectCurrentLanguage).languageCode
-  //theme
-  const themeColor = useTheme();
+
   const [numberOfVisited, setNumberOfVisited] = useState(0)
 
   useEffect(() => {
@@ -82,16 +93,16 @@ const NotificationsScreen = ({navigation}) => {
     })
   }
   return (
-    <View style={[styles.container,{backgroundColor: themeColor.primary}]}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       <View style={styles.notification_content}>
         <TouchableOpacity style={{padding: 5}} onPress={handleMarkRead}>
-          <Text style={{ width: '100%', textAlign: 'right', ...app_typo.fonts.normal.normal.h5, paddingHorizontal: 16,
-          color: themeColor.third}}>Đánh dấu đã đọc tất cả</Text>
+          <AppText style={{ width: '100%', textAlign: 'right', ...app_typo.fonts.normal.normal.h5, paddingHorizontal: 16,
+          color: theme.tertiary}}>Đánh dấu đã đọc tất cả</AppText>
         </TouchableOpacity>
         {
           numberOfVisited !== 0 ?
-          <Text style={[styles.notif_info,{color: themeColor.fourth}]}>{`Bạn có ${numberOfVisited} thông báo mới`}</Text> :
-          <Text style={[styles.notif_info,{color: themeColor.fourth}]}>Bạn không có thông báo mới nào</Text>
+          <Text style={[styles.notif_info,{color: theme.primary}]}>{`Bạn có ${numberOfVisited} thông báo mới`}</Text> :
+          <Text style={[styles.notif_info,{color: theme.primary}]}>Bạn không có thông báo mới nào</Text>
         }
 
         { currentNotif.length > 0 &&
@@ -99,7 +110,7 @@ const NotificationsScreen = ({navigation}) => {
           <TouchableOpacity
           onPress={() => handlePressNotif(notif)}
           key={notif._id} 
-          style={[styles.container_item, {backgroundColor: notif._isVisited ? themeColor.primary : themeColor.sub_second}]}>
+          style={[styles.container_item, {backgroundColor: notif._isVisited ? theme.background : theme.tertiary}]}>
           {
             notif.userSent.avatar && 
             <View style={{...app_shdw.type_1, alignSelf: 'flex-start',}}>
@@ -110,13 +121,13 @@ const NotificationsScreen = ({navigation}) => {
                 borderRadius: 15,
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: themeColor.third,
+                backgroundColor: theme.tertiary,
                 ...app_shdw.type_1,
                 position: 'absolute',
                 bottom: -5,
                 right: 10,
               }}>
-                <FontAwesome5 name={notifIcon[notif.typeNofif]} size={12} color={themeColor.primary}/>
+                <FontAwesome5 name={notifIcon[notif.typeNofif]} size={12} color={theme.background}/>
               </View>
             </View>
           }
@@ -225,6 +236,6 @@ const NotificationsScreen = ({navigation}) => {
       </View>
     </View>
   )
-}
+});
 
 export default NotificationsScreen
