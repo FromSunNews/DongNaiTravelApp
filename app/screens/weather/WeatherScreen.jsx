@@ -76,58 +76,60 @@ const WeatherDailyBlock = ({ item }) => {
   const dropWeatherDailyBlock = () => {
     if (showWeatherHourlyBlock) {
       return (
-        // <ScrollView
-        //   style={styles.weather_hourly_table}
-        //   horizontal={true}
-        //   showsHorizontalScrollIndicator={false}
-        // >
-        //   <View style={styles.weather_hourly_info}>
-        //     <AppText style={styles.weather_time}>Bây giờ</AppText>
-        //     <Image
-        //       source={require("../../assets/images/weather_forcast/sunny.png")}
-        //       resizeMode="cover"
-        //       style={styles.weather_hourly_image}
-        //       key={1}
-        //     />
-        //     <AppText style={styles.weather_hourly_temperature}>31°C</AppText>
-        //   </View>
-        //   <View style={styles.weather_hourly_info}>
-        //     <AppText style={styles.weather_time}>Bây giờ</AppText>
-        //     <Image
-        //       source={require("../../assets/images/weather_forcast/sunny.png")}
-        //       resizeMode="cover"
-        //       style={styles.weather_hourly_image}
-        //       key={2}
-        //     />
-        //     <AppText style={styles.weather_hourly_temperature}>31°C</AppText>
-        //   </View>
+        /*
+        <ScrollView
+          style={styles.weather_hourly_table}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+        >
+          <View style={styles.weather_hourly_info}>
+            <AppText style={styles.weather_time}>Bây giờ</AppText>
+            <Image
+              source={require("../../assets/images/weather_forcast/sunny.png")}
+              resizeMode="cover"
+              style={styles.weather_hourly_image}
+              key={1}
+            />
+            <AppText style={styles.weather_hourly_temperature}>31°C</AppText>
+          </View>
+          <View style={styles.weather_hourly_info}>
+            <AppText style={styles.weather_time}>Bây giờ</AppText>
+            <Image
+              source={require("../../assets/images/weather_forcast/sunny.png")}
+              resizeMode="cover"
+              style={styles.weather_hourly_image}
+              key={2}
+            />
+            <AppText style={styles.weather_hourly_temperature}>31°C</AppText>
+          </View>
 
-        //   <View style={styles.weather_hourly_info}>
-        //     <AppText style={styles.weather_time}>Bây giờ</AppText>
-        //     <Image
-        //       source={require("../../assets/images/weather_forcast/sunny.png")}
-        //       resizeMode="cover"
-        //       style={styles.weather_hourly_image}
-        //     />
-        //     <AppText style={styles.weather_hourly_temperature}>31°C</AppText>
-        //   </View>
-        //   <View style={styles.weather_hourly_info}>
-        //     <AppText style={styles.weather_time}>Bây giờ</AppText>
-        //     <Image
-        //       source={require("../../assets/images/weather_forcast/sunny.png")}
-        //       resizeMode="cover"
-        //       style={styles.weather_hourly_image}
-        //     />
-        //     <AppText style={styles.weather_hourly_temperature}>31°C</AppText>
-        //   </View>
-        // </ScrollView>
+          <View style={styles.weather_hourly_info}>
+            <AppText style={styles.weather_time}>Bây giờ</AppText>
+            <Image
+              source={require("../../assets/images/weather_forcast/sunny.png")}
+              resizeMode="cover"
+              style={styles.weather_hourly_image}
+            />
+            <AppText style={styles.weather_hourly_temperature}>31°C</AppText>
+          </View>
+          <View style={styles.weather_hourly_info}>
+            <AppText style={styles.weather_time}>Bây giờ</AppText>
+            <Image
+              source={require("../../assets/images/weather_forcast/sunny.png")}
+              resizeMode="cover"
+              style={styles.weather_hourly_image}
+            />
+            <AppText style={styles.weather_hourly_temperature}>31°C</AppText>
+          </View>
+        </ScrollView>
+        */
         <View style={styles.dropdown_container}>
           <View style={ styles.dropdown_content}>
             {
-              weatherImages.map((img) => {
+              weatherImages.map((img,index) => {
                 if( img.id === data.weather[0].icon)
                 {
-                  return <Image source={img.image} style={styles.dropdown_img}/>
+                  return <Image source={img.image} key={index} style={styles.dropdown_img}/>
                 }
                 return null
               }
@@ -207,6 +209,7 @@ const WeatherDailyBlock = ({ item }) => {
                 source={weatherImage.image}
                 resizeMode="cover"
                 style={styles.weather_daily_image}
+                key={weatherImage.id}
               />
               }
             })
@@ -389,6 +392,7 @@ const WeatherScreen = () => {
       </ImageBackground>
       <View style={styles.weather_table_info}>
         {weatherForecast.map((item,index) => {
+          console.log(index)
           return <WeatherDailyBlock item={item} key={index} />;
         })}
       </View>
