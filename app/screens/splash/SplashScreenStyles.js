@@ -6,7 +6,8 @@ import Constants from 'expo-constants'
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: app_c.HEX.primary,
+    // backgroundColor: app_c.HEX.primary,
+    backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
   },

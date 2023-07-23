@@ -354,6 +354,7 @@ const PrepareBlogPushlishScreen = (props) => {
                     containerStyle={{marginTop: 0}}
                     handleShowSuggestTitle={() => setIsShowSuggestTitle(true)}
                     handleHideSuggestTitle={() => setIsShowSuggestTitle(false)}
+                    isFromReparePublish={true}
                   />
                 )}
                 />

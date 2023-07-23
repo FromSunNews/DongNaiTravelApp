@@ -277,7 +277,7 @@ const HomeScreen = ({navigation}) => {
           >
             {
               !places
-              ? [1, 2, 3].map((value, index) => {
+              ? [1, 2, 3, 4, 5].map((value, index) => {
                 let actualStyle = [app_sp.me_18];
                 if(index === 0) actualStyle.push(app_sp.ms_18);
                 return <VerticalPlaceCardSkeleton key={value + index} style={actualStyle} />
@@ -290,7 +290,7 @@ const HomeScreen = ({navigation}) => {
             }
           </ScrollView>
         </View>
-        <View style={[{backgroundColor: themeColor.bg_second}]}>
+        <View style={[{backgroundColor: 'white'}]}>
           <TouchableOpacity style={styles.category_header} onPress={()=>navigation.navigate("BlogsNavigator")}>
             <AppText style={styles.category_name}>{langData.title_Blog[langCode]}</AppText>
             <AppText><Entypo name="chevron-small-right" size={40}/></AppText>
@@ -300,17 +300,17 @@ const HomeScreen = ({navigation}) => {
             labels={BLOG_QUANLITIES[langCode].labels}
             callBack={setTypeBlog}
             scrollStyle={[app_sp.mb_12, app_sp.ps_18]}
-            containerStyle={[{backgroundColor: themeColor.primary}, app_sp.pv_10]}
+            containerStyle={[{backgroundColor: 'white'}, app_sp.pv_10]}
           />
           <ScrollView
             horizontal={true}
-            style={[{backgroundColor:themeColor.primary}]}
-            contentContainerStyle={[{flexGrow: 1}, app_sp.pb_10]}
+            style={[{backgroundColor:'white'}]}
+            contentContainerStyle={[{flexGrow: 1}, app_sp.pb_10,]}
             showsHorizontalScrollIndicator={false}
           >
             {
               !blogs
-              ? [1, 2, 3].map((value, index) => <VerticalBlogCardSkeleton key={value + index} style={{  marginLeft: index !== 0 ? 16 : 0,}} />)
+              ? [1, 2, 3, 4, 5].map((value, index) => <VerticalBlogCardSkeleton key={value + index} style={{ marginLeft: index === 0 ? 16 : 0, marginRight: 16}} />)
               : blogs.map((blog, index) => {
                 let actualStyle = [app_sp.me_18];
                 if(index === 0) actualStyle.push(app_sp.ms_18);

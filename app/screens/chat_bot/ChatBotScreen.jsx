@@ -22,6 +22,9 @@ import moment from 'moment/moment'
 
 import { BRIEF_PLACE_DATA_FIELDS } from 'utilities/constants';
 import MessageFeature from 'components/message_feature/MessageFeature'
+import { KeyboardAvoidingView } from 'react-native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 
 const botAvatar = require('../../assets/images/avatar_chatbot.jpg')
@@ -159,13 +162,14 @@ const ChatBotScreen = () => {
   }
 
   const renderInputToolbar = (props) => {
-    <InputToolbar
-      {...props}
-      containerStyle={{
-        backgroundColor: '#222B45'
-      }}
-      primaryStyle={{ alignItems: 'center' }}
-    />
+    return <InputToolbar {...props} containerStyle={{marginLeft: 15,
+      marginRight: 15,
+      marginBottom: 10,
+      borderWidth: 0.5,
+      borderColor: 'grey',
+      borderRadius: 25,
+      backgroundColor: 'red'
+    }} />
   }
 
   const renderActions = (props) => (
@@ -214,7 +218,7 @@ const ChatBotScreen = () => {
         marginLeft: 18,
         marginRight: 8,
         minHeight: 40,
-        marginBottom: Platform.OS === 'ios' ? 20 :10 ,
+        marginBottom: Platform.OS === 'ios' ? 30 :10 ,
         marginTop: Platform.OS === 'ios' ? 0 : 5 ,
       }}
     />
@@ -230,7 +234,7 @@ const ChatBotScreen = () => {
         alignItems: 'center',
         justifyContent: 'center',
         marginRight: 8,
-        marginBottom: Platform.OS === 'ios' ? 20 :10 ,
+        marginBottom: Platform.OS === 'ios' ? 30 :10 ,
         marginTop: Platform.OS === 'ios' ? 0 : 5 ,
       }}
     >
@@ -241,55 +245,72 @@ const ChatBotScreen = () => {
       />
     </Send>
   )
+  const insets = useSafeAreaInsets();
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* https://www.npmjs.com/package/react-native-gifted-chat */}
-      <GiftedChat 
-        alignTop
-        isTyping={true}
-        wrapInSafeArea={false}
-        // multiline={false}
-        // renderUsernameOnMessage
-        alwaysShowSend
-        bottomOffset={22}
-        minInputToolbarHeight={Platform.OS === 'ios' ? 90 : 60}
-        placeholder={'Nhập tin nhắn...'}
-        messages={messages}
-        onSend={(value) => handLeSendMessages(value)}
-        onQuickReply={(quickReply) => handleQuicklyReply(quickReply)}
-        renderBubble={renderBubble}
-        keyboardShouldPersistTaps={false}
-        // renderInputToolbar={renderInputToolbar}
-        user={{_id: 1}}
-        scrollToBottom
-        scrollToBottomComponent={() => (
-          <Ionicons
-            name="arrow-down"
-            size={25}
-            color={app_c.HEX.ext_second}
-          />
-        )}
-        // renderInputToolbar={renderInputToolbar}
-        // renderActions={renderActions}
-        renderComposer={renderComposer}
-        renderSend={renderSend}
-        // renderFooter={renderFooter}
-        // renderAvatar={renderAvatar}
-        // renderSystemMessage={renderSystemMessage}
-        // renderMessage={renderMessage}
-        // renderMessageText={renderMessageText}
-        // renderCustomView={renderCustomView}
-        // isCustomViewBottom
-        // messagesContainerStyle={{ backgroundColor: 'indigo' }}
-        // parsePatterns={(linkStyle) => [
-        //   {
-        //     pattern: /#(\w+)/,
-        //     style: linkStyle,
-        //     onPress: (tag) => console.log(`Pressed on hashtag: ${tag}`),
-        //   },
-        // ]}
-      />
+    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }} edges={['left', 'right']}>
+      <KeyboardAvoidingView 
+        behavior={Platform.OS === 'ios' ? "padding" : undefined}
+        style={styles.container} 
+        keyboardVerticalOffset={70}
+      >
+        {/* https://www.npmjs.com/package/react-native-gifted-chat */}
+        <GiftedChat 
+          alignTop
+          isKeyboardInternallyHandled={false}
+          // isTyping={true}
+          wrapInSafeArea
+          // multiline={true}
+          // renderUsernameOnMessage
+          alwaysShowSend
+          bottomOffset={40}
+          minInputToolbarHeight={Platform.OS === 'ios' ? 80 : 100}
+          placeholder={'Nhập tin nhắn...'}
+          messages={messages}
+          onSend={(value) => handLeSendMessages(value)}
+          onQuickReply={(quickReply) => handleQuicklyReply(quickReply)}
+          renderBubble={renderBubble}
+          keyboardShouldPersistTaps={"never"}
+          // renderInputToolbar={renderInputToolbar}
+          user={{_id: 1}}
+          scrollToBottom
+          scrollToBottomComponent={() => (
+            <Ionicons
+              name="arrow-down"
+              size={25}
+              color={app_c.HEX.ext_second}
+            />
+          )}
+          shouldUpdateMessage={(props, nextProps) =>
+            props.extraData !== nextProps.extraData
+        }
+          // renderInputToolbar={renderInputToolbar}
+          // renderActions={renderActions}
+          renderComposer={renderComposer}
+          renderSend={renderSend}
+          listViewProps={{
+            maintainVisibleContentPosition: {
+                minIndexForVisible: 0,
+                autoscrollToTopThreshold: 60,
+            }
+        }}
+          // renderFooter={renderFooter}
+          // renderAvatar={renderAvatar}
+          // renderSystemMessage={renderSystemMessage}
+          // renderMessage={renderMessage}
+          // renderMessageText={renderMessageText}
+          // renderCustomView={renderCustomView}
+          // isCustomViewBottom
+          // messagesContainerStyle={{ backgroundColor: 'indigo' }}
+          // parsePatterns={(linkStyle) => [
+          //   {
+          //     pattern: /#(\w+)/,
+          //     style: linkStyle,
+          //     onPress: (tag) => console.log(`Pressed on hashtag: ${tag}`),
+          //   },
+          // ]}
+        />
+      </KeyboardAvoidingView>
     </SafeAreaView>
   )
 }

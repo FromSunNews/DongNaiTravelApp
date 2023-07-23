@@ -245,9 +245,11 @@ const GroupBottomTab = () => {
 			dispatch(updateNewNotifs(data.notif))
 		})
 
-		return function() {
-			socketIoInstance.disconnect();
-		}
+		return () => socketIoInstance.removeListener('s_notification_to_user', (data) => {
+			// nếu nhận được thì lưu vào state của thằng được follow
+			dispatch(updateCurrentUser(data.userReceived))
+			dispatch(updateNewNotifs(data.notif))
+		})
 	}, [])
 
 	return (

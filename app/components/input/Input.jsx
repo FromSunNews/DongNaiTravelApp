@@ -7,10 +7,10 @@ import { FloatingLabelInput } from 'react-native-floating-label-input'
 import { app_c } from 'globals/styles'
 import { styles } from './InputStyles'
 
-const Input = ({ label, hint, isPassword, onChange, onBlur, value, error, containerStyle, rightComponent, handleShowSuggestTitle, handleHideSuggestTitle, isFromChatBot = false}) => {
+const Input = ({ label, hint, isPassword, onChange, onBlur, value, error, containerStyle, rightComponent, handleShowSuggestTitle, handleHideSuggestTitle, isFromReparePublish = false}) => {
   const [isFocused, setIsFocused] = useState(false)
   useEffect(() => {
-    if (isFromChatBot) {
+    if (isFromReparePublish) {
       if(!isFocused && value) {
         handleShowSuggestTitle()
       } else {
