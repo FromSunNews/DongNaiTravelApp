@@ -1,4 +1,4 @@
-import { app_c, app_dms, app_shdw, app_typo } from 'globals/styles'
+import { app_c, app_dms, app_typo } from 'globals/styles'
 import { StyleSheet } from 'react-native'
 
 export const styles = StyleSheet.create({
@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
     marginVertical: 10
   },
   contentContainer: {
-    paddingHorizontal: 18
+    // paddingHorizontal: 18
   },
   authenContainer: {
     display: 'flex',
@@ -20,7 +20,6 @@ export const styles = StyleSheet.create({
   avatar: {
     width: 45,
     height: 45,
-    borderRadius: 22.5,
     marginRight: 10
   },
   nameAuthorRatingContainer: {
@@ -28,7 +27,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   authorName: {
-    color: app_c.HEX.fourth,
+    color: app_c.HEX.ext_second,
     ...app_typo.fonts.normal.bolder.h5,
     marginBottom: 3
   },
@@ -36,11 +35,5 @@ export const styles = StyleSheet.create({
     marginTop: 10,
     color: app_c.HEX.fourth,
     ...app_typo.fonts.normal.normal.body1
-  },
-  imageCardDay: {
-    width: 120,
-    height: 120,
-    borderRadius: 12,
-    ...app_shdw.type_3
   },
 })

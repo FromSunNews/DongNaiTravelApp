@@ -1,5 +1,5 @@
 // Phuong: screen này có trách nhiệm: điều hướng, xác thực, phân group màn hình
-import { View, Text } from 'react-native'
+import { View, Text, Platform } from 'react-native'
 import React, { useState } from 'react'
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
@@ -143,7 +143,7 @@ const AuthNavigator = ({navigation}) => {
     <AppStack.Screen 
         name="MapFullScreen" 
         component={MapScreen} 
-        options={{ headerShown: false}} 
+        options={{ headerShown: Platform.OS === 'ios' ? true : false, title: 'Bản đồ', headerBackTitleVisible: false}} 
       />
     </AppStack.Navigator>
   )
