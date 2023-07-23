@@ -1,3 +1,6 @@
+import { FILE_URL_RULE } from "./validators";
+
+ import NumberUtility from "./number";
 // by Tuan
 // Tham khảo tại Issue: https://github.com/FromSunNews/DongNaiTravelApp/issues/18
 // Lưu ý: line sẽ thay thế cho string (có thể tương ứng với câu - sentence), tránh nhầm lẫn với keyword
@@ -128,8 +131,6 @@ const createTextContentInHTMLTagGetter = function (openTagWithReg, closeTagWithR
   }
 }
 
-const link = /(http|https):\/\/[\w\d_\-\.]+\.[\w\d]{2,}([:\d]+)?(\/[\w\d\-\._\?\,\'\/\\\+&%\$#\=~]*)?/;
-
 /**
  * Đây là function dùng để test xem `text` có phải là link hay không?
  * Nếu như `text` là link thì trả về `true`, ngược lại là `false`.
@@ -137,8 +138,104 @@ const link = /(http|https):\/\/[\w\d_\-\.]+\.[\w\d]{2,}([:\d]+)?(\/[\w\d\-\._\?\
  * @returns {true | false}
  */
 function hasLink(text) {
-  return link.test(text);
+  return FILE_URL_RULE.test(text);
 }
+
+/**
+ * Hàm này dùng để reqeat một kí tự hay một chuỗi nào đó.
+ * @param {string} str Kí tự hoặc chuỗi muốn lặp.
+ * @param {number} times Số lần muốn lặp chuỗi hoặc kí tự đó.
+ * @returns 
+ */
+function repeatStr(str, times) {
+  return Array(times).fill(str).join("");
+}
+
+/**
+ * @typedef GetTextPartsOptionsProps
+ * @property {number} max Số chars tối đa của mỗi part.
+ * @property {number} divisible Số mà length của part chia hết.
+ * @property {boolean} canFillSpace Cho biết là có fill khoảng trắng để cho length của part chia hết cho `divisible` hhay không?
+ */
+
+/**
+ * Hàm này dùng để lấy ra các phần của một văn bản. Hàm này chủ yếu là dùng với tạo voice bằng Google API (Text To Speech),
+ * còn sau này có dùng thêm cho case nào không thì tuỳ.
+ * 
+ * Bởi vì case tạo voice với Google API là case đầu tiên, cho nên `options` sẽ có một số thông số mặc định như sau:
+ * - `max`: (mặc định: 900) là số char mà trong mỗi part sẽ có, bao gồm cả khoảng trắng và dấu `,` và `.`. Ngoài ra thì thông số này chỉ mang
+ * tính tương tối. Trong mỗi part, có thể sẽ có nhiều từ nhiều kí tự
+ * - `divisible`: (mặc định: 3) là số mà length của part sẽ chia hết. Vì mặc định là dùng để lấy text cho Google Voice, có liên quan tới base64,
+ * cho nên là phải chia hết cho 3.
+ * - `canFillSpace`: cho biết là có fill khoảng trắng vào part hay không nếu như length của part đó không chia hết cho `divisible`.
+ * 
+ * Hàm này sẽ hoạt động theo kiểu dò từng word một, không phải là từng letter. Với mỗi step là 10, cho nên mới nói `max` chỉ là thông số tương đổi.
+ * Nếu như length của part không chia hết cho `divisible` và `canFillSpace` thì sẽ thêm khoảng trắng vào sao cho length của part
+ * chia hết cho `divisible`.
+ * 
+ * @param {string} text Văn bản muốn tách ra thành nhiều phần.
+ * @param {GetTextPartsOptionsProps} options Options dùng để lấy các phần text như mong muốn.
+ * @returns 
+ */
+function getTextParts(text, options) {
+  options = Object.assign(
+    {
+      max: 900,
+      divisible: 3,
+      canFillSpace: true
+    },
+    options
+  );
+
+  let words = text.split(/[\s|\n]+/);
+  let wordsLength = words.length;
+  let textParts = [];
+    
+  let step = 10;
+  let start = 0;
+  let end = step;
+  while(end <= wordsLength) {
+    let sub = words.slice(start, end);
+    let subLength = sub.join(" ").length;
+    if(subLength >= options.max) {
+      let filled = subLength % options.divisible !== 0 && repeatStr(" ", (options.divisible - 1) - (subLength % options.divisible));
+      if(filled !== false && options.canFillSpace) sub.push(filled);
+      textParts.push(sub.join(" "));
+      start = end;
+    }
+    end += step;
+    if(end > wordsLength) {
+      /** 
+       * Trong trường hợp lấy part cho base64. Thì không cần phải quan tâm tới việc length của nó có chia hết cho 3 hay không
+       * Bởi vì nó là part cuối rồi cho nên có độ dài bao nhiêu cũng được.
+       */
+      sub = words.slice(start, wordsLength);
+      textParts.push(sub.join(" "));
+    }
+  }
+  return textParts;
+}
+
+/**
+ * Dùng để tạo random id
+ */
+const getRandomID = (function() {
+  let alphabet = "abcdefghijklmnopqrstuvw0123456789xyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  let alphabetN = alphabet.length;
+  return function(prefix = "dntrvel", numParts = 3, numCharsInPart = 7) {
+    let id = prefix + "-";
+    for(let i = 0; i < numParts; i++) {
+      for(let j = 0; j < numCharsInPart; j++) {
+        let r = NumberUtility.getRandomNumber(alphabetN - 1, 0);
+        let letter = alphabet[r];
+        id += letter;
+      }
+      id += "-";
+    }
+
+    return id.substring(0, id.length - 1);
+  }
+})();
 
 const StringUtility = {
   splitLineBySeperator,
@@ -148,7 +245,10 @@ const StringUtility = {
   toSnakeCase,
   toTitleCase,
   createTextContentInHTMLTagGetter,
-  hasLink
+  hasLink,
+  getTextParts,
+  repeatStr,
+  getRandomID
 };
 
 export default StringUtility;

@@ -43,18 +43,13 @@ import { socketIoInstance } from "../../../App";
 import { useRoute } from "@react-navigation/native";
 import { cloneDeep } from 'lodash'
 import { selectCurrentLanguage } from "../../redux/language/LanguageSlice";
-import useTheme from "customHooks/useTheme";
-import { selectCurrentMode } from "redux/theme/ThemeSlice";
+import { withTheme } from "hocs/withTheme";
 
-function ProfileScreen({ route, navigation}) {
+const ProfileScreen = withTheme(({ route, navigation, theme}) => {
   const userSelector = useSelector(selectCurrentUser)
   //language
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.blogScreenSetting
-  //theme
-  const themeMode = useSelector(selectCurrentMode).mode
-  console.log("🚀 ~ file: ProfileScreen.jsx:56 ~ ProfileScreen ~ themeMode:", themeMode)
-  const {themeColor} = useTheme();
   
   const [currentUser, setCurrentUser] = useState(null)
   const [isFollowed, setIsFollowed] = useState(null)
@@ -80,7 +75,6 @@ function ProfileScreen({ route, navigation}) {
       setIsMyProfile(false)
     } else {
       console.log("====================================user=========================================================")
-      console.log("🚀 ~ file: ProfileScreen.jsx:65 ~ useEffect ~ userSelector:", userSelector)
       setCurrentUser(userSelector)
       setIsMyProfile(true)
     }
@@ -237,7 +231,7 @@ function ProfileScreen({ route, navigation}) {
   }
   return (
     <>
-      <ScrollView style={[styles.wrapper,{backgroundColor: themeColor.bg_second}]}>
+      <ScrollView style={[styles.wrapper,{backgroundColor: theme.background}]}>
         <View style={styles.container}>
           <View style={{ ...app_dms.screenWidth }}>
             <View>
@@ -296,16 +290,16 @@ function ProfileScreen({ route, navigation}) {
           </View>
           <View style={styles.user_block}>
             <View style={{ alignItems: "center" }}>
-              <Text style={[styles.user_name,{color: themeColor.fourth}]}>{currentUser?.username}</Text>
+              <Text style={[styles.user_name,{color: theme.onBackground}]}>{currentUser?.username}</Text>
             </View>
             <View style={styles.user_info_follow}>
-              <Text style={[styles.user_follower,{color: themeColor.ext_second}]}>
+              <Text style={[styles.user_follower,{color: theme.onOutline}]}>
                 {currentUser?.followerIds.length} {langData.user_follower[langCode]}
               </Text>
               <Text>
-                <Entypo name="dot-single" size={20} color={themeColor.ext_second} />
+                <Entypo name="dot-single" size={20} color={theme.onBackground} />
               </Text>
-              <Text style={[styles.user_following,{color: themeColor.ext_second}]}>
+              <Text style={[styles.user_following,{color: theme.onOutline}]}>
                 {currentUser?.followingIds.length} {langData.user_following[langCode]}
               </Text>
             </View>
@@ -315,7 +309,7 @@ function ProfileScreen({ route, navigation}) {
                 <RectangleButton
                   overrideShape="rounded_8"
                   isActive
-                  activeColor={themeMode === 'light' ? 'type_1' : 'type_2'}
+                  activeColor= 'type_1'
                   typeOfButton="opacity"
                   style= {{
                     flex: 0.4,
@@ -334,7 +328,7 @@ function ProfileScreen({ route, navigation}) {
                 <RectangleButton
                   overrideShape="rounded_8"
                   isActive
-                  activeColor={themeMode === 'light' ? 'type_1' : 'type_2'}
+                  activeColor= 'type_1'
                   typeOfButton="opacity"
                   onPress={() => handleFollowUser()}
                   style= {{
@@ -350,7 +344,7 @@ function ProfileScreen({ route, navigation}) {
                   <RectangleButton
                     overrideShape="rounded_8"
                     isActive
-                    activeColor={themeMode === 'light' ? 'type_1' : 'type_2'}
+                    activeColor= 'type_1'
                     typeOfButton="opacity"
                     onPress={() => handleUnFollowUser()}
                     style= {{
@@ -392,19 +386,19 @@ function ProfileScreen({ route, navigation}) {
             </View>
             <View style={styles.user_infos}>
               <View style={styles.user_info_block}>
-                <Text style={[styles.user_info_title, {color:themeColor.fourth}]}>{langData.bio[langCode]}</Text>
-                <Text style={[styles.user_bio_content,{color:themeColor.ext_second}]}>{user.userBio}</Text>
+                <Text style={[styles.user_info_title, {color:theme.onBackground}]}>{langData.bio[langCode]}</Text>
+                <Text style={[styles.user_bio_content,{color:theme.onOutline}]}>{user.userBio}</Text>
               </View>
             </View>
             <View style={styles.user_infos}>
               <View style={styles.user_info_block}>
-                <Text style={[styles.user_info_title,{color: themeColor.fourth}]}>{langData.information[langCode]}</Text>
+                <Text style={[styles.user_info_title,{color: theme.onBackground}]}>{langData.information[langCode]}</Text>
                 <View style={styles.user_info_other}>
                   <AntDesign
-                    style={[styles.user_info_other_icon,{color:themeColor.ext_second}]}
+                    style={[styles.user_info_other_icon,{color:theme.onBackground}]}
                     name="enviromento"
                   />
-                  <Text style={[styles.user_info_other_content,{color: themeColor.ext_second}]}>
+                  <Text style={[styles.user_info_other_content,{color: theme.onOutline}]}>
                     <Text>{langData.live_in[langCode]} </Text>
                     <Text style={styles.user_info_address}>
                       {user.userInFo.userAddress}
@@ -413,7 +407,7 @@ function ProfileScreen({ route, navigation}) {
                 </View>
                 <View style={styles.user_info_other}>
                   <MaterialCommunityIcons
-                    style={[styles.user_info_other_icon,{color:themeColor.ext_second}]}
+                    style={[styles.user_info_other_icon,{color:theme.onBackground}]}
                     name="facebook"
                   />
                   <AppText
@@ -426,7 +420,7 @@ function ProfileScreen({ route, navigation}) {
                 </View>
                 <View style={styles.user_info_other}>
                   <Entypo
-                    style={[styles.user_info_other_icon,{color:themeColor.ext_second}]}
+                    style={[styles.user_info_other_icon,{color:theme.onBackground}]}
                     name="instagram"
                   />
                   <AppText
@@ -439,28 +433,28 @@ function ProfileScreen({ route, navigation}) {
                 </View>
               </View>
             </View>
-            <View style={[styles.line_horizontal,{borderBottomColor:themeColor.seperator}]}></View>
+            <View style={[styles.line_horizontal,{borderBottomColor:theme.onBackground}]}></View>
           </View>
           <View style={styles.blog_block}>
             {
               isMyProfile &&
-              <TouchableOpacity style={[styles.btn_create_blog,{backgroundColor: themeColor.ext_second}]} onPress={()=>navigation.navigate("CreatePostScreen")}>
+              <TouchableOpacity style={[styles.btn_create_blog,{backgroundColor: theme.primary}]} onPress={()=>navigation.navigate("CreatePostScreen")}>
                 <MaterialCommunityIcons
-                  style={{ color: themeColor.primary, marginRight: 6 }}
+                  style={{ color: theme.onPrimary, marginRight: 6 }}
                   name="pencil-outline"
                   size={18}
                 />
-                <Text style={[styles.btn_create_blog_name,{color:themeColor.primary}]}>{langData.write_new_blog[langCode]}</Text>
+                <Text style={[styles.btn_create_blog_name,{color:theme.onPrimary}]}>{langData.write_new_blog[langCode]}</Text>
               </TouchableOpacity>
             }
-            <TouchableOpacity style={[styles.btn_manage_blog,{backgroundColor:themeColor.ext_second}]}>
-              <Text style={[styles.btn_manage_blog_name,{color:themeColor.primary}]}>{langData.manage_blogs[langCode]}</Text>
+            <TouchableOpacity style={[styles.btn_manage_blog,{backgroundColor:theme.primary}]}>
+              <Text style={[styles.btn_manage_blog_name,{color:theme.onPrimary}]}>{langData.manage_blogs[langCode]}</Text>
             </TouchableOpacity>
             <View style={styles.blogs_list}>
               <View style={styles.blog_title_container}>
-                <Text style={[styles.blog_title,{color:themeColor.fourth}]}>{langData.blog_list[langCode]}</Text>
+                <Text style={[styles.blog_title,{color:theme.onPrimary}]}>{langData.blog_list[langCode]}</Text>
               </View>
-              {/* <View style={[styles.blog_container,{backgroundColor:themeColor.bg_second}]}>
+              {/* <View style={[styles.blog_container,{backgroundColor:theme.background}]}>
                 {
                   userBlogData.map(blog=>(
                     <RectangleButton onPress={()=>navigation.navigate("BlogDetailScreen")} defaultColor="">
@@ -500,7 +494,7 @@ function ProfileScreen({ route, navigation}) {
       />
     </>
   );
-}
+})
 
 export default ProfileScreen;
 

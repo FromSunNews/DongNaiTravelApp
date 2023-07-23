@@ -9,20 +9,23 @@ import {
   Alert
 } from 'react-native'
 import React from 'react'
-import { WebView } from 'react-native-webview';
-import {
-  KeyboardAwareScrollView
-} from 'react-native-keyboard-aware-scroll-view';
-
 import { Buffer } from 'buffer';
+
 import { deltaToMarkdown } from 'quill-delta-to-markdown';
 import markdownToDelta from "markdown-to-quill-delta";
 import { MarkdownToQuill } from "md-to-quill-delta";
+
+import { withTheme } from 'hocs/withTheme.jsx';
 
 import AsyncStorageUtility from 'utilities/asyncStorage.js';
 import {
   callWithGlobalLoading
 } from 'utilities/reduxStore.js'
+
+import { WebView } from 'react-native-webview';
+import {
+  KeyboardAwareScrollView
+} from 'react-native-keyboard-aware-scroll-view';
 
 import {
   AppText,
@@ -39,7 +42,10 @@ import {
 app_c, app_sp
 } from 'globals/styles'
 
-const BlogEditorScreen = (props) => {
+const BlogEditorScreen = withTheme(({
+  theme,
+  ...props
+}) => {
   const [blogInfo, setBlogInfo] = React.useState({
     content: null,
     isContentFromStorage: false,
@@ -170,7 +176,8 @@ const BlogEditorScreen = (props) => {
         style={{ flex: 1, backgroundColor: "transparent" }}
         injectedJavaScript={extendInjectedJS}
         source={{html: editorHtmlSource({
-          editorToolsBarBackgroundColor: app_c.HEX.primary
+          editorToolsBarBackgroundColor: theme.background,
+          editorBackgroundColor: theme.subBackground
         })}}
         onMessage={handleWebViewMessage}
         onLoadEnd={() => setBlogInfo(prevState => ({
@@ -181,15 +188,14 @@ const BlogEditorScreen = (props) => {
       <TextInput ref={textInputRef} style={{width: 0, height: 0}} />
       <View style={styles.buttonsContainer}>
         <RectangleButton
+          isActive
           typeOfButton='highlight'
           overrideShape='capsule'
-          defaultColor='type_4'
+          defaultColor='type_1'
           onPress={handleGetQuillContentPress}
           style={app_sp.me_8}
         >
-          {
-            (isActive, currentLabelStyle) => <AppText style={currentLabelStyle}>Save</AppText>
-          }
+          Save
         </RectangleButton>
 
         <RectangleButton
@@ -203,7 +209,7 @@ const BlogEditorScreen = (props) => {
       </View>
     </KeyboardAvoidingView>
   ), [app_c.HEX, blogInfo]);
-}
+})
 
 const styles = StyleSheet.create({
   container: {

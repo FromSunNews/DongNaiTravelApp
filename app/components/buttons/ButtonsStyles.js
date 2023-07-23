@@ -1,6 +1,91 @@
 import { StyleSheet } from "react-native"
 
+import { themes } from "globals/styles/theme";
 import { app_c, app_sh, app_sp } from "globals/styles";
+
+/**
+ * Hàm này dùng để lấy trong màu cho buttons theo type. Một button sẽ có 3 loại cặp màu
+ * `active`, `inactive` và một màu đặc biệt là disable.
+ * - `active`: là màu của button khi được focus, press hoặc checked.
+ * - `inactive`: là màu bình thường của button.
+ * Hiện tại thì mình có 3 màu phân cấp là primary, secondary và tertiary => 3 types. Nên
+ * `active` và `inactive` sẽ có 3 types (riêng disable chỉ có 1).
+ * 
+ * Và một button sẽ có một cặp màu như sau (nếu chỉ tính một loại cặp màu):
+ * - `label`: nhãn của button, gồm chữ và icon...
+ * - `background`: màu nền của button...
+ * @param {"light" | "dark"} themeMode
+ */
+export function getButtonColors(themeMode) {
+  return {
+    disable: {
+      type_1: {
+        lbl: themes[themeMode].onSubOutline,
+        btn: themes[themeMode].onSecondary
+      }
+    },
+    active: {
+      type_1: {
+        lbl: themes[themeMode].onPrimary,
+        btn: themes[themeMode].primary
+      },
+      type_2: {
+        lbl: themes[themeMode].onSecondary,
+        btn: themes[themeMode].secondary
+      },
+      type_3: {
+        lbl: themes[themeMode].onTertiary,
+        btn: themes[themeMode].tertiary
+      },
+      type_4: {
+        lbl: themes[themeMode].background,
+        btn: themes[themeMode].onBackground
+      },
+      type_5: {
+        lbl: themes[themeMode].subBackground,
+        btn: themes[themeMode].onSubBackground
+      },
+      type_6: {
+        lbl: themes[themeMode].outline,
+        btn: themes[themeMode].onOutline
+      },
+      type_7: {
+        lbl: themes[themeMode].subOutline,
+        btn: themes[themeMode].onSubOutline
+      }
+    },
+    inactive: {
+      type_1: {
+        lbl: themes[themeMode].primary,
+        btn: themes[themeMode].onPrimary
+      },
+      type_2: {
+        lbl: themes[themeMode].secondary,
+        btn: themes[themeMode].onSecondary
+      },
+      type_3: {
+        lbl: themes[themeMode].tertiary,
+        btn: themes[themeMode].onTertiary
+      },
+      type_4: {
+        lbl: themes[themeMode].onBackground,
+        btn: themes[themeMode].background
+      },
+      type_5: {
+        lbl: themes[themeMode].onSubBackground,
+        btn: themes[themeMode].subBackground
+      },
+      type_6: {
+        lbl: themes[themeMode].onOutline,
+        btn: themes[themeMode].outline
+      },
+      type_7: {
+        lbl: themes[themeMode].onSubOutline,
+        btn: themes[themeMode].subOutline
+      }
+    }
+  }
+}
 
 const styles = StyleSheet.create({
   btn_inactive: {

@@ -4,19 +4,18 @@ import styles from './AboutScreenStyles'
 import { useSelector } from 'react-redux'
 import { selectCurrentLanguage } from '../../redux/language/LanguageSlice'
 import useTheme from 'customHooks/useTheme'
+import { withTheme } from 'hocs/withTheme'
 
-const AboutScreen = () => {
+const AboutScreen = withTheme(({theme}) => {
   //language
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.settingAbout
-  //theme
-  const {themeColor} = useTheme();
   return (
-    <View style={[styles.container,{backgroundColor: themeColor.bg_primary}]}>
-      <Text style={[styles.h1,{color: themeColor.fourth}]}>DONGNAI TRAVEL</Text>
+    <View style={[styles.container,{backgroundColor: theme.background}]}>
+      <Text style={[styles.h1,{color: theme.onBackground}]}>DONGNAI TRAVEL</Text>
       <Text style={styles.text_version}>{langData.about_version[langCode]}{" "}1.0.0</Text>
     </View>
   )
-}
+})
 
 export default AboutScreen

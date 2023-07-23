@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native'
 import { app_c, app_dms, app_sh, app_sp, app_typo } from 'globals/styles'
 
+
 export const styles = StyleSheet.create({
   container: {
     flex: 1, 

@@ -11,35 +11,41 @@ import {
 import React from 'react'
 
 import { useNavigation } from '@react-navigation/native'
+import { useSelector } from 'react-redux'
 
-import useTheme from 'customHooks/useTheme'
 import { useBriefPlaces } from 'customHooks/usePlace'
+
+import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
 
 import {
   BRIEF_PLACE_DATA_FIELDS,
   PLACE_QUALITIES
 } from 'utilities/constants'
 
+
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import { TypeScrollView, HorizontalPlaceCard, HorizontalPlaceCardSkeleton, BannerButton } from 'components'
+import { withTheme } from 'hocs/withTheme'
+import {
+  TypeScrollView,
+  HorizontalPlaceCard,
+  HorizontalPlaceCardSkeleton,
+  BannerButton
+} from 'components'
 
 import styles from './ExploreScreenStyles'
 import { app_sp } from 'globals/styles'
-import { useSelector } from 'react-redux'
-import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
 
 /**
  * __Creator__: @NguyenAnhTuan1912
- * 
  * @returns 
  */
-const ExploreScreen = () => {
+const ExploreScreen = withTheme(({
+  route,
+  theme
+}) => {
   //language
   const langCode = useSelector(selectCurrentLanguage).languageCode 
   const langData = useSelector(selectCurrentLanguage).data?.exploreScreen
-  //theme
-  const {themeColor, themeMode} = useTheme();
-  
   
   const exploreInfo = React.useRef({
     isFirstFetch: true,
@@ -104,28 +110,28 @@ const ExploreScreen = () => {
   }, [type]);
 
   return (
-    <View style={{backgroundColor: themeColor.bg_primary}}>
+    <View style={{backgroundColor: theme.background}}>
       {
         isOnTop && (
           <View
             style={[
               app_sp.ph_18,
               {
-                backgroundColor: themeColor.bg_second,
+                backgroundColor: theme.background,
                 position: 'relative',
                 zIndex: 2,
               }
             ]}
           >
             <BannerButton
+              defaultColor='type_5'
+              activeColor='type_1'
               typeOfButton="highlight"
               style={app_sp.mt_12}
               toScreen={{ screenName: "MapScreen" }}
               setRightIcon={(isActive, currentLabelStyle) =>
-                <Ionicons name="chevron-forward-outline" style={currentLabelStyle} size={25} color={themeColor.ext_third}/>
+                <Ionicons name="chevron-forward-outline" style={currentLabelStyle} size={25} />
               }
-              defaultColor={themeMode === 'light' ? 'type_3' : 'type_1_dark'}
-              activeColor='type_2'
             >
               {langData.banner_button[langCode]}
             </BannerButton>
@@ -135,8 +141,8 @@ const ExploreScreen = () => {
       <FlatList
         data={places ? places.data : []}
         key={exploreInfo.current.placesInstance}
-        style={[styles.scroll_view_container,{backgroundColor: themeColor.bg_second}]}
-        contentContainerStyle={{paddingBottom: 200}}
+        style={[styles.scroll_view_container, { backgroundColor: theme.background }]}
+        contentContainerStyle={{paddingBottom: 200, backgroundColor: theme.background}}
         onMomentumScrollEnd={handleExploreMomentumScrollEnd}
         onEndReached={handleEndReach}
         onScroll={handleExploreScroll}
@@ -157,7 +163,7 @@ const ExploreScreen = () => {
             labels={PLACE_QUALITIES[langCode].labels}
             callBack={setType}
             scrollStyle={[app_sp.ms_18, app_sp.pv_12]}
-            containerStyle={{backgroundColor: themeColor.bg_second, ...app_sp.pv_10}}
+            containerStyle={[app_sp.pv_10, { backgroundColor: theme.background }]}
           />
         }
         renderItem={item => <View style={app_sp.ph_18}><HorizontalPlaceCard typeOfBriefPlace={type} place={item.item} placeIndex={item.index} /></View>}
@@ -167,6 +173,6 @@ const ExploreScreen = () => {
       />
     </View>
   )
-}
+})
 
 export default ExploreScreen

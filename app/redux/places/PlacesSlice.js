@@ -68,7 +68,7 @@ export const placesSlice = createSlice({
      * @param {{type: string, payload: { placeId: string, placeIndex?: string, typeOfBriefPlaces: string, updateData: PlaceDataProps }}} action 
      */
     updateBriefPlaceState: (state, action) => {
-      let {placeId, placeIndex, typeOfBriefPlaces, updateData} = action.payload;
+      let {placeId, placeIndex = 0, typeOfBriefPlaces, updateData} = action.payload;
       if(state.briefPlaces[typeOfBriefPlaces]) {
         let place = state.briefPlaces[typeOfBriefPlaces].data[placeIndex];
         if(place) state.briefPlaces[typeOfBriefPlaces].data[placeIndex] = Object.assign({}, place, updateData);

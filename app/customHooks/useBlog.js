@@ -40,7 +40,6 @@ export const {
     /**
      * Hàm này dùng để update một brief blog.
      * @param {string} blogId Id của blog.
-     * @param {string} typeOfBriefBlogs Loại blog.
      * @param {BlogDataProps} updateData Dữ liệu của blog, không cần thiết là phải đầy đủ các trường dữ liệu.
      * @param {number} blogIndex Index của blog trong mảng `data` của briefBlog, mặc định = 0.
      */

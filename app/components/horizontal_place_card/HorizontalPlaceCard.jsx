@@ -1,5 +1,10 @@
 import { View, Text, ImageBackground } from 'react-native'
 import React from 'react'
+import { useNavigation } from '@react-navigation/native'
+import { useSelector } from 'react-redux'
+
+import { useTheme } from 'customHooks/useTheme'
+import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
 
 import NumberUtility from 'utilities/number'
 import StringUtility from 'utilities/string'
@@ -13,15 +18,11 @@ import CircleButton from '../buttons/CircleButton'
 
 import styles from './HorizontalPlaceCardStyles'
 import { app_sp, app_shdw } from 'globals/styles'
-import { useSelector } from 'react-redux'
-import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
 
 import {
   PlaceDataProps,
   WithPlaceCardWrappedComponentProps
 } from 'types/index.d.ts'
-import useTheme from 'customHooks/useTheme'
-import { useNavigation } from '@react-navigation/native'
 /**
  * @typedef HorizontalPlaceCardProps
  * @property {PlaceDataProps} place Thông tin về một địa điểm của một nơi nào đó.
@@ -55,20 +56,13 @@ const HorizontalPlaceCard = ({
   const langCode = useSelector(selectCurrentLanguage).languageCode 
   const langData = useSelector(selectCurrentLanguage).data?.exploreScreen
   //theme
-  const {themeColor, themeMode} = useTheme();
+  const {theme, themeMode} = useTheme();
 
   let [city, province] = getTextContentInHTMLTag(place.adr_address);
   let presentationImage = place && place.place_photos ? {uri: place.place_photos[0]} : {}
-
-  console.log("User favorites total: ", place.user_favorites_total);
-  //shadow for card
-  let shadw = themeMode === 'light' ? 'type_1' : 'type_1_dark'
-  let bg = themeMode === 'light' ? 'bg_second' : 'bg_tertiary'
-  let heart = themeMode === 'light' ? 'heart' : 'heart_dark'
-  let activeHeart = themeMode === 'light' ? 'type_1' : 'type_1_dark'
   
   return React.useMemo(() => (
-    <View style={[styles.card,{backgroundColor: themeColor[bg], ...app_shdw[shadw]}]}>
+    <View style={[styles.card,{backgroundColor: theme.subBackground}]}>
       {/* Cột đâu tiên - Image Container */}
       <RectangleButton
         isOnlyContent
@@ -96,7 +90,6 @@ const HorizontalPlaceCard = ({
           <View style={styles.card_tag_container}>
             <AppText
               font="body2"
-              style={themeMode === 'light' ? styles.card_text_color : {color: themeColor.fourth}}
               numberOfLines={1}
             >
               {place.types.map((type, index) => (
@@ -106,19 +99,19 @@ const HorizontalPlaceCard = ({
           </View>
           <View>
             <AppText numberOfLines={1} font="h3" style={styles.card_title}>{place.name}</AppText>
-            <AppText style={themeMode === 'light' ? styles.car_subtitle : { color: themeColor.fourth }} font="body2">{StringUtility.toTitleCase(city)}{province && " - "}{StringUtility.toTitleCase(province)}</AppText>
+            <AppText font="body2">{StringUtility.toTitleCase(city)}{province && " - "}{StringUtility.toTitleCase(province)}</AppText>
           </View>
           <View style={styles.card_information_container}>
             <View style={styles.card_information_col}>
-              <AppText font="body2" style={themeMode === 'light' ? styles.card_text_color : { color: themeColor.fourth }}>
+              <AppText font="body2">
                 <Ionicons name='star-outline' /> {place.rating}
               </AppText>
-              <AppText font="body2" style={themeMode === 'light' ? styles.card_text_color : { color: themeColor.fourth }}>
+              <AppText font="body2">
                 <Ionicons name='chatbubble-outline' /> {NumberUtility.toMetricNumber(place.user_ratings_total)}
               </AppText>
             </View>
             <View style={styles.card_information_col}>
-              <AppText font="body2" style={styles.card_text_color}>
+              <AppText font="body2">
                 <Ionicons name='heart-outline' /> {NumberUtility.toMetricNumber(place.user_favorites_total)}
               </AppText>
             </View>
@@ -127,24 +120,22 @@ const HorizontalPlaceCard = ({
         <View style={styles.card_buttons_container}>
           <CircleButton
             isActive={extendedPlaceInfo.isLiked}
+            border={1}
+            defaultColor='type_5'
+            activeColor='type_1'
             style={app_sp.me_8}
             typeOfButton="highlight"
             onPress={handleLikeButton}
-            defaultColor={heart}
-            activeColor={activeHeart}
-            setIcon={(isActive, currentLabelStyle) => (
-              <Ionicons name={isActive ? 'heart' : 'heart-outline'} size={14} style={currentLabelStyle} />
-            )}
+            setIcon={<Ionicons name={extendedPlaceInfo.isLiked ? 'heart' : 'heart-outline'} size={14} />}
           />
           <CircleButton
+            border={1}
+            defaultColor='type_5'
+            activeColor='type_1'
             style={app_sp.me_8}
             typeOfButton="highlight"
             onPress={() => navigation.navigate('MapScreen', { place_id: place.place_id })}
-            defaultColor={heart}
-            activeColor={activeHeart}
-            setIcon={(isActive, currentLabelStyle) => (
-              <Ionicons name={isActive ? 'map' : 'map-outline'} size={14} style={currentLabelStyle} />
-            )}
+            setIcon={<Ionicons name='map' size={14} />}
           />
         </View>
       </View>
@@ -153,14 +144,12 @@ const HorizontalPlaceCard = ({
       <View style={styles.card_share_container}>
         <CircleButton
           isOnlyContent={true}
-          setIcon={(isActive, currentLabelStyle) => (
-            <Ionicons name="share-outline" size={20} style={[currentLabelStyle,{color: themeColor.fourth}]} />
-          )}
+          setIcon={<Ionicons name="share-outline" size={20} />}
           onPress={handleShareToSocial}
         />
       </View>
     </View>
-  ), [extendedPlaceInfo.isLiked, place.rating, place.user_favorites_total, place.user_ratings_total, themeColor]);
+  ), [extendedPlaceInfo.isLiked, place.rating, place.user_favorites_total, place.user_ratings_total, themeMode]);
 
 }
 

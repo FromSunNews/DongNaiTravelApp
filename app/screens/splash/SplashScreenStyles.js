@@ -8,11 +8,11 @@ export const styles = StyleSheet.create({
     flex: 1,
     // backgroundColor: app_c.HEX.primary,
     backgroundColor: 'white',
+
     justifyContent: 'center',
     alignItems: 'center',
   },
   label: {
-    ...app_typo.fonts.normal.title.h1,
-    color: app_c.HEX.fourth
+    ...app_typo.fonts.normal.title.h1
   }
 })

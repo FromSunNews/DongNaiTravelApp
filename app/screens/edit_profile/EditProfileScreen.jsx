@@ -1,21 +1,25 @@
-import { AppText } from "components";
-import useTheme from "customHooks/useTheme";
 import React from "react";
 import { SafeAreaView, View } from "react-native";
+
+import { withTheme } from "hocs/withTheme";
+
+import { AppText } from "components";
+
 import styles from "./EditProfileScreenStyles";
 
 
 
-function EditProfileScreen() {
+const EditProfileScreen = withTheme(({
+  theme
+}) => {
   //theme
-  const {themeColor} = useTheme();
   return ( 
- <SafeAreaView style={[styles.container,{backgroundColor: themeColor.bg_second}]}>
+ <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
     <View>
       <AppText>Edit Profile</AppText>
     </View>
  </SafeAreaView> 
   );
-}
+});
 
 export default EditProfileScreen;

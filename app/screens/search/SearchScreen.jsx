@@ -8,6 +8,9 @@ import {
 import {
   createSearchWithResultList
 } from 'hocs/createResultList'
+import { withTheme } from 'hocs/withTheme'
+
+import { useNavigation } from '@react-navigation/native'
 
 import {
   usePlaceDetailsActions
@@ -36,7 +39,6 @@ import {
   SEARCH_PLACE_DATA_FIELDS,
   SEARCH_RESULT_TYPE
 } from 'utilities/constants'
-import { useNavigation } from '@react-navigation/native'
 
 const MySearchWithResultList = createSearchWithResultList([
   async (text) => {
@@ -48,7 +50,11 @@ const MySearchWithResultList = createSearchWithResultList([
   }
 ]);
 
-const SearchScreen = (props) => {
+const SearchScreen = withTheme(({
+  navigation,
+  route,
+  theme
+}) => {
   const [results, setResults] = React.useState([]);
 
   const { addPlaceDetails } = usePlaceDetailsActions();
@@ -71,15 +77,15 @@ const SearchScreen = (props) => {
         width: '100%',
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: app_c.HEX.primary,
+        backgroundColor: theme.background,
         ...app_sp.pv_12,
         ...app_sp.ph_18,
       }}>
         <CircleButton
-          defaultColor="type_2"
+          defaultColor="type_4"
           typeOfButton="opacity"
           style={app_sp.me_12}
-          onPress={() => props.navigation.goBack()}
+          onPress={() => navigation.goBack()}
           setIcon={(isActive, currentLabelStyle) => (
             <Ionicons name="chevron-back-outline" size={18} style={currentLabelStyle} />
           )}
@@ -97,7 +103,7 @@ const SearchScreen = (props) => {
         nestedScrollEnabled
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         contentContainerStyle={[app_sp.ph_18]}
-        style={{backgroundColor: app_c.HEX.primary, flex: 1}}
+        style={{backgroundColor: theme.background, flex: 1}}
       >
         <SearchResultList
           resultListPosition='normal'
@@ -111,17 +117,17 @@ const SearchScreen = (props) => {
               return (
                 <RectangleButton
                   typeOfButton='opacity'
-                  defaultColor='type2'
+                  defaultColor='type_4'
                   onPress={() => {
                     addPlaceDetails(item);
-                    props.navigation.push('PlaceDetailScreen', {
+                    navigation.push('PlaceDetailScreen', {
                       placeId: item.place_id,
                       fromSearch: true
                     });
                   }}
                   style={[{justifyContent: 'flex-start'}, app_sp.pv_18, app_sp.ph_0]}
                 >
-                  <Foundation name="mountains" size={18} style={[app_sp.me_12, app_sp.ph_12]} />
+                  <Foundation name="mountains" color={theme.onBackground} size={18} style={[app_sp.me_12, app_sp.ph_12]} />
                   <AppText>{item.name}</AppText>
                 </RectangleButton>
               )
@@ -131,6 +137,6 @@ const SearchScreen = (props) => {
       </KeyboardAwareScrollView>
     </>
   )
-}
+})
 
 export default SearchScreen

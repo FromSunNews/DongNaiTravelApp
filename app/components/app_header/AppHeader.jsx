@@ -9,7 +9,7 @@ import {
   NativeStackNavigationOptions
 } from '@react-navigation/native-stack'
 
-import useTheme from 'customHooks/useTheme';
+import { useTheme } from 'customHooks/useTheme';
 
 import { selectCurrentNotifs } from '../../redux/notifications/NotificationsSlice';
 import { selectCurrentLanguage } from '../../redux/language/LanguageSlice';
@@ -48,7 +48,6 @@ import { app_typo } from '../../globals/styles';
  * @param {object} props.navigation - Object navigation.
  * @param {object} props.route - Thông tin về Route.
  * @param {ExtendedOptions & NativeStackNavigationOptions} props.options - [Extend NativeStackNavigationOptions] Options của screen.
- * @param {'type_1' | 'type_2' | 'type_3' | 'type_4' | 'type_5'} props.options.boxShadowType - [Extend Property] Thông số chỉnh boxShadow cho header's background.
  * @param {() => JSX.Element} props.setLeftPart - Function cho phép custom phần bên trái của Header.
  * @param {() => JSX.Element} props.setCenterPart - Function cho phép custom phần giữa của Header.
  * @param {() => JSX.Element} props.setRightPart - Function cho phép custom phần phải trái của Header.
@@ -70,7 +69,7 @@ const AppHeader = ({
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.appHeader
   //theme
-  const {themeColor} = useTheme()
+  const { theme, themeMode } = useTheme()
 
   const currentNotif = useSelector(selectCurrentNotifs)
   const [numberOfVisited, setNumberOfVisited] = useState(0)
@@ -96,8 +95,8 @@ const AppHeader = ({
   )
   const headerStyle = {
     ...styles.container,
-    ...app_shdw[boxShadow],
-    backgroundColor: themeColor.bg_second,
+    ...app_shdw.type_1,
+    backgroundColor: theme.background,
     ...(transparent ?  { backgroundColor: `rgba(${255, 255, 255}, 0)` } : {} )
   }
 
@@ -105,7 +104,7 @@ const AppHeader = ({
     if (currentNotif.length > 0) {
       setNumberOfVisited(currentNotif.filter(notif => notif._isVisited === false).length)
     }
-  }, [currentNotif,themeColor])
+  }, [currentNotif, themeMode])
 
   return (
     <View style={[headerStyle]}>
@@ -119,8 +118,7 @@ const AppHeader = ({
             canSetBackButton
             && (
               <CircleButton
-                defaultColor="type_2"
-                boxShadowType="type_1"
+                defaultColor='type_4'
                 typeOfButton="opacity"
                 onPress={() => navigation.goBack()}
                 setIcon={(isActive, currentLabelStyle) => (
@@ -137,7 +135,7 @@ const AppHeader = ({
           canSetCenterPart
           ? setCenterPart()
           : (
-              <AppText weight="lighter" font="h5" style={{textAlign: 'center'}} color = 'fourth' >{title}</AppText>
+              <AppText weight="lighter" font="h5" style={{textAlign: 'center'}}>{title}</AppText>
             )
         }
       </View>
@@ -151,12 +149,9 @@ const AppHeader = ({
           (
             <>
               <CircleButton
-                defaultColor="type_2"
-                boxShadowType="type_1"
+                defaultColor='type_4'
                 typeOfButton="opacity"
-                setIcon={(isActive, currentLabelStyle) => (
-                  <Ionicons name="search-outline" size={18} style={currentLabelStyle} />
-                )}
+                setIcon={<Ionicons name="search-outline" size={18} />}
                 onPress={() => {
                   navigation.push("GlobalNavigator", { screen: "SearchScreen" });
                 }}
@@ -168,13 +163,10 @@ const AppHeader = ({
           title === langData.home[langCode] && (
             <View style={{paddingLeft:10}}>
               <CircleButton
-                defaultColor="type_2"
-                boxShadowType="type_1"
+                defaultColor='type_4'
                 typeOfButton="opacity"
                 onPress={() => navigation.navigate('Notification')}
-                setIcon={(isActive, currentLabelStyle) => (
-                  <Ionicons name="notifications-sharp" size={18} style={[currentLabelStyle, {color: numberOfVisited !== 0 ? '#FFC72C' : null}]} />
-                )}
+                setIcon={<Ionicons name="notifications-sharp" size={18} style={{color: numberOfVisited !== 0 ? '#FFC72C' : null}} />}
               />
               {
                 numberOfVisited > 0 &&
@@ -190,8 +182,6 @@ const AppHeader = ({
                   top: 0,
                 }}>
                   <AppText style={{
-                    color: themeColor.primary,
-                    ...app_typo.fonts.normal.bolder.body2,
                     fontSize: 10
                   }}>{numberOfVisited}</AppText>
                 </View>

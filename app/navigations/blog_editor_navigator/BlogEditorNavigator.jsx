@@ -61,7 +61,12 @@ const BlogEditorNavigator = ({navigation}) => {
               name="PrepareBlogPushlishScreen"
               options={{
                 title: 'Prepare to publish',
-                header: AppHeader
+                header: props => (
+                  <AppHeader
+                    {...props}
+                    setRightPart={() => null}
+                  />
+                )
               }}
               component={PrepareBlogPushlishScreen}
             />

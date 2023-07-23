@@ -1,14 +1,18 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
+import { useTheme } from 'customHooks/useTheme'
+
 import ComponentUtility from 'utilities/component'
 
 import styles from './VerticalBlogCardStyles'
 
 import { ViewProps } from 'types/index.d'
+
 import { app_c, app_sh, app_sp } from 'globals/styles'
 import useTheme from 'customHooks/useTheme'
 import Skeleton from 'components/skeleton/Skeleton'
+
 
 /**
  * @param {ViewProps} props Props của component. Chình là props của View.
@@ -17,8 +21,9 @@ import Skeleton from 'components/skeleton/Skeleton'
 const VerticalBlogCardSkeleton = (props) => {
   const containerStyle = ComponentUtility.mergeStyle(styles.card, props.style);
   //theme
-  const {themeColor} = useTheme();
+  const { theme } = useTheme();
   return (
+
     <View {...props} style={[containerStyle,{backgroundColor: 'white'}]}>
       {/* Image */}
       <Skeleton

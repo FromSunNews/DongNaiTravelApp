@@ -6,17 +6,16 @@ import { MaterialIcons,Feather } from "react-native-vector-icons";
 import DropDown from "components/drop_down/DropDown";
 import { useSelector } from "react-redux";
 import { selectCurrentLanguage } from "../../redux/language/LanguageSlice";
-import useTheme from "customHooks/useTheme";
+import { withTheme } from "hocs/withTheme";
 
-const ReportsScreen = () => {
+const ReportsScreen = withTheme(({theme}) => {
   //language
   const langCode = useSelector(selectCurrentLanguage).languageCode
   const langData = useSelector(selectCurrentLanguage).data?.settingReport
-  //theme
-  const {themeColor} = useTheme();
+  
 
   return (
-    <View style={[styles.container,{backgroundColor: themeColor.bg_primary}]}>
+    <View style={[styles.container,{backgroundColor: theme.background}]}>
       <View style={{ ...styles.dropdown_container }}>
         <DropDown
           isParagraph={true}
@@ -37,6 +36,6 @@ const ReportsScreen = () => {
       </View>
     </View>
   );
-};
+});
 
 export default ReportsScreen;

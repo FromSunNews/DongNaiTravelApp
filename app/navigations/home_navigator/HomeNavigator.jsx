@@ -85,7 +85,8 @@ const HomeNavigator=({ navigation })=>{
       <HomeStack.Screen
         name='WeatherScreen'
         options={{
-          title: `${langCode === 'vi' ? 'Thời tiết' : 'Weather forecast'}`
+          title: `${langCode === 'vi' ? ' Dự báo thời tiết' : 'Weather forecast'}`
+          
         }}
         component={WeatherScreen}
       />

@@ -6,9 +6,11 @@ import ComponentUtility from 'utilities/component'
 import styles from './VerticalPlaceCardStyles'
 
 import { ViewProps } from 'types/index.d'
+
 import { app_c, app_sh, app_shdw, app_sp } from 'globals/styles'
 import useTheme from 'customHooks/useTheme'
 import Skeleton from 'components/skeleton/Skeleton'
+
 
 /**
  * @param {ViewProps} props Props của component. Chình là props của View.
@@ -17,12 +19,10 @@ import Skeleton from 'components/skeleton/Skeleton'
 const VerticalPlaceCardSkeleton = (props) => {
   const containerStyle = ComponentUtility.mergeStyle(styles.card, props.style);
   //theme
-  const {themeColor, themeMode} = useTheme();
-  const background = themeMode === 'light' ? themeColor.bg_second : themeColor.bg_tertiary
-  const dataBshdw = themeMode === 'light' ? 'type_1' : 'type_1_dark'
+  const { theme } = useTheme();
 
   return (
-    <View {...props} style={[containerStyle,{backgroundColor: background,...app_shdw[dataBshdw]}]}>
+    <View {...props} style={[containerStyle,{backgroundColor: theme.subBackground}]}>
       {/* Image */}
       <Skeleton
         skeletonStyle={[styles.card_image, {backgroundColor: app_c.HEX.ext_primary}]}

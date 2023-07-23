@@ -5,26 +5,20 @@ import Constants from 'expo-constants'
 
 export const styles = StyleSheet.create({
   containerScrollView: {
-    backgroundColor: app_c.HEX.primary,
     flex: 1
   },  
   container: {
     flex: 1,
     paddingTop: Constants.statusBarHeight,
-    backgroundColor: app_c.HEX.primary,
     paddingBottom: 20,
   },
   content: {
     paddingHorizontal: 18
   },
   textHeader: {
-    color: app_c.HEX.fourth,
-    marginBottom: 20,
-    ...app_typo.fonts.normal.bolder.h1
+    marginBottom: 20
   },
   textInfo: {
-    color: app_c.HEX.fourth,
-    ...app_typo.fonts.normal.normal.body0,
   },
   image: {
     width: app_dms.screenWidth - 18 * 2,
@@ -34,8 +28,7 @@ export const styles = StyleSheet.create({
   },
   textError: {
     color: '#F32424',
-    marginTop: 5,
-    ...app_typo.fonts.normal.normal.body1
+    marginTop: 5
   },
   containerLabel: {
     alignItems: 'center',

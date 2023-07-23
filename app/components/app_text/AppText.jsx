@@ -1,14 +1,16 @@
-import { Text, Linking, StyleProp, TextStyle, TextProps } from 'react-native'
 import React, { useEffect, useState } from 'react'
+import { Text, Linking, StyleProp, TextStyle, TextProps } from 'react-native'
+
+import { useTheme } from 'customHooks/useTheme';
+import { useSelector } from 'react-redux';
+import { selectCurrentMode } from 'redux/theme/ThemeSlice';
 
 import ComponentUtility from 'utilities/component';
 
 import { Link } from '@react-navigation/native';
 
 import { app_c, app_typo } from 'globals/styles'
-import useTheme from 'customHooks/useTheme';
-import { useSelector } from 'react-redux';
-import { selectCurrentMode } from 'redux/theme/ThemeSlice';
+import { ColorAlias } from 'globals/styles/theme';
 
 /**
  * @typedef ToScreenProps
@@ -22,7 +24,7 @@ import { selectCurrentMode } from 'redux/theme/ThemeSlice';
  * @property {'normal' | 'italic'} [fontStyle=normal] Kiểu của chữ, bình thường hay là nghiêng.
  * @property {'normal' | 'lighter' | 'bolder'} [weight=normal] Độ đậm của chữ.
  * @property {'h0' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'body0' | 'body1' | 'body2' | 'sub0' | 'sub1'} [font=body1] Từ khoá liên quan tới font, được quy định trong typography.js.
- * @property {'primary' | 'second' | 'third' | 'fourth' | 'sub_primary' | 'sub_second' | 'sub_third' | 'sub_fourth' | 'ext_primary' | 'ext_second' | 'ext_third'} [color=fourth] Từ khoá lên quan tới màu sắc, được quy định trong `color.js`.
+ * @property {keyof ColorAlias} [color=onBackground] Từ khoá lên quan tới màu sắc, được quy định trong `color.js`.
  * @property {string} hyperLink Khi link này được truyền vào thì `AppText sẽ giốn như thẻ `a` ở web`.
  * @property {ToScreenProps}  toScreen Một object chứa thông tin của route khác.
  */
@@ -40,23 +42,23 @@ const AppText = ({
   fontStyle = 'normal',
   weight = 'normal',
   font = 'body1',
-  color = 'fourth',
+  color = 'onBackground',
   hyperLink,
   toScreen = { screenName: "", params: {} },
   ...props
   
 }) => {
   //theme
-  var {themeColor} = useTheme();
+  var { theme } = useTheme();
 
   let stylePropIsArray = props.style instanceof Array;
 
   let textStyle = React.useMemo(() => (
     {
       ...app_typo.fonts[fontStyle][weight][font],
-      color: themeColor[color]
+      color: theme[color]
     }
-  ), [fontStyle, weight, font, color, themeColor]);
+  ), [fontStyle, weight, font, color, theme]);
 
   let textCompleteStyle = ComponentUtility.mergeStyle(textStyle, props.style);
 
@@ -65,7 +67,7 @@ const AppText = ({
     return (
       <Text
         {...props}
-        style={[textCompleteStyle, { color: themeColor.third }]}
+        style={[textCompleteStyle, { color: theme.secondary }]}
         onPress={() => Linking.openURL(hyperLink)}
       >{children}
       </Text>

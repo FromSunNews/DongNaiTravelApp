@@ -31,10 +31,10 @@ import {
 import {
   createSearchWithResultList
 } from 'hocs/createResultList'
+import { withTheme } from 'hocs/withTheme'
 
 import { useForm, Controller } from 'react-hook-form'
 
-import useTheme from 'customHooks/useTheme'
 import { useAuthState } from 'customHooks/useAuth'
 
 import {
@@ -115,7 +115,10 @@ async function pickImageFromLibrary(options) {
   }
 }
 
-const PrepareBlogPushlishScreen = (props) => {
+const PrepareBlogPushlishScreen = withTheme(({
+  theme,
+  ...props
+}) => {
   /*
     Các thông tin cơ bản của blog. Ngoài ra thì còn có content.
   */
@@ -132,7 +135,6 @@ const PrepareBlogPushlishScreen = (props) => {
     index: 0
   });
   const [isPending, startTransition] = React.useTransition();
-
   const { control, handleSubmit, formState: { errors }, setValue, getValues} = useForm ({
     defaultValues: {
       name: ""
@@ -141,7 +143,6 @@ const PrepareBlogPushlishScreen = (props) => {
 
   const { user } = useAuthState();
 
-  const theme = useTheme();
   const types = ["review", "rank", "introduce"];
   const chunkSize = 100 * 1024;
   /*
@@ -321,7 +322,7 @@ const PrepareBlogPushlishScreen = (props) => {
       nestedScrollEnabled
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       contentContainerStyle={[app_sp.pt_12, {paddingBottom: 80, paddingTop: 20}]}
-      style={{flex: 1, backgroundColor: app_c.HEX.primary}}
+      style={{flex: 1, backgroundColor: theme.background}}
     >
       <View style={[styles.container, app_sp.mb_12, {position: 'relative'}]}>
         <View style={[app_sp.ph_18, {paddingBottom: 10}]}>
@@ -402,6 +403,7 @@ const PrepareBlogPushlishScreen = (props) => {
         <View style={[app_sp.mv_12, app_sp.ph_18]}>
           <AppText font='h4' style={app_sp.mb_12}>Blog's image</AppText>
           <RectangleButton
+            isActive
             typeOfButton='highlight'
             overrideShape='rounded_8'
             onPress={() => {
@@ -414,10 +416,10 @@ const PrepareBlogPushlishScreen = (props) => {
                 }
               })
             }}
-            defaultColor='type_3'
+            defaultColor='type_1'
             style={app_sp.pv_12}
           >
-            <AppText>Choose an image</AppText>
+            Choose an image
           </RectangleButton>
           <View style={[
             styles.presentationImageContainer,
@@ -446,6 +448,8 @@ const PrepareBlogPushlishScreen = (props) => {
                   <RectangleButton
                     key={type}
                     isActive={isActive}
+                    defaultColor="type_5"
+                    activeColor="type_1"
                     typeOfButton='highlight'
                     overrideShape='capsule'
                     style={app_sp.me_12}
@@ -475,7 +479,7 @@ const PrepareBlogPushlishScreen = (props) => {
           renderResultItem={item => (
             <RectangleButton
               typeOfButton='highlight'
-              defaultColor='type2'
+              defaultColor='type_4'
               onPress={() => {
                 setBlogInfo(prevState => {
                   let m = prevState.mentionedPlaces.slice();
@@ -485,7 +489,7 @@ const PrepareBlogPushlishScreen = (props) => {
               }}
               style={[{justifyContent: 'flex-start'}, app_sp.pv_18]}
             >
-              <AppText>{item.name}</AppText>
+              {item.name}
             </RectangleButton>
           )}
         />
@@ -501,7 +505,7 @@ const PrepareBlogPushlishScreen = (props) => {
                     flexDirection: 'row',
                     alignItems: 'center',
                     borderWidth: 1,
-                    borderColor: app_c.HEX.ext_third
+                    borderColor: theme.outline
                   }, app_sh.capsule, app_sp.ps_18]}
                 >
                   <AppText>
@@ -518,9 +522,7 @@ const PrepareBlogPushlishScreen = (props) => {
                         )}
                       });
                     }}
-                    setIcon={(isActive, currentLabelStyle) => (
-                      <Ionicons name="close-outline" size={18} style={currentLabelStyle} />
-                    )}
+                    setIcon={<Ionicons name="close-outline" size={18} />}
                   />
                 </View>
               )
@@ -529,7 +531,8 @@ const PrepareBlogPushlishScreen = (props) => {
         </View>
 
         <RectangleButton
-          defaultColor='type_4'
+          isActive
+          defaultColor='type_1'
           typeOfButton='opacity'
           overrideShape='capsule'
           onPress={() => {
@@ -539,13 +542,7 @@ const PrepareBlogPushlishScreen = (props) => {
           }}
           style={[app_sp.pv_16, app_sp.mh_18]}
         >
-          {
-            (isActive, currentLabelStyle) => (
-              <AppText style={currentLabelStyle}>
-                Publish
-              </AppText>
-            )
-          }
+          Publish
         </RectangleButton>
       </View>
 
@@ -625,7 +622,7 @@ const PrepareBlogPushlishScreen = (props) => {
       }
     </KeyboardAwareScrollView>
   )
-}
+});
 
 export default PrepareBlogPushlishScreen
 

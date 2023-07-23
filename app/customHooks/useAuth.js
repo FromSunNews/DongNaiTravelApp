@@ -106,11 +106,11 @@ export const {
                 password : data.password
               }
             }
-            console.log("🚀 ~ file: SigninScreen.jsx:78 ~ onSubmit ~ user:", user)
+            console.log("🚀 ~ file: useAuth.js:109 ~ signin ~ user:", user)
             // Phuong: call Api
             await signInUserAPI(user)
             .then((res) => {
-              console.log("🚀 ~ file: Signin.js:73 ~ onSubmit ~ res", res)
+              console.log("🚀 ~ file: useAuth.js:113 ~ signin ~ res", res)
               if (res) {
                 // Phuong: Update user in persistent store
                 dispatch(updateCurrentUser(res.fullInfoUser))

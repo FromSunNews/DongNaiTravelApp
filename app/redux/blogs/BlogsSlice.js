@@ -67,12 +67,10 @@ export const blogsSlice = createSlice({
      * @param {{type: string, payload: { blogId: string, blogIndex?: string, typeOfBriefBlogs: string, updateData: BlogDataProps }}} action 
      */
     updateBriefBlogState: (state, action) => {
-      let {blogId, blogIndex, typeOfBriefBlogs, updateData} = action.payload;
+      let {blogId, blogIndex = 0, typeOfBriefBlogs, updateData} = action.payload;
       if(state.briefBlogs[typeOfBriefBlogs]) {
-        let sliceOfBriefBlogs = state.briefBlogs[typeOfBriefBlogs].data.slice(blogIndex);
-        let newBlogIndex = sliceOfBriefBlogs.findIndex(briefBlog => briefBlog._id === blogId);
-        let blog = state.briefBlogs[typeOfBriefBlogs].data[newBlogIndex];
-        if(blog) state.briefBlogs[typeOfBriefBlogs].data[newBlogIndex] = Object.assign({}, blog, updateData);
+        let blog = state.briefBlogs[typeOfBriefBlogs].data[blogIndex];
+        if(blog) state.briefBlogs[typeOfBriefBlogs].data[blogIndex] = Object.assign({}, blog, updateData);
       }
     },
     /**
