@@ -39,8 +39,6 @@ import { useTheme } from 'customHooks/useTheme'
 // Phương: Socket 
 
 import { selectCurrentUser, updateTemporaryUserId } from 'redux/user/UserSlice'
-import 'react-native-get-random-values'
-import { v4 as uuidv4 } from 'uuid'
 import { updateUserLocation } from 'redux/map/mapSlice'
 
 // Related to Expo
@@ -51,6 +49,7 @@ import { signInUserAPI } from '../../apis/axios'
 import { selectCurrentWareHouse } from '../../redux/warehouse/WareHouseSlice'
 import FunctionsUtility from '../../utilities/functions'
 import { EMAIL_RULE } from '../../utilities/validators'
+import StringUtility from 'utilities/string'
 
 const tabIcon = {
 	'HomeScreen': {
@@ -205,7 +204,7 @@ const GroupBottomTab = () => {
 		if (user?._id)
 			userId = user._id
 		else {
-			userId = uuidv4()
+			userId = StringUtility.getRandomID();
 			console.log("🚀 ~ file: GroupBottomTab.jsx:175 ~ useEffect ~ userId:", userId)
 			dispatch(updateTemporaryUserId(userId))
 		}

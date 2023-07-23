@@ -61,8 +61,8 @@ export default function App() {
   //   checkInternetConnection()
   // }, [])
 
-  useEffect(async () => {
-    if (!isConnected && isPrevConnected) {
+  useEffect(() => {
+    if(!isConnected && isPrevConnected) {
       store.dispatch(updateNotif({
         appearNotificationBottomSheet: true,
         contentNotificationBottomSheet: 'Không có kết nối internet'
