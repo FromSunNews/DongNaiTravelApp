@@ -113,7 +113,7 @@ const HomeScreen = withTheme(({
     })
   }
 
-  console.log('Theme: ', theme)
+  // console.log('Theme: ', theme)
 
   useEffect(()=>{
     if (currentMap.userLocation) {
@@ -198,14 +198,14 @@ const HomeScreen = withTheme(({
                           {
                             wind ?(
                             <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5,paddingHorizontal:5}}>{`${wind}`}
-                              <AppText style={{...app_typo.fonts.normal.normal.h5,paddingHorizontal:5}}>Km/h</AppText>
+                              <AppText style={{...app_typo.fonts.normal.normal.h5}}>km/h</AppText>
                             </AppText>
-                            ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5,marginTop:4}}>
+                            ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5}}>
                                 <AppText style={{...app_typo.fonts.normal.normal.h5}}>km/h</AppText>
                             </AppText>
                           }
                         </View>
-                        <AppText style={{fontSize:22}}>-</AppText>
+                        <AppText style={{fontSize:22}}> -</AppText>
                         <View style={[styles.temperature_other_info_quarter,{ marginLeft:6}]}>
                            <AppText style={{...app_typo.fonts.normal.normal.h5}}>Độ ẩm:</AppText>
                               {
@@ -213,7 +213,7 @@ const HomeScreen = withTheme(({
                                   <AppText style={{...app_typo.fonts.normal.normal.h5,paddingHorizontal:5}}>{`${humidity}`}
                                     <Text style={{...app_typo.fonts.normal.normal.h5}} >%</Text>
                                   </AppText>
-                                ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5  ,marginTop:4}}>
+                                ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5 }}>
                                   <Text style={{...app_typo.fonts.normal.normal.h5}}>%</Text>
                                   </AppText>
                               }
@@ -226,12 +226,12 @@ const HomeScreen = withTheme(({
                           {
                             cloud ? (
                               <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5,paddingHorizontal:5}}>{`${cloud}`+`%`}</AppText>
-                            ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5,marginTop:4}}>
+                            ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5}}>
                             <Text style={{...app_typo.fonts.normal.normal.h5}}>%</Text>
                             </AppText>
                           }
                         </View>
-                        <AppText style={{fontSize:22}}>-</AppText>
+                        <AppText style={{fontSize:22}}> -</AppText>
                         <View style={[styles.temperature_other_info_quarter,{marginLeft:6}]}>
                             {/* <MaterialCommunityIcons name='weather-fog' size={15} color={theme.ext_second}/> */}
                             
@@ -239,10 +239,10 @@ const HomeScreen = withTheme(({
                             {
                               vision ? (
                                 <AppText style={{...app_typo.fonts.normal.normal.h5,paddingHorizontal:5}}>{`${vision.toFixed(1)}`}
-                                <Text style={{...app_typo.fonts.normal.normal.h5}}>Km</Text>
+                                <Text style={{...app_typo.fonts.normal.normal.h5}}>km</Text>
                                 </AppText>
-                              ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5,marginTop:4}}>
-                                <Text style={{...app_typo.fonts.normal.normal.h5}}>Km</Text>
+                              ) :  <AppText numberOfLines={1} style={{...app_typo.fonts.normal.normal.h5}}>
+                                <Text style={{...app_typo.fonts.normal.normal.h5}}>km</Text>
                                 </AppText>
                             }
                         </View>

@@ -242,9 +242,10 @@ const WeatherScreen = () => {
   const [wind, setWind] = useState(null);
   const [day, setDay] = useState(null);
   //weather forecast
-  const [tempFc, setTemFc] = useState([]);
+
   const [weatherForecast, setWeatherForecast] = useState([]);
   const [hours,setHours] = useState([])
+
   const dateString = day;
   const date = new Date(dateString);
   const dayOfWeek = date.getDay();
@@ -292,7 +293,7 @@ const WeatherScreen = () => {
       setDay(data.weatherForecast[0].dt_txt);
       // weather forecast
       setWeatherForecast(data.weatherForecast)
-      setTemFc(data.weatherForecast.map(item=>item.main.temp))
+
     });
   };
 
@@ -392,7 +393,6 @@ const WeatherScreen = () => {
       </ImageBackground>
       <View style={styles.weather_table_info}>
         {weatherForecast.map((item,index) => {
-          console.log(index)
           return <WeatherDailyBlock item={item} key={index} />;
         })}
       </View>
