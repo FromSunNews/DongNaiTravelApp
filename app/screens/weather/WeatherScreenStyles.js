@@ -56,12 +56,14 @@ const styles = StyleSheet.create({
 
     },
     weather_daily_name: {
-        position: 'absolute',
-        left: 0,
+   
+
+    },
+    weather_daily_time:{
+        fontWeight:'600',
     },
     weather_daily_value: {
-        position: 'absolute',
-        right: 0,
+        marginLeft:70
     },
     font_weather_daily_info: {
         fontSize: 16,
@@ -71,10 +73,10 @@ const styles = StyleSheet.create({
         fontWeight: '700'
     },
     weather_daily_image: {
-        width: 70,
-        height: 70,
+        width: 40,
+        height: 40,
         position:'absolute',
-        left:90,
+        left:135,
     },
     weather_hourly_info:{
         width: 80,
@@ -99,6 +101,41 @@ const styles = StyleSheet.create({
     weather_time:{
         fontSize:18,
         fontWeight:'700'
+    },
+    weather_curr_img:{
+        width:60,
+        height:60
+    },
+    dropdown_container:{
+        width:'100%',
+        height:125,
+        paddingHorizontal:16,
+        justifyContent:'space-between',
+        flexDirection:'row'
+    },
+    dropdown_img:{
+        width:80,
+        height:80
+    },
+    dropdown_content:{
+        width:'25%',
+        justifyContent:'center',
+        alignItems:'center',
+    },
+    dropdown_desc:{
+        marginTop:4,
+        fontSize:14,
+        fontWeight:'800',
+        color:'red'
+    },
+    content:{
+        justifyContent:'center',
+        alignItems:'center',
+    },
+    title_info:{
+        fontSize:14,
+        fontWeight:'700',
+        paddingVertical:4
     }
 
 })

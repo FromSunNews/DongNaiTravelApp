@@ -165,9 +165,9 @@ const HomeScreen = withTheme(({
                         weatherImages.map(image => {
                           if(image.id === iconId)
                           {
-                            return  <Image source={image.image} style={styles.temperature_degrees_icon}/>
+                            return  <Image source={image.image} style={styles.temperature_degrees_icon} key={image.id}/>
                           }
-                          else null
+                          return null
                         })
                       }
                       {
@@ -327,5 +327,7 @@ const HomeScreen = withTheme(({
     </ScrollView>
   )
 })
+
+
 
 export default HomeScreen
