@@ -1466,7 +1466,6 @@ const Map = ({navigator}) => {
             height: 40,
             width: 40,
             borderRadius: 20,
-            backgroundColor: 'white',
             alignItems: 'center',
             justifyContent: 'center',
             ...app_shdw.type_2,

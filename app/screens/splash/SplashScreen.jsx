@@ -86,7 +86,7 @@ const SplashScreen = withTheme(({
   const lottieViewRef = useRef(null)
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: theme.background}]}>
       {/* <Animated.Text
         style={[styles.label, {opacity: opacity}]}
       >DongNaiTravelApp</Animated.Text> */}

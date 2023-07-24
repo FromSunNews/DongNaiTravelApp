@@ -294,7 +294,7 @@ const HomeScreen = withTheme(({
             }
           </ScrollView>
         </View>
-        <View style={[{backgroundColor: 'white'}]}>
+        <View style={[{backgroundColor: theme.background}]}>
 
           <TouchableOpacity style={styles.category_header} onPress={()=>navigation.navigate("BlogsNavigator")}>
             <AppText style={styles.category_name}>{langData.title_Blog[langCode]}</AppText>
@@ -305,11 +305,11 @@ const HomeScreen = withTheme(({
             labels={BLOG_QUANLITIES[langCode].labels}
             callBack={setTypeBlog}
             scrollStyle={[app_sp.mb_12, app_sp.ps_18]}
-            containerStyle={[{backgroundColor: 'white'}, app_sp.pv_10]}
+            containerStyle={[{backgroundColor: theme.background}, app_sp.pv_10]}
           />
           <ScrollView
             horizontal={true}
-            style={[{backgroundColor:'white'}]}
+            style={[{backgroundColor: theme.background}]}
             contentContainerStyle={[{flexGrow: 1}, app_sp.pb_10,]}
             showsHorizontalScrollIndicator={false}
           >

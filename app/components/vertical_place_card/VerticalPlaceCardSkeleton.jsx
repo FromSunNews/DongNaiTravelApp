@@ -8,7 +8,7 @@ import styles from './VerticalPlaceCardStyles'
 import { ViewProps } from 'types/index.d'
 
 import { app_c, app_sh, app_shdw, app_sp } from 'globals/styles'
-import useTheme from 'customHooks/useTheme'
+import {useTheme} from 'customHooks/useTheme'
 import Skeleton from 'components/skeleton/Skeleton'
 
 

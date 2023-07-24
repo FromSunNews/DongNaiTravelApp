@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useState } from 'react'
 import styles from './ChatBotScreenStyles'
 import { useSelector } from 'react-redux'
 import { selectCurrentLanguage } from '../../redux/language/LanguageSlice'
-import useTheme from 'customHooks/useTheme'
 import { getTextChatBotAPI } from 'apis/axios'
 import { selectCurrentUser } from 'redux/user/UserSlice'
 import { selectTemporaryUserId } from 'redux/user/UserSlice'
@@ -25,11 +24,12 @@ import MessageFeature from 'components/message_feature/MessageFeature'
 import { KeyboardAvoidingView } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { withTheme } from 'hocs/withTheme'
 
 
 const botAvatar = require('../../assets/images/avatar_chatbot.jpg')
 
-const ChatBotScreen = () => {
+const ChatBotScreen = withTheme(({theme}) => {
 
   const currentUserId = useSelector(selectCurrentUser)._id
   const temporaryUserId = useSelector(selectTemporaryUserId)
@@ -39,7 +39,6 @@ const ChatBotScreen = () => {
   console.log("🚀 ~ file: ChatBotScreen.jsx:20 ~ ChatBotScreen ~ langCode:", langCode)
   const langData = useSelector(selectCurrentLanguage).data?.settingAbout
   //theme
-  const themeColor = useTheme();
   
   const [messages, setMessages] = useState([])
   
@@ -313,6 +312,6 @@ const ChatBotScreen = () => {
       </KeyboardAvoidingView>
     </SafeAreaView>
   )
-}
+})
 
 export default ChatBotScreen

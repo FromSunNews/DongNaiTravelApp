@@ -3,7 +3,7 @@ import React, { Component, memo, useCallback, useEffect, useMemo, useRef, useSta
 // import styles from './ChatBotScreenStyles'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectCurrentLanguage } from '../../redux/language/LanguageSlice'
-import useTheme from 'customHooks/useTheme'
+// import useTheme from 'customHooks/useTheme'
 import { getMorePlacesTextSearchAPI, getPlacesTextSearchAPI, getPlacesTextSearchAPIWithoutLoading, getRouteDirectionAPI, getRouteDirectionAPIWithoutLoading, getTextChatBotAPI } from 'apis/axios'
 import { selectCurrentUser } from 'redux/user/UserSlice'
 import { selectTemporaryUserId } from 'redux/user/UserSlice'
@@ -53,7 +53,7 @@ const MessageFeature = ({action, data = {}}) => {
   const [places, setPlaces] = useState(null);
   const [typePlace] = useState("all");
 
-  const themeColor = useTheme();
+  // const themeColor = useTheme();
 
   // ====================================input.get-weather==========================
   const [weatherHourSelectedIndex, setWeatherHourSelectedIndex] = useState(0)
@@ -623,7 +623,7 @@ const handlePressPlace = (placeName) => {
     return (
       <ScrollView 
         horizontal={true}
-        style={[{backgroundColor:themeColor.primary}, app_sp.pb_10]}
+        style={[{backgroundColor: 'white'}, app_sp.pb_10]}
         contentContainerStyle={{flexGrow: 1}}
         showsHorizontalScrollIndicator={false}
       >

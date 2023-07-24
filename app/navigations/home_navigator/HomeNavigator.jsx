@@ -36,7 +36,7 @@ const HomeNavigator=({ navigation })=>{
               {...props}
               setLeftPart={() => (
                 <CircleButton
-                  defaultColor="type_2"
+                  defaultColor="type_5"
                   boxShadowType="type_1"
                   typeOfButton="opacity"
                   onPress={() => {

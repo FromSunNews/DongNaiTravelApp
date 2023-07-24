@@ -21,7 +21,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { selectCurrentLanguage } from 'redux/language/LanguageSlice'
 
-import useTheme from 'customHooks/useTheme'
+// import useTheme from 'customHooks/useTheme'
 import {
   usePlaceDetailsState,
   usePlaceDetailsActions,
@@ -86,7 +86,7 @@ const ItineraryDetailScreen = () => {
   const dispatch = useDispatch()
 
   //theme
-  const themeColor = useTheme();
+  // const themeColor = useTheme();
 
 
   const [selectTabIndex, setSelectTabIndex] = useState(0)
@@ -255,7 +255,7 @@ const ItineraryDetailScreen = () => {
           
         </BottomSheetScrollView>
       </BottomSheet> */}
-      <View style={[styles.pd_header, app_sp.ph_18, { borderBottomColor: themeColor.fourth }]}>
+      <View style={[styles.pd_header, app_sp.ph_18, { borderBottomColor: app_c.HEX.fourth }]}>
           
             {/* Information row */}
             <View style={{...styles.pd_row, ...app_sp.mb_12}}>
