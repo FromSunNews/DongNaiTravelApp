@@ -152,7 +152,7 @@ const HomeScreen = withTheme(({
         </View>
         {
           showPanelWeather &&
-          <TouchableOpacity onPress={() => navigation.navigate("WeatherScreen")}>
+          <TouchableOpacity onPress={() => navigation.navigate("WeatherScreen")} style>
               <View style={styles.home_temperature}>
                <ImageBackground source={require('../../assets/images/weather_forcast/5564526.jpg')}
                 resizeMode="cover" 
