@@ -1,9 +1,9 @@
 <div>
     <h1>
         <a align="left"><img src="https://i.ibb.co/SQWy8xC/logo-big.png" alt="DONGNAITRRAVEL-Logo" style="width: 80px; float: left; margin-right: 1rem" border="0"></a>
-        DONG NAI TRAVEL
+        DongNaiTravel - 
         <br>
-        Cẩm nang du lịch cho mọi người
+        Ứng dụng khám phá du lịch Đồng Nai tích hợp trợ lý ảo
     </h1>
 </div>
 
