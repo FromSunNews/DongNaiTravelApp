@@ -8,7 +8,7 @@
 </div>
 
 Ứng dụng được xây dựng cho mục đích tham gia __cuộc thi Sáng tạo Khoa học Kĩ thuật__ tỉnh Đồng Nai - 2023 và là đồ án tốt nghiệp 2024.
-
+## Achieved
 Giải pháp đạt được giải __Ba__ chung cuộc. xem thông tin [tại đây](https://dntu.edu.vn/tin-tuc/sinh-vien-khoa-cong-nghe-thong-tin-dat-giai-3-cuoc-thi-chuyen-doi-so-tinh-dong-nai?fbclid=IwZXh0bgNhZW0CMTEAAR071lmE5A1yVjtAYpqd98t6Sx_NDK32SO6PXAlYGeHX72WDPibXpx1C3Bo_aem_AdVg_F5Y82KVeij1Hm3lGWFEz3KoM9cGDidyC1ATMfAONtGm8H2F82xYegC2JzJVO_Qev--DM_nRiNLRyI0jWzTb).
 
 Giải pháp đạt được giải __Khuyến khích__ chung cuộc. Xem thêm thông tin [tại đây](https://drive.google.com/file/d/1rtrAE14D4_O47xg_cKyicr1dSMoTsqJe/view?usp=sharing).
